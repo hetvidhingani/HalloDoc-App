@@ -1,0 +1,145 @@
+﻿<div class="mainSection ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo">
+            <a asp-action="PatientSubmitRequest" asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none;
+                ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
+            <form>
+                <h3>Patient Information</h3>
+                <div class="form-floating form-group ">
+
+                    <textarea class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"
+                              placeholder=" "></textarea>
+                    <label class="form-label" for="textAreaExample2">
+                        Enter Brief Details Of Symptoms
+                        (Optional)
+                    </label>
+                </div>
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">First Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="date" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Date Of Birth</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h3>Patient Contact Information</h3>
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Email</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input id="phone" type="tel" name="phone" style="border: none;height: 54px;" />
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <h3>Patient Location</h3>
+
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Street</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">City </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">State</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Zip code</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Room # / Suite (Optional)</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h3>(Optional) Upload Photo or Document</h3>
+                <!-- <div class="" style="position: relative;">
+
+                    <input class="form-control form-control-sm file-upload" id="formFileSm" type="file"
+                        style="opacity: 0; position: absolute; top: 1em; z-index: 3; ">
+                    <div class="input-group mb-3 ">
+                        <input type="text" class="form-control" placeholder="Select Files" aria-label="Select File"
+                            aria-describedby="patientfileupload">
+                        <button class="btn btn-btn-lg btn-info text-light" type="button" id="patientfileupload"
+                            style="z-index: 2;">
+                            <span><i class="bi bi-cloud-arrow-up"></i>&nbsp;Upload</span>
+                        </button>
+                    </div>
+                </div> -->
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control d-none" id="inputGroupFile02">
+                    <input class="form-control input-group " id="uploadText" placeholder="Select your file"
+                           value=" No files selected">
+                    <label class="input-group-text " style="background-color: #00bbe8;" for="inputGroupFile02">
+                        <i class="bi bi-cloud-arrow-up " aria-hidden="true"></i>
+                        <span class="d-none d-sm-block mx-2">Upload</span>
+                    </label>
+                </div>
+                <div class="row">
+
+                    <div class="col-12 d-inline" style=" text-align: right;">
+
+                        <input type="submit" class="btn btn-submit " value="submit">
+
+                        <a href="PatientSubmitRequest.html" class="btn ">
+                            </input>
+
+                            <a href="PatientSubmitRequest.html" class="btn ">
+                                <input type="button"
+                                       class="btn-primary-outline" value="Cancle">
+                            </a>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

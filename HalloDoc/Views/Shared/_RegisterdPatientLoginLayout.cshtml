@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "_PatientSiteLayout";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -15,35 +19,47 @@
             integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="header d-flex align-content-center ">
+    <div class="row main">
+        <div class="col-lg-12 col-md-12 col-sm-12 side d-flex flex-column align-items-center  ">
 
-        <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
-        </div>
+            <img src="~/images/PatientSite.jpg" class="imgPatientBg image-fluid">
 
-        <div class="switch-mode-inner-div">
-            <img src="~/images/moon_icon.svg" alt="moon_icon" />
-        </div>
 
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+            <div class="switch-mode-inner-div" id="toggle">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
+            <div class="   text-center">
+                <img src="~/images/loginpagelogo.png" class=" PatientSiteLogo">
+            </div>
+            <div class=" right RegisteredPatient  col-lg-4 col-md-6 col-sm-10 d-flex flex-column  ">
+
+                <div class="backButton">
+                    <i class="bi bi-chevron-left"></i>
+                    <a href="#">Back</a>
+                </div>
+                <div class="text-center ">
+
+    
             @RenderBody()
-        </main>
+       </div>
+
+
+            </div>
+            <div class="mt-auto mb-3 footlink">
+                <a href="#">Terms and Conditions</a> |
+                <a href="#">Privacy Policy</a>
+
+            </div>
+        </div>
     </div>
 
-    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; color:white;width: 100%;">
-        <div class="d-flex justify-content-end align-items-center footlink">
-            <a href="#">Terms and Conditions</a> |
-            <a href="#">Privacy Policy</a>
-
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -52,3 +68,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+

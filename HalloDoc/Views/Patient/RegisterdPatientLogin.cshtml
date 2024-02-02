@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
+}
+
+
+                <div class="login">
+                    <h3 class="mainHeading">
+                        Login into your account
+                    </h3>
+                </div>
+
+                <div class=" form-floating form-group">
+                    <i class="bi bi-person-circle "></i>
+                    <input type="name" class="form-control form-control-lg" placeholder=" " />
+                    <label for="text">Username</label>
+                </div>
+
+
+                <div class=" form-floating form-group">
+                    <i class="bi bi-eye"></i>
+                    <input type="password" class="form-control  " id="pwd" placeholder=" ">
+                    <label for="pwd">Password</label>
+                </div>
+                <div class="input-group d-flex justify-content-between">
+
+                    <button class="btn btn-primary w-100  px-4">Login</button>
+
+                </div>
+                <div class="forgot ">
+    <small><a asp-controller="Patient" asp-action="PatientForgotPassword" class="forgot">Forgot Password?</a></small>
+                </div>
+
+          

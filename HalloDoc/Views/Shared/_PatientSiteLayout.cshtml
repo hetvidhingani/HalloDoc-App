@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    ViewData["Title"] = "_PatientSiteLayout";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,33 +22,19 @@
 
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="header d-flex align-content-center ">
-
-        <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
-        </div>
-
-        <div class="switch-mode-inner-div">
-            <img src="~/images/moon_icon.svg" alt="moon_icon" />
-        </div>
-
-    </header>
+    
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; color:white;width: 100%;">
-        <div class="d-flex justify-content-end align-items-center footlink">
-            <a href="#">Terms and Conditions</a> |
-            <a href="#">Privacy Policy</a>
-
-        </div>
-    </footer>
+   
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
@@ -52,3 +43,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+

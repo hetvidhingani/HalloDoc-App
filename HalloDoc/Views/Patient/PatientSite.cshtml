@@ -1,0 +1,37 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_PatientSiteLayout.cshtml";
+}
+ <div class="PatientSitePage"></div>
+
+    <div class="container-fluid mainPage">
+        <div class="header">
+            <div class="switch-mode-inner-div" id="toggle">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
+            <div class=" logoImg  text-center">
+                <img src="~/images/loginpagelogo.png" class=" PatientSiteLogo">
+            </div>
+        </div>
+        <div class="container-fluid  buttonContent">
+
+        <button type="button" class="btn p-3" style="background-color:#01bce9 ;color: white">
+            <a asp-controller="Patient" asp-action="PatientSubmitRequest" style="color:white;text-decoration:none">
+                Submit A Request
+            </a>
+        </button>
+        <button type="button" class="btn p-3 mt-5 " style="background-color:#0d1556;color: white;">
+            <a asp-controller="Patient" asp-action="RegisterdPatientLogin" style="color:white;text-decoration:none">
+                Registerd
+                Patient
+            </a>
+        </button>
+
+        </div>
+        <div class="mt-auto mb-3 footlink">
+            <a href="#">Terms and Conditions</a> |
+            <a href="#">Privacy Policy</a>
+
+        </div>
+
+    </div>
