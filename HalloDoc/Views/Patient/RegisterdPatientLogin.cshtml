@@ -1,6 +1,15 @@
 ﻿@{
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
 }
+<div class="backkButton" >
+    <i class="bi bi-chevron-left"></i>
+ 
+        <a asp-controller="Patient" asp-action="PatientSite">
+            Back
+        </a>
+  
+</div>
+<div class="text-center ">
 
 
                 <div class="login">
@@ -11,7 +20,7 @@
 
                 <div class=" form-floating form-group">
                     <i class="bi bi-person-circle "></i>
-                    <input type="name" class="form-control form-control-lg" placeholder=" " />
+                    <input type="text" class="form-control form-control-lg" placeholder=" " />
                     <label for="text">Username</label>
                 </div>
 
@@ -30,4 +39,4 @@
     <small><a asp-controller="Patient" asp-action="PatientForgotPassword" class="forgot">Forgot Password?</a></small>
                 </div>
 
-          
+</div>
