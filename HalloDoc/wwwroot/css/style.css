@@ -462,3 +462,6 @@ form > div > div {
    
 }
 /*#endregion*/
+.modal{
+    vertical-align:middle;
+}
