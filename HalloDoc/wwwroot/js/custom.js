@@ -10,6 +10,7 @@ const phoneInput1 = window.intlTelInput(phoneInputField1, {
     "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 });
 // Alert while submitting form
+//form
 function submitForm(form) {
   swal({
       title: "Information",
@@ -29,3 +30,13 @@ function changeTheme() {
   var element = document.body;
   element.classList.toggle("darkMode");
 }
+//tabs change
+//var btnContainer = document.getElementByClassName("headerTabs");
+//var btns = btnContainer.getElementsByTagName("a");
+//for (var i = 0; i < btns.length; i++) {
+//    btns[i].addEventListener("click", function () {
+   
+//        (document.querySelector('.nav-link-active')) ? document.querySelector('.nav-link-active').classList.remove('nav-link-active') : '';
+//        this.classList.add('nav-link-active');
+//    });
+//} 
