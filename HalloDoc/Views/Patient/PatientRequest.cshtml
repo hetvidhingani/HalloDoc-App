@@ -1,4 +1,8 @@
-﻿<div class="mainSection ">
+﻿@{
+    Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
+}
+
+<div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
@@ -124,17 +128,16 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-12 d-inline" style=" text-align: right;">
+                    <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
 
-                        <input type="submit" class="btn btn-submit " value="submit">
-
-                        <a href="PatientSubmitRequest.html" class="btn "></a>
-                            </input>
-
+                        <button type="button" class="createNewReqBtn submitBtn">Submit</button>
                         <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
-                                <input type="button"
-                                       class="btn-primary-outline" value="Cancle">
-                            </a>
+                            <button type="button" class="createNewReqBtn">
+                                Cancle
+                            </button>
+
+                        </a>
+
 
                     </div>
                 </div>
