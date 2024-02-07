@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using HalloDoc.DataModels;
+@using Microsoft.AspNetCore.Identity;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,7 +24,7 @@
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header class="header d-flex align-content-center ">
+    <header class="header d-flex align-items-center ">
 
         <div class="Logo">
             <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
@@ -30,6 +33,16 @@
         <div class="switch-mode-inner-div">
             <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
         </div>
+        <div class="username">
+          
+        
+
+        </div>
+        <a asp-controller="Patient" asp-action="Logout" class="logout">
+           <button class="btn" type="submit">Logout</button>
+
+
+        </a>
 
     </header>
     <div class="headerTabs">

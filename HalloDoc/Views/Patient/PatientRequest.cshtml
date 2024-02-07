@@ -1,4 +1,7 @@
-﻿@{
+﻿
+@model HalloDoc.Models.PatientRequestViewModel
+
+@{
     Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
 }
 
@@ -15,12 +18,15 @@
                 </button>
             </a>
         </div>
-        <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
-            <form>
-                <h3>Patient Information</h3>
-                <div class="form-floating form-group ">
 
-                    <textarea class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"
+        <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
+            <form asp-controller="Patient" asp-action="PatientRequest" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+               @* <input type="hidden" asp-for="@Model.User.UserId"> *@
+                <h3>Patient Information</h3>
+
+                <div class="form-floating form-group ">
+                    <textarea asp-for="@User." class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"
                               placeholder=" "></textarea>
                     <label class="form-label" for="textAreaExample2">
                         Enter Brief Details Of Symptoms
@@ -30,19 +36,19 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="FirstName" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">First Name</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="LastName" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Last Name</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="date" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="DateOfBirth" type="date" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Date Of Birth</label>
                         </div>
                     </div>
@@ -53,13 +59,13 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="Email" type="email" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Email</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input id="phone" type="tel" name="phone" style="border: none;height: 54px;" />
+                            @* <input asp-for="Mobile" id="phone" type="tel" name="phone" style="border: none;height: 54px;" /> *@
 
                         </div>
                     </div>
@@ -72,31 +78,31 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="Street" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Street</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="City" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">City </label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="State" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">State</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="ZipCode" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Zip code</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            @* <input asp-for="Room" type="text" class="form-control" id="floatingInputGrid" placeholder=" "> *@
                             <label for="floatingInputGrid">Room # / Suite (Optional)</label>
                         </div>
                     </div>
@@ -118,7 +124,7 @@
                     </div>
                 </div> -->
                 <div class="input-group mb-3">
-                    <input type="file" class="form-control d-none" id="inputGroupFile02">
+                    @* <input asp-for="Document" type="file" class="form-control d-none" id="inputGroupFile02"> *@
                     <input class="form-control input-group " id="uploadText" placeholder="Select your file"
                            value=" No files selected">
                     <label class="input-group-text " style="background-color: #00bbe8;" for="inputGroupFile02">
@@ -129,8 +135,8 @@
                 <div class="row">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+                        <input type="button" class="createNewReqBtn submitBtn" value="Submit" />
 
-                        <button type="button" class="createNewReqBtn submitBtn">Submit</button>
                         <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
                             <button type="button" class="createNewReqBtn">
                                 Cancle

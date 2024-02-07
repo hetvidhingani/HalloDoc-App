@@ -1,44 +1,56 @@
-﻿@{
+﻿@model HalloDoc.DataModels.AspNetUser
+@{
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
 }
-<div class="backkButton" >
+@{
+    if (ViewBag.Message != null)
+    {
+        <p class="text-danger text-center fs-3">@ViewBag.Message</p>
+    }
+    
+}
+<div class="backkButton">
 
     <a asp-controller="Patient" asp-action="PatientSite" class="SiteColor">
-    <i class="bi bi-chevron-left SiteColor"></i>
-            Back
-        </a>
-  
+        <i class="bi bi-chevron-left SiteColor"></i>
+        Back
+    </a>
+
 </div>
 <div class="text-center ">
 
 
-                <div class="login">
-                    <h3 class="mainHeading">
-                        Login into your account
-                    </h3>
-                </div>
+    <div class="login">
+        <h3 class="mainHeading">
+            Login into your account
+        </h3>
+    </div>
 
-                <div class=" form-floating form-group">
-                    <i class="bi bi-person-circle "></i>
-                    <input type="text" class="form-control form-control-lg" placeholder=" " />
-                    <label for="text">Username</label>
-                </div>
+    <form asp-controller="Patient" asp-action="RegisterdPatientLogin" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class=" form-floating form-group">
+            <i class="bi bi-person-circle loginIconfrom"></i>
+            <input asp-for="Email" type="text" id="email" class="form-control " placeholder=" " />
+            <label for="email">Email</label>
+            <span asp-validation-for="Email" class="text-danger"></span>
+
+        </div>
 
 
-                <div class=" form-floating form-group">
-                    <i class="bi bi-eye"></i>
-                    <input type="password" class="form-control  " id="pwd" placeholder=" ">
-                    <label for="pwd">Password</label>
-                </div>
-                <div class="input-group d-flex justify-content-between">
-        <a asp-controller="Patient" asp-action="Dashboard" class="SiteButton  px-4 py-2 w-100 " style="text-decoration:none;color:white">
-                   Login
-                    </a>
-        
+        <div class=" form-floating form-group">
+            <i class="bi bi-eye loginIconfrom"></i>
+            <input asp-for="PasswordHash" type="password" class="form-control  " id="pwd" placeholder=" ">
+            <label for="pwd">Password</label>
+            <span asp-validation-for="PasswordHash" class="text-danger"></span>
 
-                </div>
-                <div class="forgot ">
-    <small><a asp-controller="Patient" asp-action="PatientForgotPassword" class="forgot SiteColor">Forgot Password?</a></small>
-                </div>
+        </div>
+        <div class="input-group d-flex justify-content-between">
+                <input type="submit" class="SiteButton  px-4 py-2 w-100 " style="text-decoration:none;color:white;border:none" value="Login"/>
+        </div>
+   </form>
+    <div class="forgot ">
+        <small><a asp-controller="Patient" asp-action="PatientForgotPassword" class="forgot SiteColor">Forgot Password?</a></small>
+    </div>
 
 </div>

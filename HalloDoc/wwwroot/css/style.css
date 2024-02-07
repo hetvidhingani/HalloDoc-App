@@ -193,7 +193,7 @@ body {
     top: 22px;
     right: 30px;
     width: 35px;
-    height: 35px;
+    height: 38px;
     background-color: white;
     display: flex;
     border-radius: 5px;
@@ -201,13 +201,22 @@ body {
     align-items: center;
     justify-content: center;
 }
+.logout {
+    position: absolute;
+    right: 100px;
+    display: flex;
+    border-radius: 5px;
+    border: 1px solid #2596be;
+    align-items: center;
+    justify-content: center;
+    text-decoration:none;
 
+}
 .loginImg {
     width: 25vh;
     height: auto;
 }
-
-.right > div > div > i {
+.loginIconfrom {
     position: absolute;
     margin-top: 1rem;
     right: 1rem;
