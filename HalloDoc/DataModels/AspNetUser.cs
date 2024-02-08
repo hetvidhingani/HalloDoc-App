@@ -70,9 +70,6 @@ public partial class AspNetUser
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<Shift> Shifts { get; set; } = new List<Shift>();
 
-    [InverseProperty("CreatedByNavigation")]
-    public virtual ICollection<User> UserCreatedByNavigations { get; set; } = new List<User>();
-
     [InverseProperty("IdNavigation")]
     public virtual ICollection<User> UserIdNavigations { get; set; } = new List<User>();
 

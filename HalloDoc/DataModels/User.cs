@@ -81,10 +81,6 @@ public partial class User
 
     public DateOnly? DateOfBirth { get; set; }
 
-    [ForeignKey("CreatedBy")]
-    [InverseProperty("UserCreatedByNavigations")]
-    public virtual AspNetUser CreatedByNavigation { get; set; } = null!;
-
     [ForeignKey("Id")]
     [InverseProperty("UserIdNavigations")]
     public virtual AspNetUser? IdNavigation { get; set; }

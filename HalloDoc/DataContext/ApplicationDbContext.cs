@@ -427,12 +427,6 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.UserId).HasName("User_pkey");
 
-            entity.Property(e => e.UserId).ValueGeneratedNever();
-
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.UserCreatedByNavigations)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("User_CreatedBy_fkey");
-
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.UserIdNavigations).HasConstraintName("User_Id_fkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.UserModifiedByNavigations).HasConstraintName("User_ModifiedBy_fkey");
