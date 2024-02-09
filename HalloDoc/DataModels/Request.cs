@@ -89,13 +89,6 @@ public partial class Request
 
     public int? CreatedUserId { get; set; }
 
-    [StringLength(200)]
-    public string? DocumentPath { get; set; }
-
-    [Column("Symptoms ")]
-    [StringLength(200)]
-    public string? Symptoms { get; set; }
-
     [ForeignKey("PhysicianId")]
     [InverseProperty("Requests")]
     public virtual Physician? Physician { get; set; }

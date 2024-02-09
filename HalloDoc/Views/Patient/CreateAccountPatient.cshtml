@@ -1,4 +1,4 @@
-﻿@model HalloDoc.DataModels.AspNetUser
+﻿@model CreateAccountViewModel;
 @{
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
 }
@@ -14,12 +14,14 @@
 
 
     <div class="login">
+        @TempData["errormsg1"]
+        @TempData["errormsg"]
         <h3 class="mainHeading">
             Create Account
         </h3>
     </div>
 
-    <form asp-controller="Patient" asp-action="RegisterdPatientLogin" method="post">
+    <form asp-controller="Patient" asp-action="CreateAccountRequest" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <div class=" form-floating form-group">
@@ -39,7 +41,7 @@
         </div>
         <div class=" form-floating form-group">
             <i class="bi bi-eye loginIconfrom"></i>
-            <input asp-for="PasswordHash" type="password" class="form-control  " id="pwd" placeholder=" ">
+            <input asp-for="ConfirmPassword" type="password" class="form-control  " id="pwd" placeholder=" ">
             <label for="pwd">Confirm Password</label>
             <span asp-validation-for="PasswordHash" class="text-danger"></span>
         </div>
