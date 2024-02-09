@@ -365,7 +365,7 @@ namespace HalloDoc.Controllers
                         LastName = viewModel.ClientLastName,
                         PhoneNumber = viewModel.ClientPhoneNumber,
                         Email = viewModel.CLientEmail,
-
+                        RelationName=viewModel.RelationName,
 
                         CreatedDate = DateTime.Now,
 
@@ -414,10 +414,10 @@ namespace HalloDoc.Controllers
                     {
                         UserId = user.UserId,
                         RequestTypeId = 1,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        PhoneNumber = user.Mobile,
-                        Email = user.Email,
+                        FirstName = viewModel.ClientFirstName,
+                        LastName = viewModel.ClientLastName,
+                        PhoneNumber = viewModel.ClientPhoneNumber,
+                        Email = viewModel.CLientEmail,
 
 
                         CreatedDate = DateTime.Now,
@@ -456,7 +456,7 @@ namespace HalloDoc.Controllers
 
 
 
-                    return RedirectToAction("RegisterdPatientLogin");
+                    return RedirectToAction("Dashboard");
                 }
             }
             return View(viewModel);
