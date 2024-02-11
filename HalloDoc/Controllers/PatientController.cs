@@ -314,7 +314,7 @@ namespace HalloDoc.Controllers
 
         #region Family Freind Request
         [HttpPost]
-        public async Task<IActionResult> FamilyFriendRequest(PatientRequestViewModel viewModel)
+        public async Task<IActionResult> FamilyFriendRequest(FamilyFriendRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -365,7 +365,7 @@ namespace HalloDoc.Controllers
                         LastName = viewModel.ClientLastName,
                         PhoneNumber = viewModel.ClientPhoneNumber,
                         Email = viewModel.CLientEmail,
-                        RelationName=viewModel.RelationName,
+                        RelationName = viewModel.RelationName,
 
                         CreatedDate = DateTime.Now,
 

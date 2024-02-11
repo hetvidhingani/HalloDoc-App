@@ -1,15 +1,13 @@
-﻿using HalloDoc.DataModels;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HalloDoc.Models
 {
-    public class PatientRequestViewModel
+    public class FamilyFriendRequestViewModel
     {
-       
+
         [Required]
         public string? FirstName { get; set; }
         [Required]
-
         public string? LastName { get; set; }
         [Required]
         public string? PhoneNumber { get; set; }
@@ -25,15 +23,13 @@ namespace HalloDoc.Models
         public string? ZipCode { get; set; }
         [Required]
 
-        //public string? ClientFirstName { get; set; }
-        //[Required]
+        public string? ClientFirstName { get; set; }
+        [Required]
 
-        //public string? ClientLastName { get; set; }
-     
-        //public string? ClientPhoneNumber { get; set; }
-        //public string? CLientEmail { get; set; }
+        public string? ClientLastName { get; set; }
+
+        public string? ClientPhoneNumber { get; set; }
+        public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }
-
     }
 }
-
