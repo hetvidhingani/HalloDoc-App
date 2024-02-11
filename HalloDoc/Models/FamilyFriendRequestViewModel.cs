@@ -25,9 +25,7 @@ namespace HalloDoc.Models
 
         public string? ClientFirstName { get; set; }
         [Required]
-
         public string? ClientLastName { get; set; }
-
         public string? ClientPhoneNumber { get; set; }
         public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }

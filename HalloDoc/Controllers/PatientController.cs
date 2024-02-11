@@ -44,18 +44,12 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-        #region Create Account
+        #region Create Account Patient
         public IActionResult CreateAccountPatient()
         {
             return View();
         }
-        //[HttpPost]
-        //public IActionResult CreateAccountPatient(User user)
-        //{
-
-        //    return View();
-        //}
-
+       
         #endregion
 
         #region Login
@@ -119,7 +113,47 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                User userExist = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                Request request = new Request
+                {
+                    RequestTypeId = 1,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    Email = viewModel.Email,
+                    CreatedDate = DateTime.Now,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+
+                RequestClient requestClient = new RequestClient
+                {
+                    RequestId = request.RequestId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    RegionId = 1,
+                    Street = viewModel.Street,
+                    City = viewModel.City,
+                    State = viewModel.State,
+                    ZipCode = viewModel.ZipCode,
+                    Notes = viewModel.Symptoms ,
+                    Email = viewModel.Email
+                };
+                _context.RequestClients.Add(requestClient);
+                _context.SaveChanges();
+
+                RequestWiseFile requestwisefile = new RequestWiseFile
+                {
+                    RequestId = request.RequestId,
+                    FileName = viewModel.DocumentPath,
+                    CreatedDate = DateTime.Now
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+
+
+                AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
                 {
                     AspNetUser newaspNetUSer = new AspNetUser
@@ -127,19 +161,17 @@ namespace HalloDoc.Controllers
                         Id = Guid.NewGuid().ToString(),
                         UserName = viewModel.FirstName,
                         PhoneNumber = viewModel.PhoneNumber,
-                        CreatedDate = DateTime.Now,
-                        Email = viewModel.Email
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now
                     };
 
                     var AspNewUID = newaspNetUSer.Id;
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
-
-                    var AspNetUserIDFK = newaspNetUSer.Id;
-
+                  
                     User user = new User
                     {
-                        Id = AspNetUserIDFK,
+                        Id = newaspNetUSer.Id,
                         FirstName = viewModel.FirstName,
                         LastName = viewModel.LastName,
                         Email = viewModel.Email,
@@ -157,108 +189,14 @@ namespace HalloDoc.Controllers
                     _context.Users.Add(user);
                     _context.SaveChanges();
 
-                    int UsertblId = user.UserId;
-                    Request request = new Request
-                    {
-                        UserId = UsertblId,
-                        RequestTypeId = 1,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        Email = viewModel.Email,
-
-
-                        CreatedDate = DateTime.Now,
-
-                        Status = 1
-                    };
+                    request.UserId = user.UserId;
                     _context.Requests.Add(request);
                     _context.SaveChanges();
-
-                    int RequesttblID = request.RequestId;
-                    RequestClient requestClient = new RequestClient
-                    {
-                        RequestId = RequesttblID,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        RegionId = 1,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        Notes = viewModel.Symptoms
-                    };
-                    _context.RequestClients.Add(requestClient);
-                    _context.SaveChanges();
-                    int RequesttblID1 = request.RequestId;
-                    RequestWiseFile requestwisefile = new RequestWiseFile
-                    {
-                        RequestId = RequesttblID1,
-                        FileName = viewModel.DocumentPath,
-                        CreatedDate = DateTime.Now
-                    };
-                    _context.RequestWiseFiles.Add(requestwisefile);
-                    _context.SaveChanges();
-
-
 
                     return RedirectToAction("PatientSite");
 
                 }
-                else
-                {
-                    User user = _context.Users.Where(s => s.Email == viewModel.Email).FirstOrDefault();
-
-
-                    Request request = new Request
-                    {
-                        UserId = user.UserId,
-                        RequestTypeId = 1,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        PhoneNumber = user.Mobile,
-                        Email = user.Email,
-
-
-                        CreatedDate = DateTime.Now,
-
-                        Status = 1
-                    };
-                    _context.Requests.Add(request);
-                    _context.SaveChanges();
-
-                    int RequesttblID = request.RequestId;
-                    RequestClient requestClient = new RequestClient
-                    {
-                        RequestId = RequesttblID,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        RegionId = 1,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        Notes = viewModel.Symptoms
-                    };
-                    _context.RequestClients.Add(requestClient);
-                    _context.SaveChanges();
-
-                    int RequesttblID1 = request.RequestId;
-                    RequestWiseFile requestwisefile = new RequestWiseFile
-                    {
-                        RequestId = RequesttblID1,
-                        FileName = viewModel.DocumentPath,
-                        CreatedDate = DateTime.Now
-                    };
-                    _context.RequestWiseFiles.Add(requestwisefile);
-                    _context.SaveChanges();
-
-
-
-                    return RedirectToAction("RegisterdPatientLogin");
-                }
+               
             }
             return View(viewModel);
         }
@@ -318,7 +256,47 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                User userExist = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                Request request = new Request
+                {
+                    RequestTypeId = 2,
+                    FirstName = viewModel.ClientFirstName,
+                    LastName = viewModel.ClientLastName,
+                    PhoneNumber = viewModel.ClientPhoneNumber,
+                    Email = viewModel.CLientEmail,
+                    CreatedDate = DateTime.Now,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+
+                RequestClient requestClient = new RequestClient
+                {
+                    RequestId = request.RequestId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    RegionId = 1,
+                    Street = viewModel.Street,
+                    City = viewModel.City,
+                    State = viewModel.State,
+                    ZipCode = viewModel.ZipCode,
+                    Notes = viewModel.Symptoms,
+                    Email = viewModel.Email
+                };
+                _context.RequestClients.Add(requestClient);
+                _context.SaveChanges();
+
+                RequestWiseFile requestwisefile = new RequestWiseFile
+                {
+                    RequestId = request.RequestId,
+                    FileName = viewModel.DocumentPath,
+                    CreatedDate = DateTime.Now
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+
+
+                AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
                 {
                     AspNetUser newaspNetUSer = new AspNetUser
@@ -326,19 +304,17 @@ namespace HalloDoc.Controllers
                         Id = Guid.NewGuid().ToString(),
                         UserName = viewModel.FirstName,
                         PhoneNumber = viewModel.PhoneNumber,
-                        CreatedDate = DateTime.Now,
-                        Email = viewModel.Email
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now
                     };
 
                     var AspNewUID = newaspNetUSer.Id;
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
 
-                    var AspNetUserIDFK = newaspNetUSer.Id;
-
                     User user = new User
                     {
-                        Id = AspNetUserIDFK,
+                        Id = newaspNetUSer.Id,
                         FirstName = viewModel.FirstName,
                         LastName = viewModel.LastName,
                         Email = viewModel.Email,
@@ -356,108 +332,14 @@ namespace HalloDoc.Controllers
                     _context.Users.Add(user);
                     _context.SaveChanges();
 
-                    int UsertblId = user.UserId;
-                    Request request = new Request
-                    {
-                        UserId = UsertblId,
-                        RequestTypeId = 1,
-                        FirstName = viewModel.ClientFirstName,
-                        LastName = viewModel.ClientLastName,
-                        PhoneNumber = viewModel.ClientPhoneNumber,
-                        Email = viewModel.CLientEmail,
-                        RelationName = viewModel.RelationName,
-
-                        CreatedDate = DateTime.Now,
-
-                        Status = 1
-                    };
+                    request.UserId = user.UserId;
                     _context.Requests.Add(request);
                     _context.SaveChanges();
 
-                    int RequesttblID = request.RequestId;
-                    RequestClient requestClient = new RequestClient
-                    {
-                        RequestId = RequesttblID,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        RegionId = 1,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        Notes = viewModel.Symptoms
-                    };
-                    _context.RequestClients.Add(requestClient);
-                    _context.SaveChanges();
-                    int RequesttblID1 = request.RequestId;
-                    RequestWiseFile requestwisefile = new RequestWiseFile
-                    {
-                        RequestId = RequesttblID1,
-                        FileName = viewModel.DocumentPath,
-                        CreatedDate = DateTime.Now
-                    };
-                    _context.RequestWiseFiles.Add(requestwisefile);
-                    _context.SaveChanges();
-
-
-
-                    return RedirectToAction("CreateAccountPatient");
+                    return RedirectToAction("PatientSite");
 
                 }
-                else
-                {
-                    User user = _context.Users.Where(s => s.Email == viewModel.Email).FirstOrDefault();
 
-
-                    Request request = new Request
-                    {
-                        UserId = user.UserId,
-                        RequestTypeId = 1,
-                        FirstName = viewModel.ClientFirstName,
-                        LastName = viewModel.ClientLastName,
-                        PhoneNumber = viewModel.ClientPhoneNumber,
-                        Email = viewModel.CLientEmail,
-
-
-                        CreatedDate = DateTime.Now,
-
-                        Status = 1
-                    };
-                    _context.Requests.Add(request);
-                    _context.SaveChanges();
-
-                    int RequesttblID = request.RequestId;
-                    RequestClient requestClient = new RequestClient
-                    {
-                        RequestId = RequesttblID,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        RegionId = 1,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        Notes = viewModel.Symptoms
-                    };
-                    _context.RequestClients.Add(requestClient);
-                    _context.SaveChanges();
-
-                    int RequesttblID1 = request.RequestId;
-                    RequestWiseFile requestwisefile = new RequestWiseFile
-                    {
-                        RequestId = RequesttblID1,
-                        FileName = viewModel.DocumentPath,
-                        CreatedDate = DateTime.Now
-                    };
-                    _context.RequestWiseFiles.Add(requestwisefile);
-                    _context.SaveChanges();
-
-
-
-                    return RedirectToAction("Dashboard");
-                }
             }
             return View(viewModel);
         }
