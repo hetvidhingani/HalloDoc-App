@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
 }
+@model ConciergeRequestViewModel
 
 
 <div class="mainSection">
@@ -16,38 +17,46 @@
             </a>
         </div>
         <div class="   p-4 shadow mb-3  rounded h-100 PatientInfo">
-            <form>
+            <form asp-action="ConciergeRequest" asp-controller="Patient">
                 <h3>Concierge Information</h3>
-
+               
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientFirstName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Your First Name</label>
+                            <span asp-validation-for="ClientFirstName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientLastName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Your Last Name </label>
+                            <span asp-validation-for="ClientLastName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input id="phone" type="tel" name="phone" class="" style="border: none;height: 54px;" />
+                            <input asp-for="ClientPhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" />
+
+                        </div>
+                        <span asp-validation-for="ClientPhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="CLientEmail" type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <label for="floatingInputGrid">Your Email</label>
+                            <span asp-validation-for="CLientEmail" class="text-danger"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
-                            <input type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Your Email</label>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for= "ClientProperty" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Hotel Property Name</label>
+
                         </div>
                     </div>
 
@@ -59,26 +68,34 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientStreet" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Street</label>
+                            <span asp-validation-for="ClientStreet" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientCity"   type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">City </label>
+                            <span asp-validation-for="ClientCity" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientState"   type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">State</label>
+                            <span asp-validation-for="ClientState" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="ClientZipCode"   type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Zip code</label>
+                            <span asp-validation-for="ClientZipCode" class="text-danger"></span>
+
                         </div>
                     </div>
 
@@ -88,30 +105,38 @@
                 <h3>Patient Information</h3>
                 <div class="form-floating form-group ">
 
-                    <textarea class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"
+                    <textarea  asp-for="Symptoms"  class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"
                               placeholder=" "></textarea>
                     <label class="form-label" for="textAreaExample2">
                         Enter Brief Details Of Symptoms
                         (Optional)
                     </label>
+                    <span asp-validation-for="Symptoms" class="text-danger"></span>
+
                 </div>
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="FirstName"   type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="LastName "   type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="date" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="DateOfBirth"   type="date" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Date Of Birth</label>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
                         </div>
                     </div>
 
@@ -121,17 +146,20 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="Email"   type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
                         </div>
                     </div>
+                  
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input id="phone2" type="tel" name="phone" class="" style="border: none;height: 54px;" />
+                            <input asp-for="PhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" />
 
                         </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-
 
                 </div>
 
@@ -170,7 +198,7 @@
                                         </p>
                                     </div>
                                     <div class="modal-footer d-flex justify-content-center">
-                                        <button type="button" class="btn btn-info text-white"
+                                        <button type="submit" class="btn btn-info text-white"
                                                 data-bs-dismiss="modal">
                                             Ok
                                         </button>

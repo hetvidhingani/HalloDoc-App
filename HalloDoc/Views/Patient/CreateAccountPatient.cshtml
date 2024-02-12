@@ -7,6 +7,7 @@
     {
         <p class="text-danger text-center fs-3">@ViewBag.Message</p>
     }
+    
 
 }
 
@@ -23,7 +24,7 @@
 
     <form asp-controller="Patient" asp-action="CreateAccountRequest" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <input type="hidden" id="requestID" value="@TempData["id"]" asp-for="RequestID"/>
         <div class=" form-floating form-group">
             <i class="bi bi-person-circle loginIconfrom"></i>
             <input asp-for="Email" type="text" id="email" class="form-control " placeholder=" " />

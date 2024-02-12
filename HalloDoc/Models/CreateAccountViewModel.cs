@@ -12,6 +12,7 @@ namespace HalloDoc.Models
         public string PasswordHash { get; set; }
         [Required]
         public string  ConfirmPassword { get; set; }
+        public int RequestID { get; set; }
 
     }
 }

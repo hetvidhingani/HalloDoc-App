@@ -44,12 +44,13 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-        #region Create Account Patient
+        #region Create Account 
         public IActionResult CreateAccountPatient()
         {
             return View();
         }
-       
+
+
         #endregion
 
         #region Login
@@ -81,6 +82,9 @@ namespace HalloDoc.Controllers
 
             return View();
         }
+
+
+
         #endregion
 
         #region Dashboard
@@ -101,6 +105,8 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
+
+
         #endregion
 
         #region PatientRequest
@@ -137,7 +143,7 @@ namespace HalloDoc.Controllers
                     City = viewModel.City,
                     State = viewModel.State,
                     ZipCode = viewModel.ZipCode,
-                    Notes = viewModel.Symptoms ,
+                    Notes = viewModel.Symptoms,
                     Email = viewModel.Email
                 };
                 _context.RequestClients.Add(requestClient);
@@ -168,87 +174,17 @@ namespace HalloDoc.Controllers
                     var AspNewUID = newaspNetUSer.Id;
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
-                  
-                    User user = new User
-                    {
-                        Id = newaspNetUSer.Id,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        Email = viewModel.Email,
-                        Mobile = viewModel.PhoneNumber,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        DateOfBirth = viewModel.DateOfBirth,
-                        CreatedBy = "Admin",
-                        CreatedDate = DateTime.Now,
-                        RegionId = 1
-                    };
-
-                    _context.Users.Add(user);
-                    _context.SaveChanges();
-
-                    request.UserId = user.UserId;
-                    _context.Requests.Add(request);
-                    _context.SaveChanges();
-
-                    return RedirectToAction("PatientSite");
+                    TempData["id"] = request.RequestId;
+                    return RedirectToAction("CreateAccountPatient");
 
                 }
-               
+                return RedirectToAction("RegisterdPatientLogin");
             }
             return View(viewModel);
         }
-        #endregion
-
-
-        #region Create Account
-        public IActionResult CreateAccountRequest()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> CreateAccountRequest(CreateAccountViewModel createAccountViewModel)
-        {
-            if (ModelState.IsValid)
-            {
-
-                AspNetUser aspNetuser = _context.AspNetUsers.Where(s => s.Email == createAccountViewModel.Email).FirstOrDefault();
-
-                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
-                {
-                    if (aspNetuser != null)
-
-                    {
-                        aspNetuser.PasswordHash = createAccountViewModel.PasswordHash;
-                        _context.AspNetUsers.Update(aspNetuser);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction("RegisterdPatientLogin");
-                    }
-                    else
-                    {
-                        TempData["errormsg"] = "Entered Email is wrong";
-                        return RedirectToAction("CreateAccountPatient");
-                    }
-                }
-                else
-                {
-                    TempData["errormsg1"] = "Password and Confirm Password should be same";
-                    return View("CreateAccountPatient", createAccountViewModel);
-                }
-               
-                return RedirectToAction("Dashboard");
-
-
-
-             
-            }
-            return View(createAccountViewModel);
-        }
-
 
         #endregion
+
 
         #region Family Freind Request
         [HttpPost]
@@ -258,6 +194,7 @@ namespace HalloDoc.Controllers
             {
                 Request request = new Request
                 {
+                  
                     RequestTypeId = 2,
                     FirstName = viewModel.ClientFirstName,
                     LastName = viewModel.ClientLastName,
@@ -308,42 +245,278 @@ namespace HalloDoc.Controllers
                         CreatedDate = DateTime.Now
                     };
 
-                    var AspNewUID = newaspNetUSer.Id;
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
-
-                    User user = new User
-                    {
-                        Id = newaspNetUSer.Id,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        Email = viewModel.Email,
-                        Mobile = viewModel.PhoneNumber,
-                        Street = viewModel.Street,
-                        City = viewModel.City,
-                        State = viewModel.State,
-                        ZipCode = viewModel.ZipCode,
-                        DateOfBirth = viewModel.DateOfBirth,
-                        CreatedBy = "Admin",
-                        CreatedDate = DateTime.Now,
-                        RegionId = 1
-                    };
-
-                    _context.Users.Add(user);
-                    _context.SaveChanges();
-
-                    request.UserId = user.UserId;
-                    _context.Requests.Add(request);
-                    _context.SaveChanges();
-
-                    return RedirectToAction("PatientSite");
+                    TempData["id"] = request.RequestId;
+                    return RedirectToAction("CreateAccountPatient" );
 
                 }
-
+                return RedirectToAction("RegisterdPatientLogin");
             }
             return View(viewModel);
         }
+
+
+
+
+
         #endregion
+
+        #region Business Request
+        [HttpPost]
+        public async Task<IActionResult> BusinessRequest(BusinessRequestViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Request request = new Request
+                {
+
+                    RequestTypeId = 2,
+                    FirstName = viewModel.ClientFirstName,
+                    LastName = viewModel.ClientLastName,
+                    PhoneNumber = viewModel.ClientPhoneNumber,
+                    Email = viewModel.CLientEmail,
+                    CreatedDate = DateTime.Now,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+
+                Business business = new Business
+                {
+                    Name = viewModel.ClientProperty,
+                    RegionId = 1,
+                    PhoneNumber = viewModel.ClientPhoneNumber,
+                    CreatedDate = DateTime.Now,
+                    CreatedBy = "Admin",
+                    Status = 1
+                };
+                _context.Businesses.Add(business);
+                _context.SaveChanges();
+                RequestClient requestClient = new RequestClient
+                {
+                    RequestId = request.RequestId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    RegionId = 1,
+                    Street = viewModel.Street,
+                    City = viewModel.City,
+                    State = viewModel.State,
+                    ZipCode = viewModel.ZipCode,
+                    Notes = viewModel.Symptoms,
+                    Email = viewModel.Email
+                };
+                _context.RequestClients.Add(requestClient);
+                _context.SaveChanges();
+
+                RequestWiseFile requestwisefile = new RequestWiseFile
+                {
+                    RequestId = request.RequestId,
+                    
+                    CreatedDate = DateTime.Now
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+
+
+                AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (userExist == null)
+                {
+                    AspNetUser newaspNetUSer = new AspNetUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = viewModel.FirstName,
+                        PhoneNumber = viewModel.PhoneNumber,
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    _context.AspNetUsers.Add(newaspNetUSer);
+                    _context.SaveChanges();
+                    TempData["id"] = request.RequestId;
+                    return RedirectToAction("CreateAccountPatient");
+
+                }
+                return RedirectToAction("RegisterdPatientLogin");
+            }
+            return View(viewModel);
+        }
+
+
+
+        #endregion
+
+        #region Concierge Request
+        [HttpPost]
+        public async Task<IActionResult> ConciergeRequest(ConciergeRequestViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                Request request = new Request
+                {
+
+                    RequestTypeId = 2,
+                    FirstName = viewModel.ClientFirstName,
+                    LastName = viewModel.ClientLastName,
+                    PhoneNumber = viewModel.ClientPhoneNumber,
+                    Email = viewModel.CLientEmail,
+                    CreatedDate = DateTime.Now,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+
+                Concierge concierge = new Concierge
+                {
+                    ConciergeName=viewModel.ClientFirstName + " " + viewModel.ClientLastName,
+                    CreatedDate=DateTime.Now,
+                    Street=viewModel.ClientStreet,
+                    State=viewModel.ClientState,
+                    City=viewModel.ClientCity,
+                    ZipCode=viewModel.ClientZipCode,
+                    
+                    RegionId=1
+
+                };
+                _context.Concierges.Add(concierge);
+                _context.SaveChanges();
+                RequestClient requestClient = new RequestClient
+                {
+                    RequestId = request.RequestId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    RegionId = 1,
+                    Street = viewModel.Street,
+                    City = viewModel.City,
+                    State = viewModel.State,
+                    ZipCode = viewModel.ZipCode,
+                    Notes = viewModel.Symptoms,
+                    Email = viewModel.Email
+                };
+                _context.RequestClients.Add(requestClient);
+                _context.SaveChanges();
+
+                RequestWiseFile requestwisefile = new RequestWiseFile
+                {
+                    RequestId = request.RequestId,
+
+                    CreatedDate = DateTime.Now
+                };
+                _context.RequestWiseFiles.Add(requestwisefile);
+                _context.SaveChanges();
+
+
+                AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (userExist == null)
+                {
+                    AspNetUser newaspNetUSer = new AspNetUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = viewModel.FirstName,
+                        PhoneNumber = viewModel.PhoneNumber,
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    _context.AspNetUsers.Add(newaspNetUSer);
+                    _context.SaveChanges();
+                    TempData["id"] = request.RequestId;
+                    return RedirectToAction("CreateAccountPatient");
+
+                }
+                return RedirectToAction("RegisterdPatientLogin");
+            }
+            return View(viewModel);
+        }
+
+
+
+        #endregion
+
+
+        #region Create Account1
+        public IActionResult CreateAccountRequest()
+        {
+           
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateAccountRequest(CreateAccountViewModel createAccountViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                //int id = Url.RouteUrl.;
+                AspNetUser aspNetuser = _context.AspNetUsers.Where(s => s.Email == createAccountViewModel.Email).FirstOrDefault();
+                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+                {
+                    if (aspNetuser != null)
+
+                    {
+                        aspNetuser.PasswordHash = createAccountViewModel.PasswordHash;
+                        _context.AspNetUsers.Update(aspNetuser);
+                        _context.SaveChanges();
+
+                        await _context.SaveChangesAsync();
+                  
+                RequestClient requestClient = _context.RequestClients.Where(s => s.RequestId == createAccountViewModel.RequestID).FirstOrDefault();
+                       
+                        User user = new User
+                        {
+                            Id = aspNetuser.Id,
+                            FirstName = requestClient.FirstName,
+                            LastName = requestClient.LastName,
+                            Email = requestClient.Email,
+                            Mobile = requestClient.PhoneNumber,
+                            Street = requestClient.Street,
+                            City = requestClient.City,
+                            State = requestClient.State,
+                            ZipCode = requestClient.ZipCode,
+                            StrMonth = requestClient.StrMonth,
+                            IntYear = requestClient.IntYear,
+                            IntDate = requestClient.IntDate,
+                            CreatedBy = "Admin",
+                            CreatedDate = DateTime.Now,
+                            RegionId = 1
+                        };
+                        _context.Users.Add(user);
+                        _context.SaveChanges();
+
+                        Request req = _context.Requests.Where(s => s.RequestId == createAccountViewModel.RequestID).FirstOrDefault();
+                        req.UserId = user.UserId;
+                        _context.SaveChanges();
+
+
+                        return RedirectToAction("RegisterdPatientLogin");
+                    }
+                    else
+                    {
+                        TempData["errormsg"] = "Entered Email is wrong";
+                        return RedirectToAction("CreateAccountPatient");
+                    }
+                }
+                else
+                {
+                    TempData["errormsg1"] = "Password and Confirm Password should be same";
+                    return View("CreateAccountPatient", createAccountViewModel);
+                }
+
+
+
+                return RedirectToAction("Dashboard");
+
+
+
+
+            }
+            return View(createAccountViewModel);
+        }
+
+
+
+        #endregion
+
 
         #region Logout
         public IActionResult Logout()
@@ -355,6 +528,8 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
+
+
         #endregion
 
     }

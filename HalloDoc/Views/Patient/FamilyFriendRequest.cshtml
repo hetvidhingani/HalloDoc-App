@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
+
 }
 @model FamilyFriendRequestViewModel
 
@@ -19,18 +20,21 @@
 
             <form asp-action="FamilyFriendRequest" asp-controller="Patient">
                 <h3>Family / Friend Information</h3>
-
+                
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
                             <input asp-for="ClientFirstName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Your First Name</label>
+                            <span asp-validation-for="ClientFirstName" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
                             <input asp-for="ClientLastName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Your Last Name </label>
+                            <span asp-validation-for="ClientLastName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
@@ -38,11 +42,15 @@
                             <input asp-for= "ClientPhoneNumber" id="phone" type="tel"  class="" style="border: none;height: 54px;" />
 
                         </div>
+                        <span asp-validation-for="ClientPhoneNumber" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
                             <input asp-for="CLientEmail" type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Your Email</label>
+                            <span asp-validation-for="CLientEmail" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -70,12 +78,16 @@
                         <div class="form-floating form-group">
                             <input asp-for="FirstName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="LastName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -93,11 +105,13 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email" type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
                             <label for="floatingInputGrid">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" />
+                            <input asp-for="PhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" />
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>

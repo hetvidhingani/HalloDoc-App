@@ -2,20 +2,15 @@
 
 namespace HalloDoc.Models
 {
-    public class FamilyFriendRequestViewModel
+    public class ConciergeRequestViewModel
     {
-       
         [Required]
         public string? FirstName { get; set; }
         [Required]
         public string? LastName { get; set; }
         [Required]
         public string? PhoneNumber { get; set; }
-        [Required]
-
         public string? Email { get; set; }
-        public string? DocumentPath { get; set; }
-        public string? RelationName { get; set; }
         [Required]
         public string? Symptoms { get; set; }
         public string? RegionId { get; set; }
@@ -28,12 +23,25 @@ namespace HalloDoc.Models
         public string? ClientFirstName { get; set; }
         [Required]
         public string? ClientLastName { get; set; }
-        [Required]
 
         public string? ClientPhoneNumber { get; set; }
         [Required]
 
         public string? CLientEmail { get; set; }
+        public string? ClientProperty { get; set; }
+        [Required]
+
+        public string? ClientState { get; set; }
+        [Required]
+
+        public string? ClientCity { get; set; }
+        [Required]
+
+        public string? ClientStreet { get; set; }
+        [Required]
+
+        public string? ClientZipCode { get; set; }
+
         public DateOnly? DateOfBirth { get; set; }
     }
 }
