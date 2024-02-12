@@ -59,7 +59,7 @@ namespace HalloDoc.Controllers
         {
             if (HttpContext.Session.GetString("UserSession") != null)
             {
-
+              
                 return RedirectToAction("DashBoard");
             }
             return View();
@@ -69,10 +69,11 @@ namespace HalloDoc.Controllers
         public IActionResult RegisterdPatientLogin(AspNetUser user)
         {
             var myUser = _context.AspNetUsers.Where(x => x.Email == user.Email && x.PasswordHash == user.PasswordHash).FirstOrDefault();
+            var uID = _context.Users.Where(x => x.Id == myUser.Id).FirstOrDefault();
             if (myUser != null)
             {
                 HttpContext.Session.SetString("UserSession", myUser.Email);
-
+                TempData["UserDeshboardid"] = uID.UserId;
                 return RedirectToAction("DashBoard");
             }
             else
@@ -90,7 +91,11 @@ namespace HalloDoc.Controllers
         #region Dashboard
         public IActionResult Dashboard()
         {
-            return View();
+            var data = TempData["UserDeshboardid"];
+            Request requests = _context.Requests.Where(x=>x.UserId==Convert.ToInt32( data)).FirstOrDefault();
+            var requestClient = _context.RequestClients.Where(x=>x.RequestId==requests.RequestId).ToList();
+
+            return View(requestClient);
         }
         [HttpPost]
         public IActionResult DashBoard()
@@ -132,6 +137,8 @@ namespace HalloDoc.Controllers
                 _context.Requests.Add(request);
                 _context.SaveChanges();
 
+
+
                 RequestClient requestClient = new RequestClient
                 {
                     RequestId = request.RequestId,
@@ -171,7 +178,6 @@ namespace HalloDoc.Controllers
                         CreatedDate = DateTime.Now
                     };
 
-                    var AspNewUID = newaspNetUSer.Id;
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
                     TempData["id"] = request.RequestId;

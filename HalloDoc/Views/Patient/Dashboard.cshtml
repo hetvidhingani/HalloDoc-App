@@ -1,4 +1,6 @@
-﻿<div class="mainContent mx-auto">
+﻿@model IEnumerable<HalloDoc.DataModels.RequestClient>
+
+<div class="mainContent mx-auto">
     <h2>Medical History</h2>
     <div class="container-fluid mt-3 shadow mb-3  rounded h-100 p-4 " style="background-color:white">
         <div class="d-flex justify-content-end">
@@ -47,33 +49,25 @@
         </div>
         <div class="table-responsive">
             <table class="table">
+
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.FirstName)</th>
+                        <th scope="col">@Html.DisplayNameFor(model => model.LastName)</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var item in Model) {
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>mdo</td>
+                        
+                        <td> @Html.DisplayFor(modelItem => item.FirstName)</td>
+                            <td> @Html.DisplayFor(modelItem => item.LastName)</td>
+
+                       
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>twitter</td>
-                    </tr>
+                  
+                    }
                 </tbody>
             </table>
 
