@@ -201,17 +201,7 @@ body {
     align-items: center;
     justify-content: center;
 }
-.logout {
-    position: absolute;
-    right: 100px;
-    display: flex;
-    border-radius: 5px;
-    border: 1px solid #2596be;
-    align-items: center;
-    justify-content: center;
-    text-decoration:none;
 
-}
 .loginImg {
     width: 25vh;
     height: auto;
@@ -331,7 +321,6 @@ header {
     width: 100%;
     z-index: 10;
 }
-
 .tabs > a {
     text-decoration: none;
     font-weight: 500;
@@ -340,13 +329,11 @@ header {
     margin-left: 10%;
 }
 
-    .tabs > a:focus, .tabs > a:active {
+    .tabs > a:focus, .tabs > a:active, .tabs > a.active {
         color: #00bbe8;
         border-bottom: 5px solid #00bbe8;
         outline: none;
     }
-
-
 
 .mainSection {
     margin-top: 120px;
@@ -472,7 +459,16 @@ form > div > div {
     background-color: white;
     border: 2px solid #00bbe8;
 }
-
+.logout {
+    border-radius: 5px;
+    border: 2px solid #00bbe8;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.righttabs>*{
+    margin:5px;
+}
 .submitBtn {
     background-color: #00bbe8;
     color: white;
@@ -481,11 +477,75 @@ form > div > div {
     background-color: #00bbe8;
     color: white;
 }
+.moon-icon {
+    border: 2px solid #00bbe8;
+    justify-content: center;
+    padding: 5px;
+    border-radius: 5px;
+}
+.MainHeaderLogo
+{
+    width:120px;
+}
+@media only screen and (max-width: 576px) {
+    #usernamedashboard {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 577px) and (max-width:768px) {
+    #usernamedashboard {
+        display: none;
+    }
+}
+@media only screen and (min-width: 769px) and (max-width:992px) {
+   
+}
+
+@media only screen and (min-width: 993px) {
+    
+}
+
 /*#endregion*/
 .modal {
     vertical-align: middle;
-    border-radius:100px;
+    border-radius: 100px;
 }
 .modal-header,.modal-footer{
     border:0;
 }
+.table-desktop {
+    width: 100%;
+    /*  / Adjust width as needed / border-collapse: collapse;
+    / Collapse borders /*/
+}
+
+    .table-desktop th,
+    .table-desktop td {
+        border: 1px solid #ddd;
+        /* / Add border / padding: 8px;
+    / Add padding /*/
+    }
+
+/*/ Styles for mobile view /
+*/ .table-mobile {
+    width: 100%;
+    /*    / Adjust width as needed /
+*/
+}
+
+    .table-mobile th,
+    .table-mobile td {
+        display: block;
+        /* / Display table cells as block elements / width: 100%;
+    / Full width / text-align: left;
+    / Left-align text / border-bottom: 1px solid #ddd;
+    / Add border bottom / padding: 8px;
+    / Add padding /*/
+    }
+
+    /*/ Hide table header in mobile view /
+*/
+    .table-mobile th {
+        display: none;
+    }

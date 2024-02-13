@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace HalloDoc.Models
 {
-    public class PatientRequestViewModel
+    public class PatientRequestViewModel 
     {
        
         [Required]

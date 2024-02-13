@@ -1,5 +1,12 @@
-﻿@model IEnumerable<HalloDoc.DataModels.RequestClient>
+﻿@model IEnumerable<HalloDoc.Models.DashboardViewModel>;
 
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="tab-content">
+<div id="home" class="tab-pane fade in active">
 <div class="mainContent mx-auto">
     <h2>Medical History</h2>
     <div class="container-fluid mt-3 shadow mb-3  rounded h-100 p-4 " style="background-color:white">
@@ -48,25 +55,34 @@
             </div>
         </div>
         <div class="table-responsive">
-            <table class="table">
+            <table class="table " id="responsive-table">
 
                 <thead>
                     <tr>
-                        <th scope="col">@Html.DisplayNameFor(model => model.FirstName)</th>
-                        <th scope="col">@Html.DisplayNameFor(model => model.LastName)</th>
+                       <th>Created Date</th>
+                        <th>Status</th>
+                        <th>File Name</th>
+
+
                        
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model) {
+                    @{
+                        string status = "";
+                        foreach (var r in Model) {
                     <tr>
-                        
-                        <td> @Html.DisplayFor(modelItem => item.FirstName)</td>
-                            <td> @Html.DisplayFor(modelItem => item.LastName)</td>
 
-                       
+                                <td> @r.CreatedDate</td>
+                            @if(@r.Status==1)
+                            {
+                                    status = "pending";
+                                }
+                            <td>@status </td>
+                            <td>@r.FileName </td>
+
                     </tr>
-                  
+                    }
                     }
                 </tbody>
             </table>
@@ -76,3 +92,37 @@
 
     </div>
 </div>
+</div>
+
+    <div id="menu1" class="tab-pane fade in ">
+        <div class="mainContent mx-auto" >
+            <h2>Medical 2 History 
+
+            </h2>
+          
+        </div>
+</div>
+</div>
+<script>
+    function toggleTableClass() {
+        var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+
+        // Get table element
+        var table = document.getElementById('responsive-table');
+
+        // Toggle CSS class based on viewport width
+        if (viewportWidth < 768) { // Adjust threshold as needed
+            table.classList.remove('table-desktop');
+            table.classList.add('table-mobile');
+        } else {
+            table.classList.remove('table-mobile');
+            table.classList.add('table-desktop');
+        }
+    }
+
+    // Initial call to toggleTableClass function
+    toggleTableClass();
+
+    // Event listener for window resize to update table layout
+    window.addEventListener('resize', toggleTableClass);
+</script>

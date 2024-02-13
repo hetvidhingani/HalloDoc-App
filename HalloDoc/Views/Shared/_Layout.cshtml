@@ -9,58 +9,80 @@
     <title>@ViewData["Title"] - HalloDoc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="sweetalert.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
             integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
+
+
+
+
 </head>
 <body>
-    <header class="header d-flex align-items-center ">
+
+
+    <header class="header d-flex align-items-center justify-content-between">
+
 
         <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
+            <img src="~/images/loginpagelogo.png" class="MainHeaderLogo" alt="">
         </div>
 
-        <div class="switch-mode-inner-div">
-            <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+
+        <div class="d-flex righttabs align-items-center me-3">
+
+            <div class=" d-flex ">
+                <span id="usernamedashboard">
+                    <h5>
+                    Welcome,
+                      <strong >
+                            @ViewBag.MySession
+                      </strong>
+                    </h5>
+                </span>
+
+            </div>
+            <a asp-controller="Patient" asp-action="Logout" class="logout">
+                <button class="btn" type="submit">Logout</button>
+
+            </a>
+            <div class="moon-icon">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
         </div>
-        <div class="username">
-          
-        
-
-        </div>
-        <a asp-controller="Patient" asp-action="Logout" class="logout">
-           <button class="btn" type="submit">Logout</button>
-
-
-        </a>
-
     </header>
+
     <div class="headerTabs">
-        <ul class="nav">
-            <li class="tabs">
-                <a asp-controller="Patient" asp-action="Dashboard" class="nav-link"  autofocus style="  color: black">Dashboard</a>
-            </li>
-            <li class="tabs">
-                <a class="nav-link" href="#" style="  color: black">Profile</a>
-            </li>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">Dashboard</a></li>
+            <li><a data-toggle="tab" href="#menu1">Profile</a></li>
 
         </ul>
-
     </div>
 
+   
     @RenderBody()
-
-
+    
     <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:3 ;padding:5px">
         <div class="d-flex justify-content-end align-items-center footlink">
             <a href="#" style="color:white">Terms and Conditions  </a> |
@@ -68,7 +90,7 @@
 
         </div>
     </footer>
-    
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

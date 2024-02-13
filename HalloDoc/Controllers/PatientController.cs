@@ -57,9 +57,9 @@ namespace HalloDoc.Controllers
 
         public IActionResult RegisterdPatientLogin()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
+            if (HttpContext.Session.GetInt32("UserSession") != null)
             {
-              
+
                 return RedirectToAction("DashBoard");
             }
             return View();
@@ -69,11 +69,14 @@ namespace HalloDoc.Controllers
         public IActionResult RegisterdPatientLogin(AspNetUser user)
         {
             var myUser = _context.AspNetUsers.Where(x => x.Email == user.Email && x.PasswordHash == user.PasswordHash).FirstOrDefault();
-            var uID = _context.Users.Where(x => x.Id == myUser.Id).FirstOrDefault();
+
             if (myUser != null)
             {
-                HttpContext.Session.SetString("UserSession", myUser.Email);
-                TempData["UserDeshboardid"] = uID.UserId;
+                 HttpContext.Session.SetString("UserName", myUser.UserName);
+                User uID = _context.Users.Where(x => x.Email == myUser.Email).FirstOrDefault();
+                HttpContext.Session.SetInt32("UserSession", uID.UserId);
+
+
                 return RedirectToAction("DashBoard");
             }
             else
@@ -87,22 +90,60 @@ namespace HalloDoc.Controllers
 
 
         #endregion
+        //public IActionResult temp()
+        //{
+        //    ViewBag.MySession = HttpContext.Session.GetString("UserSession").ToString();
+        //    string temp = ViewBag.MySession;
+        //    //var data = TempData["UserDeshboardid"];
+        //    User user = _context.Users.Where(x => x.Email == temp).FirstOrDefault();
+        //    var requests = _context.Requests.Where(x => x.UserId == user.UserId).ToList();
+        //    //var requestClient = _context.RequestClients.Where(x=>x.RequestId==requests.RequestId).ToList();
+
+        //    return View(requests);
+        //}
 
         #region Dashboard
         public IActionResult Dashboard()
         {
-            var data = TempData["UserDeshboardid"];
-            Request requests = _context.Requests.Where(x=>x.UserId==Convert.ToInt32( data)).FirstOrDefault();
-            var requestClient = _context.RequestClients.Where(x=>x.RequestId==requests.RequestId).ToList();
+            ViewBag.MySession = HttpContext.Session.GetString("UserName");
+            int? userID = HttpContext.Session.GetInt32("UserSession");
+            var tabledashboard = 
+                (
+                    from r in _context.Requests
+                    join rfile in _context.RequestWiseFiles
 
-            return View(requestClient);
+                     on r.RequestId equals rfile.RequestId
+                    where r.UserId == userID
+                    select new
+                    {
+                        r.RequestId,
+                        r.CreatedDate,
+                        r.Status,
+                        rfile.FileName
+                    }
+
+                ).ToList();
+            List<DashboardViewModel> list = new List<DashboardViewModel>();
+            foreach(var r in tabledashboard)
+            {
+                DashboardViewModel dash = new DashboardViewModel();
+                dash.RequstId = r.RequestId;
+                dash.CreatedDate = r.CreatedDate.ToShortDateString();
+                dash.Status = r.Status;
+                dash.FileName = r.FileName;
+                list.Add(dash);
+            }
+
+
+            return View(list);
+
         }
         [HttpPost]
         public IActionResult DashBoard()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
+            if (HttpContext.Session.GetInt32("UserSession") != null)
             {
-                ViewBag.MySession = HttpContext.Session.GetString("UserSession").ToString();
+                ViewBag.MySession = HttpContext.Session.GetInt32("UserSession");
             }
             else
             {
@@ -165,6 +206,14 @@ namespace HalloDoc.Controllers
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
 
+                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (user != null)
+                {
+                    request.UserId = user.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges(true);
+
+                }
 
                 AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
@@ -180,11 +229,13 @@ namespace HalloDoc.Controllers
 
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
+
                     TempData["id"] = request.RequestId;
-                    return RedirectToAction("CreateAccountPatient");
+                    return RedirectToAction("CreateAccountPatient",viewModel);
 
                 }
-                return RedirectToAction("RegisterdPatientLogin");
+
+                return RedirectToAction("RegisterdPatientLogin",viewModel);
             }
             return View(viewModel);
         }
@@ -200,7 +251,7 @@ namespace HalloDoc.Controllers
             {
                 Request request = new Request
                 {
-                  
+
                     RequestTypeId = 2,
                     FirstName = viewModel.ClientFirstName,
                     LastName = viewModel.ClientLastName,
@@ -237,7 +288,14 @@ namespace HalloDoc.Controllers
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
+                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (user != null)
+                {
+                    request.UserId = user.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges(true);
 
+                }
 
                 AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
@@ -254,7 +312,7 @@ namespace HalloDoc.Controllers
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
                     TempData["id"] = request.RequestId;
-                    return RedirectToAction("CreateAccountPatient" );
+                    return RedirectToAction("CreateAccountPatient");
 
                 }
                 return RedirectToAction("RegisterdPatientLogin");
@@ -319,13 +377,20 @@ namespace HalloDoc.Controllers
                 RequestWiseFile requestwisefile = new RequestWiseFile
                 {
                     RequestId = request.RequestId,
-                    
+
                     CreatedDate = DateTime.Now
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
 
+                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (user != null)
+                {
+                    request.UserId = user.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges(true);
 
+                }
                 AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
                 {
@@ -375,14 +440,14 @@ namespace HalloDoc.Controllers
 
                 Concierge concierge = new Concierge
                 {
-                    ConciergeName=viewModel.ClientFirstName + " " + viewModel.ClientLastName,
-                    CreatedDate=DateTime.Now,
-                    Street=viewModel.ClientStreet,
-                    State=viewModel.ClientState,
-                    City=viewModel.ClientCity,
-                    ZipCode=viewModel.ClientZipCode,
-                    
-                    RegionId=1
+                    ConciergeName = viewModel.ClientFirstName + " " + viewModel.ClientLastName,
+                    CreatedDate = DateTime.Now,
+                    Street = viewModel.ClientStreet,
+                    State = viewModel.ClientState,
+                    City = viewModel.ClientCity,
+                    ZipCode = viewModel.ClientZipCode,
+
+                    RegionId = 1
 
                 };
                 _context.Concierges.Add(concierge);
@@ -412,7 +477,14 @@ namespace HalloDoc.Controllers
                 };
                 _context.RequestWiseFiles.Add(requestwisefile);
                 _context.SaveChanges();
+                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (user != null)
+                {
+                    request.UserId = user.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges(true);
 
+                }
 
                 AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (userExist == null)
@@ -442,10 +514,10 @@ namespace HalloDoc.Controllers
         #endregion
 
 
-        #region Create Account1
+        #region Create Account
         public IActionResult CreateAccountRequest()
         {
-           
+
             return View();
         }
         [HttpPost]
@@ -465,9 +537,9 @@ namespace HalloDoc.Controllers
                         _context.SaveChanges();
 
                         await _context.SaveChangesAsync();
-                  
-                RequestClient requestClient = _context.RequestClients.Where(s => s.RequestId == createAccountViewModel.RequestID).FirstOrDefault();
-                       
+
+                        RequestClient requestClient = _context.RequestClients.Where(s => s.RequestId == createAccountViewModel.RequestID).FirstOrDefault();
+
                         User user = new User
                         {
                             Id = aspNetuser.Id,
@@ -491,6 +563,7 @@ namespace HalloDoc.Controllers
 
                         Request req = _context.Requests.Where(s => s.RequestId == createAccountViewModel.RequestID).FirstOrDefault();
                         req.UserId = user.UserId;
+                        _context.Requests.Update(req);
                         _context.SaveChanges();
 
 
