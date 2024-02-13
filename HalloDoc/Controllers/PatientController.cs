@@ -43,6 +43,10 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+        public IActionResult ViewDocument()
+        {
+            return View();
+        }
 
         #region Create Account 
         public IActionResult CreateAccountPatient()
@@ -154,6 +158,13 @@ namespace HalloDoc.Controllers
 
 
         #endregion
+        [Route("/Patient/createpatientrequest/checkemail/{email}")]
+        [HttpGet]
+        public IActionResult CheckEmail(string email)
+        {
+            var emailExists = _context.AspNetUsers.Any(u => u.Email == email);
+            return Json(new { exists = emailExists });
+        }
 
         #region PatientRequest
         public IActionResult PatientRequest()
@@ -215,13 +226,13 @@ namespace HalloDoc.Controllers
 
                 }
 
-                AspNetUser userExist = _context.AspNetUsers.Where(x => x.Email == viewModel.Email).FirstOrDefault();
-                if (userExist == null)
+               else
                 {
                     AspNetUser newaspNetUSer = new AspNetUser
                     {
                         Id = Guid.NewGuid().ToString(),
                         UserName = viewModel.FirstName,
+                        PasswordHash=viewModel.Password,
                         PhoneNumber = viewModel.PhoneNumber,
                         Email = viewModel.Email,
                         CreatedDate = DateTime.Now
@@ -230,8 +241,32 @@ namespace HalloDoc.Controllers
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
 
+                    User user1 = new User
+                    {
+                        Id = newaspNetUSer.Id,
+                        FirstName = requestClient.FirstName,
+                        LastName = requestClient.LastName,
+                        Email = requestClient.Email,
+                        Mobile = requestClient.PhoneNumber,
+                        Street = requestClient.Street,
+                        City = requestClient.City,
+                        State = requestClient.State,
+                        ZipCode = requestClient.ZipCode,
+                        StrMonth = requestClient.StrMonth,
+                        IntYear = requestClient.IntYear,
+                        IntDate = requestClient.IntDate,
+                        CreatedBy = "Admin",
+                        CreatedDate = DateTime.Now,
+                        RegionId = 1
+                    };
+                    _context.Users.Add(user1);
+                    _context.SaveChanges();
+
+                    request.UserId = user1.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges();
                     TempData["id"] = request.RequestId;
-                    return RedirectToAction("CreateAccountPatient",viewModel);
+                    return RedirectToAction("PatientSite",viewModel);
 
                 }
 

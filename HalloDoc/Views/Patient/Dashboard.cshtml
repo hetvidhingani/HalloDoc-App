@@ -6,102 +6,110 @@
 
 
 <div class="tab-content">
-<div id="home" class="tab-pane fade in active">
-<div class="mainContent mx-auto">
-    <h2>Medical History</h2>
-    <div class="container-fluid mt-3 shadow mb-3  rounded h-100 p-4 " style="background-color:white">
-        <div class="d-flex justify-content-end">
-            <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"> Create New Request</a>
+    <div id="home" class="tab-pane fade in active">
+        <div class="mainContent mx-auto">
+            <h2>Medical History</h2>
+            <div class="container-fluid mt-3 shadow mb-3  rounded h-100 p-4 " style="background-color:white">
+                <div class="d-flex justify-content-end">
+                    <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"> Create New Request</a>
 
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
 
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Create New Request</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Create New Request</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
 
-                            <p class="">
-                                Here,I want to create new request for...
-                            </p>
-                            <div class=" d-flex justify-content-center ">
-                                <button type="button" class="createNewReqBtn routeModal" >
-                                    Me
-                                </button>
-                             
-                            
-
-                                <button type="button" class="createNewReqBtn routeModal mx-3" >
-                                    Someone Else
-                                </button>
+                                    <p class="">
+                                        Here,I want to create new request for...
+                                    </p>
+                                    <div class=" d-flex justify-content-center ">
+                                        <button type="button" class="createNewReqBtn routeModal">
+                                            Me
+                                        </button>
 
 
+
+                                        <button type="button" class="createNewReqBtn routeModal mx-3">
+                                            Someone Else
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-end">
+                                    <button type="button" class="createNewReqBtn submitBtn">Continue</button>
+
+                                    <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                                        Cancle
+                                    </button>
+
+
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-end">
-                            <button type="button" class="createNewReqBtn submitBtn">Continue</button>
-
-                            <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
-                                Cancle
-                            </button>
-
-
                         </div>
                     </div>
                 </div>
+                <div class="table-responsive">
+                    <table class="table " id="responsive-table">
+
+                        <thead>
+                            <tr>
+                                <th>Created Date</th>
+                                <th>Status</th>
+                                <th>File Name</th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                string status = "";
+                                foreach (var r in Model)
+                                {
+                                    <tr>
+
+                                        <td> @r.CreatedDate</td>
+                                        @if (@r.Status == 1)
+                                        {
+                                            status = "pending";
+                                        }
+                                        <td>@status </td>
+                                        <td>
+                                            @if (@r.FileName != null)
+                                            {
+
+                                                <button>download</button>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+
             </div>
         </div>
-        <div class="table-responsive">
-            <table class="table " id="responsive-table">
-
-                <thead>
-                    <tr>
-                       <th>Created Date</th>
-                        <th>Status</th>
-                        <th>File Name</th>
-
-
-                       
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        string status = "";
-                        foreach (var r in Model) {
-                    <tr>
-
-                                <td> @r.CreatedDate</td>
-                            @if(@r.Status==1)
-                            {
-                                    status = "pending";
-                                }
-                            <td>@status </td>
-                            <td>@r.FileName </td>
-
-                    </tr>
-                    }
-                    }
-                </tbody>
-            </table>
-
-        </div>
-
-
     </div>
-</div>
-</div>
 
     <div id="menu1" class="tab-pane fade in ">
-        <div class="mainContent mx-auto" >
-            <h2>Medical 2 History 
+        <div class="mainContent mx-auto">
+            <h2>
+                Medical 2 History
 
             </h2>
-          
+
         </div>
-</div>
+    </div>
 </div>
 <script>
     function toggleTableClass() {

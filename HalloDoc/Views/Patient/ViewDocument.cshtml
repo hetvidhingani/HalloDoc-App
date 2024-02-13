@@ -1,0 +1,62 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mainSection ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Documents</h3>
+            <a asp-action="PatientSubmitRequest" asp-controller="Patient" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <form asp-controller="Patient" asp-action="PatientRequest" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <div class="row">
+
+                    <h6>Patient Name:</h6>
+
+                    <div class="col-12 fw-bold">
+                        Testing test (MD051023TETE0001)
+                    </div>
+                    <div class="col-12">
+                        <p>Check here for any files that you or the doctors of your subsequents requestors have attached for you to review.</p>
+                    </div>
+                </div>
+
+                
+                <div class="row ">
+                    <div class="col-12 col-sm-12">
+                        <div class="input-group mb-3">
+                            <input style="border-radius:10px" type="file" class="form-control" id="UploadButton" >
+                        </div>
+                    </div>
+                </div>
+                <!-- Add Bootstrap JS -->
+                <div class="row ">
+                    <div class="col-6 d-flex align-items-center">
+                        <h3>Documents</h3>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                        <span class="logouttxt normalbtn"> Download All</span>
+                        <span class="logoutIcon normalbtn"><i class="bi bi-cloud-arrow-down"></i></span>
+                    </div>
+                </div>
+
+
+
+
+
+            </form>
+        </div>
+    </div>
+</div>

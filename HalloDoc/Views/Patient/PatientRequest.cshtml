@@ -65,7 +65,9 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Email" type="email" class="form-control" id="floatingInputGrid" placeholder=" ">
+                            <input asp-for="Email"
+                                   id="patientEmail" onblur="checkEmailExists()" type="email" autocomplete="off"
+                            class="form-control"  placeholder=" ">
                             <label for="floatingInputGrid">Email</label>
 
                         </div>
@@ -84,6 +86,19 @@
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                     <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Password" type="password" class="form-control " id="passwordFields1" placeholder="Password">
+                            <label for="floatingInputGrid">Password</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control " id="passwordFields2" placeholder="Password">
+                            <label for="floatingInputGrid">Password</label>
+                        </div>
                     </div>
                 </div>
 
@@ -165,3 +180,28 @@
         </div>
     </div>
 </div>
+<script>
+    function checkEmailExists() {
+        var email = document.getElementById("patientEmail").value;
+
+        // fetch('/Form/patientinfo/checkemail/' + email)
+        fetch('/Patient/createpatientrequest/checkemail/' + email)
+            .then(response => response.json())
+            .then(data => {
+                var patientPassword = document.getElementById('passwordFields1');
+                var patientConfirmPassword = document.getElementById('passwordFields2');
+                if (data.exists) {
+                    patientPassword.style.display = 'none';
+                    patientConfirmPassword.style.display = 'none';
+                    console.log("exist ")
+                }
+                else {
+                    patientPassword.style.display = 'block';
+                    patientConfirmPassword.style.display = 'block';
+                    console.log(" not exist ")
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+</script>

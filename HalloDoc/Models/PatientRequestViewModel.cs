@@ -33,6 +33,8 @@ namespace HalloDoc.Models
         //public string? ClientPhoneNumber { get; set; }
         //public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }
+        public string? Password { get; set; }
+        public string? ConfirmPassword { get; set;}
 
     }
 }

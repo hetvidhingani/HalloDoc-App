@@ -206,6 +206,7 @@ body {
     width: 25vh;
     height: auto;
 }
+
 .loginIconfrom {
     position: absolute;
     margin-top: 1rem;
@@ -315,12 +316,13 @@ header {
 
 .headerTabs {
     position: fixed;
-    top: 83px;
+    top: 60px;
     background-color: white;
     box-shadow: 0px 5px 5px 0px rgb(196, 190, 196);
     width: 100%;
     z-index: 10;
 }
+
 .tabs > a {
     text-decoration: none;
     font-weight: 500;
@@ -447,7 +449,7 @@ form > div > div {
 /*#region Patient Dashboard*/
 
 .mainContent {
-    margin-top: 200px;
+    margin-top: 150px;
     width: 90%;
 }
 
@@ -459,93 +461,184 @@ form > div > div {
     background-color: white;
     border: 2px solid #00bbe8;
 }
+
 .logout {
     border-radius: 5px;
     border: 2px solid #00bbe8;
     align-items: center;
+    padding: 5px;
+    color: #00bbe8;
+    background-color: white;
     justify-content: center;
     text-decoration: none;
 }
-.righttabs>*{
-    margin:5px;
+.logoutIcon {
+    display: none;
 }
+.righttabs > * {
+    margin: 1px;
+}
+
 .submitBtn {
     background-color: #00bbe8;
     color: white;
 }
+
 .routeModal:focus, .modal-header {
     background-color: #00bbe8;
     color: white;
 }
+
 .moon-icon {
     border: 2px solid #00bbe8;
     justify-content: center;
     padding: 5px;
     border-radius: 5px;
 }
-.MainHeaderLogo
-{
-    width:120px;
+.normalbtn {
+    border: 1px solid #00bbe8;
+    color: #00bbe8;
+    background-color:white;
+    padding:7px;
+    border-radius:7px;
+ 
 }
-@media only screen and (max-width: 576px) {
-    #usernamedashboard {
-        display: none;
-    }
+.MainHeaderLogo {
+    width: 10rem;
+    display: flex;
+    align-items: center
 }
-
-@media only screen and (min-width: 577px) and (max-width:768px) {
-    #usernamedashboard {
-        display: none;
-    }
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
+    border:none;
 }
-@media only screen and (min-width: 769px) and (max-width:992px) {
-   
-}
-
-@media only screen and (min-width: 993px) {
-    
+.nav-tabs>li>a{
+    border:none;
 }
 
-/*#endregion*/
-.modal {
+    /*#endregion*/
+    .modal {
     vertical-align: middle;
     border-radius: 100px;
 }
-.modal-header,.modal-footer{
-    border:0;
+
+.modal-header, .modal-footer {
+    border: 0;
 }
+
 .table-desktop {
     width: 100%;
-    /*  / Adjust width as needed / border-collapse: collapse;
-    / Collapse borders /*/
 }
 
     .table-desktop th,
     .table-desktop td {
         border: 1px solid #ddd;
-        /* / Add border / padding: 8px;
-    / Add padding /*/
-    }
-
-/*/ Styles for mobile view /
-*/ .table-mobile {
+        }
+.table-mobile {
     width: 100%;
-    /*    / Adjust width as needed /
-*/
+   
 }
 
     .table-mobile th,
     .table-mobile td {
         display: block;
-        /* / Display table cells as block elements / width: 100%;
-    / Full width / text-align: left;
-    / Left-align text / border-bottom: 1px solid #ddd;
-    / Add border bottom / padding: 8px;
-    / Add padding /*/
+       
     }
 
-    /*/ Hide table header in mobile view /
-*/
     .table-mobile th {
         display: none;
     }
+
+.topnav {
+    overflow: hidden;
+    position: fixed;
+    height: 60px;
+    background-color: white;
+    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+    .topnav a {
+        float: left;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+    }
+    .topnav .icon {
+        display: none;
+    }
+
+@media screen and (max-width: 600px) {
+
+    #usernamedashboard {
+        display: none;
+    }
+
+    .topnav a.icon {
+        float: left;
+        display: flex;
+        align-items: center;
+        vertical-align: middle;
+    }
+
+    .topnav.responsive {
+        position: relative;
+    }
+
+        .topnav.responsive a {
+            float: none;
+            display: block;
+            text-align: left;
+        }
+
+    .logouttxt {
+        display: none;
+    }
+
+    .logoutIcon {
+        display: block;
+    }
+    input[type="file"]::-webkit-file-upload-button {
+        display: none;
+    }
+
+    input[type="file"]::before {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 17px;
+        content: '';
+        background: url('../images/cloud-arrow-up.svg') no-repeat center center;
+        display: inline-block;
+        background-color: #00bbe8;
+        color: black;
+        width: 50px;
+        text-align: center;
+        float: right;
+        background-position-y: center;
+    }
+    
+}
+@media screen and (min-width: 601px) {
+
+    input[type="file"]::-webkit-file-upload-button {
+        display: none;
+    }
+
+    input[type="file"]::before {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 8px;
+        content: 'Upload';
+        background: url('../images/cloud-arrow-up.svg') no-repeat 16px ;
+       
+        display: inline-block;
+        background-color: #00bbe8;
+        color: black;
+        width: 120px;
+        text-align: center;
+        float: right;
+        background-position-y: center;
+    }
+}

@@ -41,38 +41,53 @@
 <body>
 
 
-    <header class="header d-flex align-items-center justify-content-between">
+    <div class="topnav d-flex align-content-center " id="myTopnav">
 
+
+
+
+        <a  class="icon  "  data-bs-toggle="collapse" href="#collapseExample"
+        role="button" aria-expanded="false" aria-controls="collapseExample">
+            menu
+        </a>
 
         <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="MainHeaderLogo" alt="">
+            <img src="~/images/loginpagelogo.png" class="MainHeaderLogo " alt="">
+        </div>
+
+        <div class="d-flex " style="margin-left:auto">
+            <div class="d-flex righttabs align-items-center mx-3">
+
+                <div class=" d-flex mx-3 ">
+                    <span id="usernamedashboard">
+                        <h5>
+                            Welcome,
+                            <strong>
+                                @ViewBag.MySession
+                            </strong>
+                        </h5>
+                    </span>
+
+                </div>
+                <a asp-controller="Patient" asp-action="Logout">
+                    <button class="mx-3 logout" type="submit">
+                        <span class="logouttxt"> Logout</span>
+                        <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                    </button>
+
+                </a>
+                <div class="moon-icon">
+                    <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+                </div>
+            </div>
+
         </div>
 
 
-        <div class="d-flex righttabs align-items-center me-3">
 
-            <div class=" d-flex ">
-                <span id="usernamedashboard">
-                    <h5>
-                    Welcome,
-                      <strong >
-                            @ViewBag.MySession
-                      </strong>
-                    </h5>
-                </span>
+    </div>
 
-            </div>
-            <a asp-controller="Patient" asp-action="Logout" class="logout">
-                <button class="btn" type="submit">Logout</button>
-
-            </a>
-            <div class="moon-icon">
-                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
-            </div>
-        </div>
-    </header>
-
-    <div class="headerTabs">
+    <div class="headerTabs" class="collapse" id="collapseExample">
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#home">Dashboard</a></li>
             <li><a data-toggle="tab" href="#menu1">Profile</a></li>
@@ -80,9 +95,9 @@
         </ul>
     </div>
 
-   
+
     @RenderBody()
-    
+
     <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:3 ;padding:5px">
         <div class="d-flex justify-content-end align-items-center footlink">
             <a href="#" style="color:white">Terms and Conditions  </a> |
@@ -91,6 +106,16 @@
         </div>
     </footer>
 
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myTopnav");
+            if (x.className === "topnav") {
+                x.className += " responsive";
+            } else {
+                x.className = "topnav";
+            }
+        }
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
