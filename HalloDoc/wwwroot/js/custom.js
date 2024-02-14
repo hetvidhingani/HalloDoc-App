@@ -12,21 +12,7 @@ const phoneInput1 = window.intlTelInput(phoneInputField1, {
 });
 // Alert while submitting form
 //form
-function submitForm(form) {
-  swal({
-      title: "Information",
-      text: "When submitting a request, you must provide the correct contact information for the patient of the responsibly party.Failure to provide the correct email and phone number will delay service or be declined.",
-      icon: "warning",
-      button: true,
 
-  })
-  .then(function (isOkay) {
-      if (isOkay) {
-          form.submit();
-      }
-  });
-  return false;
-}
 function changeTheme() {
   var element = document.body;
   element.classList.toggle("darkMode");
@@ -44,21 +30,21 @@ function changeTheme() {
 // Add event listeners to the navigation links
 // Add event listeners to the navigation links
 // Add event listeners to the navigation links
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', event => {
-        // Remove the active class from all links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
+//document.querySelectorAll('.nav-link').forEach(link => {
+//    link.addEventListener('click', event => {
+//        // Remove the active class from all links
+//        document.querySelectorAll('.nav-link').forEach(link => {
+//            link.classList.remove('active');
+//        });
 
-        // Add the active class to the clicked link
-        event.target.classList.add('active');
+//        // Add the active class to the clicked link
+//        event.target.classList.add('active');
 
-        // Store the active tab in a view data variable
-        const tabId = event.target.id.replace('Link', '');
-        ViewData["ActiveTab"] = tabId;
-    });
-});
+//        // Store the active tab in a view data variable
+//        const tabId = event.target.id.replace('Link', '');
+//        ViewData["ActiveTab"] = tabId;
+//    });
+//});
 
 // Add the active class to the dashboard link by default
 document.querySelector('#dashboardLink').classList.add('active');

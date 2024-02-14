@@ -43,12 +43,8 @@
 
     <div class="topnav d-flex align-content-center " id="myTopnav">
 
-
-
-
-        <a  class="icon  "  data-bs-toggle="collapse" href="#collapseExample"
-        role="button" aria-expanded="false" aria-controls="collapseExample">
-            menu
+        <a class="icon "  data-toggle="collapse" data-target="#demo">
+            <i class="bi bi-list logout"></i>
         </a>
 
         <div class="Logo">
@@ -87,11 +83,15 @@
 
     </div>
 
-    <div class="headerTabs" class="collapse" id="collapseExample">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#home">Dashboard</a></li>
-            <li><a data-toggle="tab" href="#menu1">Profile</a></li>
-
+    <div class="headerTabs " id="demo" >
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item"  role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+            </li>
+           
         </ul>
     </div>
 
@@ -107,7 +107,8 @@
     </footer>
 
     <script>
-        function myFunction() {
+
+        function mytoggle() {
             var x = document.getElementById("myTopnav");
             if (x.className === "topnav") {
                 x.className += " responsive";

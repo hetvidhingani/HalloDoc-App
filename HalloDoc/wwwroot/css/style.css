@@ -316,6 +316,7 @@ header {
 
 .headerTabs {
     position: fixed;
+    height:31px;
     top: 60px;
     background-color: white;
     box-shadow: 0px 5px 5px 0px rgb(196, 190, 196);
@@ -525,28 +526,6 @@ form > div > div {
     border: 0;
 }
 
-.table-desktop {
-    width: 100%;
-}
-
-    .table-desktop th,
-    .table-desktop td {
-        border: 1px solid #ddd;
-        }
-.table-mobile {
-    width: 100%;
-   
-}
-
-    .table-mobile th,
-    .table-mobile td {
-        display: block;
-       
-    }
-
-    .table-mobile th {
-        display: none;
-    }
 
 .topnav {
     overflow: hidden;
@@ -567,9 +546,18 @@ form > div > div {
     .topnav .icon {
         display: none;
     }
-
-@media screen and (max-width: 600px) {
-
+.mobileviewdashboard {
+    background-color: #ebfafd;
+}
+.table-btn {
+    border: none;
+    background-color: #ebfafd;
+}
+@media screen and (max-width: 768px) {
+    .dashboardtbl
+    {
+        display:none;
+    }
     #usernamedashboard {
         display: none;
     }
@@ -619,8 +607,10 @@ form > div > div {
     }
     
 }
-@media screen and (min-width: 601px) {
-
+@media screen and (min-width: 769px) {
+    .mobileviewdashboard,.mbltbl{
+        display:none;
+    }
     input[type="file"]::-webkit-file-upload-button {
         display: none;
     }

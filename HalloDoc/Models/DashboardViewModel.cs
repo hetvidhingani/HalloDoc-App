@@ -7,7 +7,9 @@ namespace HalloDoc.Models
         public int RequstId { get; set; }
         public string? CreatedDate { get; set; }
         public int? Status { get; set; }
-        public string FileName { get; set; }
+        public string? FileName { get; set; }
+        public string Username { get; set; }
+        public string LastName { get; set; }
 
 
     }

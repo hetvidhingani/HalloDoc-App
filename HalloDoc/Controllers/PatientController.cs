@@ -43,10 +43,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        public IActionResult ViewDocument()
-        {
-            return View();
-        }
+        
 
         #region Create Account 
         public IActionResult CreateAccountPatient()
@@ -155,16 +152,78 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
-
+      
 
         #endregion
-        [Route("/Patient/patientrequest/checkemail/{email}")]
+        [Route("/Patient/checkemail/{email}")]
         [HttpGet]
         public IActionResult CheckEmail(string email)
         {
             var emailExists = _context.AspNetUsers.Any(u => u.Email == email);
             return Json(new { exists = emailExists });
         }
+
+        [HttpPost]
+        public IActionResult ViewDocument(IFormFile a, int Id)
+        {
+            //int? requestid = HttpContext.Session.GetInt32("request_id");
+            if (a != null && a.Length > 0)
+            {
+                var fileName = Path.GetFileName(a.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    a.CopyTo(fileStream);
+                }
+                var newRequestWiseFile = new RequestWiseFile
+                {
+                    RequestId = Id,
+                    FileName = fileName,
+                };
+                _context.RequestWiseFiles.Add(newRequestWiseFile);
+                _context.SaveChanges();
+                return RedirectToAction("ViewDocument");
+            }
+            return View("ViewDocument");
+        }
+
+        public IActionResult ViewDocument(int Id)
+        {
+
+            var tableData = (from r in _context.Requests
+                             join rwf in _context.RequestWiseFiles
+                             on r.RequestId equals rwf.RequestId
+                             where r.RequestId == Id
+                             //where r.UserId == userid 
+                             select new
+                             {
+                                 r.FirstName,
+                                 r.LastName,
+                                 r.RequestId,
+                                 r.CreatedDate,
+                                 r.Status,
+                                 rwf.FileName
+                             }).ToList();
+
+            List<DashboardViewModel> list = new List<DashboardViewModel>();
+            foreach (var e in tableData)
+            {
+                DashboardViewModel model = new DashboardViewModel();
+                model.Username = e.FirstName + " " + e.LastName;
+                model.RequstId = e.RequestId;
+                model.CreatedDate = e.CreatedDate.ToShortDateString();
+                model.FileName = e.FileName;
+                model.Status = e.Status;
+                list.Add(model);
+            }
+
+            return View(list);
+        }
+
+
+
+
 
         #region PatientRequest
         public IActionResult PatientRequest()
@@ -208,14 +267,29 @@ namespace HalloDoc.Controllers
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
 
-                RequestWiseFile requestwisefile = new RequestWiseFile
+             
+
+                if (viewModel.File != null && viewModel.File.Length > 0)
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.DocumentPath,
-                    CreatedDate = DateTime.Now
-                };
-                _context.RequestWiseFiles.Add(requestwisefile);
-                _context.SaveChanges();
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        viewModel.File.CopyTo(stream);
+                        var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
+                        RequestWiseFile newFile = new RequestWiseFile
+                        {
+                            RequestId = userCheck.RequestId,
+                            FileName = viewModel.File.FileName,
+                            CreatedDate = DateTime.Now,
+                            DocType = 1,
+                        };
+
+                        _context.RequestWiseFiles.Add(newFile);
+                        _context.SaveChanges();
+                    }
+                }
+
+                
 
                 User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (user != null)
@@ -315,14 +389,26 @@ namespace HalloDoc.Controllers
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
 
-                RequestWiseFile requestwisefile = new RequestWiseFile
+                if (viewModel.File != null && viewModel.File.Length > 0)
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.DocumentPath,
-                    CreatedDate = DateTime.Now
-                };
-                _context.RequestWiseFiles.Add(requestwisefile);
-                _context.SaveChanges();
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        viewModel.File.CopyTo(stream);
+                        //var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
+                        RequestWiseFile newFile = new RequestWiseFile
+                        {
+                            RequestId = request.RequestId,
+                            FileName = viewModel.File.FileName,
+                            CreatedDate = DateTime.Now,
+                            DocType = 1,
+                        };
+
+                        _context.RequestWiseFiles.Add(newFile);
+                        _context.SaveChanges();
+                    }
+                }
+
                 User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
                 if (user != null)
                 {
@@ -354,10 +440,6 @@ namespace HalloDoc.Controllers
             }
             return View(viewModel);
         }
-
-
-
-
 
         #endregion
 

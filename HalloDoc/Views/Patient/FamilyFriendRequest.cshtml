@@ -18,7 +18,7 @@
         </div>
         <div class=" p-4  shadow mb-3  rounded h-100 PatientInfo">
 
-            <form asp-action="FamilyFriendRequest" asp-controller="Patient">
+            <form asp-action="FamilyFriendRequest" asp-controller="Patient" method="post" enctype="multipart/form-data">
                 <h3>Family / Friend Information</h3>
                 
                 <div class="row ">
@@ -158,24 +158,13 @@
 
                 <h3>(Optional) Upload Photo or Document</h3>
 
-                <div class="row">
-
-                    <div class="" style="position: relative;">
-
-                        <input asp-for="DocumentPath" class="form-control form-control-sm file-upload" id="formFileSm" type="file"
-                               style="opacity: 0; position: absolute; top: 1em; z-index: 3; ">
-                        <div class="input-group mb-3 ">
-                            <input type="text" class="form-control" placeholder="Select Files"
-                                   aria-label="Select File" aria-describedby="patientfileupload">
-                            <button class="btn btn-btn-lg btn-info text-light" type="button" id="patientfileupload"
-                                    style="z-index: 2;">
-                                <span><i class="bi bi-cloud-arrow-up"></i>&nbsp;Upload</span>
-                            </button>
+                <div class="input-group mb-3">
+                    <div class="col-12 col-sm-12">
+                        <div class="input-group mb-3">
+                            <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton">
                         </div>
                     </div>
-
                 </div>
-
 
                 <div class="row">
 

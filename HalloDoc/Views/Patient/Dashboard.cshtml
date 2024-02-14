@@ -6,12 +6,17 @@
 
 
 <div class="tab-content">
-    <div id="home" class="tab-pane fade in active">
+    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
         <div class="mainContent mx-auto">
             <h2>Medical History</h2>
-            <div class="container-fluid mt-3 shadow mb-3  rounded h-100 p-4 " style="background-color:white">
+            <div class="container-fluid mt-3 dashboardtbl shadow mb-3  rounded h-100 p-4 " style="background-color:white">
                 <div class="d-flex justify-content-end">
-                    <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal"> Create New Request</a>
+                    <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <span class="logouttxt">  Create New Request</span>
+                        <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
+
+                       
+                       </a>
 
                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
                          aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -55,15 +60,13 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table " id="responsive-table">
+                    <table class="table dashboardtbl" id="responsive-table">
 
                         <thead>
                             <tr>
                                 <th>Created Date</th>
                                 <th>Status</th>
                                 <th>File Name</th>
-
-
 
                             </tr>
                         </thead>
@@ -83,8 +86,10 @@
                                         <td>
                                             @if (@r.FileName != null)
                                             {
+                                                <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                                                    <button class="normalbtn">Download</button>
 
-                                                <button>download</button>
+                                                </a>
                                             }
                                         </td>
 
@@ -93,15 +98,107 @@
                             }
                         </tbody>
                     </table>
-
+                  
                 </div>
-
+               
 
             </div>
+            <div class="mbltbl  mt-3 shadow mb-3  rounded h-100  " style="background-color:white">
+                <div class="d-flex justify-content-end">
+                    <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <span class="logouttxt">  Create New Request</span>
+                        <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
+
+                    </a>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Create New Request</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <p class="">
+                                        Here,I want to create new request for...
+                                    </p>
+                                    <div class=" d-flex justify-content-center ">
+                                        <button type="button" class="createNewReqBtn routeModal">
+                                            Me
+                                        </button>
+
+
+
+                                        <button type="button" class="createNewReqBtn routeModal mx-3">
+                                            Someone Else
+                                        </button>
+
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer d-flex justify-content-end">
+                                    <button type="button" class="createNewReqBtn submitBtn">Continue</button>
+
+                                    <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                                        Cancle
+                                    </button>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> @foreach (var r in Model)
+                {
+
+                    <div class="mobileviewdashboard my-2 p-4">
+                        <button class="table-btn d-flex d-sm-flex d-md-none d-lg-none"
+                                type="button"
+                                data-toggle="collapse" data-target="#a-@r.RequstId"
+                                aria-controls="a-@r.RequstId">
+                            <i class="bi bi-clock "></i>
+                            <strong class="mx-2"> Created Date:</strong>
+                           @r.CreatedDate
+
+                        </button>
+
+
+                        <div id="a-@r.RequstId" class="collapse collapse1">
+                            <div class="provider d-flex gap-2">
+                                <div class="icons">
+                                    <i class="fa-solid fa-user-nurse"></i>
+                                </div>
+                                Provider: <span>-</span>
+                            </div>
+                            <div class="provider d-flex gap-2">
+                                <div class="icons">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </div>
+                                @if (@r.Status == 1)
+                                {
+                                    status = "pending";
+                                }
+                                Current Status: @status
+
+                            </div>
+                            <div class="provider d-flex gap-2">
+                                <button class="documents">(1) Documents</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+        
         </div>
+
     </div>
 
-    <div id="menu1" class="tab-pane fade in ">
+    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
         <div class="mainContent mx-auto">
             <h2>
                 Medical 2 History
@@ -110,7 +207,7 @@
 
         </div>
     </div>
-</div>
+</div>@* 
 <script>
     function toggleTableClass() {
         var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -134,3 +231,4 @@
     // Event listener for window resize to update table layout
     window.addEventListener('resize', toggleTableClass);
 </script>
+ *@

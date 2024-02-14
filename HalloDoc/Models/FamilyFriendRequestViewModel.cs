@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+
 
 namespace HalloDoc.Models
 {
@@ -11,10 +13,11 @@ namespace HalloDoc.Models
         public string? LastName { get; set; }
         [Required]
         public string? PhoneNumber { get; set; }
+        public IFormFile? File { get; set; }
         [Required]
 
         public string? Email { get; set; }
-        public string? DocumentPath { get; set; }
+      
         public string? RelationName { get; set; }
         [Required]
         public string? Symptoms { get; set; }
@@ -35,5 +38,7 @@ namespace HalloDoc.Models
 
         public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }
+        
+
     }
 }

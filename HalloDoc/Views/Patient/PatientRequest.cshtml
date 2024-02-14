@@ -5,6 +5,32 @@
     Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
 }
 
+<script> 
+    function AlertName() {
+        var email = document.getElementById("patientEmail").value;
+
+        fetch('/Patient/checkemail/' + email)
+            .then(response => response.json())
+            .then(data => {
+                    var patientPassword = document.getElementById('passwordFields1');
+                    var patientConfirmPassword = document.getElementById('passwordFields2');
+                var labels = document.getElementsByClassName('passwordFields');
+                    if (data.exists) {
+                        patientPassword.style.display = 'none';
+                        patientConfirmPassword.style.display = 'none';
+                        labels.style.display = 'none';
+                        console.log("exist ")
+                    }
+                    else {
+                        patientPassword.style.display = 'block';
+                        patientConfirmPassword.style.display = 'block';
+                        console.log(" not exist ")
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+    }
+
+</script>
 <div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -19,7 +45,7 @@
         </div>
 
         <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
-            <form asp-controller="Patient" asp-action="PatientRequest" method="post">
+            <form asp-controller="Patient" asp-action="PatientRequest" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
              
                 <h3>Patient Information</h3>
@@ -66,19 +92,13 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Email"
-                                   id="patientEmail" onblur="checkEmailExists()" type="email" autocomplete="off"
+                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
                             class="form-control"  placeholder=" ">
                             <label for="floatingInputGrid">Email</label>
 
                         </div>
                     </div>
-                    @* <div class="col-lg-6 col-md-6 col-sm-12 ">
-                        <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" name="phone" style="border: none;height: 54px;" />
-
-                        </div>
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div> *@
+                   
 
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
@@ -89,15 +109,15 @@
                     </div>
                      <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Password" type="password" class="form-control " id="passwordFields1" placeholder="Password">
-                            <label for="floatingInputGrid">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
+                            <label for="floatingInputGrid" class="passwordFields">Password</label>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ConfirmPassword" type="password" class="form-control " id="passwordFields2" placeholder="Password">
-                            <label for="floatingInputGrid">Password</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
+                            <label for="floatingInputGrid" class="passwordFields"> Confirm Password</label>
                         </div>
                     </div>
                 </div>
@@ -139,27 +159,13 @@
                 </div>
 
                 <h3>(Optional) Upload Photo or Document</h3>
-                <!-- <div class="" style="position: relative;">
-
-                    <input class="form-control form-control-sm file-upload" id="formFileSm" type="file"
-                        style="opacity: 0; position: absolute; top: 1em; z-index: 3; ">
-                    <div class="input-group mb-3 ">
-                        <input type="text" class="form-control" placeholder="Select Files" aria-label="Select File"
-                            aria-describedby="patientfileupload">
-                        <button class="btn btn-btn-lg btn-info text-light" type="button" id="patientfileupload"
-                            style="z-index: 2;">
-                            <span><i class="bi bi-cloud-arrow-up"></i>&nbsp;Upload</span>
-                        </button>
-                    </div>
-                </div> -->
+         
                 <div class="input-group mb-3">
-                    <input asp-for="DocumentPath" type="file" class="form-control d-none" id="inputGroupFile02">
-                    <input class="form-control input-group " id="uploadText" placeholder="Select your file"
-                           value=" No files selected">
-                    <label class="input-group-text " style="background-color: #00bbe8;" for="inputGroupFile02">
-                        <i class="bi bi-cloud-arrow-up " aria-hidden="true"></i>
-                        <span class="d-none d-sm-block mx-2">Upload</span>
-                    </label>
+                    <div class="col-12 col-sm-12">
+                        <div class="input-group mb-3">
+                            <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
 
@@ -181,27 +187,28 @@
     </div>
 </div>
 <script>
-    function checkEmailExists() {
-        var email = document.getElementById("patientEmail").value;
-
-        // fetch('/Form/patientinfo/checkemail/' + email)
-        fetch('/Patient/createpatientrequest/checkemail/' + email)
-            .then(response => response.json())
-            .then(data => {
-                var patientPassword = document.getElementById('passwordFields1');
-                var patientConfirmPassword = document.getElementById('passwordFields2');
-                if (data.exists) {
-                    patientPassword.style.display = 'none';
-                    patientConfirmPassword.style.display = 'none';
-                    console.log("exist ")
-                }
-                else {
-                    patientPassword.style.display = 'block';
-                    patientConfirmPassword.style.display = 'block';
-                    console.log(" not exist ")
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
+    // console.log("asasssssd");
+    // function checkEmailExists() {
+    // alert("asas")
+    //     console.log("assd");
+    //     var email = document.getElementById("patientEmail").value;
+    //     fetch('/Patient/checkemail/' + email)
+    //         .then(response => response.json())
+    //         .then(data =>
+    //             var patientPassword = document.getElementById('passwordFields1');
+    //             var patientConfirmPassword = document.getElementById('passwordFields2');
+    //             if (data.exists) {
+    //                 patientPassword.style.display = 'none';
+    //                 patientConfirmPassword.style.display = 'none';
+    //                 console.log("exist ")
+    //             }
+    //             else {
+    //                 patientPassword.style.display = 'block';
+    //                 patientConfirmPassword.style.display = 'block';
+    //                 console.log(" not exist ")
+    //             }
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // }
 
 </script>
