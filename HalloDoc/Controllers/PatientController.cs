@@ -158,7 +158,7 @@ namespace HalloDoc.Controllers
 
 
         #endregion
-        [Route("/Patient/createpatientrequest/checkemail/{email}")]
+        [Route("/Patient/patientrequest/checkemail/{email}")]
         [HttpGet]
         public IActionResult CheckEmail(string email)
         {
@@ -265,7 +265,7 @@ namespace HalloDoc.Controllers
                     request.UserId = user1.UserId;
                     _context.Requests.Update(request);
                     _context.SaveChanges();
-                    TempData["id"] = request.RequestId;
+                  
                     return RedirectToAction("PatientSite",viewModel);
 
                 }
