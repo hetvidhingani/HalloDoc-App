@@ -3,7 +3,7 @@
 }
 @model IEnumerable<HalloDoc.Models.DashboardViewModel>;
 
-<div class="mainSection ">
+<div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
@@ -37,10 +37,15 @@
                 
                 <div class="row ">
                     <div class="col-12 col-sm-12">
-                        <div class="input-group mb-3">
+                       @*  <div class="input-group mb-3">
                             <input style="border-radius:10px" name="a" type="file" class="form-control" id="UploadButton">
                             <button type="submit"> submit</button>
-                        </div>
+                        </div> *@
+                        <input type="file" name="a">
+                        <button type="submit" class="upload-btn">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <span class="btntxtupload">&nbsp;Upload</span>
+                        </button>
                     </div>
                 </div>
                 <!-- Add Bootstrap JS -->
@@ -54,6 +59,7 @@
                     </div>
                 </div>
             </form>
+            <div class="table-responsive">
                 <table class="table table-hover">
                     
                     <thead>
@@ -83,8 +89,7 @@
                     }
                 </table>
 
-
-
+                </div>
 
            
         </div>

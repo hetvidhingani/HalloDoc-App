@@ -5,9 +5,9 @@
 }
 
 
-<div class="tab-content">
-    <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
-        <div class="mainContent mx-auto">
+
+  
+        <div class="mainContent2 mx-auto">
             <h2>Medical History</h2>
             <div class="container-fluid mt-3 dashboardtbl shadow mb-3  rounded h-100 p-4 " style="background-color:white">
                 <div class="d-flex justify-content-end">
@@ -103,7 +103,7 @@
                
 
             </div>
-            <div class="mbltbl  mt-3 shadow mb-3  rounded h-100  " style="background-color:white">
+            <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
                 <div class="d-flex justify-content-end">
                     <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <span class="logouttxt">  Create New Request</span>
@@ -151,31 +151,24 @@
                             </div>
                         </div>
                     </div>
-                </div> @foreach (var r in Model)
+                </div>
+                @foreach (var r in Model)
                 {
 
-                    <div class="mobileviewdashboard my-2 p-4">
-                        <button class="table-btn d-flex d-sm-flex d-md-none d-lg-none"
-                                type="button"
-                                data-toggle="collapse" data-target="#a-@r.RequstId"
-                                aria-controls="a-@r.RequstId">
-                            <i class="bi bi-clock "></i>
-                            <strong class="mx-2"> Created Date:</strong>
-                           @r.CreatedDate
-
-                        </button>
-
-
-                        <div id="a-@r.RequstId" class="collapse collapse1">
+                    <div class="mobileviewdashboard my-3 p-4">
+                     
+                        <button type="button" class="table-btn collapsible">
+                            <i class="bi bi-clock"></i>
+                            <strong>Created Date: </strong>
+                            @r.CreatedDate</button>
+                        <div class="content" style="display:none">
                             <div class="provider d-flex gap-2">
-                                <div class="icons">
-                                    <i class="fa-solid fa-user-nurse"></i>
-                                </div>
+                                <i class="bi bi-person-circle"></i>
                                 Provider: <span>-</span>
                             </div>
                             <div class="provider d-flex gap-2">
                                 <div class="icons">
-                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    <i class="bi bi-check-circle"></i>
                                 </div>
                                 @if (@r.Status == 1)
                                 {
@@ -185,50 +178,41 @@
 
                             </div>
                             <div class="provider d-flex gap-2">
-                                <button class="documents">(1) Documents</button>
+                        @if (@r.FileName != null)
+                        {
+                            <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                                <button class="normalbtn">Download</button>
+
+                            </a>
+                        }
                             </div>
                         </div>
                     </div>
 
                 }
 
-            </div>
+
+            
         
         </div>
 
-    </div>
 
-    <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <div class="mainContent mx-auto">
-            <h2>
-                Medical 2 History
+   
+</div>
 
-            </h2>
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
 
-        </div>
-    </div>
-</div>@* 
-<script>
-    function toggleTableClass() {
-        var viewportWidth = window.innerWidth || document.documentElement.clientWidth;
-
-        // Get table element
-        var table = document.getElementById('responsive-table');
-
-        // Toggle CSS class based on viewport width
-        if (viewportWidth < 768) { // Adjust threshold as needed
-            table.classList.remove('table-desktop');
-            table.classList.add('table-mobile');
-        } else {
-            table.classList.remove('table-mobile');
-            table.classList.add('table-desktop');
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            });
         }
-    }
-
-    // Initial call to toggleTableClass function
-    toggleTableClass();
-
-    // Event listener for window resize to update table layout
-    window.addEventListener('resize', toggleTableClass);
-</script>
- *@
+    </script>

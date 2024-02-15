@@ -221,7 +221,10 @@ namespace HalloDoc.Controllers
             return View(list);
         }
 
-
+        public IActionResult Profile()
+        {
+            return View();
+        }
 
 
 
