@@ -18,13 +18,13 @@
                     Here,I want to create new request for...
                 </p>
                 <div class=" d-flex justify-content-center ">
-                    <button type="button" class="createNewReqBtn routeModal">
+                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
                         Me
                     </button>
 
 
 
-                    <button type="button" class="createNewReqBtn routeModal mx-3">
+                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
                         Someone Else
                     </button>
 
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-end">
-                <button type="button" class="createNewReqBtn submitBtn">
+                <button type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
                     Continue
                     </button>
 
@@ -177,5 +177,20 @@
                 content.style.display = "none";
             }
         });
+    }
+    // Submit Request for menubar or someone else
+    let selectedOption = "";
+
+    function selectOption(option) {
+        selectedOption = option;
+
+    }
+    function continueToPage() {
+        if (selectedOption == 'me') {
+            window.location.assign("PatientRequest");
+
+        } else {
+            window.location.assign("PatientSubmitRequest");
+        }
     }
 </script>

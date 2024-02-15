@@ -184,6 +184,7 @@ namespace HalloDoc.Controllers
 
         public IActionResult ViewDocument(int Id)
         {
+            ViewBag.MySession = HttpContext.Session.GetString("UserName");
 
             var tableData = (from r in _context.Requests
                              join rwf in _context.RequestWiseFiles
@@ -213,6 +214,18 @@ namespace HalloDoc.Controllers
             }
 
             return View(list);
+        }
+        public FileResult DownloadFile(string name, string filename)
+        {
+            RequestWiseFile reqw = _context.RequestWiseFiles.Where(x => x.FileName == name).FirstOrDefault();
+            if (reqw != null)
+            {
+                filename = reqw.FileName;
+            }
+
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", filename);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
         #endregion
 
