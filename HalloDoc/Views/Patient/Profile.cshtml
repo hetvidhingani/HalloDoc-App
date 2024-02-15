@@ -1,16 +1,6 @@
-﻿@model PatientRequestViewModel
-<script>
-    const phoneInputField = document.querySelector("#phone");
-    const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    });
-    const phoneInputField1 = document.querySelector("#phone2");
-    const phoneInput1 = window.intlTelInput(phoneInputField1, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    });
-</script>
+﻿@model HalloDoc.Models.PatientRequestViewModel;
+
+
 <div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -25,142 +15,115 @@
         </div>
 
         <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
-            <form asp-controller="Patient" asp-action="PatientRequest" method="post" enctype="multipart/form-data">
+            <form asp-controller="Patient" asp-action="EditUser" method="post" enctype="multipart/form-data">
+
+        
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-                <h3>General Information</h3>
+                <h4>General Information</h4>
 
-               
+
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="FirstName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">First Name</label>
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">First Name</label>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="LastName" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Last Name</label>
-                            <span asp-validation-for="LastName" class="text-danger"></span>
+                                <input asp-for="LastName" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Last Name</label>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Date Of Birth</label>
-                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " >
+                            <label for=" ">Date Of Birth</label>
 
                         </div>
                     </div>
 
                 </div>
 
-                <h3> Contact Information</h3>
+                <h4> Contact Information</h4>
                 <div class="row ">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-between ">
+                        <div class="col-4 "> 
+
+                            <div class="form-floating  ">
+                                    <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example" readonly>
+                                    <option selected>Mobile </option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                                <label for="floatingSelectGrid">Type </label>
+                            </div>
+                        </div>
+                        <div class="col-8 ">
+                            <div class="form-floating form-group  border">
+                                    <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" readonly />
+
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                                   class="form-control" placeholder=" ">
-                            <label for="floatingInputGrid">Email</label>
+                                       class="form-control" placeholder=" " readonly>
+                            <label for=" ">Email</label>
 
                         </div>
                     </div>
 
-
-                    <div class="col-lg-6 col-md-6 col-sm-12 ">
-
-                        <div class="form-floating">
-                            <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example">
-                                <option selected>Open this select menu</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                            <label for="floatingSelectGrid">Works with selects</label>
-                        </div>
-                        <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" />
-
-                        </div>
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
-                            <label for="floatingInputGrid" class="passwordFields">Password</label>
-
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
-                            <label for="floatingInputGrid" class="passwordFields"> Confirm Password</label>
-                        </div>
-                    </div>
                 </div>
 
-                <h3>Patient Location</h3>
+                <h4> Location Information</h4>
 
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Street" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Street</label>
+                                <input asp-for="Street" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Street</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="City" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">City </label>
+                                <input asp-for="City" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">City </label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="State" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">State</label>
+                                <input asp-for="State" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">State</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ZipCode" type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Zip code</label>
+                                <input asp-for="ZipCode" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Zip code</label>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input type="text" class="form-control" id="floatingInputGrid" placeholder=" ">
-                            <label for="floatingInputGrid">Room # / Suite (Optional)</label>
-                        </div>
-                    </div>
+
 
                 </div>
 
-                <h3>(Optional) Upload Photo or Document</h3>
-
-                <div class="input-group mb-3">
-                    <div class="col-12 col-sm-12">
-                        <div class="input-group mb-3">
-                            <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
+                   
+                   
+                <div class="row ">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
-                        <input type="submit" class="createNewReqBtn submitBtn" value="Submit" />
+                    <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
 
-                        <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
-                            <button type="button" class="createNewReqBtn">
-                                Cancle
-                            </button>
-                        </a>
-
-
+                
+                    <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />
                     </div>
                 </div>
 
@@ -168,3 +131,25 @@
         </div>
     </div>
 </div>
+<script>
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+    var editButton = document.getElementById("edit-button");
+    editButton.addEventListener("click", function () {
+        var form = editButton.closest("form");
+        var inputs = form.querySelectorAll("input[readonly]");
+        var saveButton = form.querySelector("input[type='submit']");
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+        });
+        saveButton.removeAttribute("disabled");
+        saveButton.style.display = "block";
+
+        editButton.style.display = "none";
+
+    });
+</script>

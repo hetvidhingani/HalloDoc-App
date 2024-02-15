@@ -82,17 +82,17 @@
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="hide1">
+                        <div class="form-floating form-group" >
                             <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
-                            <label for=" " class="passwordFields">Password</label>
+                            <label for=" " id="passwordFieldslable1">Password</label>
 
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="hide2">
                         <div class="form-floating form-group">
                             <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
-                            <label for=" " class="passwordFields"> Confirm Password</label>
+                            <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
                         </div>
                     </div>
                 </div>
@@ -173,16 +173,24 @@
             .then(data => {
                 var patientPassword = document.getElementById('passwordFields1');
                 var patientConfirmPassword = document.getElementById('passwordFields2');
-                var labels = document.getElementsByClassName('passwordFields');
+                var label1= document.getElementById('hide1');
+                var label2 = document.getElementById('hide2');
+
                 if (data.exists) {
                     patientPassword.style.display = 'none';
                     patientConfirmPassword.style.display = 'none';
-                    labels.style.display = 'none';
-                    console.log("exist ")
+                    label1.style.display = 'none';
+                    label2.style.display = 'none';
+
+                    console.log("exist")
                 }
                 else {
                     patientPassword.style.display = 'block';
                     patientConfirmPassword.style.display = 'block';
+                    label1.style.display = 'block';
+                    label2.style.display = 'block';
+
+
                     console.log(" not exist ")
                 }
             })

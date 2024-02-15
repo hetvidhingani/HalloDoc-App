@@ -1,6 +1,7 @@
 ﻿@using HalloDoc.DataModels;
 @using Microsoft.AspNetCore.Identity;
-
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +36,7 @@
     <div class="header2 d-flex align-content-center shadow p-3 "  id="" >
 
         <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
-            <button class="btn-outline-primary mt-2 p-1" style="color: #01bce9; border: 1px solid #01bce9;">
+            <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
                <i class="bi bi-list"></i>
             </button>
         </a>
@@ -52,7 +53,7 @@
                         <h5>
                             Welcome,
                             <strong>
-                                @ViewBag.MySession
+                                @HttpContextAccessor?.HttpContext?.Session.GetString("UserName")
                             </strong>
                         </h5>
                     </span>
@@ -78,8 +79,8 @@
     <div class="col-12 t " style="z-index:1000">
         <div class="topnav" id="myTopnav" >
                <strong>
-                <a asp-action="Dashboard" asp-controller="Patient" class="py-2">Dashboard</a>
-                <a asp-action="Profile" asp-controller="Patient" class="py-2">Profile</a>
+                <a asp-action="Dashboard" asp-controller="Patient" class="py-2"  style="color:#01BCE9">Dashboard</a>
+                <a asp-action="Profile" asp-controller="Patient" class="py-2" style="color:#01BCE9">Profile</a>
                </strong>
             </div>
 

@@ -457,18 +457,17 @@ form > div > div {
     height: 50%;
 }
 
-
 /* #endregion  */
 /*#region Patient Dashboard*/
-.MainHeaderLogolayout{
-    width:100px;
+.MainHeaderLogolayout {
+    width: 100px;
 }
 .mainContent {
     margin-top: 150px;
     width: 90%;
 }
 .mainContent2{
-    margin-top:100px;
+    margin:10vh 0px;
     width:90%;
 }
 
@@ -522,6 +521,7 @@ form > div > div {
     border-radius:7px;
  
 }
+
 .MainHeaderLogo {
     width: 10rem;
     display: flex;
@@ -563,8 +563,8 @@ form > div > div {
 }
 
     .topnav a:hover {
-         background-color: #ddd;
-         color: #01bae7;
+        background-color: #F6F5F5;
+        color: #01bae7;
         text-decoration: underline 2px solid #01bae7;
     }
 
