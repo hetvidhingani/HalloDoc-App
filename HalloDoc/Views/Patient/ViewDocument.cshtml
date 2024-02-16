@@ -56,8 +56,8 @@
                         <h3>Documents</h3>
                     </div>
                     <div class="col-6 d-flex justify-content-end align-items-center">
-                        <span class="logouttxt normalbtn"> Download All</span>
-                        <span class="logoutIcon normalbtn"><i class="bi bi-cloud-arrow-down"></i></span>
+                        <a class="logouttxt normalbtn" onclick="Download_all()"> Download All</a>
+                        <a class="logoutIcon normalbtn" onclick="Download_all()"><i class="bi bi-cloud-arrow-down"></i></a>
                     </div>
                 </div>
             </form>
@@ -89,15 +89,15 @@
                         <tr>
                                 <th>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                        <input class="form-check-input doc-checkbox" type="checkbox" value="" id="flexCheckDefault">
 
                                     </div>
                                 </th>
-                            <th scope="row">@r.FileName</th>
+                                <th scope="row" >@r.FileName</th>
                             <td>@r.Username</td>
                             <td>@r.CreatedDate</td>
                                 <td>
-                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info">
+                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link">
                                         <i class="bi bi-cloud-arrow-down"></i>
                                     </a>
                                 </td>
@@ -119,10 +119,10 @@
 
                         <button type="button" class="table-btn collapsible" style="background-color:white">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                <input class="form-check-input doc-checkbox" type="checkbox" value="" id="flexCheckDefault">
                                
                             </div>
-                            <strong>  @r.FileName</strong>
+                            <strong class="">  @r.FileName</strong>
                         </button>
                         <div class="content mx-2">
                             <div class="provider d-flex gap-2">
@@ -135,7 +135,7 @@
                             </div>
                             <div class="provider d-flex pt-2 gap-2">
                               @*   <a href="~/uploads/@r.FileName" target="_blank"><i class="bi bi-cloud-arrow-down normalbtn"></i></a> *@
-                                <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info">
+                                <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link">
                                     <i class="bi bi-cloud-arrow-down"></i>
                                 </a>
                             </div>
@@ -169,5 +169,19 @@
                 content.style.display = "none";
             }
         });
+    }
+
+    // download all FileSystem
+    function Download_all() {
+        var allcheckbox = document.getElementsByClassName('doc-checkbox');
+        var alllinks = document.getElementsByClassName('download-link');
+        console.log(alllinks.length);
+        console.log(allcheckbox.length);
+        for (var i = 0; i < allcheckbox.length; i++) {
+            if (allcheckbox[i].checked) {
+                console.log(alllinks[i]);
+                alllinks[i].click();
+            }
+        }
     }
 </script>

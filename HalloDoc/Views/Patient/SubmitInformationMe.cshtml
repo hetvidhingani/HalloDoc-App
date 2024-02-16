@@ -1,18 +1,12 @@
-﻿
-@model HalloDoc.Models.PatientRequestViewModel
+﻿@model HalloDoc.Models.PatientRequestViewModel
 
-@* @{
-    Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
-} *@
-@using Microsoft.AspNetCore.Http;
-@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
         <div class="PatientInfo">
-            <a  asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
+            <a asp-action="Dashboard" asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
@@ -21,9 +15,9 @@
         </div>
 
         <div class="p-4 shadow mb-3  rounded h-100 PatientInfo">
-            <form  method="post" enctype="multipart/form-data">
+            <form asp-controller="Patient" asp-action="PatientRequest" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-             
+
                 <h3>Patient Information</h3>
 
                 <div class="form-floating form-group ">
@@ -32,7 +26,6 @@
                         Enter Brief Details Of Symptoms
                         (Optional)
                     </label>
-                    <span asp-validation-for="Symptoms" class="text-danger"></span>
 
                 </div>
                 <div class="row ">
@@ -40,15 +33,13 @@
                         <div class="form-floating form-group">
                             <input asp-for="FirstName" type="text" class="form-control" placeholder=" ">
                             <label for=" ">First Name</label>
-                            <span asp-validation-for="FirstName" class="text-danger"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="LastName" type="text" class="form-control"  placeholder=" ">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Last Name</label>
-                            <span asp-validation-for="LastName" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -56,7 +47,6 @@
                         <div class="form-floating form-group">
                             <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" ">
                             <label for=" ">Date Of Birth</label>
-                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -69,37 +59,20 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                            class="form-control"  placeholder=" ">
+                                   class="form-control" placeholder=" ">
                             <label for=" ">Email</label>
 
                         </div>
                     </div>
-                   
+
 
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
                             <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" />
 
                         </div>
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserName")==null)
-                    {
-                        <div class="col-lg-6 col-md-6 col-sm-12" id="hide1">
-                            <div class="form-floating form-group">
-                                <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
-                                <label for=" " id="passwordFieldslable1">Password</label>
-
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12" id="hide2">
-                            <div class="form-floating form-group">
-                                <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
-                                <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
-                            </div>
-                        </div>
-                    }
-                   
+                  
                 </div>
 
                 <h3>Patient Location</h3>
@@ -107,7 +80,7 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Street" type="text" class="form-control"  placeholder=" ">
+                            <input asp-for="Street" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Street</label>
                         </div>
                     </div>
@@ -119,58 +92,48 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="State" type="text" class="form-control"  placeholder=" ">
+                            <input asp-for="State" type="text" class="form-control" placeholder=" ">
                             <label for=" ">State</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ZipCode" type="text" class="form-control"  placeholder=" ">
+                            <input asp-for="ZipCode" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Zip code</label>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input  type="text" class="form-control"  placeholder=" ">
+                            <input type="text" class="form-control" placeholder=" ">
                             <label for=" ">Room # / Suite (Optional)</label>
                         </div>
                     </div>
 
                 </div>
-                 @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserName")!=null )
-                    {
-                <h3 id="relationHTag">Relation</h3>
 
-                <div id="Realtion" class="row ">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="RelationName" type="text" class="form-control" placeholder=" ">
-                            <label for=" ">Relation with Patient</label>
-                        </div>
-                    </div>
-                </div>
-                    }
                 <h3>(Optional) Upload Photo or Document</h3>
-         
+
                 <div class="input-group mb-3">
                     <div class="col-12 col-sm-12">
                         <div class="input-group mb-3">
                             <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton">
                         </div>
                     </div>
-                </div> 
-              
+                </div>
+
 
                 <div class="row">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
-                        <input type="submit" class="createNewReqBtn submitBtn" value="Submit" onclick="continueToPage()" />
+                        <input type="submit" class="createNewReqBtn submitBtn" value="Submit" />
 
                         <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
                             <button type="button" class="createNewReqBtn">
                                 Cancle
                             </button>
                         </a>
+
+
                     </div>
                 </div>
 
@@ -180,70 +143,12 @@
 </div>
 
 <script>
-    function AlertName() {
-        var email = document.getElementById("patientEmail").value;
-
-        fetch('/Patient/checkemail/' + email)
-            .then(response => response.json())
-            .then(data => {
-                var patientPassword = document.getElementById('passwordFields1');
-                var patientConfirmPassword = document.getElementById('passwordFields2');
-                var label1= document.getElementById('hide1');
-                var label2 = document.getElementById('hide2');
-
-                if (data.exists) {
-                    patientPassword.style.display = 'none';
-                    patientConfirmPassword.style.display = 'none';
-                    label1.style.display = 'none';
-                    label2.style.display = 'none';
-
-                 
-                }
-                else {
-                    patientPassword.style.display = 'block';
-                    patientConfirmPassword.style.display = 'block';
-                    label1.style.display = 'block';
-                    label2.style.display = 'block';
-
-
-                   
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    //display some div when user creates new request
-    $(document).ready(function () {
-        var id = sessionStorage.getItem("currentId");
-        if (id === "2") {
-            $("#relationHTag").show();
-            $("#Realtion").show();
-
-        } else {
-            $("#relationHTag").hide();
-            $("#Realtion").hide();
-
-
-        }
-    });
-
-    function continueToPage() {
-        int id = sessionStorage.getItem("currentId");
-        if (id == 2) {
-
-            window.location.href = '@Url.Action("SubmitInformationSomeoneElse", "Patient")';
-        }
-        else {
-            window.location.href = '@Url.Action("PatientRequest", "Patient")';
-
-        }
-       
-    }
+   
 
     const phoneInputField = document.querySelector("#phone");
     const phoneInput = window.intlTelInput(phoneInputField, {
         utilsScript:
             "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
-    
+
 </script>

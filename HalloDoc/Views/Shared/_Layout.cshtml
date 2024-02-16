@@ -32,60 +32,75 @@
 <body>
 
 
+    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+    {
+        <div class="header2 d-flex align-content-center shadow p-3 " id="">
 
-    <div class="header2 d-flex align-content-center shadow p-3 "  id="" >
+            <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
+                <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
+                    <i class="bi bi-list"></i>
+                </button>
+            </a>
 
-        <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
-            <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
-               <i class="bi bi-list"></i>
-            </button>
-        </a>
+            <div class="Logo">
+                <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+            </div>
 
-        <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
-        </div>
+            <div class="d-flex " style="margin-left:auto">
+                <div class="d-flex righttabs align-items-center">
 
-        <div class="d-flex " style="margin-left:auto">
-            <div class="d-flex righttabs align-items-center">
+                    <div class=" d-flex mx-3 ">
+                        <span id="usernamedashboard">
+                            <h5>
+                                Welcome,
+                                <strong>
+                                    @HttpContextAccessor?.HttpContext?.Session.GetString("UserName")
+                                </strong>
+                            </h5>
+                        </span>
 
-                <div class=" d-flex mx-3 ">
-                    <span id="usernamedashboard">
-                        <h5>
-                            Welcome,
-                            <strong>
-                                @HttpContextAccessor?.HttpContext?.Session.GetString("UserName")
-                            </strong>
-                        </h5>
-                    </span>
+                    </div>
+                    <a asp-controller="Patient" asp-action="Logout">
+                        <button class="mx-3 logout" type="submit">
+                            <span class="logouttxt"> Logout</span>
+                            <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                        </button>
 
+                    </a>
+                    <div class="moon-icon">
+                        <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+                    </div>
                 </div>
-                <a asp-controller="Patient" asp-action="Logout">
-                    <button class="mx-3 logout" type="submit">
-                        <span class="logouttxt"> Logout</span>
-                        <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
-                    </button>
 
-                </a>
-                <div class="moon-icon">
-                    <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
-                </div>
             </div>
 
         </div>
 
-    </div>
-
-
-    <div class="col-12 t " style="z-index:1000">
-        <div class="topnav" id="myTopnav" >
-               <strong>
-                <a asp-action="Dashboard" asp-controller="Patient" class="py-2"  style="color:#01BCE9">Dashboard</a>
-                <a asp-action="Profile" asp-controller="Patient" class="py-2" style="color:#01BCE9">Profile</a>
-               </strong>
+        <div class="col-12 t " style="z-index:1000">
+            <div class="topnav" id="myTopnav">
+                <strong>
+                    <a asp-action="Dashboard" asp-controller="Patient" class="py-2" style="color:#01BCE9">Dashboard</a>
+                    <a asp-action="Profile" asp-controller="Patient" class="py-2" style="color:#01BCE9">Profile</a>
+                </strong>
             </div>
 
         </div>
-   
+    }
+    else
+    {
+        <header class="header d-flex align-content-center ">
+
+            <div class="Logo">
+                <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
+            </div>
+
+            <div class="switch-mode-inner-div">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
+
+        </header>
+    }
+
 
 
     @RenderBody()

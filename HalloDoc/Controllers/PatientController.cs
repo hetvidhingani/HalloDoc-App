@@ -22,10 +22,7 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-        public IActionResult PatientForgotPassword()
-        {
-            return View();
-        }
+
         public IActionResult PatientSubmitRequest()
         {
             return View();
@@ -64,7 +61,7 @@ namespace HalloDoc.Controllers
             return Json(new { exists = emailExists });
         }
         #endregion
-      
+
         #region Login
 
         public IActionResult RegisterdPatientLogin()
@@ -101,6 +98,43 @@ namespace HalloDoc.Controllers
 
 
 
+        #endregion
+
+        #region Forgot Password
+        public IActionResult PatientForgotPassword()
+        {
+            return View();
+
+        }
+        [HttpPost]
+        public IActionResult PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
+        {
+            var myUser = _context.AspNetUsers.Where(x => x.Email == createAccountViewModel.Email).FirstOrDefault();
+
+            if (myUser != null)
+            {
+                //ViewBag.Message = "Reset Password Link is sent to your registerd Email.";
+                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+                {
+                    myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
+                    _context.AspNetUsers.Update(myUser);
+                    _context.SaveChangesAsync();
+                    ViewBag.Message = "Password Updated";
+
+                }
+                else
+                {
+                    ViewBag.Message = "Password and Confirm Password must be same!!!";
+
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = "Invalid User Name";
+            }
+            return View();
+        }
         #endregion
 
         #region Dashboard
@@ -155,6 +189,134 @@ namespace HalloDoc.Controllers
 
 
         #endregion
+
+        #region create new request
+        [HttpPost]
+        public IActionResult SubmitInformationSomeoneElse(PatientRequestViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                 int ? userId = HttpContext.Session.GetInt32("UserSession");
+
+                User userExist = _context.Users.Where(x=>x.UserId == userId).FirstOrDefault();   
+                Request request = new Request
+                {
+                    RequestTypeId = 1,
+                    FirstName = userExist.FirstName,
+                    LastName = userExist.LastName,
+                    PhoneNumber = userExist.Mobile,
+                    Email = userExist.Email,
+                    CreatedDate = DateTime.Now,
+                    RelationName = viewModel.RelationName,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+
+
+                RequestClient requestClient = new RequestClient
+                {
+                    RequestId = request.RequestId,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    RegionId = 1,
+                    Street = viewModel.Street,
+                    City = viewModel.City,
+                    State = viewModel.State,
+                    ZipCode = viewModel.ZipCode,
+                    Notes = viewModel.Symptoms,
+                    Email = viewModel.Email
+
+                };
+                _context.RequestClients.Add(requestClient);
+                _context.SaveChanges();
+
+
+
+                if (viewModel.File != null && viewModel.File.Length > 0)
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        viewModel.File.CopyTo(stream);
+                        var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
+                        RequestWiseFile newFile = new RequestWiseFile
+                        {
+                            RequestId = userCheck.RequestId,
+                            FileName = viewModel.File.FileName,
+                            CreatedDate = DateTime.Now,
+                            DocType = 1,
+                        };
+
+                        _context.RequestWiseFiles.Add(newFile);
+                        _context.SaveChanges();
+                    }
+                }
+
+
+
+                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                if (user != null)
+                {
+                    request.UserId = user.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges(true);
+
+                }
+
+                else
+                {
+                    AspNetUser newaspNetUSer = new AspNetUser
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        UserName = viewModel.FirstName,
+                        PasswordHash = viewModel.Password,
+                        PhoneNumber = viewModel.PhoneNumber,
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now
+                    };
+
+                    _context.AspNetUsers.Add(newaspNetUSer);
+                    _context.SaveChanges();
+
+                    User user1 = new User
+                    {
+                        Id = newaspNetUSer.Id,
+                        FirstName = requestClient.FirstName,
+                        LastName = requestClient.LastName,
+                        Email = requestClient.Email,
+                        Mobile = requestClient.PhoneNumber,
+                        Street = requestClient.Street,
+                        City = requestClient.City,
+                        State = requestClient.State,
+                        ZipCode = requestClient.ZipCode,
+                        StrMonth = viewModel.DateOfBirth.Value.Month.ToString(),
+                        IntYear = viewModel.DateOfBirth.Value.Year,
+                        IntDate = viewModel.DateOfBirth.Value.Day,
+
+                        CreatedBy = "Admin",
+                        CreatedDate = DateTime.Now,
+                        RegionId = 1
+                    };
+                    _context.Users.Add(user1);
+                    _context.SaveChanges();
+
+                    request.UserId = user1.UserId;
+                    _context.Requests.Update(request);
+                    _context.SaveChanges();
+
+                   
+
+                }
+
+                return RedirectToAction("Dashboard", viewModel);
+            }
+            return View();
+        }
+     
+        #endregion
+
 
         #region View Document
         [HttpPost]
@@ -247,18 +409,16 @@ namespace HalloDoc.Controllers
                 string storedStrMonth = user.StrMonth;
                 int? storedIntYear = user.IntYear;
                 int? storedIntDate = user.IntDate;
-        //        DateOnly storedDob = new DateOnly((int)storedIntYear, int.Parse(storedStrMonth), (int)storedIntDate);
+                //        DateOnly storedDob = new DateOnly((int)storedIntYear, int.Parse(storedStrMonth), (int)storedIntDate);
 
-          //      requestViewModel.DateOfBirth = storedDob;
+                //      requestViewModel.DateOfBirth = storedDob;
 
                 //requestViewModel.PDob = dob;
                 return View(requestViewModel);
             }
             return View();
         }
-        #endregion
 
-        #region Edit My Profile
         [HttpPost]
         public async Task<IActionResult> EditUser(PatientRequestViewModel patientRequestViewModel)
         {
@@ -274,12 +434,12 @@ namespace HalloDoc.Controllers
                 user.Mobile = patientRequestViewModel.PhoneNumber;
                 user.State = patientRequestViewModel.State;
                 user.ZipCode = patientRequestViewModel.ZipCode;
-               
-               user.StrMonth=patientRequestViewModel.DateOfBirth.Value.ToString();
+
+                user.StrMonth = patientRequestViewModel.DateOfBirth.Value.ToString();
                 user.IntDate = patientRequestViewModel.DateOfBirth.Value.Day;
-                user.IntYear=patientRequestViewModel.DateOfBirth.Value.Year;
+                user.IntYear = patientRequestViewModel.DateOfBirth.Value.Year;
                 user.ModifiedDate = DateTime.Now;
-           
+
 
 
 
@@ -292,31 +452,62 @@ namespace HalloDoc.Controllers
 
         #endregion
 
-
         #region PatientRequest
-        public IActionResult PatientRequest()
+        [HttpGet]
+        public IActionResult PatientRequest(int id)
         {
+            int? userId = HttpContext.Session.GetInt32("UserSession");
+            if (id!=2 && userId!=null)
+            {
+                var user = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
+                PatientRequestViewModel viewModel = new PatientRequestViewModel();
+                if (user != null)
+                {
+                    viewModel.FirstName = user.FirstName;
+                    viewModel.LastName = user.LastName;
+                    viewModel.City = user.City;
+                    viewModel.State = user.State;
+                    viewModel.Street = user.Street;
+                    viewModel.Email = user.Email;
+                    viewModel.PhoneNumber = user.Mobile;
+                    viewModel.ZipCode = user.ZipCode;
+                    string storedStrMonth = user.StrMonth;
+                    int? storedIntYear = user.IntYear;
+                    int? storedIntDate = user.IntDate;
+                        //   DateOnly storedDob = new DateOnly((int)storedIntDate, int.Parse(storedStrMonth), (int)storedIntYear);
+
+                 //   viewModel.DateOfBirth = storedDob;
+
+                    //requestViewModel.PDob = dob;
+                    return View(viewModel);
+                }
+            }
+
+
             return View();
         }
+     
         [HttpPost]
         public async Task<IActionResult> PatientRequest(PatientRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                Request request = new Request
-                {
-                    RequestTypeId = 1,
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                    PhoneNumber = viewModel.PhoneNumber,
-                    Email = viewModel.Email,
-                    CreatedDate = DateTime.Now,
-                    Status = 1
-                };
-                _context.Requests.Add(request);
-                _context.SaveChanges();
-
-
+                
+                  Request request = new Request
+                    {
+                        RequestTypeId = 1,
+                        FirstName = viewModel.FirstName,
+                        LastName = viewModel.LastName,
+                        PhoneNumber = viewModel.PhoneNumber,
+                        Email = viewModel.Email,
+                        CreatedDate = DateTime.Now,
+                        //RelationName = viewModel.RelationName,
+                        Status = 1
+                    };
+                    _context.Requests.Add(request);
+                    _context.SaveChanges();
+                    int id = request.RequestId;
+                
 
                 RequestClient requestClient = new RequestClient
                 {
@@ -331,8 +522,8 @@ namespace HalloDoc.Controllers
                     ZipCode = viewModel.ZipCode,
                     Notes = viewModel.Symptoms,
                     Email = viewModel.Email
-                     
-            };
+
+                };
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
 
@@ -398,7 +589,7 @@ namespace HalloDoc.Controllers
                         StrMonth = viewModel.DateOfBirth.Value.Month.ToString(),
                         IntYear = viewModel.DateOfBirth.Value.Year,
                         IntDate = viewModel.DateOfBirth.Value.Day,
-                       
+
                         CreatedBy = "Admin",
                         CreatedDate = DateTime.Now,
                         RegionId = 1

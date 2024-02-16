@@ -32,9 +32,9 @@
                 </div>
             </div>
             <div class="modal-footer d-flex justify-content-end">
-                <button type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
+                <a type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
                     Continue
-                    </button>
+                </a>
 
                 <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
                     Cancle
@@ -58,7 +58,7 @@
 
             </a>
 
-           
+
         </div>
         <div class="table-responsive">
             <table class="table dashboardtbl" id="responsive-table">
@@ -106,13 +106,13 @@
     </div>
     <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
         <div class="d-flex justify-content-end">
-            <a  class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-              
+            <a class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+
                 <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
 
             </a>
 
-            
+
         </div>
         @foreach (var r in Model)
         {
@@ -178,7 +178,7 @@
             }
         });
     }
-    // Submit Request for menubar or someone else
+    // Submit Request for me or someone else
     let selectedOption = "";
 
     function selectOption(option) {
@@ -187,10 +187,15 @@
     }
     function continueToPage() {
         if (selectedOption == 'me') {
-            window.location.assign("PatientRequest");
+            sessionStorage.setItem("currentId", 1);
+            window.location.href = '@Url.Action("PatientRequest", "Patient")';
 
         } else {
-            window.location.assign("PatientSubmitRequest");
+            sessionStorage.setItem("currentId", 2);
+            window.location.href = '@Url.Action("PatientRequest", "Patient",new{id=2})';
         }
     }
+
+
+
 </script>
