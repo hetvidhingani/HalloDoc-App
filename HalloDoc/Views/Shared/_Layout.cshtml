@@ -1,6 +1,7 @@
 ﻿@using HalloDoc.DataModels;
 @using Microsoft.AspNetCore.Identity;
-
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,87 +14,93 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="sweetalert.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
             crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
-            integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" 
+    integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
 
-
-
-
+    
 </head>
 <body>
 
 
-    <div class="topnav d-flex align-content-center " id="myTopnav">
+    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+    {
+        <div class="header2 d-flex align-content-center shadow p-3 " id="">
 
-        <a class="icon "  data-toggle="collapse" data-target="#demo">
-            <i class="bi bi-list logout"></i>
-        </a>
+            <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
+                <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
+                    <i class="bi bi-list"></i>
+                </button>
+            </a>
 
-        <div class="Logo">
-            <img src="~/images/loginpagelogo.png" class="MainHeaderLogo " alt="">
-        </div>
+            <div class="Logo">
+                <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+            </div>
 
-        <div class="d-flex " style="margin-left:auto">
-            <div class="d-flex righttabs align-items-center mx-3">
+            <div class="d-flex " style="margin-left:auto">
+                <div class="d-flex righttabs align-items-center">
 
-                <div class=" d-flex mx-3 ">
-                    <span id="usernamedashboard">
-                        <h5>
-                            Welcome,
-                            <strong>
-                                @ViewBag.MySession
-                            </strong>
-                        </h5>
-                    </span>
+                    <div class=" d-flex mx-3 ">
+                        <span id="usernamedashboard">
+                            <h5>
+                                Welcome,
+                                <strong>
+                                    @HttpContextAccessor?.HttpContext?.Session.GetString("UserName")
+                                </strong>
+                            </h5>
+                        </span>
 
+                    </div>
+                    <a asp-controller="Patient" asp-action="Logout">
+                        <button class="mx-3 logout" type="submit">
+                            <span class="logouttxt"> Logout</span>
+                            <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                        </button>
+
+                    </a>
+                    <div class="moon-icon">
+                        <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+                    </div>
                 </div>
-                <a asp-controller="Patient" asp-action="Logout">
-                    <button class="mx-3 logout" type="submit">
-                        <span class="logouttxt"> Logout</span>
-                        <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
-                    </button>
 
-                </a>
-                <div class="moon-icon">
-                    <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
-                </div>
             </div>
 
         </div>
 
+        <div class="col-12 t " style="z-index:1000">
+            <div class="topnav" id="myTopnav">
+                <strong>
+                    <a asp-action="Dashboard" asp-controller="Patient" class="py-2" style="color:#01BCE9">Dashboard</a>
+                    <a asp-action="Profile" asp-controller="Patient" class="py-2" style="color:#01BCE9">Profile</a>
+                </strong>
+            </div>
 
+        </div>
+    }
+    else
+    {
+        <header class="header d-flex align-content-center ">
 
-    </div>
+            <div class="Logo">
+                <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
+            </div>
 
-    <div class="headerTabs " id="demo" >
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item"  role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Dashboard</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
-            </li>
-           
-        </ul>
-    </div>
+            <div class="switch-mode-inner-div">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
+
+        </header>
+    }
+
 
 
     @RenderBody()
@@ -108,7 +115,7 @@
 
     <script>
 
-        function mytoggle() {
+        function myFunction1() {
             var x = document.getElementById("myTopnav");
             if (x.className === "topnav") {
                 x.className += " responsive";

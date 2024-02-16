@@ -315,16 +315,28 @@ header {
 }
 
 .headerTabs {
-    position: fixed;
-    height:31px;
-    top: 60px;
+   height:30px;
     background-color: white;
     box-shadow: 0px 5px 5px 0px rgb(196, 190, 196);
     width: 100%;
     z-index: 10;
 }
-
-.tabs > a {
+.header2 {
+    position: sticky;
+    height: 80px;
+    background-color: white;
+    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+.t {
+    position: fixed;
+    top: 82px;
+    background-color: white;
+    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
+}
+/*.tabs > a {
     text-decoration: none;
     font-weight: 500;
     text-align: center;
@@ -336,7 +348,7 @@ header {
         color: #00bbe8;
         border-bottom: 5px solid #00bbe8;
         outline: none;
-    }
+    }*/
 
 .mainSection {
     margin-top: 120px;
@@ -445,13 +457,18 @@ form > div > div {
     height: 50%;
 }
 
-
 /* #endregion  */
 /*#region Patient Dashboard*/
-
+.MainHeaderLogolayout {
+    width: 100px;
+}
 .mainContent {
     margin-top: 150px;
     width: 90%;
+}
+.mainContent2{
+    margin:10vh 0px;
+    width:90%;
 }
 
 .createNewReqBtn {
@@ -504,6 +521,7 @@ form > div > div {
     border-radius:7px;
  
 }
+
 .MainHeaderLogo {
     width: 10rem;
     display: flex;
@@ -527,25 +545,70 @@ form > div > div {
 }
 
 
-.topnav {
-    overflow: hidden;
-    position: fixed;
-    height: 60px;
-    background-color: white;
-    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
-    top: 0;
-    width: 100%;
-    z-index: 1000;
+/*.topnav {
+    /background-color: #333;
+    / / overflow: hidden;
+    /
+}*/
+
+
+.topnav a {
+    float: left;
+    display: block;
+    color: #0a0a0a;
+    text-align: center;
+    padding: 0px 16px;
+    text-decoration: none;
+    font-size: 17px;
 }
-    .topnav a {
-        float: left;
-        display: block;
-        text-align: center;
-        text-decoration: none;
+
+    .topnav a:hover {
+        background-color: #F6F5F5;
+        color: #01bae7;
+        text-decoration: underline 2px solid #01bae7;
     }
-    .topnav .icon {
+
+
+.topicon {
+    display: none;
+}
+
+
+@media screen and (max-width:600px) {
+    #username {
         display: none;
     }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav a {
+        display: none;
+    }
+
+    .topicon {
+        float: left;
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .topnav.responsive {
+        position: relative;
+    }
+
+        .topnav.responsive .topicon {
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .topnav.responsive a {
+            float: none;
+            display: block;
+            text-align: left;
+        }
+}
+
 .mobileviewdashboard {
     background-color: #ebfafd;
 }
@@ -605,6 +668,9 @@ form > div > div {
         float: right;
         background-position-y: center;
     }
+    .btntxtupload {
+        display:none;
+    }
     
 }
 @media screen and (min-width: 769px) {
@@ -619,7 +685,7 @@ form > div > div {
         position: absolute;
         right: 0;
         top: 0;
-        padding: 8px;
+        padding: 10px;
         content: 'Upload';
         background: url('../images/cloud-arrow-up.svg') no-repeat 16px ;
        
@@ -631,4 +697,38 @@ form > div > div {
         float: right;
         background-position-y: center;
     }
+}
+
+
+input[type="file"] {
+    background-color: #f1f1f1;
+    width: 85%;
+    -webkit-appearance: none;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+
+    input[type="file"]::-webkit-file-upload-button {
+        -webkit-appearance: none;
+        float: right;
+        position: absolute;
+        margin: 0 0 0 10px;
+        right: 10%;
+        padding: 5px;
+        border: 1px solid #aaaaaa;
+        border-radius: 4px;
+        opacity: 0;
+    }
+
+.upload-btn {
+    border: 1px solid #01bae7;
+    color: white;
+    background-color: #01bae7;
+    padding: 7px;
+    padding-bottom: 8px;
+    border-radius: 0 10px 10px 0;
+    font-size: 18px;
+    position: absolute;
 }

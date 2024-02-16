@@ -26,6 +26,7 @@ namespace HalloDoc.Models
         public string? ZipCode { get; set; }
         [Required]
 
+
         //public string? ClientFirstName { get; set; }
         //[Required]
 
