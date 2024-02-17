@@ -38,7 +38,14 @@ namespace HalloDoc.Models
 
         public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }
-        
+        public string? ClientProperty { get; set; }
+        public string? ClientCaseNo { get; set; }
+        public string? ClientZipCode { get; set; }
+         public string? ClientState { get; set; }
+
+        public string? ClientCity { get; set; }
+
+        public string? ClientStreet { get; set; }
 
     }
 }

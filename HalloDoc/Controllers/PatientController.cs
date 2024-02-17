@@ -476,14 +476,8 @@ namespace HalloDoc.Controllers
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
                     viewModel.ZipCode = user.ZipCode;
-                    string storedStrMonth = user.StrMonth;
-                    int? storedIntYear = user.IntYear;
-                    int? storedIntDate = user.IntDate;
-                    //   DateOnly storedDob = new DateOnly((int)storedIntDate, int.Parse(storedStrMonth), (int)storedIntYear);
-
-                    //   viewModel.DateOfBirth = storedDob;
-
-                    //requestViewModel.PDob = dob;
+                    viewModel.DateOfBirth=user.DateOfBirth;
+                   
                     return View(viewModel);
                 }
             }
@@ -710,14 +704,14 @@ namespace HalloDoc.Controllers
 
         #region Business Request
         [HttpPost]
-        public async Task<IActionResult> BusinessRequest(BusinessRequestViewModel viewModel)
+        public async Task<IActionResult> BusinessRequest(FamilyFriendRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 Request request = new Request
                 {
 
-                    RequestTypeId = 2,
+                    RequestTypeId = 4,
                     FirstName = viewModel.ClientFirstName,
                     LastName = viewModel.ClientLastName,
                     PhoneNumber = viewModel.ClientPhoneNumber,
@@ -801,14 +795,14 @@ namespace HalloDoc.Controllers
 
         #region Concierge Request
         [HttpPost]
-        public async Task<IActionResult> ConciergeRequest(ConciergeRequestViewModel viewModel)
+        public async Task<IActionResult> ConciergeRequest(FamilyFriendRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 Request request = new Request
                 {
 
-                    RequestTypeId = 2,
+                    RequestTypeId = 3,
                     FirstName = viewModel.ClientFirstName,
                     LastName = viewModel.ClientLastName,
                     PhoneNumber = viewModel.ClientPhoneNumber,
