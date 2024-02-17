@@ -147,14 +147,14 @@ namespace HalloDoc.Controllers
                     from r in _context.Requests
                     join rfile in _context.RequestWiseFiles
 
-                     on r.RequestId equals rfile.RequestId
+                     on r.RequestId equals rfile.RequestId into files from file in files.DefaultIfEmpty()
                     where r.UserId == userID
                     select new
                     {
                         r.RequestId,
                         r.CreatedDate,
                         r.Status,
-                        rfile.FileName
+                        FileName=file!=null?file.FileName:null
                     }
 
                 ).ToList();
@@ -191,6 +191,11 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region create new request
+        public IActionResult SubmitInformationSomeoneElse()
+        {
+            return View();
+
+        }
         [HttpPost]
         public IActionResult SubmitInformationSomeoneElse(PatientRequestViewModel viewModel)
         {
@@ -454,10 +459,10 @@ namespace HalloDoc.Controllers
 
         #region PatientRequest
         [HttpGet]
-        public IActionResult PatientRequest(int id)
+        public IActionResult PatientRequest()
         {
             int? userId = HttpContext.Session.GetInt32("UserSession");
-            if (id!=2 && userId!=null)
+            if ( userId != null)
             {
                 var user = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
                 PatientRequestViewModel viewModel = new PatientRequestViewModel();
@@ -474,9 +479,9 @@ namespace HalloDoc.Controllers
                     string storedStrMonth = user.StrMonth;
                     int? storedIntYear = user.IntYear;
                     int? storedIntDate = user.IntDate;
-                        //   DateOnly storedDob = new DateOnly((int)storedIntDate, int.Parse(storedStrMonth), (int)storedIntYear);
+                    //   DateOnly storedDob = new DateOnly((int)storedIntDate, int.Parse(storedStrMonth), (int)storedIntYear);
 
-                 //   viewModel.DateOfBirth = storedDob;
+                    //   viewModel.DateOfBirth = storedDob;
 
                     //requestViewModel.PDob = dob;
                     return View(viewModel);

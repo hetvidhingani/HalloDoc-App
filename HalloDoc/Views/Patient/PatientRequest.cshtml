@@ -1,9 +1,6 @@
 ﻿
 @model HalloDoc.Models.PatientRequestViewModel
 
-@* @{
-    Layout = "~/Views/Shared/_UnauthorizedUserLayout.cshtml";
-} *@
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor
 
@@ -12,7 +9,7 @@
 
 
         <div class="PatientInfo">
-            <a  asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
+            <a asp-action="PatientRequest" asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
@@ -83,8 +80,7 @@
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserName")==null)
-                    {
+                   
                         <div class="col-lg-6 col-md-6 col-sm-12" id="hide1">
                             <div class="form-floating form-group">
                                 <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
@@ -98,8 +94,7 @@
                                 <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
                             </div>
                         </div>
-                    }
-                   
+                    
                 </div>
 
                 <h3>Patient Location</h3>
@@ -137,19 +132,7 @@
                     </div>
 
                 </div>
-                 @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserName")!=null )
-                    {
-                <h3 id="relationHTag">Relation</h3>
-
-                <div id="Realtion" class="row ">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="RelationName" type="text" class="form-control" placeholder=" ">
-                            <label for=" ">Relation with Patient</label>
-                        </div>
-                    </div>
-                </div>
-                    }
+                
                 <h3>(Optional) Upload Photo or Document</h3>
          
                 <div class="input-group mb-3">
@@ -213,32 +196,31 @@
     }
 
     //display some div when user creates new request
-    $(document).ready(function () {
-        var id = sessionStorage.getItem("currentId");
-        if (id === "2") {
-            $("#relationHTag").show();
-            $("#Realtion").show();
+    // $(document).ready(function () {
+    //     var id = sessionStorage.getItem("currentId");
+    //     if (id === "2") {
+    //         $("#relationHTag").show();
+    //         $("#Realtion").show();
 
-        } else {
-            $("#relationHTag").hide();
-            $("#Realtion").hide();
+    //     } else {
+    //         $("#relationHTag").hide();
+    //         $("#Realtion").hide();
 
 
-        }
-    });
+    //     }
+    // });
 
-    function continueToPage() {
-        int id = sessionStorage.getItem("currentId");
-        if (id == 2) {
+    // function continueToPage() {
+    //     var id = sessionStorage.getItem("currentId");
+    //     if (id === 'me') {
+    //         form.action = '/Patient/PatientRequest';
+    //     }
+    //     else {
+    //         form.action = '/Patient/SubmitInformationSomeone';
 
-            window.location.href = '@Url.Action("SubmitInformationSomeoneElse", "Patient")';
-        }
-        else {
-            window.location.href = '@Url.Action("PatientRequest", "Patient")';
-
-        }
-       
-    }
+    //     }
+    //     form.submit();
+    // }
 
     const phoneInputField = document.querySelector("#phone");
     const phoneInput = window.intlTelInput(phoneInputField, {

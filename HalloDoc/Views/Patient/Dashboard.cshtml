@@ -18,13 +18,13 @@
                     Here,I want to create new request for...
                 </p>
                 <div class=" d-flex justify-content-center ">
-                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
+                    <button  type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
                         Me
                     </button>
 
 
 
-                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
+                    <button  type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
                         Someone Else
                     </button>
 
@@ -54,21 +54,17 @@
             <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <span class="logouttxt">  Create New Request</span>
                 <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
-
-
             </a>
 
 
         </div>
         <div class="table-responsive">
             <table class="table dashboardtbl" id="responsive-table">
-
                 <thead>
                     <tr style="background-color:#F0F0F0">
                         <th>Created Date</th>
                         <th>Status</th>
                         <th>File Name</th>
-
                     </tr>
                 </thead>
                 <tbody>
@@ -76,43 +72,35 @@
                         string status = "";
                         foreach (var r in Model)
                         {
-                            <tr>
-
-                                <td> @r.CreatedDate</td>
-                                @if (@r.Status == 1)
+                                <tr>
+                                    <td> @r.CreatedDate</td>
+                                    @if (@r.Status == 1)
                                 {
                                     status = "pending";
                                 }
-                                <td>@status </td>
-                                <td>
-                                    @if (@r.FileName != null)
+                                    <td>@status </td>
+                                    <td>
+                                        @if (@r.FileName != null)
                                     {
-                                        <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
-                                            <button class="normalbtn">Download</button>
-
-                                        </a>
+                                            <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                                                <button class="normalbtn">Download</button>
+                                            </a>
                                     }
-                                </td>
+                                    </td>
 
-                            </tr>
+                                </tr>
                         }
                     }
                 </tbody>
             </table>
-
         </div>
-
 
     </div>
     <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
         <div class="d-flex justify-content-end">
             <a class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-
                 <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
-
             </a>
-
-
         </div>
         @foreach (var r in Model)
         {
@@ -124,6 +112,8 @@
                     <strong>Created Date: </strong>
                     @r.CreatedDate
                 </button>
+
+
                 <div class="content" style="display:none">
                     <div class="provider d-flex gap-2">
                         <i class="bi bi-person-circle"></i>
@@ -138,14 +128,12 @@
                             status = "pending";
                         }
                         Current Status: @status
-
                     </div>
                     <div class="provider d-flex gap-2">
                         @if (@r.FileName != null)
                         {
                             <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
                                 <button class="normalbtn">Download</button>
-
                             </a>
                         }
                     </div>
@@ -153,8 +141,6 @@
             </div>
 
         }
-
-
 
 
     </div>
@@ -187,15 +173,14 @@
     }
     function continueToPage() {
         if (selectedOption == 'me') {
-            sessionStorage.setItem("currentId", 1);
-            window.location.href = '@Url.Action("PatientRequest", "Patient")';
+            sessionStorage.setItem("currentId", "me");
+            window.location.href = '@Url.Action("PatientRequest","Patient" )';
 
         } else {
-            sessionStorage.setItem("currentId", 2);
-            window.location.href = '@Url.Action("PatientRequest", "Patient",new{id=2})';
+            sessionStorage.setItem("currentId", "else");
+            window.location.href = '@Url.Action("SubmitInformationSomeoneElse", "Patient")';
+
         }
     }
-
-
 
 </script>
