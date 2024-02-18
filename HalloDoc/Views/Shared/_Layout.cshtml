@@ -34,17 +34,19 @@
 
     @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
     {
-        <div class="header2 d-flex align-content-center shadow p-3 " id="">
+        <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
-            <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
-                <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
-                    <i class="bi bi-list"></i>
-                </button>
-            </a>
+           <div class="d-flex align-items-center">
+                <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
+                    <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
+                        <i class="bi bi-list"></i>
+                    </button>
+                </a>
 
-            <div class="Logo">
-                <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
-            </div>
+                <div class="Logo">
+                    <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+                </div>
+           </div>
 
             <div class="d-flex " style="margin-left:auto">
                 <div class="d-flex righttabs align-items-center">
@@ -67,7 +69,8 @@
                         </button>
 
                     </a>
-                    <div class="moon-icon">
+                  
+                    <div  class="moon-icon" style="d-flex justify-content-center align-items-center">
                         <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
                     </div>
                 </div>
@@ -76,7 +79,7 @@
 
         </div>
 
-        <div class="col-12 t " style="z-index:1000">
+        <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
             <div class="topnav" id="myTopnav">
                 <strong>
                     <a asp-action="Dashboard" asp-controller="Patient" class="py-2" style="color:#01BCE9">Dashboard</a>
@@ -88,7 +91,7 @@
     }
     else
     {
-        <header class="header d-flex align-content-center ">
+        <header class="header bg-white d-flex align-content-center ">
 
             <div class="Logo">
                 <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
@@ -131,9 +134,52 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
 
+        $(document).ready(function () {
+            var theme = getCookie("theme");
+            if (theme == "dark") {
+                $("body").addClass("darkMode");
+                $(".mainSection").addClass("darkMode");
+                $(".header2").addClass("bg-dark");
+                $(".header2").removeClass("bg-white");
+
+                $(".header").addClass("bg-dark");
+                $(".header").removeClass("bg-white");
+                $(".subHeader").addClass("bg-dark");
+                $(".subHeader").removeClass("bg-white");
+                $(".table").addClass("table-dark");
+
+                $(".mobileviewdashboard").addClass("darkMode");
+            }
+            else {
+                $("body").removeClass("darkMode");
+                $(".mainSection").removeClass("darkMode");
+                $(".header2").removeClass("bg-dark");
+                $(".header2").addClass("bg-white");
+                $(".header").removeClass("bg-dark");
+                $(".header").addClass("bg-white");
+                $(".header").removeClass("bg-dark");
+                $(".subHeader").addClass("bg-white");
+                $(".subHeader").removeClass("bg-dark");
+                $(".table").removeClass("table-dark");
+
+
+                $(".mobileviewdashboard").removeClass("darkMode");
+
+            }
+        });
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+    </script>
 
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

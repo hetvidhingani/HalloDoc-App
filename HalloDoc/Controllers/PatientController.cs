@@ -729,6 +729,7 @@ namespace HalloDoc.Controllers
                     PhoneNumber = viewModel.ClientPhoneNumber,
                     CreatedDate = DateTime.Now,
                     CreatedBy = "Admin",
+                    Address1=viewModel.ClientProperty,
                     Status = 1
                 };
                 _context.Businesses.Add(business);
@@ -817,6 +818,7 @@ namespace HalloDoc.Controllers
                 {
                     ConciergeName = viewModel.ClientFirstName + " " + viewModel.ClientLastName,
                     CreatedDate = DateTime.Now,
+                    Address=viewModel.ClientProperty,
                     Street = viewModel.ClientStreet,
                     State = viewModel.ClientState,
                     City = viewModel.ClientCity,

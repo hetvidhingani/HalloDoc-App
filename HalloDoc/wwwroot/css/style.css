@@ -3,10 +3,12 @@ body {
     padding: 0;
     background-color: rgba(255, 255, 255, 0.61);
 }
-
+.headerDarkTheme {
+    box-shadow: 5px 5px 5px ;
+}
 .darkMode {
-    background-color: rgb(27, 27, 27);
-    color: white;
+    background-color: #212121;
+    color:white;
 }
 /*#region media queries*/
 @media only screen and (max-width: 576px) {
@@ -248,7 +250,8 @@ body {
         place-content: center;
     }
 
-    .backButton > a,
+    .backButton > a
+
     {
         text-decoration: none;
         opacity: 1;
@@ -307,11 +310,12 @@ body {
 header {
     position: fixed;
     height: 80px;
-    background-color: white;
+   
+
     box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 1100;
 }
 
 .headerTabs {
@@ -324,17 +328,25 @@ header {
 .header2 {
     position: sticky;
     height: 80px;
-    background-color: white;
-    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
+    
     top: 0;
     width: 100%;
     z-index: 1000;
 }
-.t {
+.subHeader {
     position: fixed;
-    top: 82px;
-    background-color: white;
-    box-shadow: 0px 1px 0px 0px rgb(196, 190, 196);
+    top: 81px;
+   
+}
+.shadow {
+    box-shadow: 0px 6px 8px -2px rgba(125,114,114,0.74);
+    -webkit-box-shadow: 0px 6px 8px -2px rgba(125,114,114,0.74);
+    -moz-box-shadow: 0px 6px 8px -2px rgba(125,114,114,0.74);
+}
+.formshadow {
+    box-shadow: 1px -1px 53px -13px rgba(176,173,173,0.84);
+    -webkit-box-shadow: 1px -1px 53px -13px rgba(176,173,173,0.84);
+    -moz-box-shadow: 1px -1px 53px -13px rgba(176,173,173,0.84);
 }
 /*.tabs > a {
     text-decoration: none;
@@ -349,7 +361,6 @@ header {
         border-bottom: 5px solid #00bbe8;
         outline: none;
     }*/
-
 .mainSection {
     margin-top: 120px;
 }
@@ -363,7 +374,7 @@ header {
     color: #00bbe8;
     border-radius: 5px;
     padding: 5px 8px;
-    background-color: white;
+               background-color:white;
     border: 2px solid #00bbe8;
 }
 
@@ -418,9 +429,7 @@ header {
 
 /* #endregion */
 /* #region Create Patient Request  */
-.PatientInfo {
-    background-color: white;
-}
+
 
 form > *,
 form > div > div {
@@ -516,10 +525,9 @@ form > div > div {
 .normalbtn {
     border: 1px solid #00bbe8;
     color: #00bbe8;
-    background-color:white;
-    padding:7px;
-    border-radius:7px;
- 
+    padding: 7px;
+    background-color: white;
+    border-radius: 7px;
 }
 
 .MainHeaderLogo {
