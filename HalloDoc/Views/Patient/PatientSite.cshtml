@@ -1,8 +1,40 @@
 ﻿
 @{
-    Layout = "~/Views/Shared/_PatientSiteLayout.cshtml";
+    Layout = null;
 }
- <div class="PatientSitePage"></div>
+
+@{
+    ViewData["Title"] = "_PatientSiteLayout";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HalloDoc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+
+
+    <div class="PatientSitePage"></div>
 
     <div class="container-fluid mainPage">
         <div class="header">
@@ -16,17 +48,17 @@
         <div class="container-fluid  buttonContent">
 
             <a asp-controller="Patient" asp-action="PatientSubmitRequest" style="color:white;text-decoration:none;">
-        <button type="button" class="btn btn-lg" style="background-color:#01bce9 ;color: white">
-                Submit A Request
-        </button>
+                <button type="button" class="btn btn-lg" style="background-color:#01bce9 ;color: white">
+                    Submit A Request
+                </button>
             </a>
             <a asp-controller="Patient" asp-action="RegisterdPatientLogin" style="color:white;text-decoration:none">
-            <button type="button" class="btn btn-lg mt-5 " style="background-color:#0d1556;color: white;">
-                Registerd
-                Patient
-        </button>
+                <button type="button" class="btn btn-lg mt-5 " style="background-color:#0d1556;color: white;">
+                    Registerd
+                    Patient
+                </button>
             </a>
-      
+
 
         </div>
         <div class="mt-auto mb-3 footlink">
@@ -36,3 +68,50 @@
         </div>
 
     </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/custom.js" asp-append-version="true"></script>
+    <script>
+
+        $(document).ready(function () {
+            var theme = getCookie("theme");
+            if (theme == "dark") {
+                $("body").addClass("darkMode");
+                $(".mainSection").addClass("darkMode");
+                $(".header2").addClass("bg-dark");
+                $(".header2").removeClass("bg-white");
+
+                $(".header").addClass("bg-dark");
+                $(".header").removeClass("bg-white");
+                $(".subHeader").addClass("bg-dark");
+                $(".subHeader").removeClass("bg-white");
+
+                $(".mobileviewdashboard").addClass("darkMode");
+            }
+        });
+
+        function getCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2) return parts.pop().split(";").shift();
+        }
+
+    </script>
+
+    @* @await RenderSectionAsync("Scripts", required: false) *@
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

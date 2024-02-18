@@ -83,7 +83,7 @@
                                         @if (@r.FileName != null)
                                     {
                                             <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
-                                                <button class="normalbtn">Download</button>
+                                                <button class="normalbtn">Download (@r.FileCount)</button>
                                             </a>
                                     }
                                     </td>

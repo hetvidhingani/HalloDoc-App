@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using HalloDoc.Models;
+using System.IO.Compression;
 
 namespace HalloDoc.Controllers
 {
@@ -142,35 +143,26 @@ namespace HalloDoc.Controllers
         {
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
             int? userID = HttpContext.Session.GetInt32("UserSession");
-            var tabledashboard =
-                (
-                    from r in _context.Requests
-                    join rfile in _context.RequestWiseFiles
-
-                     on r.RequestId equals rfile.RequestId into files from file in files.DefaultIfEmpty()
-                    where r.UserId == userID
-                    select new
-                    {
-                        r.RequestId,
-                        r.CreatedDate,
-                        r.Status,
-                        FileName=file!=null?file.FileName:null
-                    }
-
-                ).ToList();
-            List<DashboardViewModel> list = new List<DashboardViewModel>();
-            foreach (var r in tabledashboard)
+            var tabledashboard = (
+            from r in _context.Requests
+            where r.UserId == userID
+            select new DashboardViewModel
             {
-                DashboardViewModel dash = new DashboardViewModel();
-                dash.RequstId = r.RequestId;
-                dash.CreatedDate = r.CreatedDate.ToShortDateString();
-                dash.Status = r.Status;
-                dash.FileName = r.FileName;
-                list.Add(dash);
-            }
-
-
-            return View(list);
+                RequstId = r.RequestId,
+                CreatedDate = r.CreatedDate.ToShortDateString(),
+                Status = r.Status,
+                FileName = ( 
+                    from file in _context.RequestWiseFiles
+                    where file.RequestId == r.RequestId
+                    select file.FileName
+                ).FirstOrDefault(), // Use FirstOrDefault() to get only the first file name or null
+                FileCount = ( // Retrieve the count of files associated with the request
+            from file in _context.RequestWiseFiles
+            where file.RequestId == r.RequestId
+            select file.FileName
+        ).Count()
+            }).ToList();
+            return View(tabledashboard);
 
         }
         [HttpPost]
@@ -201,9 +193,9 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                 int ? userId = HttpContext.Session.GetInt32("UserSession");
+                int? userId = HttpContext.Session.GetInt32("UserSession");
 
-                User userExist = _context.Users.Where(x=>x.UserId == userId).FirstOrDefault();   
+                User userExist = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
                 Request request = new Request
                 {
                     RequestTypeId = 1,
@@ -311,7 +303,7 @@ namespace HalloDoc.Controllers
                     _context.Requests.Update(request);
                     _context.SaveChanges();
 
-                   
+
 
                 }
 
@@ -319,7 +311,7 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
-     
+
         #endregion
 
 
@@ -374,9 +366,10 @@ namespace HalloDoc.Controllers
                 DashboardViewModel model = new DashboardViewModel();
                 model.Username = e.FirstName + " " + e.LastName;
                 model.RequstId = e.RequestId;
-                model.CreatedDate = e.CreatedDate.ToShortDateString();
+                model.CreatedDate = DateTime.Now.ToShortDateString();
                 model.FileName = e.FileName;
                 model.Status = e.Status;
+                TempData["reqID"] = model.RequstId;
                 list.Add(model);
             }
 
@@ -394,6 +387,24 @@ namespace HalloDoc.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
+        public IActionResult DownloadAll()
+        {
+            var filesRow = _context.RequestWiseFiles.Where(u => u.RequestId == (int)TempData["reqID"]).ToList();
+            MemoryStream ms = new MemoryStream();
+            using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                filesRow.ForEach(file =>
+                {
+                    var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
+                    ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
+                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    using (Stream zipEntryStream = zipEntry.Open())
+                    {
+                        fs.CopyTo(zipEntryStream);
+                    }
+                });
+            return File(ms.ToArray(), "application/zip", "download.zip");
+        }
+
         #endregion
 
         #region Patient My Profile
@@ -462,7 +473,7 @@ namespace HalloDoc.Controllers
         public IActionResult PatientRequest()
         {
             int? userId = HttpContext.Session.GetInt32("UserSession");
-            if ( userId != null)
+            if (userId != null)
             {
                 var user = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
                 PatientRequestViewModel viewModel = new PatientRequestViewModel();
@@ -476,8 +487,8 @@ namespace HalloDoc.Controllers
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
                     viewModel.ZipCode = user.ZipCode;
-                    viewModel.DateOfBirth=user.DateOfBirth;
-                   
+                    viewModel.DateOfBirth = user.DateOfBirth;
+
                     return View(viewModel);
                 }
             }
@@ -485,28 +496,28 @@ namespace HalloDoc.Controllers
 
             return View();
         }
-     
+
         [HttpPost]
         public async Task<IActionResult> PatientRequest(PatientRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                
-                  Request request = new Request
-                    {
-                        RequestTypeId = 1,
-                        FirstName = viewModel.FirstName,
-                        LastName = viewModel.LastName,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        Email = viewModel.Email,
-                        CreatedDate = DateTime.Now,
-                        //RelationName = viewModel.RelationName,
-                        Status = 1
-                    };
-                    _context.Requests.Add(request);
-                    _context.SaveChanges();
-                    int id = request.RequestId;
-                
+
+                Request request = new Request
+                {
+                    RequestTypeId = 1,
+                    FirstName = viewModel.FirstName,
+                    LastName = viewModel.LastName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    Email = viewModel.Email,
+                    CreatedDate = DateTime.Now,
+                    //RelationName = viewModel.RelationName,
+                    Status = 1
+                };
+                _context.Requests.Add(request);
+                _context.SaveChanges();
+                int id = request.RequestId;
+
 
                 RequestClient requestClient = new RequestClient
                 {
@@ -729,7 +740,7 @@ namespace HalloDoc.Controllers
                     PhoneNumber = viewModel.ClientPhoneNumber,
                     CreatedDate = DateTime.Now,
                     CreatedBy = "Admin",
-                    Address1=viewModel.ClientProperty,
+                    Address1 = viewModel.ClientProperty,
                     Status = 1
                 };
                 _context.Businesses.Add(business);
@@ -818,7 +829,7 @@ namespace HalloDoc.Controllers
                 {
                     ConciergeName = viewModel.ClientFirstName + " " + viewModel.ClientLastName,
                     CreatedDate = DateTime.Now,
-                    Address=viewModel.ClientProperty,
+                    Address = viewModel.ClientProperty,
                     Street = viewModel.ClientStreet,
                     State = viewModel.ClientState,
                     City = viewModel.ClientCity,

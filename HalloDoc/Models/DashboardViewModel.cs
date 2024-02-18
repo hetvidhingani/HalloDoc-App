@@ -10,6 +10,7 @@ namespace HalloDoc.Models
         public string? FileName { get; set; }
         public string Username { get; set; }
         public string LastName { get; set; }
+        public int? FileCount { get; set; } 
 
 
     }
