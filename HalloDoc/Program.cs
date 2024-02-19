@@ -1,4 +1,5 @@
 using HalloDoc.DataContext;
+using HalloDoc.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDbContext<ApplicationDbContext>();
+var emailConfig = builder.Configuration
+    .GetSection("EmailConfiguration")
+    .Get<SendEmailModel>();
+
+builder.Services.AddSingleton(emailConfig);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

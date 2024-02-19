@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                
+              
                 <div class="row ">
                     <div class="col-12 col-sm-12">
                        @*  <div class="input-group mb-3">
@@ -50,14 +50,17 @@
                         </button>
                     </div>
                 </div>
+            </form>
+            <form class=" " asp-action="DownloadAll" asp-controller="Patient" method="post" enctype="multipart/form-data">
                 <!-- Add Bootstrap JS -->
                 <div class="row ">
                     <div class="col-6 d-flex align-items-center">
                         <h3>Documents</h3>
                     </div>
                     <div class="col-6 d-flex justify-content-end align-items-center">
-                        <a class="logouttxt normalbtn" asp-action="DownloadAll" asp-controller="Patient" > Download All</a>
-                        <a class="logoutIcon normalbtn" asp-action="DownloadAll" asp-controller="Patient"><i class="bi bi-cloud-arrow-down"></i></a>
+                        <input type="submit" class="back mt-2 mb-3 p-2" value="DownloadAll">
+                        @* <a class="logouttxt normalbtn" asp-action="DownloadAll" asp-controller="Patient" > Download All</a>
+                        <a class="logoutIcon normalbtn" asp-action="DownloadAll" asp-controller="Patient"><i class="bi bi-cloud-arrow-down"></i></a> *@
                     </div>
                 </div>
             </form>
@@ -69,13 +72,11 @@
 
                         <tr>
 
-                            <th>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
 
-                                </div>
+                            <th scope="col">
+                                <input type="checkbox" onclick="toggle(this)">File
                             </th>
-                            <th scope="col">File</th>
+
                             <th scope="col">Uploader</th>
                             <th scope="col">Upload Date</th>
                                <th scope="col">Action</th>
@@ -87,17 +88,16 @@
                 {
                         <tbody>
                         <tr>
-                                <th>
-                                    <div class="form-check">
-                                        <input class="form-check-input doc-checkbox" type="checkbox" value="" id="flexCheckDefault">
+                            <td>
 
-                                    </div>
-                                </th>
-                                <th scope="row" >@r.FileName</th>
+                                <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                            </td>
+
+                              
                             <td>@r.Username</td>
                             <td>@r.CreatedDate</td>
                                 <td>
-                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link">
+                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                         <i class="bi bi-cloud-arrow-down"></i>
                                     </a>
                                 </td>
@@ -171,17 +171,31 @@
         });
     }
 
+
+
+
+   
     // download all FileSystem
-    function Download_all() {
-        var allcheckbox = document.getElementsByClassName('doc-checkbox');
-        var alllinks = document.getElementsByClassName('download-link');
-        console.log(alllinks.length);
-        console.log(allcheckbox.length);
-        for (var i = 0; i < allcheckbox.length; i++) {
-            if (allcheckbox[i].checked) {
-                console.log(alllinks[i]);
-                alllinks[i].click();
+    // function Download_all() {
+    //     var allcheckbox = document.getElementsByClassName('doc-checkbox');
+    //     var alllinks = document.getElementsByClassName('download-link');
+    //     console.log(alllinks.length);
+    //     console.log(allcheckbox.length);
+    //     for (var i = 0; i < allcheckbox.length; i++) {
+    //         if (allcheckbox[i].checked) {
+    //             console.log(alllinks[i]);
+    //             alllinks[i].click();
+    //         }
+    //     }
+    // }
+   
+   
+        // for checkbox 
+        function toggle(source) {
+            checkboxes = document.getElementsByClassName('checkboxforall');
+            for (var i = 0, n = checkboxes.length; i < n; i++) {
+                checkboxes[i].checked = source.checked;
             }
         }
-    }
+
 </script>

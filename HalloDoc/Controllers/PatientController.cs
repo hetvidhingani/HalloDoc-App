@@ -6,24 +6,40 @@ using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
 using HalloDoc.Models;
 using System.IO.Compression;
+using System.Net.Mail;
+using System.Net;
 
 namespace HalloDoc.Controllers
 {
     public class PatientController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SendEmailModel _emailConfig;
 
-        public PatientController(ApplicationDbContext context)
+        public PatientController(ApplicationDbContext context, SendEmailModel emailConfig)
         {
             _context = context;
+            _emailConfig = emailConfig;
         }
-
+        public string Encode(string encodeMe)
+        {
+            byte[] encoded = System.Text.Encoding.UTF8.GetBytes(encodeMe);
+            return Convert.ToBase64String(encoded);
+        }
+        public string Decode(string decodeMe)
+        {
+            byte[] encoded = Convert.FromBase64String(decodeMe);
+            return System.Text.Encoding.UTF8.GetString(encoded);
+        }
         public IActionResult PatientSite()
         {
             return View();
         }
 
-
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
         public IActionResult PatientSubmitRequest()
         {
             return View();
@@ -52,6 +68,35 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+
+
+
+        #region EmailSending
+
+
+
+        public IActionResult SendEmail(SendEmailModel sendEmailModel)
+        {
+            MailMessage message = new MailMessage();
+            message.From = new MailAddress(_emailConfig.From);
+            message.Subject = "Reset Password";
+            message.To.Add(new MailAddress(sendEmailModel.Email));
+            message.Body = "Reset Password Link: ";
+            message.IsBodyHtml = true;
+            using (var smtpClient = new SmtpClient(_emailConfig.SmtpServer))
+            {
+                smtpClient.Port = 587;
+                smtpClient.Credentials = new NetworkCredential(_emailConfig.Username, _emailConfig.Password);
+                smtpClient.EnableSsl = true;
+
+                smtpClient.Send(message);
+            }
+
+            return View("PatientForgotPassword");
+        }
+        #endregion
+
+
 
         #region check email
         [Route("/Patient/checkemail/{email}")]
@@ -333,6 +378,7 @@ namespace HalloDoc.Controllers
                 {
                     RequestId = Id,
                     FileName = fileName,
+                    CreatedDate=DateTime.Now
                 };
                 _context.RequestWiseFiles.Add(newRequestWiseFile);
                 _context.SaveChanges();
@@ -343,6 +389,7 @@ namespace HalloDoc.Controllers
 
         public IActionResult ViewDocument(int Id)
         {
+            HttpContext.Session.SetInt32("reqID",Id);
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
 
             var tableData = (from r in _context.Requests
@@ -372,6 +419,7 @@ namespace HalloDoc.Controllers
                 TempData["reqID"] = model.RequstId;
                 list.Add(model);
             }
+           
 
             return View(list);
         }
@@ -387,9 +435,13 @@ namespace HalloDoc.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
+
         public IActionResult DownloadAll()
         {
-            var filesRow = _context.RequestWiseFiles.Where(u => u.RequestId == (int)TempData["reqID"]).ToList();
+            int? requestid = HttpContext.Session.GetInt32("reqID");
+
+
+            var filesRow = _context.RequestWiseFiles.Where(u => u.RequestId == requestid).ToList();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>
@@ -404,6 +456,39 @@ namespace HalloDoc.Controllers
                 });
             return File(ms.ToArray(), "application/zip", "download.zip");
         }
+
+
+        //public ActionResult DownloadAll(IEnumerable<string> selectedFiles)
+        //{
+
+
+        //    // Create a memory stream to store the zip archive
+        //    using (MemoryStream memoryStream = new MemoryStream())
+        //    {
+        //        // Create a zip archive
+        //        using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+        //        {
+        //            foreach (var file in selectedFiles)
+        //            {
+        //                // Get the file bytes (assuming you have a property like 'FileData' representing the file content)
+        //                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+        //                byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+        //                // Add the file to the zip archive
+        //                var zipEntry = zipArchive.CreateEntry(file);
+        //                using (var zipEntryStream = zipEntry.Open())
+        //                {
+        //                    zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+        //                }
+        //            }
+        //        }
+        //        // Set the position of the memory stream to the beginning
+        //        memoryStream.Seek(0, SeekOrigin.Begin);
+
+        //        // Return the zip archive as a downloadable response
+        //        return File(memoryStream.ToArray(), "application/zip", "files.zip");
+        //    }
+        //}
 
         #endregion
 
@@ -531,7 +616,8 @@ namespace HalloDoc.Controllers
                     State = viewModel.State,
                     ZipCode = viewModel.ZipCode,
                     Notes = viewModel.Symptoms,
-                    Email = viewModel.Email
+                    Email = viewModel.Email,
+                    DateOfBirth=viewModel.DateOfBirth
 
                 };
                 _context.RequestClients.Add(requestClient);
@@ -596,10 +682,10 @@ namespace HalloDoc.Controllers
                         City = requestClient.City,
                         State = requestClient.State,
                         ZipCode = requestClient.ZipCode,
-                        StrMonth = viewModel.DateOfBirth.Value.Month.ToString(),
-                        IntYear = viewModel.DateOfBirth.Value.Year,
-                        IntDate = viewModel.DateOfBirth.Value.Day,
-
+                        //StrMonth = viewModel.DateOfBirth.Value.Month.ToString(),
+                        //IntYear = viewModel.DateOfBirth.Value.Year,
+                        //IntDate = viewModel.DateOfBirth.Value.Day,
+                        DateOfBirth=viewModel.DateOfBirth,
                         CreatedBy = "Admin",
                         CreatedDate = DateTime.Now,
                         RegionId = 1
@@ -654,7 +740,9 @@ namespace HalloDoc.Controllers
                     State = viewModel.State,
                     ZipCode = viewModel.ZipCode,
                     Notes = viewModel.Symptoms,
-                    Email = viewModel.Email
+                    DateOfBirth = viewModel.DateOfBirth,
+
+                    Email = viewModel.Email,
                 };
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
@@ -702,7 +790,7 @@ namespace HalloDoc.Controllers
 
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
-                    //TempData["id"] = request.RequestId;
+                    
                     return RedirectToAction("CreateAccountPatient");
 
                 }
@@ -757,7 +845,9 @@ namespace HalloDoc.Controllers
                     State = viewModel.State,
                     ZipCode = viewModel.ZipCode,
                     Notes = viewModel.Symptoms,
-                    Email = viewModel.Email
+                    Email = viewModel.Email,
+                    DateOfBirth = viewModel.DateOfBirth
+
                 };
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
@@ -852,7 +942,8 @@ namespace HalloDoc.Controllers
                     State = viewModel.State,
                     ZipCode = viewModel.ZipCode,
                     Notes = viewModel.Symptoms,
-                    Email = viewModel.Email
+                    Email = viewModel.Email,
+                    DateOfBirth=viewModel.DateOfBirth
                 };
                 _context.RequestClients.Add(requestClient);
                 _context.SaveChanges();
@@ -937,9 +1028,10 @@ namespace HalloDoc.Controllers
                             City = requestClient.City,
                             State = requestClient.State,
                             ZipCode = requestClient.ZipCode,
-                            StrMonth = requestClient.StrMonth,
-                            IntYear = requestClient.IntYear,
-                            IntDate = requestClient.IntDate,
+                            //StrMonth = requestClient.StrMonth,
+                            //IntYear = requestClient.IntYear,
+                            //IntDate = requestClient.IntDate,
+                           DateOfBirth= requestClient.DateOfBirth,
                             CreatedBy = "Admin",
                             CreatedDate = DateTime.Now,
                             RegionId = 1
@@ -981,6 +1073,7 @@ namespace HalloDoc.Controllers
 
 
         #endregion
+
 
         #region Logout
         public IActionResult Logout()

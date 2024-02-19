@@ -89,6 +89,8 @@ public partial class RequestClient
     [Precision(9, 6)]
     public decimal? Longitude { get; set; }
 
+    public DateOnly? DateOfBirth { get; set; }
+
     [ForeignKey("RegionId")]
     [InverseProperty("RequestClients")]
     public virtual Region? Region { get; set; }
