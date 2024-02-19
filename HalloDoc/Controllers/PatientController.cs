@@ -789,9 +789,13 @@ namespace HalloDoc.Controllers
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
                     
-                    return RedirectToAction("CreateAccountPatient");
+                    return RedirectToAction("PatientSite");
 
                 }
+                await LinkToCreateAccount(new CreateAccountViewModel
+                {
+                    Email = viewModel.Email
+                });
                 return RedirectToAction("RegisterdPatientLogin");
             }
             return View(viewModel);
@@ -881,11 +885,15 @@ namespace HalloDoc.Controllers
 
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
-                    CreateAccountViewModel vm = new CreateAccountViewModel();
-                    await LinkToCreateAccount(vm);
+                    
                     return RedirectToAction("CreateAccountPatient");
 
                 }
+
+                await LinkToCreateAccount(new CreateAccountViewModel
+                {
+                    Email = viewModel.Email
+                });
                 return RedirectToAction("RegisterdPatientLogin");
             }
             return View(viewModel);
@@ -982,6 +990,10 @@ namespace HalloDoc.Controllers
                     return RedirectToAction("CreateAccountPatient");
 
                 }
+                await LinkToCreateAccount(new CreateAccountViewModel
+                {
+                    Email = viewModel.Email
+                });
                 return RedirectToAction("RegisterdPatientLogin");
             }
             return View(viewModel);
