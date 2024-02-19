@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </form>
-            <form class=" " asp-action="DownloadAll" asp-controller="Patient" method="post" enctype="multipart/form-data">
+            <form  asp-action="DownloadAll" asp-controller="Patient" method="post" enctype="multipart/form-data">
                 <!-- Add Bootstrap JS -->
                 <div class="row ">
                     <div class="col-6 d-flex align-items-center">
@@ -63,24 +63,16 @@
                         <a class="logoutIcon normalbtn" asp-action="DownloadAll" asp-controller="Patient"><i class="bi bi-cloud-arrow-down"></i></a> *@
                     </div>
                 </div>
-            </form>
+           
             <div class="dashboardtbl table-responsive">
                 <table class="table table-hover">
                     
                     <thead style="background-color:#F0F0F0">
-                       
-
                         <tr>
-
-
-                            <th scope="col">
-                                <input type="checkbox" onclick="toggle(this)">File
-                            </th>
-
+                            <th scope="col"> <input type="checkbox" onclick="toggle(this)"></th>
                             <th scope="col">Uploader</th>
                             <th scope="col">Upload Date</th>
                                <th scope="col">Action</th>
-
                         </tr>
                       
                     </thead>
@@ -109,7 +101,7 @@
                 </table>
 
                 </div>
-
+            </form>
             <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
              
                 @foreach (var r in Model)
@@ -194,7 +186,7 @@
  
         // For Download File
         function toggle(source) {
-            checkboxes = document.getElementsByName('checkboxForAll');
+            checkboxes = document.getElementsByClassName('checkboxForAll');
             for (var i = 0, n = checkboxes.length; i < n; i++) {
                 checkboxes[i].checked = source.checked;
             }

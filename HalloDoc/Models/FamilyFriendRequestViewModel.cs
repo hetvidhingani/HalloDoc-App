@@ -7,14 +7,17 @@ namespace HalloDoc.Models
     public class FamilyFriendRequestViewModel
     {
        
-        [Required]
+        [Required(ErrorMessage = "Enter Patient's First Name Here")]
         public string? FirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter Patient's Last Name Here")]
+
         public string? LastName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter Patient's Phone Number Here")]
+
         public string? PhoneNumber { get; set; }
         public IFormFile? File { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter Patient's Email Here")]
+
 
         public string? Email { get; set; }
       
@@ -26,15 +29,16 @@ namespace HalloDoc.Models
         public string? City { get; set; }
         public string? State { get; set; }
         public string? ZipCode { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter First Name Here")]
 
         public string? ClientFirstName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter Last Name Here")]
+
         public string? ClientLastName { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter Phone Number Here")]
 
         public string? ClientPhoneNumber { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Enter your Email Here")]
 
         public string? CLientEmail { get; set; }
         public DateOnly? DateOfBirth { get; set; }

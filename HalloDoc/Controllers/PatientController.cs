@@ -95,8 +95,12 @@ namespace HalloDoc.Controllers
             return View("PatientForgotPassword");
         }
         #endregion
+       
 
-
+        private Task<bool> CheckregisterdAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
 
         #region check email
         [Route("/Patient/checkemail/{email}")]
@@ -359,7 +363,6 @@ namespace HalloDoc.Controllers
 
         #endregion
 
-
         #region View Document
         [HttpPost]
         public IActionResult ViewDocument(IFormFile a, int Id)
@@ -436,59 +439,32 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public IActionResult DownloadAll()
+       
+
+        public IActionResult DownloadAll(IEnumerable<string> selectedFiles)
         {
-            int? requestid = HttpContext.Session.GetInt32("reqID");
 
-
-            var filesRow = _context.RequestWiseFiles.Where(u => u.RequestId == requestid).ToList();
-            MemoryStream ms = new MemoryStream();
-            using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
-                filesRow.ForEach(file =>
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
-                    ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
-                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    using (Stream zipEntryStream = zipEntry.Open())
+                    foreach (var file in selectedFiles)
                     {
-                        fs.CopyTo(zipEntryStream);
+                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                        byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                        var zipEntry = zipArchive.CreateEntry(file);
+                        using (var zipEntryStream = zipEntry.Open())
+                        {
+                            zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+                        }
                     }
-                });
-            return File(ms.ToArray(), "application/zip", "download.zip");
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return File(memoryStream.ToArray(), "application/zip", "files.zip");
+            }
         }
-
-
-        //public ActionResult DownloadAll(IEnumerable<string> selectedFiles)
-        //{
-
-
-        //    // Create a memory stream to store the zip archive
-        //    using (MemoryStream memoryStream = new MemoryStream())
-        //    {
-        //        // Create a zip archive
-        //        using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-        //        {
-        //            foreach (var file in selectedFiles)
-        //            {
-        //                // Get the file bytes (assuming you have a property like 'FileData' representing the file content)
-        //                var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
-        //                byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
-
-        //                // Add the file to the zip archive
-        //                var zipEntry = zipArchive.CreateEntry(file);
-        //                using (var zipEntryStream = zipEntry.Open())
-        //                {
-        //                    zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
-        //                }
-        //            }
-        //        }
-        //        // Set the position of the memory stream to the beginning
-        //        memoryStream.Seek(0, SeekOrigin.Begin);
-
-        //        // Return the zip archive as a downloadable response
-        //        return File(memoryStream.ToArray(), "application/zip", "files.zip");
-        //    }
-        //}
 
         #endregion
 
