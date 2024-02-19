@@ -13,6 +13,7 @@ namespace HalloDoc.Models
         [Required]
         public string  ConfirmPassword { get; set; }
         //public int RequestID { get; set; }
+        public object? Token { get; internal set; } = null;
 
     }
 }

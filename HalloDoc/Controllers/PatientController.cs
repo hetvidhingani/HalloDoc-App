@@ -8,29 +8,21 @@ using HalloDoc.Models;
 using System.IO.Compression;
 using System.Net.Mail;
 using System.Net;
+using System.Security.Cryptography;
+using MimeKit;
 
 namespace HalloDoc.Controllers
 {
     public class PatientController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly SendEmailModel _emailConfig;
-
-        public PatientController(ApplicationDbContext context, SendEmailModel emailConfig)
+       
+        public PatientController(ApplicationDbContext context)
         {
             _context = context;
-            _emailConfig = emailConfig;
+           
         }
-        public string Encode(string encodeMe)
-        {
-            byte[] encoded = System.Text.Encoding.UTF8.GetBytes(encodeMe);
-            return Convert.ToBase64String(encoded);
-        }
-        public string Decode(string decodeMe)
-        {
-            byte[] encoded = Convert.FromBase64String(decodeMe);
-            return System.Text.Encoding.UTF8.GetString(encoded);
-        }
+      
         public IActionResult PatientSite()
         {
             return View();
@@ -75,32 +67,90 @@ namespace HalloDoc.Controllers
 
 
 
-        public IActionResult SendEmail(SendEmailModel sendEmailModel)
+        public async Task SendEmailfgpasswordAsync(string toEmail, string subject, string body)
         {
-            MailMessage message = new MailMessage();
-            message.From = new MailAddress(_emailConfig.From);
-            message.Subject = "Reset Password";
-            message.To.Add(new MailAddress(sendEmailModel.Email));
-            message.Body = "Reset Password Link: ";
-            message.IsBodyHtml = true;
-            using (var smtpClient = new SmtpClient(_emailConfig.SmtpServer))
-            {
-                smtpClient.Port = 587;
-                smtpClient.Credentials = new NetworkCredential(_emailConfig.Username, _emailConfig.Password);
-                smtpClient.EnableSsl = true;
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("HalloDoc", "t12281554@gmail.com"));
+            message.To.Add(new MailboxAddress("HalloDocMember", toEmail));
+            message.Subject = subject;
 
-                smtpClient.Send(message);
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = body;
+
+
+            message.Body = bodyBuilder.ToMessageBody();
+
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 587, false);
+                await client.AuthenticateAsync("t12281554@gmail.com", "vbdhvlywjczuttbh");
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+        }
+
+        private const int TokenExpirationHours = 24;
+
+        public string GenerateToken()
+        {
+            byte[] tokenBytes = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(tokenBytes);
             }
 
-            return View("PatientForgotPassword");
-        }
-        #endregion
-       
+            string token = Convert.ToBase64String(tokenBytes);
 
-        private Task<bool> CheckregisterdAsync(string email)
-        {
-            throw new NotImplementedException();
+            return token;
         }
+
+        public DateTime GetTokenExpiration()
+        {
+            return DateTime.UtcNow.AddHours(TokenExpirationHours);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetpasswordRequest(CreateAccountViewModel req)
+        {
+            if (req.Email == null)
+            {
+                TempData["emptyemail"] = "Please enter Email";
+                return RedirectToAction("PatientForgotPassword", "Patient");
+
+            }
+            var resetToken = GenerateToken();
+            var resetLink = "<a href=" + Url.Action("PatientForgotPassword", "Patient", new { email = req.Email, code = resetToken }, "http") + ">Reset Password</a>";
+            var subject = "Password Reset Request";
+            var body = "<b>Please find the Password Reset Link.</b><br/>" + resetLink;
+
+            await SendEmailfgpasswordAsync(req.Email, subject, body);
+            TempData["emailsend"] = "Email is sent successfully to your email account";
+            return RedirectToAction("RegisterdPatientLogin", "Patient");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LinkToCreateAccount(CreateAccountViewModel req)
+        {
+            if (req.Email == null)
+            {
+                TempData["emptyemail"] = "Please enter Email";
+                return RedirectToAction("CreateAccountRequest", "Patient");
+
+            }
+            var resetToken = GenerateToken();
+            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Patient", new { email = req.Email, code = resetToken }, "http") + ">Create account</a>";
+            var subject = "Create Patient Account";
+            var body = "<b>Please Create Account Link.</b><br/>" + resetLink;
+
+            await SendEmailfgpasswordAsync(req.Email, subject, body);
+            TempData["emailsend"] = "Email is sent successfully to your email account";
+            return RedirectToAction("PatientSite", "Patient");
+        }
+
+
+        #endregion
+
+
 
         #region check email
         [Route("/Patient/checkemail/{email}")]
@@ -156,35 +206,7 @@ namespace HalloDoc.Controllers
             return View();
 
         }
-        [HttpPost]
-        public IActionResult PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
-        {
-            var myUser = _context.AspNetUsers.Where(x => x.Email == createAccountViewModel.Email).FirstOrDefault();
 
-            if (myUser != null)
-            {
-                //ViewBag.Message = "Reset Password Link is sent to your registerd Email.";
-                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
-                {
-                    myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
-                    _context.AspNetUsers.Update(myUser);
-                    _context.SaveChangesAsync();
-                    ViewBag.Message = "Password Updated";
-
-                }
-                else
-                {
-                    ViewBag.Message = "Password and Confirm Password must be same!!!";
-
-                }
-
-            }
-            else
-            {
-                ViewBag.Message = "Invalid User Name";
-            }
-            return View();
-        }
         #endregion
 
         #region Dashboard
@@ -859,6 +881,8 @@ namespace HalloDoc.Controllers
 
                     _context.AspNetUsers.Add(newaspNetUSer);
                     _context.SaveChanges();
+                    CreateAccountViewModel vm = new CreateAccountViewModel();
+                    await LinkToCreateAccount(vm);
                     return RedirectToAction("CreateAccountPatient");
 
                 }
@@ -968,11 +992,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Create Account
-        public IActionResult CreateAccountRequest()
-        {
-
-            return View();
-        }
+     
         [HttpPost]
         public async Task<IActionResult> CreateAccountRequest(CreateAccountViewModel createAccountViewModel)
         {
@@ -1049,7 +1069,6 @@ namespace HalloDoc.Controllers
 
 
         #endregion
-
 
         #region Logout
         public IActionResult Logout()

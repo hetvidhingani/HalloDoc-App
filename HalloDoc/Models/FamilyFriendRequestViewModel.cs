@@ -35,7 +35,7 @@ namespace HalloDoc.Models
         [Required(ErrorMessage = "Enter Last Name Here")]
 
         public string? ClientLastName { get; set; }
-        [Required(ErrorMessage = "Enter Phone Number Here")]
+
 
         public string? ClientPhoneNumber { get; set; }
         [Required(ErrorMessage = "Enter your Email Here")]
