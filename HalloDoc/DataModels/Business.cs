@@ -66,8 +66,12 @@ public partial class Business
     [InverseProperty("Businesses")]
     public virtual BusinessType? BusinessType { get; set; }
 
+    [ForeignKey("CreatedBy")]
+    [InverseProperty("BusinessCreatedByNavigations")]
+    public virtual AspNetUser? CreatedByNavigation { get; set; }
+
     [ForeignKey("ModifiedBy")]
-    [InverseProperty("Businesses")]
+    [InverseProperty("BusinessModifiedByNavigations")]
     public virtual AspNetUser? ModifiedByNavigation { get; set; }
 
     [ForeignKey("RegionId")]

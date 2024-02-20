@@ -160,7 +160,9 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.BusinessType).WithMany(p => p.Businesses).HasConstraintName("Business_BusinessTypeId_fkey");
 
-            entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.Businesses).HasConstraintName("Business_ModifiedBy_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.BusinessCreatedByNavigations).HasConstraintName("Business_CreatedBy_fkey");
+
+            entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.BusinessModifiedByNavigations).HasConstraintName("Business_ModifiedBy_fkey");
 
             entity.HasOne(d => d.Region).WithMany(p => p.Businesses).HasConstraintName("Business_RegionId_fkey");
         });
