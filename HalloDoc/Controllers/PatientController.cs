@@ -22,7 +22,7 @@ namespace HalloDoc.Controllers
             _context = context;
            
         }
-      
+        #region view
         public IActionResult PatientSite()
         {
             return View();
@@ -61,7 +61,7 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-
+        #endregion
 
         #region EmailSending
 
@@ -79,6 +79,7 @@ namespace HalloDoc.Controllers
 
 
             message.Body = bodyBuilder.ToMessageBody();
+            ViewBag.emailsend = "Email is sent successfully to your email account";
 
             using (var client = new MailKit.Net.Smtp.SmtpClient())
             {
@@ -114,7 +115,7 @@ namespace HalloDoc.Controllers
         {
             if (req.Email == null)
             {
-                TempData["emptyemail"] = "Please enter Email";
+                ViewBag.emailEnter = "Please enter Email";
                 return RedirectToAction("PatientForgotPassword", "Patient");
 
             }
@@ -124,8 +125,8 @@ namespace HalloDoc.Controllers
             var body = "<b>Please find the Password Reset Link.</b><br/>" + resetLink;
 
             await SendEmailfgpasswordAsync(req.Email, subject, body);
-            TempData["emailsend"] = "Email is sent successfully to your email account";
-            return RedirectToAction("RegisterdPatientLogin", "Patient");
+            TempData["sent"] = "Reset Password link is Successfully sent to your email!";
+            return RedirectToAction("ResetPassword", "Patient");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -149,8 +150,6 @@ namespace HalloDoc.Controllers
 
 
         #endregion
-
-
 
         #region check email
         [Route("/Patient/checkemail/{email}")]
@@ -206,7 +205,35 @@ namespace HalloDoc.Controllers
             return View();
 
         }
+        [HttpPost]
+        public IActionResult PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
+        {
+            var myUser = _context.AspNetUsers.Where(x => x.Email == createAccountViewModel.Email).FirstOrDefault();
 
+            if (myUser != null)
+            {
+                //ViewBag.Message = "Reset Password Link is sent to your registerd Email.";
+                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+                {
+                    myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
+                    _context.AspNetUsers.Update(myUser);
+                    _context.SaveChangesAsync();
+                    ViewBag.Message = "Password Updated";
+
+                }
+                else
+                {
+                    ViewBag.Message = "Password and Confirm Password must be same!!!";
+
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = "Invalid User Name";
+            }
+            return RedirectToAction("RegisterdPatientLogin");
+        }
         #endregion
 
         #region Dashboard
@@ -466,25 +493,53 @@ namespace HalloDoc.Controllers
         public IActionResult DownloadAll(IEnumerable<string> selectedFiles)
         {
 
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-                {
-                    foreach (var file in selectedFiles)
-                    {
-                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
-                        byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
 
-                        var zipEntry = zipArchive.CreateEntry(file);
-                        using (var zipEntryStream = zipEntry.Open())
+
+            if (selectedFiles.Count()>0)
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                    {
+                        foreach (var file in selectedFiles)
                         {
-                            zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+                            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                            var zipEntry = zipArchive.CreateEntry(file);
+                            using (var zipEntryStream = zipEntry.Open())
+                            {
+                                zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+                            }
                         }
                     }
-                }
-                memoryStream.Seek(0, SeekOrigin.Begin);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
 
-                return File(memoryStream.ToArray(), "application/zip", "files.zip");
+                    return File(memoryStream.ToArray(), "application/zip", "files.zip");
+                }
+               
+
+            }
+            else
+            {
+
+                int? requestid = HttpContext.Session.GetInt32("reqID");
+
+
+                var filesRow = _context.RequestWiseFiles.Where(u => u.RequestId == requestid).ToList();
+                MemoryStream ms = new MemoryStream();
+                using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                    filesRow.ForEach(file =>
+                    {
+                        var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
+                        ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
+                        using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        using (Stream zipEntryStream = zipEntry.Open())
+                        {
+                            fs.CopyTo(zipEntryStream);
+                        }
+                    });
+                return File(ms.ToArray(), "application/zip", "download.zip");
             }
         }
 
