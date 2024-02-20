@@ -1,0 +1,118 @@
+﻿@model HalloDoc.DataModels.AspNetUser
+
+@{
+    Layout = null;
+}
+@using HalloDoc.DataModels;
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - HalloDoc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+            crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
+
+
+</head>
+<body>
+
+    <div class="row main">
+        <div class="col-lg-6 col-md-6 col-sm-12 side">
+
+            <img src="~/images/loginpage.jpg" class="img image-fluid">
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center flex-wrap justify-content-center flex-column">
+
+            <div class="switch-mode-inner-div" id="toggle">
+                <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
+            </div>
+            <div class=" logoImg  text-center">
+                <img src="~/images/loginpagelogo.png" class="loginImg ">
+            </div>
+            <div class=" right  col-lg-6 col-md-8 col-sm-8  align-items-center">
+
+                <div class="backButton">
+                    <i class="bi bi-chevron-left"></i>
+                    <a href="#">Back</a>
+                </div>
+                <div class="text-center ">
+
+
+                    <div class="login">
+                        <h3 class="mainHeading">
+                            Login into your account
+                        </h3>
+                    </div>
+
+                    <form asp-controller="Admin" asp-action="AdminLogin" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class=" form-floating form-group">
+                            <i class="bi bi-person-circle loginIconfrom"></i>
+                            <input asp-for="Email" type="text" id="email" class="form-control " placeholder=" " />
+                            <label for="email">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+
+
+                        <div class=" form-floating form-group">
+                            <i class="bi bi-eye loginIconfrom" id="disp"></i>
+                            <input asp-for="PasswordHash" type="password" class="form-control  " id="pwd" placeholder=" ">
+                            <label for="pwd">Password</label>
+                            <span asp-validation-for="PasswordHash" class="text-danger"></span>
+
+
+
+                        </div>
+                        <div class="input-group d-flex justify-content-between">
+                            <input type="submit" class="SiteButton  px-4 py-2 w-100 " style="text-decoration:none;color:white;border:none" value="Login" />
+                        </div>
+                    </form>
+
+                </div>
+
+
+            </div>
+            <div class="mt-auto mb-3 footlink">
+                <a href="#">Terms and Conditions</a> |
+                <a href="#">Privacy Policy</a>
+
+            </div>
+        </div>
+    </div>
+
+
+   
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/custom.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    </body>
+    </html>
+

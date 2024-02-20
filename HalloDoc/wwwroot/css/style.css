@@ -1,3 +1,91 @@
+
+/*#region admin css*/
+
+.mainSectionMargin {
+    margin: 150px 15px;
+}
+
+.cardDesign1 {
+    background-color: #e9eaef;
+    color: #203e84;
+    border: 1px solid #203e84;
+    border-radius: 10px;
+}
+.cardDesign2 {
+    background-color: #e5f2f8;
+    color: #20a2ce;
+    border: 1px solid #20a2ce;
+    border-radius: 10px;
+}
+.cardDesign3 {
+    background-color: #e9f0e8;
+    color: #377b37;
+    border: 1px solid #377b37;
+    border-radius: 10px;
+}
+.cardDesign4 {
+    background-color: #f7e6ee;
+    color: #a52879;
+    border: 1px solid #a52879;
+    border-radius: 10px;
+}
+.cardDesign5 {
+    background-color: #e5eef5;
+    color: #236cb5;
+    border: 1px solid #236cb5;
+    border-radius: 10px;
+}
+.cardDesign6 {
+    background-color: #efeef4;
+    color: #937ab3;
+    border: 1px solid #937ab3;
+    border-radius: 10px;
+}
+
+.mainTextLink {
+    text-decoration: none;
+    background-color: #06b9df;
+    color: white;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0px 5px;
+}
+.iconLink {
+    text-decoration: none;
+    background-color: #06b9df;
+    color: white;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 0px 5px;
+}
+@media only screen and (max-width: 600px) {
+    .cust-col {
+        flex: 0 0 33.33333%;
+        max-width: 33.33333%;
+    }
+    .i{
+        display:none;
+    }
+    .cards{
+       text-align:center;
+    }
+    .mainTextLink {
+        display: none;
+    }
+}
+@media only screen and (min-width: 601px) {
+
+
+    .iconLink {
+        display: none;
+    }
+}
+
+
+/*#endregion*/
+/*#region patient css*/
 body {
     margin: 0;
     padding: 0;
@@ -740,3 +828,4 @@ input[type="file"] {
     font-size: 18px;
     position: absolute;
 }
+/*#endregion*/

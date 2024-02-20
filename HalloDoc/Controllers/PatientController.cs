@@ -515,7 +515,7 @@ namespace HalloDoc.Controllers
                     }
                     memoryStream.Seek(0, SeekOrigin.Begin);
 
-                    return File(memoryStream.ToArray(), "application/zip", "files.zip");
+                    return File(memoryStream.ToArray(), "application/zip", "download.zip");
                 }
                
 
@@ -1143,6 +1143,7 @@ namespace HalloDoc.Controllers
             if (HttpContext.Session.GetString("UserSession") != null)
             {
                 HttpContext.Session.Remove("UserSession");
+                HttpContext.Session.Clear();
                 return RedirectToAction("RegisterdPatientLogin");
             }
             return View();

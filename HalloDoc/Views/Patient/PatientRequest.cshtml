@@ -177,6 +177,7 @@
 </div>
 
 <script>
+   
     function AlertName() {
         var email = document.getElementById("patientEmail").value;
 
@@ -209,32 +210,6 @@
             .catch(error => console.error('Error:', error));
     }
 
-    //display some div when user creates new request
-    // $(document).ready(function () {
-    //     var id = sessionStorage.getItem("currentId");
-    //     if (id === "2") {
-    //         $("#relationHTag").show();
-    //         $("#Realtion").show();
-
-    //     } else {
-    //         $("#relationHTag").hide();
-    //         $("#Realtion").hide();
-
-
-    //     }
-    // });
-
-    // function continueToPage() {
-    //     var id = sessionStorage.getItem("currentId");
-    //     if (id === 'me') {
-    //         form.action = '/Patient/PatientRequest';
-    //     }
-    //     else {
-    //         form.action = '/Patient/SubmitInformationSomeone';
-
-    //     }
-    //     form.submit();
-    // }
     if (localStorage.getItem("Mytheme")) { 
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
@@ -244,5 +219,15 @@
         utilsScript:
             "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
-    
+    var flag = document.getElementsByClassName('iti__selected-flag');
+    window.onload = function () {
+
+        $("#hide1").hide();
+        $("#hide2").hide();
+
+        var input = document.querySelector("#phone");
+        input.removeAttribute("title");
+
+
+    }
 </script>

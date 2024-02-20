@@ -92,7 +92,9 @@
                 $(".mobileviewdashboard").addClass("darkMode");
             }
         });
-
+        if (localStorage.getItem("Mytheme")) {
+            body.classList.toggle(localStorage.getItem("Mytheme"));
+        }
         function getCookie(name) {
             var value = "; " + document.cookie;
             var parts = value.split("; " + name + "=");

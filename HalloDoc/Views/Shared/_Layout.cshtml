@@ -32,7 +32,7 @@
 <body>
 
 
-    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null || @HttpContextAccessor?.HttpContext?.Session.GetString("AdminSession") != null)
     {
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
@@ -43,9 +43,9 @@
                     </button>
                 </a>
 
-                <div class="Logo">
+                <a asp-action="Dashboard"  class="Logo">
                     <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
-                </div>
+                </a>
            </div>
 
             <div class="d-flex " style="margin-left:auto">
@@ -93,9 +93,9 @@
     {
         <header class="header bg-white d-flex align-content-center ">
 
-            <div class="Logo">
+            <a asp-action="PatientSite" class="Logo">
                 <img src="~/images/loginpagelogo.png" class="headerLogo" alt="">
-            </div>
+            </a>
 
             <div class="switch-mode-inner-div">
                 <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
