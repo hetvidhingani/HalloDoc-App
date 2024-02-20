@@ -1,8 +1,7 @@
-﻿using HalloDoc.DataModels;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
-namespace HalloDoc.Models
+namespace HalloDoc.Entities.Models
 {
     public class PatientRequestViewModel 
     {

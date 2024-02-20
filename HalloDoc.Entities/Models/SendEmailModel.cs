@@ -1,4 +1,4 @@
-﻿namespace HalloDoc.Models
+﻿namespace HalloDoc.Entities.Models
 {
     public class SendEmailModel
     {

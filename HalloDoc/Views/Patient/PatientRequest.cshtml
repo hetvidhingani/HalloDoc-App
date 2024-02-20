@@ -1,5 +1,4 @@
-﻿
-@model HalloDoc.Models.PatientRequestViewModel
+﻿@model HalloDoc.Entities.Models.PatientRequestViewModel
 
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor
@@ -222,9 +221,7 @@
     var flag = document.getElementsByClassName('iti__selected-flag');
     window.onload = function () {
 
-        $("#hide1").hide();
-        $("#hide2").hide();
-
+       
         var input = document.querySelector("#phone");
         input.removeAttribute("title");
 

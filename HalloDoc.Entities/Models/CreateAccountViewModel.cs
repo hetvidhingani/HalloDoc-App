@@ -1,7 +1,6 @@
-﻿using HalloDoc.DataModels;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace HalloDoc.Models
+namespace HalloDoc.Entities.Models
 {
     public class CreateAccountViewModel
     {

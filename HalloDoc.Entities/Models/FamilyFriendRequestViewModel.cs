@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 
 
-namespace HalloDoc.Models
+namespace HalloDoc.Entities.Models
 {
     public class FamilyFriendRequestViewModel
     {

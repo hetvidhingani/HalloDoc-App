@@ -1,25 +1,26 @@
-﻿using HalloDoc.DataContext;
-using HalloDoc.DataModels;
+﻿using HalloDoc.Entities.DataModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using System.Diagnostics;
-using HalloDoc.Models;
 using System.IO.Compression;
 using System.Net.Mail;
 using System.Net;
 using System.Security.Cryptography;
 using MimeKit;
-
+using HalloDoc.Repository.IRepository;
+using HalloDoc.Entities.Models;
 namespace HalloDoc.Controllers
 {
     public class PatientController : Controller
     {
         private readonly ApplicationDbContext _context;
+        public IPatientRepository _patient;
        
-        public PatientController(ApplicationDbContext context)
+        public PatientController(ApplicationDbContext context,IPatientRepository patient)
         {
             _context = context;
+            _patient = patient;
            
         }
         #region view
@@ -636,124 +637,122 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PatientRequest(PatientRequestViewModel viewModel)
+        public IActionResult PatientRequest(PatientRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
 
-                Request request = new Request
-                {
-                    RequestTypeId = 1,
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                    PhoneNumber = viewModel.PhoneNumber,
-                    Email = viewModel.Email,
-                    CreatedDate = DateTime.Now,
-                    //RelationName = viewModel.RelationName,
-                    Status = 1
-                };
-                _context.Requests.Add(request);
-                _context.SaveChanges();
-                int id = request.RequestId;
+                //Request request = new Request
+                //{
+                //    RequestTypeId = 1,
+                //    FirstName = viewModel.FirstName,
+                //    LastName = viewModel.LastName,
+                //    PhoneNumber = viewModel.PhoneNumber,
+                //    Email = viewModel.Email,
+                //    CreatedDate = DateTime.Now,
+
+                //    Status = 1
+                //};
+                //_context.Requests.Add(request);
+                //_context.SaveChanges();
+                //int id = request.RequestId;
 
 
-                RequestClient requestClient = new RequestClient
-                {
-                    RequestId = request.RequestId,
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                    PhoneNumber = viewModel.PhoneNumber,
-                    RegionId = 1,
-                    Street = viewModel.Street,
-                    City = viewModel.City,
-                    State = viewModel.State,
-                    ZipCode = viewModel.ZipCode,
-                    Notes = viewModel.Symptoms,
-                    Email = viewModel.Email,
-                    DateOfBirth=viewModel.DateOfBirth
+                //RequestClient requestClient = new RequestClient
+                //{
+                //    RequestId = request.RequestId,
+                //    FirstName = viewModel.FirstName,
+                //    LastName = viewModel.LastName,
+                //    PhoneNumber = viewModel.PhoneNumber,
+                //    RegionId = 1,
+                //    Street = viewModel.Street,
+                //    City = viewModel.City,
+                //    State = viewModel.State,
+                //    ZipCode = viewModel.ZipCode,
+                //    Notes = viewModel.Symptoms,
+                //    Email = viewModel.Email,
+                //    DateOfBirth=viewModel.DateOfBirth
 
-                };
-                _context.RequestClients.Add(requestClient);
-                _context.SaveChanges();
-
-
-
-                if (viewModel.File != null && viewModel.File.Length > 0)
-                {
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                    using (var stream = System.IO.File.Create(filePath))
-                    {
-                        viewModel.File.CopyTo(stream);
-                        var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
-                        RequestWiseFile newFile = new RequestWiseFile
-                        {
-                            RequestId = userCheck.RequestId,
-                            FileName = viewModel.File.FileName,
-                            CreatedDate = DateTime.Now,
-                            DocType = 1,
-                        };
-
-                        _context.RequestWiseFiles.Add(newFile);
-                        _context.SaveChanges();
-                    }
-                }
+                //};
+                //_context.RequestClients.Add(requestClient);
+                //_context.SaveChanges();
 
 
 
-                User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
-                if (user != null)
-                {
-                    request.UserId = user.UserId;
-                    _context.Requests.Update(request);
-                    _context.SaveChanges(true);
+                //if (viewModel.File != null && viewModel.File.Length > 0)
+                //{
+                //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                //    using (var stream = System.IO.File.Create(filePath))
+                //    {
+                //        viewModel.File.CopyTo(stream);
+                //        var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
+                //        RequestWiseFile newFile = new RequestWiseFile
+                //        {
+                //            RequestId = userCheck.RequestId,
+                //            FileName = viewModel.File.FileName,
+                //            CreatedDate = DateTime.Now,
+                //            DocType = 1,
+                //        };
 
-                }
+                //        _context.RequestWiseFiles.Add(newFile);
+                //        _context.SaveChanges();
+                //    }
+                //}
 
-                else
-                {
-                    AspNetUser newaspNetUSer = new AspNetUser
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        UserName = viewModel.FirstName,
-                        PasswordHash = viewModel.Password,
-                        PhoneNumber = viewModel.PhoneNumber,
-                        Email = viewModel.Email,
-                        CreatedDate = DateTime.Now
-                    };
 
-                    _context.AspNetUsers.Add(newaspNetUSer);
-                    _context.SaveChanges();
 
-                    User user1 = new User
-                    {
-                        Id = newaspNetUSer.Id,
-                        FirstName = requestClient.FirstName,
-                        LastName = requestClient.LastName,
-                        Email = requestClient.Email,
-                        Mobile = requestClient.PhoneNumber,
-                        Street = requestClient.Street,
-                        City = requestClient.City,
-                        State = requestClient.State,
-                        ZipCode = requestClient.ZipCode,
-                        //StrMonth = viewModel.DateOfBirth.Value.Month.ToString(),
-                        //IntYear = viewModel.DateOfBirth.Value.Year,
-                        //IntDate = viewModel.DateOfBirth.Value.Day,
-                        DateOfBirth=viewModel.DateOfBirth,
-                        CreatedBy = "Admin",
-                        CreatedDate = DateTime.Now,
-                        RegionId = 1
-                    };
-                    _context.Users.Add(user1);
-                    _context.SaveChanges();
+                //User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
+                //if (user != null)
+                //{
+                //    request.UserId = user.UserId;
+                //    _context.Requests.Update(request);
+                //    _context.SaveChanges(true);
 
-                    request.UserId = user1.UserId;
-                    _context.Requests.Update(request);
-                    _context.SaveChanges();
+                //}
 
-                    return RedirectToAction("PatientSite", viewModel);
+                //else
+                //{
+                //    AspNetUser newaspNetUSer = new AspNetUser
+                //    {
+                //        Id = Guid.NewGuid().ToString(),
+                //        UserName = viewModel.FirstName,
+                //        PasswordHash = viewModel.Password,
+                //        PhoneNumber = viewModel.PhoneNumber,
+                //        Email = viewModel.Email,
+                //        CreatedDate = DateTime.Now
+                //    };
 
-                }
+                //    _context.AspNetUsers.Add(newaspNetUSer);
+                //    _context.SaveChanges();
 
+                //    User user1 = new User
+                //    {
+                //        Id = newaspNetUSer.Id,
+                //        FirstName = requestClient.FirstName,
+                //        LastName = requestClient.LastName,
+                //        Email = requestClient.Email,
+                //        Mobile = requestClient.PhoneNumber,
+                //        Street = requestClient.Street,
+                //        City = requestClient.City,
+                //        State = requestClient.State,
+                //        ZipCode = requestClient.ZipCode,
+
+                //        DateOfBirth=viewModel.DateOfBirth,
+                //        CreatedBy = "Admin",
+                //        CreatedDate = DateTime.Now,
+                //        RegionId = 1
+                //    };
+                //    _context.Users.Add(user1);
+                //    _context.SaveChanges();
+
+                //    request.UserId = user1.UserId;
+                //    _context.Requests.Update(request);
+                //    _context.SaveChanges();
+
+                //    return RedirectToAction("PatientSite", viewModel);
+
+                // }
+                var result = _patient.PatientRequest(viewModel);
                 return RedirectToAction("RegisterdPatientLogin", viewModel);
             }
             return View(viewModel);
