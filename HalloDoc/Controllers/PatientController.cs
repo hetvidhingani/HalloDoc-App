@@ -10,14 +10,17 @@ using System.Security.Cryptography;
 using MimeKit;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Entities.Models;
+using HalloDoc.Services.IServices;
+
 namespace HalloDoc.Controllers
 {
     public class PatientController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public IPatientRepository _patient;
-       
-        public PatientController(ApplicationDbContext context,IPatientRepository patient)
+        public IPatientService _patient;
+
+
+        public PatientController(ApplicationDbContext context,IPatientService patient)
         {
             _context = context;
             _patient = patient;
@@ -242,9 +245,27 @@ namespace HalloDoc.Controllers
         {
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
             int? userID = HttpContext.Session.GetInt32("UserSession");
-            var result = await _patient.Dashboard(userID);
+            //var result = await _patient.Dashboard(userID);
+            var tabledashboard = (
+          from r in _context.Requests
+          where r.UserId == userID
+          select new DashboardViewModel
+          {
+              RequstId = r.RequestId,
+              CreatedDate = r.CreatedDate.ToShortDateString(),
+              Status = r.Status,
+              FileName = (
+                  from file in _context.RequestWiseFiles
+                  where file.RequestId == r.RequestId
+                  select file.FileName
+              ).FirstOrDefault(),
+              FileCount = (
+          from file in _context.RequestWiseFiles
+          where file.RequestId == r.RequestId
+          select file.FileName).Count()
+          }).ToList();
 
-            return View(result);
+            return View();
 
         }
         [HttpPost]
@@ -586,11 +607,11 @@ namespace HalloDoc.Controllers
         [HttpGet]
         public async Task<IActionResult> PatientRequest()
         {
-            int? userId = HttpContext.Session.GetInt32("UserSession");
+            //int? userId = HttpContext.Session.GetInt32("UserSession");
 
-            var result = await _patient.PatientRequest(userId);
+            //var result = await _patient.PatientRequest(userId);
 
-            return View(result);
+            return View();
         }
 
         [HttpPost]

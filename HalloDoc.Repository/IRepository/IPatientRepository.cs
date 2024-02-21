@@ -12,11 +12,11 @@ namespace HalloDoc.Repository.IRepository
     public interface IPatientRepository
     {
 
-        Task<object> PatientRequest(int? userId);
+        //Task<object> PatientRequest(int? userId);
 
-        Task<string> PatientRequest(PatientRequestViewModel viewModel);
+        //Task<string> PatientRequest(PatientRequestViewModel viewModel);
 
-        Task<object> Dashboard(int? userId);
+       // Task<object> Dashboard(int? userId);
 
         Task<string> RegisterdPatientLogin(AspNetUser user);
 

@@ -35,8 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HalloDoc.Entities\HalloDoc.Entities.csproj" />
-    <ProjectReference Include="..\HalloDoc.Repository\HalloDoc.Repository.csproj" />
+    <ProjectReference Include="..\HalloDoc.Services\HalloDoc.Services.csproj" />
   </ItemGroup>
 
 </Project>
