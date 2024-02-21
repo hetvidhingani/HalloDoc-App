@@ -175,15 +175,15 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public IActionResult RegisterdPatientLogin(AspNetUser user)
+        public async Task<IActionResult> RegisterdPatientLogin(AspNetUser user)
         {
             var myUser = _context.AspNetUsers.Where(x => x.Email == user.Email && x.PasswordHash == user.PasswordHash).FirstOrDefault();
 
             if (myUser != null)
             {
                 HttpContext.Session.SetString("UserName", myUser.UserName);
-                User uID = _context.Users.Where(x => x.Email == myUser.Email).FirstOrDefault();
-                HttpContext.Session.SetInt32("UserSession", uID.UserId);
+                User userID = _context.Users.Where(x => x.Email == myUser.Email).FirstOrDefault();
+                HttpContext.Session.SetInt32("UserSession", userID.UserId);
 
 
                 return RedirectToAction("DashBoard");
@@ -192,7 +192,7 @@ namespace HalloDoc.Controllers
             {
                 ViewBag.Message = "Login Failed!";
             }
-
+          
             return View();
         }
 
@@ -238,30 +238,13 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Dashboard
-        public IActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
             int? userID = HttpContext.Session.GetInt32("UserSession");
-            var tabledashboard = (
-            from r in _context.Requests
-            where r.UserId == userID
-            select new DashboardViewModel
-            {
-                RequstId = r.RequestId,
-                CreatedDate = r.CreatedDate.ToShortDateString(),
-                Status = r.Status,
-                FileName = ( 
-                    from file in _context.RequestWiseFiles
-                    where file.RequestId == r.RequestId
-                    select file.FileName
-                ).FirstOrDefault(), // Use FirstOrDefault() to get only the first file name or null
-                FileCount = ( // Retrieve the count of files associated with the request
-            from file in _context.RequestWiseFiles
-            where file.RequestId == r.RequestId
-            select file.FileName
-        ).Count()
-            }).ToList();
-            return View(tabledashboard);
+            var result = await _patient.Dashboard(userID);
+
+            return View(result);
 
         }
         [HttpPost]
@@ -564,11 +547,7 @@ namespace HalloDoc.Controllers
                 string storedStrMonth = user.StrMonth;
                 int? storedIntYear = user.IntYear;
                 int? storedIntDate = user.IntDate;
-                //        DateOnly storedDob = new DateOnly((int)storedIntYear, int.Parse(storedStrMonth), (int)storedIntDate);
-
-                //      requestViewModel.DateOfBirth = storedDob;
-
-                //requestViewModel.PDob = dob;
+               
                 return View(requestViewModel);
             }
             return View();
@@ -589,14 +568,10 @@ namespace HalloDoc.Controllers
                 user.Mobile = patientRequestViewModel.PhoneNumber;
                 user.State = patientRequestViewModel.State;
                 user.ZipCode = patientRequestViewModel.ZipCode;
-
                 user.StrMonth = patientRequestViewModel.DateOfBirth.Value.ToString();
                 user.IntDate = patientRequestViewModel.DateOfBirth.Value.Day;
                 user.IntYear = patientRequestViewModel.DateOfBirth.Value.Year;
                 user.ModifiedDate = DateTime.Now;
-
-
-
 
                 _context.Users.Update(user);
                 await _context.SaveChangesAsync();
@@ -609,151 +584,22 @@ namespace HalloDoc.Controllers
 
         #region PatientRequest
         [HttpGet]
-        public IActionResult PatientRequest()
+        public async Task<IActionResult> PatientRequest()
         {
             int? userId = HttpContext.Session.GetInt32("UserSession");
-            if (userId != null)
-            {
-                var user = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
-                PatientRequestViewModel viewModel = new PatientRequestViewModel();
-                if (user != null)
-                {
-                    viewModel.FirstName = user.FirstName;
-                    viewModel.LastName = user.LastName;
-                    viewModel.City = user.City;
-                    viewModel.State = user.State;
-                    viewModel.Street = user.Street;
-                    viewModel.Email = user.Email;
-                    viewModel.PhoneNumber = user.Mobile;
-                    viewModel.ZipCode = user.ZipCode;
-                    viewModel.DateOfBirth = user.DateOfBirth;
 
-                    return View(viewModel);
-                }
-            }
+            var result = await _patient.PatientRequest(userId);
 
-
-            return View();
+            return View(result);
         }
 
         [HttpPost]
-        public IActionResult PatientRequest(PatientRequestViewModel viewModel)
+        public async Task<IActionResult> PatientRequest(PatientRequestViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-
-                //Request request = new Request
-                //{
-                //    RequestTypeId = 1,
-                //    FirstName = viewModel.FirstName,
-                //    LastName = viewModel.LastName,
-                //    PhoneNumber = viewModel.PhoneNumber,
-                //    Email = viewModel.Email,
-                //    CreatedDate = DateTime.Now,
-
-                //    Status = 1
-                //};
-                //_context.Requests.Add(request);
-                //_context.SaveChanges();
-                //int id = request.RequestId;
-
-
-                //RequestClient requestClient = new RequestClient
-                //{
-                //    RequestId = request.RequestId,
-                //    FirstName = viewModel.FirstName,
-                //    LastName = viewModel.LastName,
-                //    PhoneNumber = viewModel.PhoneNumber,
-                //    RegionId = 1,
-                //    Street = viewModel.Street,
-                //    City = viewModel.City,
-                //    State = viewModel.State,
-                //    ZipCode = viewModel.ZipCode,
-                //    Notes = viewModel.Symptoms,
-                //    Email = viewModel.Email,
-                //    DateOfBirth=viewModel.DateOfBirth
-
-                //};
-                //_context.RequestClients.Add(requestClient);
-                //_context.SaveChanges();
-
-
-
-                //if (viewModel.File != null && viewModel.File.Length > 0)
-                //{
-                //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                //    using (var stream = System.IO.File.Create(filePath))
-                //    {
-                //        viewModel.File.CopyTo(stream);
-                //        var userCheck = _context.Requests.OrderBy(e => e.RequestId).LastOrDefault(e => e.Email == viewModel.Email);
-                //        RequestWiseFile newFile = new RequestWiseFile
-                //        {
-                //            RequestId = userCheck.RequestId,
-                //            FileName = viewModel.File.FileName,
-                //            CreatedDate = DateTime.Now,
-                //            DocType = 1,
-                //        };
-
-                //        _context.RequestWiseFiles.Add(newFile);
-                //        _context.SaveChanges();
-                //    }
-                //}
-
-
-
-                //User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
-                //if (user != null)
-                //{
-                //    request.UserId = user.UserId;
-                //    _context.Requests.Update(request);
-                //    _context.SaveChanges(true);
-
-                //}
-
-                //else
-                //{
-                //    AspNetUser newaspNetUSer = new AspNetUser
-                //    {
-                //        Id = Guid.NewGuid().ToString(),
-                //        UserName = viewModel.FirstName,
-                //        PasswordHash = viewModel.Password,
-                //        PhoneNumber = viewModel.PhoneNumber,
-                //        Email = viewModel.Email,
-                //        CreatedDate = DateTime.Now
-                //    };
-
-                //    _context.AspNetUsers.Add(newaspNetUSer);
-                //    _context.SaveChanges();
-
-                //    User user1 = new User
-                //    {
-                //        Id = newaspNetUSer.Id,
-                //        FirstName = requestClient.FirstName,
-                //        LastName = requestClient.LastName,
-                //        Email = requestClient.Email,
-                //        Mobile = requestClient.PhoneNumber,
-                //        Street = requestClient.Street,
-                //        City = requestClient.City,
-                //        State = requestClient.State,
-                //        ZipCode = requestClient.ZipCode,
-
-                //        DateOfBirth=viewModel.DateOfBirth,
-                //        CreatedBy = "Admin",
-                //        CreatedDate = DateTime.Now,
-                //        RegionId = 1
-                //    };
-                //    _context.Users.Add(user1);
-                //    _context.SaveChanges();
-
-                //    request.UserId = user1.UserId;
-                //    _context.Requests.Update(request);
-                //    _context.SaveChanges();
-
-                //    return RedirectToAction("PatientSite", viewModel);
-
-                // }
-                var result = _patient.PatientRequest(viewModel);
-                return RedirectToAction("RegisterdPatientLogin", viewModel);
+                var result = await _patient.PatientRequest(viewModel);
+                return RedirectToAction(result, viewModel);
             }
             return View(viewModel);
         }

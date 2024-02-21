@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataContext\**" />
+    <Content Remove="DataContext\**" />
+    <EmbeddedResource Remove="DataContext\**" />
+    <None Remove="DataContext\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.15">
@@ -23,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DataContext\" />
     <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>

@@ -49,7 +49,7 @@
     font-weight: 500;
     padding: 10px;
     border-radius: 10px;
-    margin: 0px 5px;
+    margin: 0px 3px;
 }
 .iconLink {
     text-decoration: none;
@@ -58,15 +58,63 @@
     font-weight: 500;
     padding: 10px;
     border-radius: 10px;
-    margin: 0px 5px;
+    margin: 0px 2px;
 }
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+.dot1 {
+    height: 10px;
+    width: 10px;
+    background-color: #6EB072;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot2 {
+    height: 10px;
+    width: 10px;
+    background-color: #D99739;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot3 {
+    height: 10px;
+    width: 10px;
+    background-color: #CB6D7B;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot4 {
+    height: 10px;
+    width: 10px;
+    background-color: #097BBA;
+    border-radius: 50%;
+    display: inline-block;
+}
+.type>span{
+    font-size:11px;
+}
+
 @media only screen and (max-width: 600px) {
     .cust-col {
         flex: 0 0 33.33333%;
         max-width: 33.33333%;
     }
-    .i{
-        display:none;
+    .i {
+        display: none;
     }
     .cards{
        text-align:center;
@@ -74,10 +122,16 @@
     .mainTextLink {
         display: none;
     }
+    .has-search{
+        width:100%;
+    }
+    .firstType {
+        display: none;
+    }
 }
 @media only screen and (min-width: 601px) {
 
-
+    
     .iconLink {
         display: none;
     }

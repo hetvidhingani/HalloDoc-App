@@ -1,28 +1,12 @@
 ﻿<main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
         <div class="container-fluid">
-           @* cards *@
-            
-            <div class="row g-4 ">
-                <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                   <div class="cards cardDesign1 p-2">
-                        <div class="row ">
-                            <div class="col-12">
-                                <i class="bi bi-plus-circle i"></i>
-                               <strong>NEW</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <strong>1492</strong>
+            @* cards *@
 
-                            </div>
-                        </div>
-                   </div>
-                </div>
+            <div class="row g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign2 p-2">
-                        <div class="row ">
+                    <div class="cards cardDesign1 px-2 py-3">
+                        <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
                                 <strong>NEW</strong>
@@ -37,11 +21,11 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign3 p-2">
+                    <div class="cards cardDesign2 px-2 py-3">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>NEW</strong>
+                                <strong>PENDING</strong>
                             </div>
                         </div>
                         <div class="row">
@@ -53,43 +37,59 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign4 p-2">
+                    <div class="cards cardDesign3 px-2 py-3">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>NEW</strong>
+                                <strong>ACTIVE</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>1492</strong>
+                                <strong>266</strong>
 
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign5 p-2">
+                    <div class="cards cardDesign4 px-2 py-3">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>NEW</strong>
+                                <strong>CONCLUDE</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>1492</strong>
+                                <strong>66</strong>
 
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign6 p-2">
+                    <div class="cards cardDesign5 px-2 py-3">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>NEW</strong>
+                                <strong>TO CLOSE</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>12</strong>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
+                    <div class="cards cardDesign6 px-2 py-3">
+                        <div class="row ">
+                            <div class="col-12">
+                                <i class="bi bi-plus-circle i"></i>
+                                <strong>UNPAID</strong>
                             </div>
                         </div>
                         <div class="row">
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-               
+
             </div>
             @* tables *@
 
@@ -112,8 +112,8 @@
                             <h5 style="color:#203e84">(Pending)</h5>
                         </strong>
                     </div>
-                    <div class="dashboardLinks d-flex flex-wrap">
-                        
+                    <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
+
                         <a href="#" class="mainTextLink">Send Link</a><i class="bi bi-send iconLink"></i>
                         <a href="#" class="mainTextLink">Create Requests</a><i class="bi bi-file-earmark iconLink"></i>
                         <a href="#" class="mainTextLink">Export</a><i class="bi bi-arrow-up-right iconLink"></i>
@@ -122,57 +122,74 @@
 
                     </div>
                 </div>
-              
+
             </div>
-            
 
-            <div class="row mt-3">
-                <div class="d-flex justify-content-between">
-                   <div>
-                        <input type="search" value="search" />
-                        <input type="search" value="search" />
-                   </div>
-                   <div>
-                       <button>All</button>
-                        <button>All</button>
-                        <button>All</button>
-                        <button>All</button>
-                        <button>All</button>
+            <div class="container-fluid rounded formshadow p-3">
+                <div class="row mt-3">
+                    <div class="col-12 d-flex justify-content-between flex-wrap">
+                        <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 ">
+                            <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
+                                <span class="fa fa-search form-control-feedback"></span>
+                                <input type="text" class="form-control " placeholder="Search">
+                            </div>
+                            <div class="has-search col-lg-4 col-md-6 col-sm-6 px-1">
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Open this select menu</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12 ">
+                            <div class="row d-flex align-items-center">
+                                <div class="col-1"> <div class="firstType "> All   </div></div>
+                                <div class="col-11">
+                                    <div class="row d-flex flex-row-reverse justify-content-evenly ">
 
-                       <button>All</button>
-                   </div>
-                </div>
+                                        <div class="btn type col-3"><span class="col-2"><span class="dot4 "></span></span><span class="p-1 col-10 ">Concierge</span></div>
+                                        <div class="btn type col-3"><span class="col-2"><span class="dot3 "></span></span><span class="p-1 col-10 ">Business</span></div>
+                                        <div class="btn type col-3"><span class="col-2"><span class="dot2 "></span></span><span class="p-1 col-10 ">Family/Friend</span></div>
+                                        <div class="btn type col-3"><span class="col-2"><span class="dot1 "></span></span><span class="p-1 col-10 ">Patient</span></div>
+                                    </div>
+                                </div>
 
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="table-responsive mt-5">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td>Larry</td>
+                                    <td>the Bird</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        
         </div>
     </div>
 </main>

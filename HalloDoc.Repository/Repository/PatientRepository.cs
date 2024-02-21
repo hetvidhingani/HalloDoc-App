@@ -6,18 +6,49 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HalloDoc.Entities.Models;
+using Microsoft.AspNetCore.Http;
+
 namespace HalloDoc.Repository.Repository
 {
-    public class PatientRepository:IPatientRepository
+    public class PatientRepository : IPatientRepository
     {
         private readonly ApplicationDbContext _context;
 
         public PatientRepository(ApplicationDbContext context)
         {
             _context = context;
-
         }
-       public string  PatientRequest(PatientRequestViewModel viewModel)
+
+        #region Login
+
+        #endregion
+
+        #region PatientRequest
+        public async Task<object> PatientRequest(int? userId)
+        {
+
+            if (userId != null)
+            {
+                var user = _context.Users.Where(x => x.UserId == userId).FirstOrDefault();
+                PatientRequestViewModel viewModel = new PatientRequestViewModel();
+                if (user != null)
+                {
+                    viewModel.FirstName = user.FirstName;
+                    viewModel.LastName = user.LastName;
+                    viewModel.City = user.City;
+                    viewModel.State = user.State;
+                    viewModel.Street = user.Street;
+                    viewModel.Email = user.Email;
+                    viewModel.PhoneNumber = user.Mobile;
+                    viewModel.ZipCode = user.ZipCode;
+                    viewModel.DateOfBirth = user.DateOfBirth;
+
+                    return viewModel;
+                }
+            }
+            return "";
+        }
+        public async Task<string> PatientRequest(PatientRequestViewModel viewModel)
         {
             Request request = new Request
             {
@@ -27,13 +58,11 @@ namespace HalloDoc.Repository.Repository
                 PhoneNumber = viewModel.PhoneNumber,
                 Email = viewModel.Email,
                 CreatedDate = DateTime.Now,
-                //RelationName = viewModel.RelationName,
                 Status = 1
             };
             _context.Requests.Add(request);
             _context.SaveChanges();
             int id = request.RequestId;
-
 
             RequestClient requestClient = new RequestClient
             {
@@ -53,8 +82,6 @@ namespace HalloDoc.Repository.Repository
             };
             _context.RequestClients.Add(requestClient);
             _context.SaveChanges();
-
-
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
@@ -76,17 +103,13 @@ namespace HalloDoc.Repository.Repository
                 }
             }
 
-
-
             User user = _context.Users.Where(x => x.Email == viewModel.Email).FirstOrDefault();
             if (user != null)
             {
                 request.UserId = user.UserId;
                 _context.Requests.Update(request);
                 _context.SaveChanges(true);
-
             }
-
             else
             {
                 AspNetUser newaspNetUSer = new AspNetUser
@@ -128,10 +151,46 @@ namespace HalloDoc.Repository.Repository
                 _context.Requests.Update(request);
                 _context.SaveChanges();
 
-
             }
-              return "";
+
+            return "RegisterdPatientLogin";
         }
-        
+
+
+        #endregion
+
+        #region Dashboard
+
+        public async Task<object> Dashboard(int? userID)
+        {
+            var tabledashboard = (
+           from r in _context.Requests
+           where r.UserId == userID
+           select new DashboardViewModel
+           {
+               RequstId = r.RequestId,
+               CreatedDate = r.CreatedDate.ToShortDateString(),
+               Status = r.Status,
+               FileName = (
+                   from file in _context.RequestWiseFiles
+                   where file.RequestId == r.RequestId
+                   select file.FileName
+               ).FirstOrDefault(),
+               FileCount = (
+           from file in _context.RequestWiseFiles
+           where file.RequestId == r.RequestId
+           select file.FileName).Count()
+           }).ToList();
+
+            return tabledashboard;
+        }
+
+        #endregion
+
+        public async Task<string> RegisterdPatientLogin(AspNetUser user)
+        {
+
+            return "";
+        }
     }
 }

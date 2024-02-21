@@ -5,11 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HalloDoc.Entities.Models;
+using Microsoft.AspNetCore.Http;
+
 namespace HalloDoc.Repository.IRepository
 {
     public interface IPatientRepository
     {
-        string PatientRequest(PatientRequestViewModel viewModel);
-        
+
+        Task<object> PatientRequest(int? userId);
+
+        Task<string> PatientRequest(PatientRequestViewModel viewModel);
+
+        Task<object> Dashboard(int? userId);
+
+        Task<string> RegisterdPatientLogin(AspNetUser user);
+
     }
 }
