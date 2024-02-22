@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IRequestClientRepository
+    public interface IRequestClientRepository:IGenericRepository<RequestClient>
     {
-        public Task AddRequest(RequestClient requestClient);
-
-        public Task UpdateRequest(RequestClient requestClient);
+        Task<RequestClient> CheckUserByEmail(string email);
     }
 }

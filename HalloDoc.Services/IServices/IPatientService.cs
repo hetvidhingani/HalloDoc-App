@@ -1,4 +1,5 @@
-﻿using HalloDoc.Entities.Models;
+﻿using HalloDoc.Entities.DataModels;
+using HalloDoc.Entities.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,14 @@ namespace HalloDoc.Services.IServices
 {
     public interface IPatientService
     {
-       //public Task<object> PatientRequest(int? userId);
-
+        Task<object> PatientRequest(int? userId);
         Task<string> PatientRequest(PatientRequestViewModel viewModel);
+        Task<string> FamilyFriendRequest(OtherRequestViewModel viewModel);
+        Task<string> BusinessRequest(OtherRequestViewModel viewModel);
+        Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
+        Task<AspNetUser> CheckEmail(string email);
+        Task<AspNetUser> checkEmailPassword(AspNetUser user);
+        Task<AspNetUser> GetUser(string email);
+
     }
 }

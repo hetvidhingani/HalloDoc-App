@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IUserRepository:IGenericRepository<User>
+    public interface IBusinessRepository:IGenericRepository<Business>
     {
 
-      Task<User> CheckUserByEmail(string email);
     }
 }

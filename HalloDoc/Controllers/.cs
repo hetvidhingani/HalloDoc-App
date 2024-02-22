@@ -1,4 +1,4 @@
-﻿using HalloDoc.Entities.Models;
+﻿using HalloDoc.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

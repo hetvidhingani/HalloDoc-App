@@ -8,35 +8,25 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class AspNetUserRepository : IAspNetUserRepository
+    public class AspNetUserRepository : GenericRepository<AspNetUser>,IAspNetUserRepository
     {
         private readonly ApplicationDbContext _context;
-        public AspNetUserRepository(ApplicationDbContext context)
+        public AspNetUserRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
-        }
-        public async Task AddAspnetUser(AspNetUser aspNetUser)
-        {
-            _context.Add(aspNetUser);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateAspnetUser(AspNetUser aspNetUser)
-        {
-            _context.Update(aspNetUser);
-            await _context.SaveChangesAsync();
+           _context = context;
         }
         public async Task<AspNetUser> CheckUserByEmail(string email)
         {
-            AspNetUser aspNetUser = _context.AspNetUsers.Where(x => x.Email == email).FirstOrDefault();
+            AspNetUser user = _context.AspNetUsers.Where(x => x.Email == email).FirstOrDefault();
 
-            return  aspNetUser;
+            return user;
         }
-        public async Task<AspNetUser> CheckUserForLogin(string email, string password)
+        public async Task<AspNetUser> Login(string email,string password)
         {
-            AspNetUser aspNetUser = _context.AspNetUsers.Where(x => x.Email == email && x.PasswordHash == password).FirstOrDefault();
+            AspNetUser user = _context.AspNetUsers.Where(x => x.Email == email && x.PasswordHash==password).FirstOrDefault();
 
-            return aspNetUser;
+            return user;
         }
-
+        public async void FirstOrDefaultAsync()
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
-namespace HalloDoc.Entities.Models
+namespace HalloDoc.Entities.ViewModels
 {
-    public class PatientRequestViewModel 
+    public class PatientRequestViewModel
     {
-       
+
         [Required(ErrorMessage = "Enter First Name Here")]
         public string? FirstName { get; set; }
 
@@ -13,7 +13,7 @@ namespace HalloDoc.Entities.Models
         public string? LastName { get; set; }
 
         [Required(ErrorMessage = "Enter Phone Number Here")]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",ErrorMessage = "Entered phone format is not valid.")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Entered phone format is not valid.")]
         public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Enter your Email Here")]
@@ -32,9 +32,9 @@ namespace HalloDoc.Entities.Models
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
-       
+
         public string? Password { get; set; }
-        public string? ConfirmPassword { get; set;}
+        public string? ConfirmPassword { get; set; }
 
     }
 }

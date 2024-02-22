@@ -1,5 +1,4 @@
-﻿
-namespace HalloDoc.Entities.Models
+﻿namespace HalloDoc.Entities.ViewModels
 {
     public class DashboardViewModel
     {
@@ -9,7 +8,7 @@ namespace HalloDoc.Entities.Models
         public string? FileName { get; set; }
         public string Username { get; set; }
         public string LastName { get; set; }
-        public int? FileCount { get; set; } 
+        public int? FileCount { get; set; }
 
 
     }

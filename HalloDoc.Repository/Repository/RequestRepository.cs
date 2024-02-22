@@ -8,28 +8,18 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class RequestRepository:IRequestRepository
+    public class RequestRepository: GenericRepository<Request>, IRequestRepository
     {
         private readonly ApplicationDbContext _context;
-        public RequestRepository(ApplicationDbContext context)
+        public RequestRepository(ApplicationDbContext context):base(context)
         {
-            _context = context;
-        }
-        public async Task AddRequest(Request request)
-        {
-            _context.Add(request);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateRequest(Request request)
-        {
-            _context.Update(request);
-            await _context.SaveChangesAsync();
+           
         }
         public async Task<Request> CheckUserByEmail(string email)
         {
-            Request userByRequest = _context.Requests.Where(x => x.Email == email).FirstOrDefault();
+            Request user = _context.Requests.Where(x => x.Email == email).FirstOrDefault();
 
-            return userByRequest;
+            return user;
         }
     }
 }

@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 
 
-namespace HalloDoc.Entities.Models
+namespace HalloDoc.Entities.ViewModels
 {
-    public class FamilyFriendRequestViewModel
+    public class OtherRequestViewModel
     {
         [Required(ErrorMessage = "Enter Patient's Symptoms Here")]
         public string Symptoms { get; set; }
@@ -15,7 +15,7 @@ namespace HalloDoc.Entities.Models
         public string LastName { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-     
+
         [Required(ErrorMessage = "Phone Number Required!")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$",
                    ErrorMessage = "Entered phone format is not valid.")]
@@ -28,13 +28,13 @@ namespace HalloDoc.Entities.Models
 
         public IFormFile? File { get; set; }
         public string? RelationName { get; set; }
-        
+
         public string? RegionId { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
-        [Required(ErrorMessage = "Zip is Required")]
-        [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid Zip")]
+        //[Required(ErrorMessage = "Zip is Required")]
+      //  [RegularExpression(@"^\d{5}(-\d{4})?$", ErrorMessage = "Invalid Zip")]
         public string? ZipCode { get; set; }
 
         [Required(ErrorMessage = "Enter First Name Here")]

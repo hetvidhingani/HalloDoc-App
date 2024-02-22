@@ -8,22 +8,12 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository :GenericRepository<User>, IUserRepository
     {
         private readonly ApplicationDbContext _context;
-        public UserRepository(ApplicationDbContext context)
+        public UserRepository(ApplicationDbContext context):base(context) 
         {
             _context = context;
-        }
-        public async Task AddUser(User users)
-        {
-            _context.Add(users);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateUser(User user)
-        {
-            _context.Update(user);
-            await _context.SaveChangesAsync();
         }
         public async Task<User> CheckUserByEmail(string email)
         {
@@ -31,12 +21,8 @@ namespace HalloDoc.Repository.Repository
 
             return user;
         }
-        public async Task<User> GetUser(int? userID)
-        {
-            User user = _context.Users.Where(x => x.UserId == userID).FirstOrDefault();
+      
 
-            return user;
-        }
 
     }
 }

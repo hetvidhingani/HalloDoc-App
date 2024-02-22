@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IRequestWiseFilesRepository
+    public interface IRequestWiseFilesRepository:IGenericRepository<RequestWiseFile>
     {
-        public Task AddRequestWiseFiles(RequestWiseFile requestWiseFile);
-
-        public Task UpdateRequestWiseFiles(RequestWiseFile requestWiseFile);
+      
     }
 }

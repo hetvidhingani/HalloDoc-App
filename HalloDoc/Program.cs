@@ -2,7 +2,6 @@ using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.IRepository;
 
-using HalloDoc.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
@@ -15,13 +14,14 @@ builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddDbContext<ApplicationDbContext>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("ApplicationDbContext")));
-
-builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IAspNetUserRepository, AspNetUserRepository>();
 builder.Services.AddScoped<IRequestClientRepository, RequestClientRepository>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<IRequestWiseFilesRepository, RequestWiseFilesRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
+builder.Services.AddScoped<IConciergeRepository, ConciergeRepository>();
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();

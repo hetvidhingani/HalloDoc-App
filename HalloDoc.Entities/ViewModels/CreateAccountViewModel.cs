@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HalloDoc.Entities.Models
+namespace HalloDoc.Entities.ViewModels
 {
     public class CreateAccountViewModel
     {
@@ -10,7 +10,7 @@ namespace HalloDoc.Entities.Models
         [Required]
         public string PasswordHash { get; set; }
         [Required]
-        public string  ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
         //public int RequestID { get; set; }
         public object? Token { get; internal set; } = null;
 

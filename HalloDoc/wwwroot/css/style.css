@@ -118,6 +118,7 @@
     }
     .cards{
        text-align:center;
+       padding:7px 0px;
     }
     .mainTextLink {
         display: none;
@@ -128,9 +129,12 @@
     .firstType {
         display: none;
     }
+  
 }
 @media only screen and (min-width: 601px) {
-
+    .cards {
+        padding: 8px 2px;
+    }
     
     .iconLink {
         display: none;

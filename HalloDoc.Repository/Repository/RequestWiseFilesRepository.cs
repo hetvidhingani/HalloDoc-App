@@ -8,23 +8,14 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class RequestWiseFilesRepository:IRequestWiseFilesRepository
+    public class RequestWiseFilesRepository: GenericRepository<RequestWiseFile>, IRequestWiseFilesRepository
     {
         private readonly ApplicationDbContext _context;
-        public RequestWiseFilesRepository(ApplicationDbContext context)
+        public RequestWiseFilesRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
-        public async Task AddRequestWiseFiles(RequestWiseFile requestWiseFile)
-        {
-            _context.Add(requestWiseFile);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateRequestWiseFiles(RequestWiseFile requestWiseFile)
-        {
-            _context.Update(requestWiseFile);
-            await _context.SaveChangesAsync();
-        }
+       
       
     }
 }

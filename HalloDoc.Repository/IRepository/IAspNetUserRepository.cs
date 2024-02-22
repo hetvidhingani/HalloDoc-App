@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IAspNetUserRepository
+    public interface IAspNetUserRepository:IGenericRepository<AspNetUser>
     {
-        public Task AddAspnetUser(AspNetUser aspnetuser);
 
-        public Task UpdateAspnetUser(AspNetUser aspnetuser);
-        public Task<AspNetUser> CheckUserByEmail(string email);
-        public Task<AspNetUser> CheckUserForLogin(string email, string password);
+        Task<AspNetUser> CheckUserByEmail(string email);
+        Task<AspNetUser> Login(string email,string password);   
+
     }
 }
