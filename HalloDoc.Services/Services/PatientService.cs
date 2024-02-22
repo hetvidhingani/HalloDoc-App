@@ -447,16 +447,50 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Login
         public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
         {
 
             return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); ;
         }
-        public string GetUser(string email)
+       public async Task<User> GetUser(string email)
         {
-            string s= await _userRepository.CheckUserByEmail(email);
-            return s;
-            
+            User user =await _userRepository.CheckUserByEmail(email);
+            return user;
+        }
+        #endregion
+        public async Task<AspNetUser> GetAspNetUser(string email)
+        {
+            AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
+            return user;
+        }
+        public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
+        {
+            AspNetUser myUser =await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
+
+            if (myUser != null)
+            {
+                //ViewBag.Message = "Reset Password Link is sent to your registerd Email.";
+                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+                {
+                    myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
+                    _aspnetuserRepository.UpdateAsync(myUser);
+                    TempData["Message"] = "Password Updated";
+
+                }
+                else
+                {
+                    ViewBag.Message = "Password and Confirm Password must be same!!!";
+
+                }
+
+            }
+            else
+            {
+                ViewBag.Message = "Invalid User Name";
+            }
+            return RedirectToAction("RegisterdPatientLogin");
+            return "";
         }
 
     }

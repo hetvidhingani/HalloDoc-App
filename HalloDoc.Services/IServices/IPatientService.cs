@@ -17,7 +17,8 @@ namespace HalloDoc.Services.IServices
         Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
         Task<AspNetUser> CheckEmail(string email);
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
-        Task<AspNetUser> GetUser(string email);
-
+        Task<User> GetUser(string email);
+        Task<AspNetUser> GetAspNetUser(string email);
+        Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel);
     }
 }

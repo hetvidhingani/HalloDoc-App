@@ -27,6 +27,6 @@ namespace HalloDoc.Repository.Repository
 
             return user;
         }
-        public async void FirstOrDefaultAsync()
+       
     }
 }
