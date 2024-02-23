@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,16 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-       
-      
+
+        public async Task<RequestWiseFile> FindFile(string fileName)
+        {
+            RequestWiseFile file = _context.RequestWiseFiles.Where(x => x.FileName == fileName).FirstOrDefault();
+
+            return file;
+        }
+        public IQueryable<RequestWiseFile> FindFileByRequestID(int? requestID)
+        {
+            return _context.RequestWiseFiles.Where(x => x.RequestId == requestID);
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace HalloDoc.Repository.IRepository
 {
     public interface IRequestWiseFilesRepository:IGenericRepository<RequestWiseFile>
     {
-      
+        Task<RequestWiseFile> FindFile(string fileName);
+        IQueryable<RequestWiseFile> FindFileByRequestID(int? requestID);
     }
 }

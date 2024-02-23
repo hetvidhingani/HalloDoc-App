@@ -3,9 +3,11 @@ using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,6 +38,23 @@ namespace HalloDoc.Services.Services
             _requestwisefileRepository = requestwisefileRepository;
             _businessRepository = businessRepository;
             _conciergeRepository = conciergeRepository;
+        }
+        #endregion
+
+        #region comman services
+        public async Task<T> GetTempData<T>(string key)
+        {
+            return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
+        }
+        public async Task<AspNetUser> GetAspNetUser(string email)
+        {
+            AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
+            return user;
+        }
+        public async Task<RequestWiseFile> FindFile(string fileName)
+        {
+            RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
+            return file;
         }
         #endregion
 
@@ -249,7 +268,7 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-      
+
         #region BusinessRequest
         public async Task<string> BusinessRequest(OtherRequestViewModel viewModel)
         {
@@ -443,7 +462,7 @@ namespace HalloDoc.Services.Services
         public async Task<AspNetUser> CheckEmail(string email)
         {
             return await _aspnetuserRepository.CheckUserByEmail(email);
-           
+
         }
         #endregion
 
@@ -453,45 +472,379 @@ namespace HalloDoc.Services.Services
 
             return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); ;
         }
-       public async Task<User> GetUser(string email)
+        public async Task<User> GetUser(string email)
         {
-            User user =await _userRepository.CheckUserByEmail(email);
+            User user = await _userRepository.CheckUserByEmail(email);
             return user;
         }
         #endregion
-        public async Task<AspNetUser> GetAspNetUser(string email)
-        {
-            AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
-            return user;
-        }
+
+        #region PatientForgotPassword
         public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
-            AspNetUser myUser =await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
+            AspNetUser myUser = await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
 
             if (myUser != null)
             {
-                //ViewBag.Message = "Reset Password Link is sent to your registerd Email.";
                 if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
                 {
                     myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
-                    _aspnetuserRepository.UpdateAsync(myUser);
-                    TempData["Message"] = "Password Updated";
-
+                    await _aspnetuserRepository.UpdateAsync(myUser);
+                    _aspnetuserRepository.SetTempData("Message", "Password Updated");
+                    return "RegisterdPatientLogin";
                 }
                 else
                 {
-                    ViewBag.Message = "Password and Confirm Password must be same!!!";
+                    _aspnetuserRepository.SetTempData("Message", "Password and Confirm Password must be same!!!");
 
                 }
-
             }
             else
             {
-                ViewBag.Message = "Invalid User Name";
+                _aspnetuserRepository.SetTempData("Message", "Invalid User Name");
             }
-            return RedirectToAction("RegisterdPatientLogin");
+            return "PatientForgotPassword";
+
+        }
+        #endregion
+
+        #region Dashboard
+        public async Task<object> Dashboard(int? userId)
+        {
+            int? userID = userId;
+            var tabledashboard = (
+            from r in _requestRepository.GetAll()
+            where r.UserId == userID
+            select new DashboardViewModel
+            {
+                RequstId = r.RequestId,
+                CreatedDate = r.CreatedDate.ToShortDateString(),
+                Status = r.Status,
+                FileName = (
+                    from file in _requestwisefileRepository.GetAll()
+                    where file.RequestId == r.RequestId
+                    select file.FileName
+                ).FirstOrDefault(),
+                FileCount = (
+            from file in _requestwisefileRepository.GetAll()
+            where file.RequestId == r.RequestId
+            select file.FileName
+        ).Count()
+            }).ToList();
+            return tabledashboard;
+        }
+        #endregion
+
+        #region create new request(someoneElse)
+        public async Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel, int? userId)
+        {
+
+            User userExist = await _userRepository.GetByIdAsync(userId);
+            Request request = new Request
+            {
+                RequestTypeId = 1,
+                FirstName = userExist.FirstName,
+                LastName = userExist.LastName,
+                PhoneNumber = userExist.Mobile,
+                Email = userExist.Email,
+                CreatedDate = DateTime.Now,
+                RelationName = viewModel.RelationName,
+                Status = 1
+            };
+            await _requestRepository.AddAsync(request);
+
+            RequestClient requestClient = new RequestClient
+            {
+                RequestId = request.RequestId,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                PhoneNumber = viewModel.PhoneNumber,
+                RegionId = 1,
+                Street = viewModel.Street,
+                City = viewModel.City,
+                State = viewModel.State,
+                ZipCode = viewModel.ZipCode,
+                Notes = viewModel.Symptoms,
+                DateOfBirth = viewModel.DateOfBirth,
+                Email = viewModel.Email,
+            };
+            await _requestclientRepository.AddAsync(requestClient);
+
+            if (viewModel.File != null && viewModel.File.Length > 0)
+            {
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                using (var stream = System.IO.File.Create(filePath))
+                {
+                    viewModel.File.CopyTo(stream);
+                    RequestWiseFile newFile = new RequestWiseFile
+                    {
+                        RequestId = request.RequestId,
+                        FileName = viewModel.File.FileName,
+                        CreatedDate = DateTime.Now,
+                        DocType = 1,
+                    };
+
+                    await _requestwisefileRepository.AddAsync(newFile);
+                }
+            }
+
+            User user = await _userRepository.CheckUserByEmail(viewModel.Email);
+            if (user != null)
+            {
+                request.UserId = user.UserId;
+                await _requestRepository.UpdateAsync(request);
+
+            }
+
+            AspNetUser IsuserExist = await _aspnetuserRepository.CheckUserByEmail(viewModel.Email);
+            if (IsuserExist == null)
+            {
+                AspNetUser newaspNetUSer = new AspNetUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = viewModel.FirstName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    Email = viewModel.Email,
+                    CreatedDate = DateTime.Now
+                };
+
+                await _aspnetuserRepository.AddAsync(newaspNetUSer);
+
+
+
+            }
+            return "Dashboard";
+        }
+
+        #endregion
+
+        #region Create Account
+
+        public async Task<string> CreateAccountRequest(CreateAccountViewModel createAccountViewModel)
+        {
+            AspNetUser aspNetuser = await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
+            if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+            {
+                if (aspNetuser != null)
+
+                {
+                    aspNetuser.PasswordHash = createAccountViewModel.PasswordHash;
+                    await _aspnetuserRepository.UpdateAsync(aspNetuser);
+
+                    RequestClient requestClient = await _requestclientRepository.CheckUserByEmail(createAccountViewModel.Email);
+
+                    User user = new User
+                    {
+                        Id = aspNetuser.Id,
+                        FirstName = requestClient.FirstName,
+                        LastName = requestClient.LastName,
+                        Email = requestClient.Email,
+                        Mobile = requestClient.PhoneNumber,
+                        Street = requestClient.Street,
+                        City = requestClient.City,
+                        State = requestClient.State,
+                        ZipCode = requestClient.ZipCode,
+                        DateOfBirth = requestClient.DateOfBirth,
+                        CreatedBy = "Admin",
+                        CreatedDate = DateTime.Now,
+                        RegionId = 1
+                    };
+                    await _userRepository.AddAsync(user);
+
+                    Request req = await _requestRepository.GetByIdAsync(requestClient.RequestId);
+                    req.UserId = user.UserId;
+                    await _requestRepository.UpdateAsync(req);
+
+
+                    return "RegisterdPatientLogin";
+                }
+                else
+                {
+                    _aspnetuserRepository.SetTempData("errormsg", "Entered Email is wrong");
+                    return "CreateAccountPatient";
+
+                }
+            }
+            else
+            {
+                _aspnetuserRepository.SetTempData("errormsg", "Password and Confirm Password should be same");
+                return "CreateAccountPatient";
+
+            }
+
+        }
+
+
+
+        #endregion
+
+        #region Patient My Profile
+        public async Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId)
+        {
+            User user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                requestViewModel.FirstName = user.FirstName;
+                requestViewModel.LastName = user.LastName;
+                requestViewModel.City = user.City;
+                requestViewModel.State = user.State;
+                requestViewModel.Street = user.Street;
+                requestViewModel.Email = user.Email;
+                requestViewModel.PhoneNumber = user.Mobile;
+                requestViewModel.ZipCode = user.ZipCode;
+                string storedStrMonth = user.StrMonth;
+                int? storedIntYear = user.IntYear;
+                int? storedIntDate = user.IntDate;
+                return requestViewModel;
+
+            }
             return "";
         }
+
+
+        public async Task<string> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId)
+        {
+            User user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.FirstName = patientRequestViewModel.FirstName;
+                user.LastName = patientRequestViewModel.LastName;
+                user.Email = patientRequestViewModel.Email;
+                user.Street = patientRequestViewModel.Street;
+                user.City = patientRequestViewModel.City;
+                user.Mobile = patientRequestViewModel.PhoneNumber;
+                user.State = patientRequestViewModel.State;
+                user.ZipCode = patientRequestViewModel.ZipCode;
+                user.StrMonth = patientRequestViewModel.DateOfBirth.Value.ToString();
+                user.IntDate = patientRequestViewModel.DateOfBirth.Value.Day;
+                user.IntYear = patientRequestViewModel.DateOfBirth.Value.Year;
+                user.ModifiedDate = DateTime.Now;
+
+                await _userRepository.UpdateAsync(user);
+
+            }
+            return "Profile";
+        }
+
+        #endregion
+
+        #region View Document
+        public List<DashboardViewModel> ViewDocument(int Id)
+        {
+
+            var tableData = (from r in _requestRepository.GetAll()
+                             join rwf in _requestwisefileRepository.GetAll()
+                             on r.RequestId equals rwf.RequestId
+                             where r.RequestId == Id
+                             select new
+                             {
+                                 r.FirstName,
+                                 r.LastName,
+                                 r.RequestId,
+                                 r.CreatedDate,
+                                 r.Status,
+                                 rwf.FileName
+                             }).ToList();
+
+            List<DashboardViewModel> list = new List<DashboardViewModel>();
+            foreach (var e in tableData)
+            {
+                DashboardViewModel model = new DashboardViewModel();
+                model.Username = e.FirstName + " " + e.LastName;
+                model.RequstId = e.RequestId;
+                model.CreatedDate = DateTime.Now.ToShortDateString();
+                model.FileName = e.FileName;
+                model.Status = e.Status;
+                _aspnetuserRepository.SetTempData("reqID", model.RequstId);
+
+                list.Add(model);
+            }
+
+
+            return list;
+        }
+        public async Task<string> ViewDocument(IFormFile a, int Id)
+        {
+            if (a != null && a.Length > 0)
+            {
+                var fileName = Path.GetFileName(a.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    a.CopyTo(fileStream);
+                }
+                var newRequestWiseFile = new RequestWiseFile
+                {
+                    RequestId = Id,
+                    FileName = fileName,
+                    CreatedDate = DateTime.Now
+                };
+                await _requestwisefileRepository.AddAsync(newRequestWiseFile);
+            }
+            return "";
+        }
+
+
+        public async Task<RequestWiseFile> DownloadFile(string name)
+        {
+            RequestWiseFile reqw = await _requestwisefileRepository.FindFile(name);
+           
+            return reqw;
+        }
+
+
+
+        public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
+        {
+
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var file in selectedFiles)
+                    {
+                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                        byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                        var zipEntry = zipArchive.CreateEntry(file);
+                        using (var zipEntryStream = zipEntry.Open())
+                        {
+                            zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+                        }
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return memoryStream.ToArray();
+            }
+
+
+        }
+        public async Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles,int? requestid)
+        {
+            var filesRow =await  _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
+            MemoryStream ms = new MemoryStream();
+            using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                filesRow.ForEach(file =>
+                {
+                    var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
+                    ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
+                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    using (Stream zipEntryStream = zipEntry.Open())
+                    {
+                        fs.CopyTo(zipEntryStream);
+                    }
+                });
+            ms.Seek(0, SeekOrigin.Begin);
+
+            return ms.ToArray();
+        }
+
+    
+        #endregion
+
 
     }
 }

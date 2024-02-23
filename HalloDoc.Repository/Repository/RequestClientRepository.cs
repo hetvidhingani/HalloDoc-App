@@ -13,7 +13,7 @@ namespace HalloDoc.Repository.Repository
         private readonly ApplicationDbContext _context;
         public RequestClientRepository(ApplicationDbContext context):base(context) 
         {
-            
+            _context = context;
         }
         public async Task<RequestClient> CheckUserByEmail(string email)
         {

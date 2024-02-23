@@ -3,9 +3,9 @@
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
 }
 @{
-    if (ViewBag.Message != null)
+    if ( @TempData["errormsg"] != null)
     {
-        <p class="text-danger text-center fs-3">@ViewBag.Message</p>
+        <p class="text-danger text-center fs-3">@TempData["errormsg"]</p>
     }
     
 }
@@ -21,8 +21,7 @@
 
 
     <div class="login">
-        @TempData["errormsg1"]
-        @TempData["errormsg"]
+        
         <h3 class="mainHeading">
             Create Account
         </h3>
