@@ -3,137 +3,135 @@
         <div>
             @* cards *@
 
-            <div class="row g-2 ">
+            <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign1 ">
+                    <button class="cards cardDesign1 " id="#btn1">
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>NEW</strong>
+                                <strong class="cardContaint">NEW</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>1492</strong>
+                                <strong class="cardContaint">1492</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign2  ">
+                    <button class="cards cardDesign2  ">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>PENDING</strong>
+                                <strong class="cardContaint">PENDING</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>1492</strong>
+                                <strong class="cardContaint">1492</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign3  ">
+                    <button class="cards cardDesign3  ">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>ACTIVE</strong>
+                                <strong class="cardContaint">ACTIVE</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>266</strong>
+                                <strong class="cardContaint">266</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign4  ">
+                    <button class="cards cardDesign4  ">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>CONCLUDE</strong>
+                                <strong class="cardContaint">CONCLUDE</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>66</strong>
+                                <strong class="cardContaint">66</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign5  ">
+                    <button class="cards cardDesign5  ">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>TO CLOSE</strong>
+                                <strong class="cardContaint">TO CLOSE</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>12</strong>
+                                <strong class="cardContaint">12</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <div class="cards cardDesign6  ">
+                    <button class="cards cardDesign6  ">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong>UNPAID</strong>
+                                <strong class="cardContaint">UNPAID</strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>1492</strong>
+                                <strong class="cardContaint">1492</strong>
 
                             </div>
                         </div>
-                    </div>
+                    </button>
                 </div>
 
             </div>
-            @* tables *@
+            @* table *@
 
-            <div class="row mt-5">
+            <div class="row mt-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="sectionHeading">
-                        <strong>
-                            <h3>Patients</h3>
-                            <h5 style="color:#203e84">(Pending)</h5>
+                        <strong class="tableHead ">
+                            <h3 class="">Patients</h3>
+                            <h5 style="color:#203e84;font-size:14px" class="">(Pending)</h5>
                         </strong>
                     </div>
                     <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-
                         <a href="#" class="mainTextLink">Send Link</a><i class="bi bi-send iconLink"></i>
                         <a href="#" class="mainTextLink">Create Requests</a><i class="bi bi-file-earmark iconLink"></i>
                         <a href="#" class="mainTextLink">Export</a><i class="bi bi-arrow-up-right iconLink"></i>
                         <a href="#" class="mainTextLink">Export All</a><i class="bi bi-share-fill iconLink"></i>
                         <a href="#" class="mainTextLink">Request DTY Support</a><i class="bi bi-person-walking iconLink"></i>
-
                     </div>
                 </div>
 
             </div>
 
-            <div class="container-fluid rounded formshadow p-3">
+            <div class="container-fluid rounded formshadow px-2 py-1">
                 <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-between flex-wrap">
-                        <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 ">
+                    <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
+                        <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
                             <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <input type="text" class="form-control " placeholder="Search">
                             </div>
-                            <div class="has-search col-lg-4 col-md-6 col-sm-6 px-1">
+                            <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
                                 <select class="form-select" aria-label="Default select example">
                                     <option selected>Open this select menu</option>
                                     <option value="1">One</option>
@@ -142,45 +140,147 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center justify-content-end" style="">
-                                <div class=""> <div  class="firstType "> All   </div></div>
-                                <div class="btn type "><span class="dot4 "></span>Concierge</div>
-                                <div class="btn type "><span class="dot3 "></span>Business</div>
-                                <div class="btn type "><span class="dot2 "></span>Family/Friend</div>
-                                <div class="btn type "><span class="dot1 "></span>Patient</div>
+                        <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
+                            <div class=""> <button class="firstType"> All   </button></div>
+                            <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
+                            <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
+                            <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
+                            <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
                         </div>
                     </div>
+                    @* admin dashboard Desktop *@
+                    <div class="table-responsive mt-5 adminDashTable">
+                        <table class="table table-borderless">
 
-                    <div class="table-responsive mt-5">
-                        <table class="table">
-                            <thead>
+                            <thead class="table-secondary">
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Date Of Birth</th>
+                                    <th scope="col">Requester</th>
+                                    <th scope="col">Requested Date</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Address</th>
+                                    <th scope="col">Notes</th>
+                                    <th scope="col">Chat With</th>
+                                    <th scope="col">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th scope="row">1</th>
                                     <td>Mark</td>
                                     <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+
                                 </tr>
                                 <tr>
-                                    <th scope="row">2</th>
                                     <td>Jacob</td>
                                     <td>Thornton</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+
                                 </tr>
                                 <tr>
-                                    <th scope="row">3</th>
                                     <td>Larry</td>
                                     <td>the Bird</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+                                    <td>Otto</td>
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
+                    @* admin dashboard Mobile *@
+                    <div class="adminDashMobile">
+                        <div class="mobileviewdashboard my-3 p-2">
+                            <button type="button" class="table-btn collapsible d-flex flex-column">
+                                <span>
+                                    Patient Name
+                                </span>
+                                Address
+                            </button>
+
+                            <div class="content" style="display:none">
+                                <hr />
+                                <div class="d-flex justify-content-end">
+                                    <button class="viewCaseBtn">View Case</button>
+                                </div>
+                                <div class="">
+                                    <i class="bi bi-calendar"></i>
+                                    Date Of Birth: <span>-</span>
+                                </div>
+                                <div class="">
+                                    <i class="bi bi-envelope"></i>
+                                    Email:
+                                    <br />
+                                    Current Status:
+                                    <br />
+                                    <i class="bi bi-telephone"></i>
+                                    Patient:
+                                    <br />
+                                    <i class="bi bi-calendar"></i>
+
+                                    Date Of Service:
+                                    <br />
+                                    <i class="bi bi-person"></i>
+                                    Physician:
+                                    <br />
+
+                                    Requestor:
+                                </div>
+                                <br />
+                                <div class=" row z ">
+                                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                                </div>
+                                <div>
+                                    Chat With:
+                                    <button class="bg-transparent normalbtn">Patient</button>
+                                    <button class="bg-transparent normalbtn">Provider</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </div>
 </main>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        });
+    }
+</script>
