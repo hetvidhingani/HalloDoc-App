@@ -63,13 +63,27 @@
                         </span>
 
                     </div>
-                    <a asp-controller="Patient" asp-action="Logout">
-                        <button class="mx-3 logout" type="submit">
-                            <span class="logouttxt"> Logout</span>
-                            <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
-                        </button>
+                    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+                    {
+                        <a asp-controller="Patient" asp-action="Logout">
+                            <button class="mx-3 logout" type="submit">
+                                <span class="logouttxt"> Logout</span>
+                                <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                            </button>
 
-                    </a>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Admin" asp-action="Logout">
+                            <button class="mx-3 logout" type="submit">
+                                <span class="logouttxt"> Logout</span>
+                                <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                            </button>
+
+                        </a>
+                    }
+
                   
                     <div  class="moon-icon" style="d-flex justify-content-center align-items-center">
                         <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />

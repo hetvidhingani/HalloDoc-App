@@ -1,51 +1,47 @@
 ﻿using HalloDoc.Entities.DataModels;
+using HalloDoc.Entities.ViewModels;
+using HalloDoc.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.Contracts;
 
 namespace HalloDoc.Controllers
 {
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private IAdminService _admin;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context,IAdminService admin)
         {
             _context = context;
-
+            _admin = admin;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+       
         #region Login
         public IActionResult AdminLogin()
         {
             if (HttpContext.Session.GetInt32("AdminSession") != null)
             {
-
                 return RedirectToAction("DashBoard");
             }
             return View();
         }
         [HttpPost]
-        public IActionResult AdminLogin(AspNetUser user)
+        public async Task<IActionResult> AdminLogin(AspNetUser user)
         {
-            var myUser = _context.AspNetUsers.Where(x => x.Email == user.Email && x.PasswordHash == user.PasswordHash).FirstOrDefault();
+            AspNetUser myUser = await _admin.checkEmailPassword(user);
 
             if (myUser != null)
             {
                 HttpContext.Session.SetString("UserName", myUser.UserName);
-                User uID = _context.Users.Where(x => x.Email == myUser.Email).FirstOrDefault();
-                HttpContext.Session.SetInt32("AdminSession", uID.UserId);
-
-
-                return RedirectToAction("DashBoard");
+                User userID = await _admin.GetUser(myUser.Email);
+                HttpContext.Session.SetInt32("AdminSession", userID.UserId);
+                return RedirectToAction("Dashboard");
             }
             else
             {
                 ViewBag.Message = "Login Failed!";
             }
-
             return View();
         }
         #endregion
@@ -62,9 +58,25 @@ namespace HalloDoc.Controllers
 
 
         #endregion
-        public IActionResult Dashboard()
+
+        public async Task<IActionResult> Dashboard()
         {
             return View();
+
         }
+
+        public IActionResult New()
+        {
+            List<AdminDashboardViewModel> list = _admin.New();
+            return PartialView("_NewPartialView", list);
+        }
+        public IActionResult Pending()
+        {
+            List<AdminDashboardViewModel> list = _admin.New();
+
+            return PartialView("_PendingPartialView", list);
+        }
+
+
     }
 }

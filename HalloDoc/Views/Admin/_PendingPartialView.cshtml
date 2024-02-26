@@ -1,0 +1,123 @@
+﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
+
+
+<div class="container-fluid rounded formshadow px-2 py-1">
+    <div class="row mt-3">
+        <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
+            <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
+                <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
+                    <span class="fa fa-search form-control-feedback"></span>
+                    <input type="text" class="form-control " placeholder="Search">
+                </div>
+                <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Open this select menu</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
+                <div class=""> <button class="firstType"> All   </button></div>
+                <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
+                <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
+                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
+                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
+            </div>
+        </div>
+        @* admin dashboard Desktop *@
+        <div class="table-responsive mt-5 adminDashTable">
+            <table class="table table-borderless">
+
+                <thead class="table-secondary">
+                    <tr>
+                        <th scope="col">Name1</th>
+                        <th scope="col">Date Of Birth</th>
+                        <th scope="col">Requester</th>
+                        <th scope="col">Requested Date</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Notes</th>
+                        <th scope="col">Chat With</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model)
+                    {
+                        <tr>
+                            <td>@request.PatientName</td>
+                            <td>@request.DateOfBirth</td>
+                            <td>@request.Requestor</td>
+                            <td>@request.RequestedDate</td>
+                            <td>@request.PatientPhone (Client) @request.RequestorPhone</td>
+                            <td>@request.Address</td>
+                            <td>@request.Notes</td>
+                            <td>Chat With</td>
+                            <td>Actions</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @* admin dashboard Mobile *@
+        <div class="adminDashMobile">
+            <div class="mobileviewdashboard my-3 p-2">
+                <button type="button" class="table-btn collapsible d-flex flex-column">
+                    <span>
+                        Patient Name
+                    </span>
+                    Address
+                </button>
+
+                <div class="content" style="display:none">
+                    <hr />
+                    <div class="d-flex justify-content-end">
+                        <button class="viewCaseBtn">View Case</button>
+                    </div>
+                    <div class="">
+                        <i class="bi bi-calendar"></i>
+                        Date Of Birth: <span>-</span>
+                    </div>
+                    <div class="">
+                        <i class="bi bi-envelope"></i>
+                        Email:
+                        <br />
+                        Current Status:
+                        <br />
+                        <i class="bi bi-telephone"></i>
+                        Patient:
+                        <br />
+                        <i class="bi bi-calendar"></i>
+
+                        Date Of Service:
+                        <br />
+                        <i class="bi bi-person"></i>
+                        Physician:
+                        <br />
+
+                        Requestor:
+                    </div>
+                    <br />
+                    <div class=" row z ">
+                        <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                        <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                        <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                        <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                        <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                    </div>
+                    <div>
+                        Chat With:
+                        <button class="bg-transparent normalbtn">Patient</button>
+                        <button class="bg-transparent normalbtn">Provider</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

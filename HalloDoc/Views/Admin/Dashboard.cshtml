@@ -1,11 +1,10 @@
 ﻿<main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
         <div>
-            @* cards *@
-
+           
             <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign1 " id="#btn1">
+                    <button class="cards cardDesign1 " id="New" data-view-name="_NewPartialView">
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -21,7 +20,7 @@
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign2  ">
+                    <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -37,7 +36,7 @@
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign3  ">
+                    <button class="cards cardDesign3  " id="#Active">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -53,7 +52,7 @@
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign4  ">
+                    <button class="cards cardDesign4  " id="#Conclude">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -69,7 +68,7 @@
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign5  ">
+                    <button class="cards cardDesign5  " id="#ToClose">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -85,7 +84,7 @@
                     </button>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign6  ">
+                    <button class="cards cardDesign6  " id="#Unpaid">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -123,148 +122,7 @@
 
             </div>
 
-            <div class="container-fluid rounded formshadow px-2 py-1">
-                <div class="row mt-3">
-                    <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
-                        <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
-                            <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
-                                <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control " placeholder="Search">
-                            </div>
-                            <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
-                            <div class=""> <button class="firstType"> All   </button></div>
-                            <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
-                            <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
-                            <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                            <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
-                        </div>
-                    </div>
-                    @* admin dashboard Desktop *@
-                    <div class="table-responsive mt-5 adminDashTable">
-                        <table class="table table-borderless">
-
-                            <thead class="table-secondary">
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Date Of Birth</th>
-                                    <th scope="col">Requester</th>
-                                    <th scope="col">Requested Date</th>
-                                    <th scope="col">Phone</th>
-                                    <th scope="col">Address</th>
-                                    <th scope="col">Notes</th>
-                                    <th scope="col">Chat With</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-
-                                </tr>
-                                <tr>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-
-                                </tr>
-                                <tr>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-                                    <td>Otto</td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    @* admin dashboard Mobile *@
-                    <div class="adminDashMobile">
-                        <div class="mobileviewdashboard my-3 p-2">
-                            <button type="button" class="table-btn collapsible d-flex flex-column">
-                                <span>
-                                    Patient Name
-                                </span>
-                                Address
-                            </button>
-
-                            <div class="content" style="display:none">
-                                <hr />
-                                <div class="d-flex justify-content-end">
-                                    <button class="viewCaseBtn">View Case</button>
-                                </div>
-                                <div class="">
-                                    <i class="bi bi-calendar"></i>
-                                    Date Of Birth: <span>-</span>
-                                </div>
-                                <div class="">
-                                    <i class="bi bi-envelope"></i>
-                                    Email:
-                                    <br />
-                                    Current Status:
-                                    <br />
-                                    <i class="bi bi-telephone"></i>
-                                    Patient:
-                                    <br />
-                                    <i class="bi bi-calendar"></i>
-
-                                    Date Of Service:
-                                    <br />
-                                    <i class="bi bi-person"></i>
-                                    Physician:
-                                    <br />
-
-                                    Requestor:
-                                </div>
-                                <br />
-                                <div class=" row z ">
-                                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                                </div>
-                                <div>
-                                    Chat With:
-                                    <button class="bg-transparent normalbtn">Patient</button>
-                                    <button class="bg-transparent normalbtn">Provider</button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
-            </div>
+            <div id="admindata"></div>
         </div>
     </div>
 </main>
@@ -283,4 +141,114 @@
             }
         });
     }
+ 
+        $(document).ready(function () {
+            load();
+            $('#New').click(function () {
+                $.ajax({
+                    url: "/Admin/New",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+
+        $('#Pending').click(function () {
+                $.ajax({
+                    url: "/Admin/Pending",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+
+            $('#Active').click(function () {
+                $.ajax({
+                    url: "/Admin/Active",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+
+            $('#Conclude').click(function () {
+                $.ajax({
+                    url: "/Admin/Conclude",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+
+
+            $('#ToClose').click(function () {
+                $.ajax({
+                    url: "/Admin/ToClose",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+
+            $('#Unpaid').click(function () {
+                $.ajax({
+                    url: "/Admin/Unpaid",
+                    type: "POST",
+                    dataType: "html",
+                    success: function (data) {
+                        $("#admindata").html(data);
+                    },
+                    error: function () {
+                        alert("No Projects Found");
+                        $("#admindata").html('An error has occurred');
+                    }
+                });
+            });
+        });
+
+    function load() {
+        $.ajax({
+            url: "/Admin/New",
+            type: "POST",
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+
 </script>

@@ -226,7 +226,6 @@ namespace HalloDoc.Controllers
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
             int? userID = HttpContext.Session.GetInt32("UserSession");
             var result = await _patient.Dashboard(userID);
-
             return View(result);
 
         }
