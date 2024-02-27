@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class BusinessRepository:GenericRepository<Business>,IBusinessRepository
+    public class PhysicianRepository:GenericRepository<Physician>,IPhysicianRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public BusinessRepository(ApplicationDbContext context) : base(context)
-        { 
+        public PhysicianRepository(ApplicationDbContext context) : base(context)
+        {
             _context = context;
 
         }

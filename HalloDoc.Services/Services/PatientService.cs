@@ -701,7 +701,6 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-
         public async Task<string> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId)
         {
             User user = await _userRepository.GetByIdAsync(userId);

@@ -19,12 +19,14 @@ namespace HalloDoc.Services.Services
         private readonly IRequestWiseFilesRepository _requestwisefileRepository;
         private readonly IBusinessRepository _businessRepository;
         private readonly IConciergeRepository _conciergeRepository;
+        private readonly IPhysicianRepository _physicianRepository;
 
         #region constructor
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
-                               IConciergeRepository conciergeRepository)
+                               IConciergeRepository conciergeRepository,
+                               IPhysicianRepository physicianRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -33,6 +35,7 @@ namespace HalloDoc.Services.Services
             _requestwisefileRepository = requestwisefileRepository;
             _businessRepository = businessRepository;
             _conciergeRepository = conciergeRepository;
+            _physicianRepository = physicianRepository;
         }
         #endregion
 
@@ -62,13 +65,34 @@ namespace HalloDoc.Services.Services
                   RequestorPhone=r.PhoneNumber,
                   Address=p.Street+","+p.City + ","+p.State+","+p.ZipCode,
                   Notes=p.Notes
-
-                 
-                 
+ 
                   
               }).ToList();
               return  tabledashboard1;
          }
+        public List<AdminDashboardViewModel> Pending()
+        {
 
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName=phy.FirstName+" "+phy.LastName
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
     }
 }

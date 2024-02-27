@@ -21,6 +21,7 @@ builder.Services.AddScoped<IRequestWiseFilesRepository, RequestWiseFilesReposito
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
 builder.Services.AddScoped<IConciergeRepository, ConciergeRepository>();
+builder.Services.AddScoped<IPhysicianRepository, PhysicianRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

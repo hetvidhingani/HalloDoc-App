@@ -72,7 +72,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult Pending()
         {
-            List<AdminDashboardViewModel> list = _admin.New();
+            List<AdminDashboardViewModel> list = _admin.Pending();
 
             return PartialView("_PendingPartialView", list);
         }
