@@ -13,8 +13,15 @@ namespace HalloDoc.Services.IServices
     {
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
         Task<User> GetUser(string email);
+       
         List<AdminDashboardViewModel> New();
         List<AdminDashboardViewModel> Pending();
+        List<AdminDashboardViewModel> Active();
+        List<AdminDashboardViewModel> Conclude();
+        List<AdminDashboardViewModel> ToClose();
+        List<AdminDashboardViewModel> Unpaid();
+
+
 
     }
 }

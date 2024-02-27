@@ -46,14 +46,15 @@
         @* admin dashboard Desktop *@
         <div class="table-responsive mt-5 adminDashTable">
             <table class="table table-borderless">
+
                 <thead class="table-secondary">
                     <tr>
                         <th scope="col">Name1</th>
                         <th scope="col">Date Of Birth</th>
                         <th scope="col">Requester</th>
                         <td scope="col">PhysicianName</td>
+                        <th scope="col">Requested Date</th>
 
-                        <th scope="col">Date Of Service</th>
                         <th scope="col">Phone</th>
                         <th scope="col">Address</th>
                         <th scope="col">Notes</th>
@@ -84,8 +85,8 @@
                             bgColor = " ";
                             break;
                     }
-                <tbody>
-                    
+                    <tbody>
+
                         <tr class="@bgColor" style="color:white;">
                             <td>@request.PatientName</td>
                             <td>@request.DateOfBirth</td>
@@ -112,8 +113,8 @@
 
                             </td>
                         </tr>
-                    
-                </tbody>
+
+                    </tbody>
                 }}
             </table>
         </div>

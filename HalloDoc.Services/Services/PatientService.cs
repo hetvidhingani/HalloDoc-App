@@ -422,7 +422,6 @@ namespace HalloDoc.Services.Services
                         CreatedDate = DateTime.Now,
                         DocType = 1,
                     };
-
                     await _requestwisefileRepository.AddAsync(newFile);
                 }
             }

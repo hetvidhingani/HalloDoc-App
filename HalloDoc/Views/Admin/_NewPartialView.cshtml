@@ -1,6 +1,23 @@
 ﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
 
+<div class="row mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="sectionHeading">
+            <strong class="tableHead ">
+                <h3 class="">Patients</h3>
+                <h5 style="color:#203e84;font-size:14px" class="">(New)</h5>
+            </strong>
+        </div>
+        <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
+            <a href="#" class="mainTextLink">Send Link</a><i class="bi bi-send iconLink"></i>
+            <a href="#" class="mainTextLink">Create Requests</a><i class="bi bi-file-earmark iconLink"></i>
+            <a href="#" class="mainTextLink">Export</a><i class="bi bi-arrow-up-right iconLink"></i>
+            <a href="#" class="mainTextLink">Export All</a><i class="bi bi-share-fill iconLink"></i>
+            <a href="#" class="mainTextLink">Request DTY Support</a><i class="bi bi-person-walking iconLink"></i>
+        </div>
+    </div>
 
+</div>
 <div class="container-fluid rounded formshadow px-2 py-1">
     <div class="row mt-3">
         <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
@@ -24,12 +41,12 @@
                 <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
                 <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
                 <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
+
             </div>
         </div>
         @* admin dashboard Desktop *@
-        <div class="table-responsive mt-5 adminDashTable">
-            <table class="table table-borderless">
-
+        <div class=" table-responsive mt-5 adminDashTable">
+            <table class="table">
                 <thead class="table-secondary">
                     <tr>
                         <th scope="col">Name</th>
@@ -43,10 +60,35 @@
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var request in Model)
+
+
+                @foreach (var request in Model)
+                {
+
+                    var bgColor = "";
+
+                    switch (request.RequestTypeID)
                     {
-                        <tr>
+                        case 1:
+                            bgColor = "green";
+                            break;
+                        case 2:
+                            bgColor = "orange"; //rgb(75, 223, 75)
+                            break;
+                        case 3:
+                            bgColor = "blue";
+                            break;
+                        case 4:
+                            bgColor = "pink";
+                            break;
+                        default:
+                            bgColor = " ";
+                            break;
+                    }
+
+                    <tbody>
+
+                        <tr class="@bgColor" style="color:white;">
                             <td>@request.PatientName</td>
                             <td>@request.DateOfBirth</td>
                             <td>@request.Requestor</td>
@@ -54,11 +96,41 @@
                             <td>@request.PatientPhone (Client) @request.RequestorPhone</td>
                             <td>@request.Address</td>
                             <td>@request.Notes</td>
-                            <td>Chat With</td>
-                            <td>Actions</td>
+                            <td><button class="dashboardBTN">Provider</button></td>
+                          @*   <td>
+
+                                <button class="dashboardBTN" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+
+                            </td> *@
+
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn4" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Action
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><button class="dropdown-item" type="button">View Case</button></li>
+                                        <li><button class="dropdown-item" type="button">View Uploads</button></li>
+                                        <li><button class="dropdown-item" type="button">View Notes</button></li>
+                                        <li><button class="dropdown-item" type="button">Transfer</button></li>
+                                        <li><button class="dropdown-item" type="button">Clear Case</button></li>
+                                        <li><button class="dropdown-item" type="button">Send Agreement</button></li>
+                                    </ul>
+                                </div>
+                            </td>
+
                         </tr>
-                    }
-                </tbody>
+
+                    </tbody>
+
+                }
             </table>
         </div>
         @* admin dashboard Mobile *@

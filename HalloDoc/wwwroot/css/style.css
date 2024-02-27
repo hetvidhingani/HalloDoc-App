@@ -121,7 +121,30 @@ input[type=password]::-ms-clear {
    vertical-align:middle;
    
 }
-
+.table {
+    --bs-table-bg: none !important;
+    --bs-table-color:none !important;
+}
+.adminDashTable tbody tr.green {
+    background-color: #5FBC61 !important;
+    color:white;
+}
+.blue {
+    background-color: #007FC6 !important;
+}
+.orange {
+    background-color: #E49129 !important;
+}
+.pink {
+    background-color: #D76879 !important;
+}
+.dashboardBTN{
+    background-color:transparent;
+    border:1px solid white;
+    border-radius:5px;
+    padding:3px;
+    color:white;
+}
 @media only screen and (max-width: 600px) {
     .cust-col {
         flex: 0 0 33.33333%;
@@ -562,7 +585,7 @@ header {
     z-index: 10;
 }
 .header2 {
-    position: sticky;
+    position: fixed;
     height: 80px;
     
     top: 0;
@@ -712,7 +735,7 @@ form > div > div {
     width: 90%;
 }
 .mainContent2{
-    margin:10vh 0px;
+    margin:15vh 0vh;
     width:90%;
 }
 

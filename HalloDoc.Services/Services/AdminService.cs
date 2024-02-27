@@ -55,6 +55,7 @@ namespace HalloDoc.Services.Services
             var tabledashboard1 = (
               from r in _requestRepository.GetAll()
               join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId
+              where r.Status==1
               select new AdminDashboardViewModel
               {
                  PatientName=p.FirstName+","+p.LastName,
@@ -64,7 +65,9 @@ namespace HalloDoc.Services.Services
                   PatientPhone=p.PhoneNumber,
                   RequestorPhone=r.PhoneNumber,
                   Address=p.Street+","+p.City + ","+p.State+","+p.ZipCode,
-                  Notes=p.Notes
+                  Notes=p.Notes,
+                  RequestTypeID=r.RequestTypeId,
+                  Status=r.Status
  
                   
               }).ToList();
@@ -77,6 +80,8 @@ namespace HalloDoc.Services.Services
               from r in _requestRepository.GetAll()
               join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
               join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 1
+
               select new AdminDashboardViewModel
               {
                   PatientName = rec.FirstName + "," + rec.LastName,
@@ -87,7 +92,116 @@ namespace HalloDoc.Services.Services
                   RequestorPhone = r.PhoneNumber,
                   Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                   Notes = rec.Notes,
-                  PhysicianName=phy.FirstName+" "+phy.LastName
+                  PhysicianName=phy.FirstName+" "+phy.LastName,
+                  RequestTypeID = r.RequestTypeId
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
+        public List<AdminDashboardViewModel> Active()
+        {
+
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 2
+
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName = phy.FirstName + " " + phy.LastName,
+                  RequestTypeID = r.RequestTypeId
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
+        public List<AdminDashboardViewModel> Conclude()
+        {
+
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 3
+
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName = phy.FirstName + " " + phy.LastName,
+                  RequestTypeID = r.RequestTypeId
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
+        public List<AdminDashboardViewModel> ToClose()
+        {
+
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 4
+
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName = phy.FirstName + " " + phy.LastName,
+                  RequestTypeID = r.RequestTypeId
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
+        public List<AdminDashboardViewModel> Unpaid()
+        {
+
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 4
+
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName = phy.FirstName + " " + phy.LastName,
+                  RequestTypeID = r.RequestTypeId
 
 
 

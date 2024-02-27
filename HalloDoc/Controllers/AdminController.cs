@@ -76,6 +76,31 @@ namespace HalloDoc.Controllers
 
             return PartialView("_PendingPartialView", list);
         }
+        public IActionResult Active()
+        {
+            List<AdminDashboardViewModel> list = _admin.Active();
+
+            return PartialView("_ActivePartialView", list);
+        }
+        public IActionResult Conclude()
+        {
+            List<AdminDashboardViewModel> list = _admin.Conclude();
+
+            return PartialView("_ConcludePartialView", list);
+        }
+        public IActionResult ToClose()
+        {
+            List<AdminDashboardViewModel> list = _admin.ToClose();
+
+            return PartialView("_ToClosePartialView", list);
+        }
+        public IActionResult Unpaid()
+        {
+            List<AdminDashboardViewModel> list = _admin.Unpaid();
+
+            return PartialView("_UnpaidPartialView", list);
+        }
+      
 
 
     }
