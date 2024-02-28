@@ -155,7 +155,11 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>View Case</li>
+                                        <li>
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })">
+                                                <button class="normalbtn">View Case </button>
+                                            </a>
+                                        </li>
                                         <li>View Case</li>
                                         <li>View Case</li>
 

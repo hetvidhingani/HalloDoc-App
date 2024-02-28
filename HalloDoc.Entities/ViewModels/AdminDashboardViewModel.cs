@@ -8,6 +8,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class AdminDashboardViewModel
     {
+        public int requestID { get; set; }
         public int Status { get; set; }
         public int RequestTypeID { get; set; }
         public int? RequstClientId { get; set; }

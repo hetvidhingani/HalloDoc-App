@@ -29,5 +29,12 @@ namespace HalloDoc.Repository.Repository
 
             return await context.Requests.CountAsync(predicate);
         }
+        public async Task<int> CheckUserByID(int id)
+        {
+            Request user = _context.Requests.Where(x => x.RequestId == id).FirstOrDefault();
+            int userID = (int)user.UserId;
+            return userID;
+        }
+
     }
 }

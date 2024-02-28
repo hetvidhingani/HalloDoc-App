@@ -12,5 +12,7 @@ namespace HalloDoc.Repository.IRepository
     {
         Task<Request> CheckUserByEmail(string email);
         Task<int> GetCountAsync(Expression<Func<Request, bool>> predicate);
+        Task<int> CheckUserByID(int id);
+
     }
 }

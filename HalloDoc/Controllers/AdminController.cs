@@ -16,7 +16,7 @@ namespace HalloDoc.Controllers
             _context = context;
             _admin = admin;
         }
-       
+     
         #region Login
         public IActionResult AdminLogin()
         {
@@ -45,6 +45,7 @@ namespace HalloDoc.Controllers
             return View();
         }
         #endregion
+       
         #region Logout
         public IActionResult Logout()
         {
@@ -59,11 +60,7 @@ namespace HalloDoc.Controllers
 
         #endregion
 
-        //public async Task<IActionResult> Dashboard()
-        //{
-        //    return View();
-
-        //}
+        #region Dashboard
         public async Task<IActionResult> Dashboard()
         {
             var viewModel = new AdminDashboardViewModel
@@ -113,8 +110,18 @@ namespace HalloDoc.Controllers
 
             return PartialView("_UnpaidPartialView", list);
         }
-      
 
+        #endregion
+
+        #region View Case
+
+        public async Task<IActionResult> ViewCase(int Id)
+        {
+            int user = await _admin.GetUserByRequestClientID(Id);
+            var result = await _admin.ViewCase(user);
+            return View(result);
+        }
+        #endregion
 
     }
 }

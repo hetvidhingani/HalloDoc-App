@@ -21,7 +21,8 @@ namespace HalloDoc.Services.IServices
         List<AdminDashboardViewModel> ToClose();
         List<AdminDashboardViewModel> Unpaid();
         Task<int> GetCount(int statusId);
-
+        Task<object> ViewCase( int userId);
+        Task<int> GetUserByRequestClientID(int id);
 
     }
 }

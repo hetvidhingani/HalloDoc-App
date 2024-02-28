@@ -39,7 +39,7 @@ namespace HalloDoc.Services.Services
             _physicianRepository = physicianRepository;
         }
         #endregion
-
+        #region common methods
         public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
         {
 
@@ -54,7 +54,9 @@ namespace HalloDoc.Services.Services
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId);
         }
-        public  List<AdminDashboardViewModel> New()
+        #endregion
+        #region Dashboard
+        public List<AdminDashboardViewModel> New()
         {
 
             var tabledashboard1 = (
@@ -74,6 +76,7 @@ namespace HalloDoc.Services.Services
                   Notes=p.Notes,
                   RequestTypeID=r.RequestTypeId,
                   Status=r.Status,
+                  requestID=p.RequestId
                     
                   
               }).ToList();
@@ -214,5 +217,36 @@ namespace HalloDoc.Services.Services
               }).ToList();
             return tabledashboard1;
         }
+        #endregion
+        #region View Case
+        public async Task<int> GetUserByRequestClientID(int id)
+        {
+            int user = await _requestRepository.CheckUserByID(id);
+            return user;
+        }
+
+        public async Task<object> ViewCase(int userId)
+        {
+            ViewCaseViewModel viewmodel = new ViewCaseViewModel();
+            User user = await _userRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                viewmodel.LastName = user.LastName;
+                viewmodel.City = user.City;
+                viewmodel.FirstName = user.FirstName;
+                viewmodel.State = user.State;
+                viewmodel.Street = user.Street;
+                viewmodel.Email = user.Email;
+                viewmodel.PhoneNumber = user.Mobile;
+                viewmodel.ZipCode = user.ZipCode;
+                
+              
+                return viewmodel;
+
+            }
+            return "ViewCase";
+        }
+
+        #endregion
     }
 }
