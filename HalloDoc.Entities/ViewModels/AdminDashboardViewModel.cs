@@ -22,6 +22,14 @@ namespace HalloDoc.Entities.ViewModels
       public string? PhysicianName { get; set; }
      public DateTime? DateOfService { get; set; }
        public string? Region { get; set; }
+        public int NewCount { get; set; }
+        public int PendingCount { get; set; }
+        public int ActiveCount { get; set; }
+        public int ConcludeCount { get; set; }
+        public int UnpaidCount { get; set; }
+        public int ToCloseCount { get; set; }
+
+        
 
 
 

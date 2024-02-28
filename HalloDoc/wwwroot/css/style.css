@@ -235,9 +235,7 @@ input[type=password]::-ms-clear {
     .adminDashMobile{
         display:none;
     }
-    .iconLink {
-        display: none;
-    }
+    
     .type{
         font-size:10px;
     }

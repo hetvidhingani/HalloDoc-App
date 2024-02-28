@@ -1,4 +1,7 @@
-﻿<main class="mainSectionMargin">
+﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel
+
+
+<main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
         <div>
            
@@ -8,12 +11,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong class="cardContaint">NEW</strong>
+                                <strong class="cardContaint" >
+                                    NEW
+                                </strong>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">1492</strong>
+                                <strong class="cardContaint" id="newCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -29,7 +34,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">1492</strong>
+                                <strong class="cardContaint" id="pendingCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -45,7 +50,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">266</strong>
+                                <strong class="cardContaint" id="ActiveCount"></strong>
 
                             </div>
                         </div>
@@ -61,7 +66,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">66</strong>
+                                <strong class="cardContaint" id="ConcludeCount"></strong>
 
                             </div>
                         </div>
@@ -77,7 +82,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">12</strong>
+                                <strong class="cardContaint" id="ToCloseCount"></strong>
 
                             </div>
                         </div>
@@ -93,7 +98,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint">1492</strong>
+                                <strong class="cardContaint" id="UnpaidCount"></strong>
 
                             </div>
                         </div>
@@ -102,9 +107,6 @@
 
             </div>
             @* table *@
-
-           
-
             <div id="admindata"></div>
         </div>
     </div>
@@ -232,6 +234,14 @@
                 $("#admindata").html('An error has occurred');
             }
         });
+      
     }
+    document.getElementById("newCountDisplay").innerText = @Model.NewCount;
+    document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;
+    document.getElementById("ActiveCount").innerText = @Model.ActiveCount;
+    document.getElementById("ConcludeCount").innerText = @Model.ConcludeCount;
+    document.getElementById("ToCloseCount").innerText = @Model.ToCloseCount;
+    document.getElementById("UnpaidCount").innerText = @Model.UnpaidCount;
+
 
 </script>

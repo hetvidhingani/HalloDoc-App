@@ -2,6 +2,7 @@
 using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,13 +50,18 @@ namespace HalloDoc.Services.Services
             User user = await _userRepository.CheckUserByEmail(email);
             return user;
         }
+        public async Task<int> GetCount(int statusId)
+        {
+            return await _requestRepository.GetCountAsync(r => r.Status == statusId);
+        }
         public  List<AdminDashboardViewModel> New()
         {
 
             var tabledashboard1 = (
-              from r in _requestRepository.GetAll()
-              join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId
-              where r.Status==1
+               
+              from r in _requestRepository.GetAll() 
+              join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId 
+              where r.Status==1 
               select new AdminDashboardViewModel
               {
                  PatientName=p.FirstName+","+p.LastName,
@@ -67,8 +73,8 @@ namespace HalloDoc.Services.Services
                   Address=p.Street+","+p.City + ","+p.State+","+p.ZipCode,
                   Notes=p.Notes,
                   RequestTypeID=r.RequestTypeId,
-                  Status=r.Status
- 
+                  Status=r.Status,
+                    
                   
               }).ToList();
               return  tabledashboard1;

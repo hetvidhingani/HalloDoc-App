@@ -59,12 +59,25 @@ namespace HalloDoc.Controllers
 
         #endregion
 
+        //public async Task<IActionResult> Dashboard()
+        //{
+        //    return View();
+
+        //}
         public async Task<IActionResult> Dashboard()
         {
-            return View();
+            var viewModel = new AdminDashboardViewModel
+            {
+                NewCount = await _admin.GetCount(1),
+                PendingCount = await _admin.GetCount(1),
+                ActiveCount = await _admin.GetCount(2),
+                ConcludeCount = await _admin.GetCount(3),
+                ToCloseCount = await _admin.GetCount(4),
+                UnpaidCount = await _admin.GetCount(5)
+            };
 
+            return View(viewModel);
         }
-
         public IActionResult New()
         {
             List<AdminDashboardViewModel> list = _admin.New();

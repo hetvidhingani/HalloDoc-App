@@ -1,8 +1,10 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +22,12 @@ namespace HalloDoc.Repository.Repository
             Request user = _context.Requests.Where(x => x.Email == email).FirstOrDefault();
 
             return user;
+        }
+        public async Task<int> GetCountAsync(Expression<Func<Request, bool>> predicate)
+        {
+            using var context = new ApplicationDbContext();
+
+            return await context.Requests.CountAsync(predicate);
         }
     }
 }

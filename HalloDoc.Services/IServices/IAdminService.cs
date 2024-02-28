@@ -20,7 +20,7 @@ namespace HalloDoc.Services.IServices
         List<AdminDashboardViewModel> Conclude();
         List<AdminDashboardViewModel> ToClose();
         List<AdminDashboardViewModel> Unpaid();
-
+        Task<int> GetCount(int statusId);
 
 
     }

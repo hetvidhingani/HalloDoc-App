@@ -9,11 +9,23 @@
             </strong>
         </div>
         <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-            <a href="#" class="mainTextLink">Send Link</a><i class="bi bi-send iconLink"></i>
-            <a href="#" class="mainTextLink">Create Requests</a><i class="bi bi-file-earmark iconLink"></i>
-            <a href="#" class="mainTextLink">Export</a><i class="bi bi-arrow-up-right iconLink"></i>
-            <a href="#" class="mainTextLink">Export All</a><i class="bi bi-share-fill iconLink"></i>
-            <a href="#" class="mainTextLink">Request DTY Support</a><i class="bi bi-person-walking iconLink"></i>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
+                Request DTY Support</a>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
+           
+
+            Export All</a>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
+            </a>
+            <a href="#" class="mainTextLink"><i class="bi bi-file-earmark iconLink"></i>Create Requests</a>
+            <a href="#" class="mainTextLink">
+                <i class="bi bi-send iconLink"></i>
+
+                Send Link
+            </a>
         </div>
     </div>
 
@@ -28,7 +40,7 @@
                 </div>
                 <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
                     <select class="form-select" aria-label="Default select example">
-                        <option selected>Open this select menu</option>
+                        <option selected>All Regions</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
@@ -37,10 +49,10 @@
             </div>
             <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
                 <div class=""> <button class="firstType"> All   </button></div>
+                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
+                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
                 <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
                 <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
-                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
 
             </div>
         </div>
@@ -93,39 +105,63 @@
                             <td>@request.DateOfBirth</td>
                             <td>@request.Requestor</td>
                             <td>@request.RequestedDate</td>
-                            <td>@request.PatientPhone (Client) @request.RequestorPhone</td>
+
+                            <td>
+                                @{
+                                    var requestor = "";
+                                    var display = "block";
+                                    if (request.RequestTypeID == 2)
+                                    {
+                                        requestor = "Family/Friend";
+
+
+                                    }
+                                    else if (request.RequestTypeID == 3)
+                                    {
+                                        requestor = "Concierge";
+
+                                    }
+                                    else if (request.RequestTypeID == 1)
+                                    {
+                                        requestor = "";
+                                        display = "none";
+
+                                    }
+                                    else
+                                    {
+                                        requestor = "Business";
+
+                                    }
+                                }
+                                <div class="dashboardBTN">
+                                    @request.PatientPhone
+                                </div>
+                                (Patient)
+                                <div style="display:@display">
+
+                                    <br>
+                                    <div class="dashboardBTN">
+                                        @request.RequestorPhone
+                                    </div>
+                                    (@requestor)
+                                </div>
+                            </td>
                             <td>@request.Address</td>
                             <td>@request.Notes</td>
                             <td><button class="dashboardBTN">Provider</button></td>
-                          @*   <td>
-
-                                <button class="dashboardBTN" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Action
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-
-                            </td> *@
-
                             <td>
-                                <div class="btn-group">
-                                    <button type="button" class="btn4" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Action
+                                <div class="btn-group dropstart">
+                                    <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><button class="dropdown-item" type="button">View Case</button></li>
-                                        <li><button class="dropdown-item" type="button">View Uploads</button></li>
-                                        <li><button class="dropdown-item" type="button">View Notes</button></li>
-                                        <li><button class="dropdown-item" type="button">Transfer</button></li>
-                                        <li><button class="dropdown-item" type="button">Clear Case</button></li>
-                                        <li><button class="dropdown-item" type="button">Send Agreement</button></li>
+                                    <ul class="dropdown-menu">
+                                        <li>View Case</li>
+                                        <li>View Case</li>
+                                        <li>View Case</li>
+
                                     </ul>
                                 </div>
                             </td>
-
                         </tr>
 
                     </tbody>

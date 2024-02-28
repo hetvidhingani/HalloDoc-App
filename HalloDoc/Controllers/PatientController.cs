@@ -164,8 +164,13 @@ namespace HalloDoc.Controllers
 
             return Json(new { exists = _patient.CheckEmail(email) });
         }
+        //public IActionResult CheckEmail(string email)
+        //{
+        //    var emailExists = _context.AspNetUsers.Any(u => u.Email == email);
+        //    return Json(new { exists = emailExists });
+        //}
         #endregion
-       
+
         #region Login
 
         public IActionResult RegisterdPatientLogin()

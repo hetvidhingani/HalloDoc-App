@@ -28,7 +28,7 @@
                 </div>
                 <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
                     <select class="form-select" aria-label="Default select example">
-                        <option selected>Open this select menu</option>
+                        <option selected>All Regions</option>
                         <option value="1">One</option>
                         <option value="2">Two</option>
                         <option value="3">Three</option>
@@ -37,10 +37,10 @@
             </div>
             <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
                 <div class=""> <button class="firstType"> All   </button></div>
+                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
+                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
                 <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
                 <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
-                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
             </div>
         </div>
         @* admin dashboard Desktop *@
@@ -100,20 +100,23 @@
                             </td>
                             <td>
 
-                                <button class="dashboardBTN dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Action
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
+                                <div class="btn-group dropstart">
+                                    <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li>View Case</li>
+                                        <li>View Case</li>
+                                        <li>View Case</li>
+
+                                    </ul>
+                                </div>
 
                             </td>
                         </tr>
 
                     </tbody>
-                }}
+                }
             </table>
         </div>
         @* admin dashboard Mobile *@

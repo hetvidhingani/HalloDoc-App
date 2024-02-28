@@ -11,7 +11,7 @@ namespace HalloDoc.Repository.IRepository
     {
 
         Task<AspNetUser> CheckUserByEmail(string email);
-        Task<AspNetUser> Login(string email,string password);   
+        Task<AspNetUser> Login(string email,string password);
 
     }
 }
