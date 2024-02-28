@@ -49,7 +49,7 @@
             </div>
             <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
                 <div class=""> <button class="firstType"> All   </button></div>
-                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
+                <button class="btn type request-type-btn" data-requesttype="1"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
                 <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
                 <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
                 <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
@@ -154,14 +154,25 @@
                                     <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu ">
+                                        <div class="d-flex flex-column  align-items-center">
+
+                                        <li>Assign Case</li>
+                                        <li>Cancle Case</li>
+
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })">
-                                                <button class="normalbtn">View Case </button>
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                                View Case
                                             </a>
                                         </li>
-                                        <li>View Case</li>
-                                        <li>View Case</li>
+                                        <li>
+                                            <a href="@Url.Action("ViewNotes", "Admin")" style="text-decoration:none;color:black;">
+                                                View Notes
+                                            </a>
+                                        </li>
+                                        <li>Block Patient</li>
+                                        </div>
+                                        
 
                                     </ul>
                                 </div>
@@ -233,3 +244,19 @@
 
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        // Event handler for state buttons
+        filterData(state, requesttype);
+        $(".btn-state").click(function () {
+            state = $(this).data("state");
+            filterData(state, requesttype);
+        });
+
+        // Event handler for request type buttons
+        $(".request-type-btn").click(function () {
+            var requesttype = $(this).data("requesttype");
+            filterData(state, requesttype);
+        });
+    });
+</script>

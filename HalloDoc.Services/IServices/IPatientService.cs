@@ -16,7 +16,7 @@ namespace HalloDoc.Services.IServices
         Task<string> FamilyFriendRequest(OtherRequestViewModel viewModel);
         Task<string> BusinessRequest(OtherRequestViewModel viewModel);
         Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
-        Task<AspNetUser> CheckEmail(string email);
+        string? CheckEmail(string email);
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
         Task<User> GetUser(string email);
         Task<AspNetUser> GetAspNetUser(string email);

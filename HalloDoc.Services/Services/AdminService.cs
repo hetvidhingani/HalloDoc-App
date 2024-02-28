@@ -76,7 +76,7 @@ namespace HalloDoc.Services.Services
                   Notes=p.Notes,
                   RequestTypeID=r.RequestTypeId,
                   Status=r.Status,
-                  requestID=p.RequestId
+                  requestID=p.RequestClientId
                     
                   
               }).ToList();
@@ -228,18 +228,19 @@ namespace HalloDoc.Services.Services
         public async Task<object> ViewCase(int userId)
         {
             ViewCaseViewModel viewmodel = new ViewCaseViewModel();
-            User user = await _userRepository.GetByIdAsync(userId);
+            RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
             if (user != null)
             {
+                viewmodel.Symptoms = user.Notes;
                 viewmodel.LastName = user.LastName;
                 viewmodel.City = user.City;
                 viewmodel.FirstName = user.FirstName;
                 viewmodel.State = user.State;
                 viewmodel.Street = user.Street;
                 viewmodel.Email = user.Email;
-                viewmodel.PhoneNumber = user.Mobile;
+                viewmodel.PhoneNumber = user.PhoneNumber;
                 viewmodel.ZipCode = user.ZipCode;
-                
+               
               
                 return viewmodel;
 

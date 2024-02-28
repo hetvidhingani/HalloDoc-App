@@ -458,9 +458,14 @@ namespace HalloDoc.Services.Services
 
         #region check email
 
-        public async Task<AspNetUser> CheckEmail(string email)
+        public string? CheckEmail(string email)
         {
-            return await _aspnetuserRepository.CheckUserByEmail(email);
+            var tmp = _aspnetuserRepository.CheckUserByEmail(email);
+           if(tmp.Result == null)
+            {
+                return "";
+            }
+            return tmp.Result.Email;
 
         }
         #endregion

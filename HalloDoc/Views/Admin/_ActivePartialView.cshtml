@@ -9,11 +9,25 @@
             </strong>
         </div>
         <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-            <a href="#" class="mainTextLink">Send Link</a><i class="bi bi-send iconLink"></i>
-            <a href="#" class="mainTextLink">Create Requests</a><i class="bi bi-file-earmark iconLink"></i>
-            <a href="#" class="mainTextLink">Export</a><i class="bi bi-arrow-up-right iconLink"></i>
-            <a href="#" class="mainTextLink">Export All</a><i class="bi bi-share-fill iconLink"></i>
-            <a href="#" class="mainTextLink">Request DTY Support</a><i class="bi bi-person-walking iconLink"></i>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
+                Request DTY Support
+            </a>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
+
+
+                Export All
+            </a>
+            <a href="#" class="mainTextLink">
+                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
+            </a>
+            <a href="#" class="mainTextLink"><i class="bi bi-file-earmark iconLink"></i>Create Requests</a>
+            <a href="#" class="mainTextLink">
+                <i class="bi bi-send iconLink"></i>
+
+                Send Link
+            </a>
         </div>
     </div>
 
@@ -146,9 +160,21 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li>View Case</li>
-                                        <li>View Case</li>
-                                        <li>View Case</li>
+                                        <div class="d-flex flex-column  align-items-center">
+                                        <li>
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                                View Case
+                                            </a>
+                                        </li>
+                                        <li>View Uploads</li>
+
+                                        <li>View Notes</li>
+                                        <li>Orders</li>
+                                        <li>Docotors Note</li>
+
+
+                                        <li>Encounter</li>
+                                </div>
 
                                     </ul>
                                 </div>

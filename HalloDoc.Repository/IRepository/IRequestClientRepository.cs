@@ -10,5 +10,6 @@ namespace HalloDoc.Repository.IRepository
     public interface IRequestClientRepository:IGenericRepository<RequestClient>
     {
         Task<RequestClient> CheckUserByEmail(string email);
+        Task<RequestClient> CheckUserByID(int id);
     }
 }

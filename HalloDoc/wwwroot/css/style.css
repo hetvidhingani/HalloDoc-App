@@ -5,7 +5,7 @@ input[type=password]::-ms-clear {
 /*#region admin css*/
 
 .mainSectionMargin {
-    margin: 150px 15px;
+    margin: 180px 15px;
 }
 .firstType {
     font-size: 12px;
@@ -144,6 +144,9 @@ input[type=password]::-ms-clear {
     border-radius:5px;
     padding:3px;
     color:white;
+}
+.viewNote>*{
+    margin:1.3rem 0.2rem;
 }
 @media only screen and (max-width: 600px) {
     .cust-col {

@@ -1,0 +1,55 @@
+﻿
+
+
+<div class="mainSectionMargin ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo">
+    <div class="p-4 bg-transparent mb-3 rounded formshadow h-100 PatientInfo">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+           
+
+       
+            <div class="row ">
+                <div class="col-lg-6 col-md-6 col-sm-12 bg-white">
+                   Transfer Notes
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 bg-white">
+                   Physician Notes
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 bg-white">
+                    Admin Notes
+                </div>
+
+            </div>
+            <div class="form-floating form-group ">
+                <textarea class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <label class="form-label" for="textAreaExample2">
+                    Admin Notes
+                </label>
+
+            </div>
+
+
+
+
+        </form>
+    </div>
+    </div>
+    </div>
+
+</div>
+
+<script>
+
+
+
+    if (localStorage.getItem("Mytheme")) {
+        body.classList.toggle(localStorage.getItem("Mytheme"));
+    }
+
+
+</script>

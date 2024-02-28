@@ -117,9 +117,17 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewCase(int Id)
         {
-            int user = await _admin.GetUserByRequestClientID(Id);
-            var result = await _admin.ViewCase(user);
+           // int user = await _admin.GetUserByRequestClientID(Id);
+            var result = await _admin.ViewCase(Id);
             return View(result);
+        }
+        #endregion
+        #region View Notes
+
+        public async Task<IActionResult> ViewNotes()
+        {
+           
+            return View();
         }
         #endregion
 
