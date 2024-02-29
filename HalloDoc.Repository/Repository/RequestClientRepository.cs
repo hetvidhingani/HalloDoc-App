@@ -27,5 +27,11 @@ namespace HalloDoc.Repository.Repository
 
             return user;
         }
+        public async Task<RequestClient> GetRequestIDByClientID(int id)
+        {
+            RequestClient user = _context.RequestClients.Where(x => x.RequestClientId == id).FirstOrDefault();
+
+            return user;
+        }
     }
 }

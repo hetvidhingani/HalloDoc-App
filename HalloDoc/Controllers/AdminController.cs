@@ -34,8 +34,8 @@ namespace HalloDoc.Controllers
             if (myUser != null)
             {
                 HttpContext.Session.SetString("UserName", myUser.UserName);
-                User userID = await _admin.GetUser(myUser.Email);
-                HttpContext.Session.SetInt32("AdminSession", userID.UserId);
+                Admin userID = await _admin.GetAdmin(myUser.Email);
+                HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
                 return RedirectToAction("Dashboard");
             }
             else
@@ -66,11 +66,11 @@ namespace HalloDoc.Controllers
             var viewModel = new AdminDashboardViewModel
             {
                 NewCount = await _admin.GetCount(1),
-                PendingCount = await _admin.GetCount(1),
-                ActiveCount = await _admin.GetCount(2),
-                ConcludeCount = await _admin.GetCount(3),
-                ToCloseCount = await _admin.GetCount(4),
-                UnpaidCount = await _admin.GetCount(5)
+                PendingCount = await _admin.GetCount(2),
+                ActiveCount = await _admin.GetCount(4),
+                ConcludeCount = await _admin.GetCount(6),
+                ToCloseCount = await _admin.GetCount(3),
+                UnpaidCount = await _admin.GetCount(9)
             };
 
             return View(viewModel);
@@ -121,13 +121,28 @@ namespace HalloDoc.Controllers
             var result = await _admin.ViewCase(Id);
             return View(result);
         }
+        [HttpPost]
+        public async Task<IActionResult> ViewCase(ViewCaseViewModel viewmodel, int Id)
+        {
+            // int user = await _admin.GetUserByRequestClientID(Id);
+            var result = await _admin.EditNewRequest(viewmodel,Id);
+            return View(result);
+        }
+
         #endregion
         #region View Notes
 
-        public async Task<IActionResult> ViewNotes()
+        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel,int Id)
         {
-           
-            return View();
+            var result = await _admin.ViewNotes(viewModel, Id);
+            return View(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel,int Id,int x)
+        {
+         var result =  await _admin.AddNotes(viewModel, Id);
+            return View(result);
         }
         #endregion
 

@@ -111,7 +111,8 @@ namespace HalloDoc.Services.Services
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth
+                DateOfBirth = viewModel.DateOfBirth,
+                Address = viewModel.Street + "," + viewModel.City +"," + viewModel.ZipCode
 
             };
             await _requestclientRepository.AddAsync(requestClient);
@@ -217,6 +218,8 @@ namespace HalloDoc.Services.Services
                 Notes = viewModel.Symptoms,
                 DateOfBirth = viewModel.DateOfBirth,
                 Email = viewModel.Email,
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
+
             };
             await _requestclientRepository.AddAsync(requestClient);
 
@@ -310,7 +313,9 @@ namespace HalloDoc.Services.Services
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth
+                DateOfBirth = viewModel.DateOfBirth,
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
+
 
             };
             await _requestclientRepository.AddAsync(requestClient);
@@ -405,7 +410,9 @@ namespace HalloDoc.Services.Services
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth
+                DateOfBirth = viewModel.DateOfBirth,
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
+
             };
             await _requestclientRepository.AddAsync(requestClient);
 

@@ -1,4 +1,5 @@
-﻿
+﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel
+
 
 
 <div class="mainSectionMargin w-100">
@@ -15,9 +16,9 @@
 
        
             <div class="p-4 bg-transparent mb-3  h-100 PatientInfo">
-                <form method="post" enctype="multipart/form-data">
+            <form asp-action="ViewNotes" asp-controller="Admin" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+                   
                     <div class="row justify-content-between">
                         <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1 bg-white p-4 formshadow rounded-3 d-flex flex-column">
                         <strong> Transfer Notes</strong>
@@ -30,22 +31,22 @@
                         </div>
                     <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  bg-white p-4 formshadow d-flex rounded-3 flex-column">
                         <strong> Admin Notes</strong>
-                        <small>-</small>
+                        <small><div>@Model.AdminNotes</div></small>
 
                         </div>
                     </div>
                 <div class="bg-white p-3 formshadow">
                 <div class="form-floating form-group  rounded-3">
-                        <textarea class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
                         <label class="form-label" for="textAreaExample2">
-                            Admin Notes
+                            Additional Notes
                         </label>
 
                     </div>
                     <div class="row ">
 
                         <div class="col-12 d-flex " style="justify-content:end;align-items:center">
-                            <input type="submit" class="btn btn-info p-2 " style=" color: white;width: 120px; " value="Save Changes" disabled />
+                            <input type="submit"  class="btn btn-info p-2 " style=" color: white;width: 120px; " value="Save Changes"  />
                         </div>
                     </div>
                 </div>
@@ -67,6 +68,10 @@
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
+   
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("textAreaExample2").value = "";
+        });
 
 
 </script>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using HalloDoc.Entities.DataModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace HalloDoc.Entities.DataModels;
@@ -88,7 +87,7 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("User ID = postgres;Password=9503;Server=localhost;Port=5432;Database=HalloDoc;Integrated Security=true;Pooling=true;");
+        => optionsBuilder.UseNpgsql("User ID =postgres;Password=9503;Server=localhost;Database=HalloDoc;Integrated Security=true;Pooling=true;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -160,9 +159,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.BusinessType).WithMany(p => p.Businesses).HasConstraintName("Business_BusinessTypeId_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.BusinessCreatedByNavigations).HasConstraintName("Business_CreatedBy_fkey");
-
-            entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.BusinessModifiedByNavigations).HasConstraintName("Business_ModifiedBy_fkey");
+            entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.Businesses).HasConstraintName("Business_ModifiedBy_fkey");
 
             entity.HasOne(d => d.Region).WithMany(p => p.Businesses).HasConstraintName("Business_RegionId_fkey");
         });
@@ -317,9 +314,7 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.RequestNotesId).HasName("RequestNotes_pkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.RequestNoteCreatedByNavigations)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("RequestNotes_CreatedBy_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.RequestNoteCreatedByNavigations).HasConstraintName("RequestNotes_CreatedBy_fkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.RequestNoteModifiedByNavigations).HasConstraintName("RequestNotes_ModifiedBy_fkey");
 

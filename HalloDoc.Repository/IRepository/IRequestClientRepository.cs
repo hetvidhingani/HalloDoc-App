@@ -11,5 +11,6 @@ namespace HalloDoc.Repository.IRepository
     {
         Task<RequestClient> CheckUserByEmail(string email);
         Task<RequestClient> CheckUserByID(int id);
+        Task<RequestClient> GetRequestIDByClientID(int id);
     }
 }

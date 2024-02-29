@@ -23,6 +23,9 @@ namespace HalloDoc.Services.IServices
         Task<int> GetCount(int statusId);
         Task<object> ViewCase( int userId);
         Task<int> GetUserByRequestClientID(int id);
-
+        Task<Admin> GetAdmin(string email);
+        Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
+        Task<object> ViewNotes(AdminDashboardViewModel viewmodel, int id);
+        Task<object> AddNotes(AdminDashboardViewModel viewmodel, int id);
     }
 }

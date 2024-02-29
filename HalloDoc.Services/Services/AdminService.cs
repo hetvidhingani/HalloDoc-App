@@ -15,19 +15,23 @@ namespace HalloDoc.Services.Services
     {
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IAdminRepository _adminRepository;
+
         private readonly IRequestRepository _requestRepository;
         private readonly IRequestClientRepository _requestclientRepository;
         private readonly IRequestWiseFilesRepository _requestwisefileRepository;
         private readonly IBusinessRepository _businessRepository;
         private readonly IConciergeRepository _conciergeRepository;
         private readonly IPhysicianRepository _physicianRepository;
+        private readonly IRequestNotesRepository _requestNotesRepository;
+
 
         #region constructor
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
                                IConciergeRepository conciergeRepository,
-                               IPhysicianRepository physicianRepository)
+                               IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -37,6 +41,8 @@ namespace HalloDoc.Services.Services
             _businessRepository = businessRepository;
             _conciergeRepository = conciergeRepository;
             _physicianRepository = physicianRepository;
+            _adminRepository = adminRepository;
+            _requestNotesRepository = requestNotesRepository;
         }
         #endregion
         #region common methods
@@ -50,6 +56,11 @@ namespace HalloDoc.Services.Services
             User user = await _userRepository.CheckUserByEmail(email);
             return user;
         }
+        public async Task<Admin> GetAdmin(string email)
+        {
+            Admin user = await _adminRepository.CheckUserByEmail(email);
+            return user;
+        }
         public async Task<int> GetCount(int statusId)
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId);
@@ -60,56 +71,29 @@ namespace HalloDoc.Services.Services
         {
 
             var tabledashboard1 = (
-               
-              from r in _requestRepository.GetAll() 
-              join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId 
-              where r.Status==1 
-              select new AdminDashboardViewModel
-              {
-                 PatientName=p.FirstName+","+p.LastName,
-                  DateOfBirth = p.DateOfBirth,
-                  Requestor=r.FirstName+","+r.LastName,
-                  RequestedDate=r.CreatedDate,
-                  PatientPhone=p.PhoneNumber,
-                  RequestorPhone=r.PhoneNumber,
-                  Address=p.Street+","+p.City + ","+p.State+","+p.ZipCode,
-                  Notes=p.Notes,
-                  RequestTypeID=r.RequestTypeId,
-                  Status=r.Status,
-                  requestID=p.RequestClientId
-                    
-                  
-              }).ToList();
-              return  tabledashboard1;
-         }
-        public List<AdminDashboardViewModel> Pending()
-        {
 
-            var tabledashboard1 = (
               from r in _requestRepository.GetAll()
-              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId
               where r.Status == 1
-
               select new AdminDashboardViewModel
               {
-                  PatientName = rec.FirstName + "," + rec.LastName,
-                  DateOfBirth = rec.DateOfBirth,
+                  PatientName = p.FirstName + "," + p.LastName,
+                  DateOfBirth = p.DateOfBirth,
                   Requestor = r.FirstName + "," + r.LastName,
                   RequestedDate = r.CreatedDate,
-                  PatientPhone = rec.PhoneNumber,
+                  PatientPhone = p.PhoneNumber,
                   RequestorPhone = r.PhoneNumber,
-                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                  Notes = rec.Notes,
-                  PhysicianName=phy.FirstName+" "+phy.LastName,
-                  RequestTypeID = r.RequestTypeId
-
+                  Address = p.Street + "," + p.City + "," + p.State + "," + p.ZipCode,
+                  Notes = p.Notes,
+                  RequestTypeID = r.RequestTypeId,
+                  Status = r.Status,
+                  requestID = p.RequestClientId
 
 
               }).ToList();
             return tabledashboard1;
         }
-        public List<AdminDashboardViewModel> Active()
+        public List<AdminDashboardViewModel> Pending()
         {
 
             var tabledashboard1 = (
@@ -136,6 +120,33 @@ namespace HalloDoc.Services.Services
               }).ToList();
             return tabledashboard1;
         }
+        public List<AdminDashboardViewModel> Active()
+        {
+
+            var tabledashboard1 = (
+              from r in _requestRepository.GetAll()
+              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
+              where r.Status == 4
+
+              select new AdminDashboardViewModel
+              {
+                  PatientName = rec.FirstName + "," + rec.LastName,
+                  DateOfBirth = rec.DateOfBirth,
+                  Requestor = r.FirstName + "," + r.LastName,
+                  RequestedDate = r.CreatedDate,
+                  PatientPhone = rec.PhoneNumber,
+                  RequestorPhone = r.PhoneNumber,
+                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                  Notes = rec.Notes,
+                  PhysicianName = phy.FirstName + " " + phy.LastName,
+                  RequestTypeID = r.RequestTypeId
+
+
+
+              }).ToList();
+            return tabledashboard1;
+        }
         public List<AdminDashboardViewModel> Conclude()
         {
 
@@ -143,7 +154,7 @@ namespace HalloDoc.Services.Services
               from r in _requestRepository.GetAll()
               join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
               join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 3
+              where r.Status == 6
 
               select new AdminDashboardViewModel
               {
@@ -170,7 +181,7 @@ namespace HalloDoc.Services.Services
               from r in _requestRepository.GetAll()
               join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
               join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 4
+              where r.Status == 3
 
               select new AdminDashboardViewModel
               {
@@ -197,7 +208,7 @@ namespace HalloDoc.Services.Services
               from r in _requestRepository.GetAll()
               join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
               join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 4
+              where r.Status == 9
 
               select new AdminDashboardViewModel
               {
@@ -233,21 +244,76 @@ namespace HalloDoc.Services.Services
             {
                 viewmodel.Symptoms = user.Notes;
                 viewmodel.LastName = user.LastName;
-                viewmodel.City = user.City;
                 viewmodel.FirstName = user.FirstName;
                 viewmodel.State = user.State;
-                viewmodel.Street = user.Street;
                 viewmodel.Email = user.Email;
                 viewmodel.PhoneNumber = user.PhoneNumber;
-                viewmodel.ZipCode = user.ZipCode;
-               
-              
+                viewmodel.Address = user.Street + "," + user.City + "," + user.ZipCode;
+                viewmodel.requestclientID = user.RequestClientId;
+
                 return viewmodel;
+            }
+            return "ViewCase";
+        }
+        public async Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId)
+        {
+            RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+
+                user.Email = viewModel.Email;
+
+                user.PhoneNumber = viewModel.PhoneNumber;
+
+                await _requestclientRepository.UpdateAsync(user);
 
             }
             return "ViewCase";
         }
 
+        #endregion
+
+        #region View Notes
+        public async Task<object> ViewNotes(AdminDashboardViewModel viewmodel, int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
+            if (requestNote != null)
+            {
+                viewmodel.AdminNotes = requestNote.AdminNotes;
+                
+            }
+            return viewmodel;
+        }
+
+        public async Task<object> AddNotes(AdminDashboardViewModel viewmodel, int Id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(Id);
+
+            RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
+
+            if (requestNote != null)
+            {
+                requestNote.AdminNotes = viewmodel.AdditionalNotes;
+                await _requestNotesRepository.UpdateAsync(requestNote);
+                viewmodel.AdminNotes=requestNote.AdminNotes;
+               
+            }
+            else
+            {
+                RequestNote requestNote1 = new RequestNote();
+                requestNote1.RequestId = req.RequestId;
+                requestNote1.AdminNotes = viewmodel.AdditionalNotes;
+                requestNote1.CreatedDate = DateTime.Now;
+                requestNote1.CreatedBy = "admin";
+                await _requestNotesRepository.AddAsync(requestNote1);
+                viewmodel.AdminNotes = requestNote1.AdminNotes;
+               
+
+            }
+            viewmodel.AdditionalNotes= string.Empty;
+            return viewmodel;
+        }
         #endregion
     }
 }

@@ -1,5 +1,46 @@
 ﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
 
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p class="">
+                    Here,I want to create new request for...
+                </p>
+                <div class=" d-flex justify-content-center ">
+                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
+                        Me
+                    </button>
+
+
+
+                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
+                        Someone Else
+                    </button>
+
+
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <a type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
+                    Continue
+                </a>
+
+                <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                    Cancle
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div class="sectionHeading">
@@ -158,7 +199,7 @@
                                         <div class="d-flex flex-column  align-items-center">
 
                                         <li>Assign Case</li>
-                                        <li>Cancle Case</li>
+                                        <li data-bs-toggle="modal" data-bs-target="#exampleModal">Cancle Case</li>
 
                                         <li>
                                             <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
@@ -166,7 +207,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin")" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
                                                 View Notes
                                             </a>
                                         </li>

@@ -30,7 +30,10 @@ namespace HalloDoc.Entities.ViewModels
         public int UnpaidCount { get; set; }
         public int ToCloseCount { get; set; }
 
-        
+        public string? AdminNotes { get; set; }
+        public string? PhysicianNotes { get; set; }
+        public string? TransferNotes { get; set; }
+        public string? AdditionalNotes { get; set; }
 
 
 

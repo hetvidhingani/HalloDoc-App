@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="DataContext\" />
     <Folder Include="Models\" />
   </ItemGroup>
 
