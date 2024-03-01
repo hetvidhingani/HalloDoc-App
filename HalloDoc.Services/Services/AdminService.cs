@@ -390,6 +390,43 @@ namespace HalloDoc.Services.Services
             return viewModel;
 
         }
+        public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+
+            RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
+
+
+            if (requestNote1 != null)
+            {
+                requestNote1.Status = 2;
+                requestNote1.AdminId = 1;
+                requestNote1.Notes = viewModel.AdditionalNotes;
+                await _requestStatusLogRepository.UpdateAsync(requestNote1);
+            }
+            else
+            {
+                RequestStatusLog requesStatusLog = new RequestStatusLog();
+                requesStatusLog.Status = 2;
+                requesStatusLog.AdminId = 1;
+                requesStatusLog.RequestId = req.RequestId;
+                requesStatusLog.Notes = viewModel.AdditionalNotes;
+                requesStatusLog.CreatedDate = DateTime.Now;
+
+                await _requestStatusLogRepository.AddAsync(requesStatusLog);
+            }
+
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+
+            request.Status = 2;
+            request.PhysicianId = viewModel.physicianID;
+            request.CaseTag = viewModel.CaseTagID;
+            await _requestRepository.UpdateAsync(request);
+
+            return "Dashboard";
+
+        }
         #endregion
     }
 }

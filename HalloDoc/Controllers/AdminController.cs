@@ -167,6 +167,11 @@ namespace HalloDoc.Controllers
             var result = await _admin.AssignCase(viewModel, id);
             return PartialView("_AssignRequestPartialView", result);
         }
+        public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.AssignRequest(viewModel, id);
+            return RedirectToAction("Dashboard");
+        }
         #endregion
     }
 }

@@ -4,7 +4,7 @@
     <h5 class="modal-title">Assign Request</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form asp-controller="Admin" asp-action="AssignCase" asp-route-id="@Model.RequestClientID">
+<form asp-controller="Admin" asp-action="AssignRequest" asp-route-id="@Model.RequestClientID">
     <div class="modal-body">
         <small>To Assign this Request, search and select another Physician.</small>
       
@@ -19,11 +19,11 @@
                 }
             </select>
 
-            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID">
+            <select class="form-select mb-3 h-50" aria-label="Default select example" name="physicianID" asp-for="physicianID">
                 <option>Open this select menu</option>
                 @foreach (var r in Model.Physician)
                 {
-                    <option value="@r.RegionId">
+                    <option value="@r.PhysicianId">
                         @r.FirstName
                     </option>
                 }

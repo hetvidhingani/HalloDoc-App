@@ -30,5 +30,6 @@ namespace HalloDoc.Services.IServices
         Task<object> CancelCase(CancelCaseViewModel viewModel, int id);
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
         Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
+        Task<string> AssignRequest(AssignCaseViewModel viewModel, int id);
     }
 }
