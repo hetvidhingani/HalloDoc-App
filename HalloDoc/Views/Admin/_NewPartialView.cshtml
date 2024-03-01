@@ -1,43 +1,10 @@
 ﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="CancelCase" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Create New Request</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-                <p class="">
-                    Here,I want to create new request for...
-                </p>
-                <div class=" d-flex justify-content-center ">
-                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
-                        Me
-                    </button>
-
-
-
-                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
-                        Someone Else
-                    </button>
-
-
-                </div>
-            </div>
-            <div class="modal-footer d-flex justify-content-end">
-                <a type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
-                    Continue
-                </a>
-
-                <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
-                    Cancle
-                </button>
-
-
-            </div>
+           
         </div>
     </div>
 </div>
@@ -52,12 +19,14 @@
         <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
             <a href="#" class="mainTextLink">
                 <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-                Request DTY Support</a>
+                Request DTY Support
+            </a>
             <a href="#" class="mainTextLink">
                 <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-           
 
-            Export All</a>
+
+                Export All
+            </a>
             <a href="#" class="mainTextLink">
                 <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
             </a>
@@ -199,10 +168,15 @@
                                         <div class="d-flex flex-column  align-items-center">
 
                                         <li>Assign Case</li>
-                                        <li data-bs-toggle="modal" data-bs-target="#exampleModal">Cancle Case</li>
+                                        <li>
+                                            <a class="Cancel1" data-bs-toggle="modal" data-bs-target="#CancelCase" id=@request.requestID>
+
+                                                Cancle Case
+                                            </a>
+                                        </li>
 
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
                                                 View Case
                                             </a>
                                         </li>
@@ -212,92 +186,95 @@
                                             </a>
                                         </li>
                                         <li>Block Patient</li>
-                                        </div>
-                                        
-
-                                    </ul>
                                 </div>
-                            </td>
-                        </tr>
 
-                    </tbody>
+
+                                </ul>
+            </div>
+            </td>
+            </tr>
+
+            </tbody>
 
                 }
-            </table>
-        </div>
+        </table>
+    </div>
         @* admin dashboard Mobile *@
-        <div class="adminDashMobile">
-            <div class="mobileviewdashboard my-3 p-2">
-                <button type="button" class="table-btn collapsible d-flex flex-column">
-                    <span>
-                        Patient Name
-                    </span>
-                    Address
-                </button>
+    <div class="adminDashMobile">
+        <div class="mobileviewdashboard my-3 p-2">
+            <button type="button" class="table-btn collapsible d-flex flex-column">
+                <span>
+                    Patient Name
+                </span>
+                Address
+            </button>
 
-                <div class="content" style="display:none">
-                    <hr />
-                    <div class="d-flex justify-content-end">
-                        <button class="viewCaseBtn">View Case</button>
-                    </div>
-                    <div class="">
-                        <i class="bi bi-calendar"></i>
-                        Date Of Birth: <span>-</span>
-                    </div>
-                    <div class="">
-                        <i class="bi bi-envelope"></i>
-                        Email:
-                        <br />
-                        Current Status:
-                        <br />
-                        <i class="bi bi-telephone"></i>
-                        Patient:
-                        <br />
-                        <i class="bi bi-calendar"></i>
-
-                        Date Of Service:
-                        <br />
-                        <i class="bi bi-person"></i>
-                        Physician:
-                        <br />
-
-                        Requestor:
-                    </div>
+            <div class="content" style="display:none">
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <button class="viewCaseBtn">View Case</button>
+                </div>
+                <div class="">
+                    <i class="bi bi-calendar"></i>
+                    Date Of Birth: <span>-</span>
+                </div>
+                <div class="">
+                    <i class="bi bi-envelope"></i>
+                    Email:
                     <br />
-                    <div class=" row z ">
-                        <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                    </div>
-                    <div>
-                        Chat With:
-                        <button class="bg-transparent normalbtn">Patient</button>
-                        <button class="bg-transparent normalbtn">Provider</button>
-                    </div>
+                    Current Status:
+                    <br />
+                    <i class="bi bi-telephone"></i>
+                    Patient:
+                    <br />
+                    <i class="bi bi-calendar"></i>
+
+                    Date Of Service:
+                    <br />
+                    <i class="bi bi-person"></i>
+                    Physician:
+                    <br />
+
+                    Requestor:
+                </div>
+                <br />
+                <div class=" row z ">
+                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                </div>
+                <div>
+                    Chat With:
+                    <button class="bg-transparent normalbtn">Patient</button>
+                    <button class="bg-transparent normalbtn">Provider</button>
                 </div>
             </div>
-
         </div>
 
-
     </div>
-</div>
-<script>
-    $(document).ready(function () {
-        // Event handler for state buttons
-        filterData(state, requesttype);
-        $(".btn-state").click(function () {
-            state = $(this).data("state");
-            filterData(state, requesttype);
-        });
 
-        // Event handler for request type buttons
-        $(".request-type-btn").click(function () {
-            var requesttype = $(this).data("requesttype");
-            filterData(state, requesttype);
+
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+   
+    $('.Cancel1').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("CancelCase", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                $("#CancelCase").find('.modal-content').html(data);
+            }
         });
     });
+  
 </script>

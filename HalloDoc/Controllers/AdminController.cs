@@ -130,6 +130,7 @@ namespace HalloDoc.Controllers
         }
 
         #endregion
+       
         #region View Notes
 
         public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel,int Id)
@@ -146,5 +147,19 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Cancel Case
+
+        public async Task<IActionResult> CancelCase(CancelCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.CancelCase(viewModel,id);
+            return PartialView("_CancelCasePartialView", result);
+        }
+     
+        public async Task<IActionResult> ConfirmCancelCase(CancelCaseViewModel viewModel ,int id)
+        {
+            var result = await _admin.ConfirmCancelCase(viewModel, id);
+            return RedirectToAction("Dashboard" );
+        }
+        #endregion
     }
 }

@@ -1,0 +1,49 @@
+﻿@model HalloDoc.Entities.ViewModels.CancelCaseViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Confirm Cancellation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form asp-controller="Admin" asp-action="ConfirmCancelCase" asp-route-id="@Model.RequestClientID">
+    <div class="modal-body">
+
+        <p>
+            Patient Name: @Model.PatientName
+        </p>
+        <div class=" d-flex justify-content-center flex-column  ">
+            <select class="form-select mb-3" aria-label="Default select example" name="CaseTagID" asp-for="CaseTagID">
+                <option>Open this select menu</option>
+                @foreach (var cases in Model.Case)
+                {
+                    <option value="@cases.CaseTagId">
+                        @cases.Name
+                    </option>
+                }
+            </select>
+
+            <div class="form-floating form-group  rounded-3">
+                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <label class="form-label" for="textAreaExample2">
+                    Additional Notes
+                </label>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+        @*  <a class="createNewReqBtn submitBtn" href="@Url.Action("ConfirmCancelCase", "Admin", new { id = Model.RequestClientID })">
+        Confirm
+        </a> *@
+        <button class="createNewReqBtn submitBtn" type="submit">
+            Confirm
+        </button>
+
+        <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+            Cancle
+        </button>
+
+
+    </div>
+</form>
