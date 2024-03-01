@@ -148,117 +148,139 @@ input[type=password]::-ms-clear {
 .viewNote>*{
     margin:1.3rem 0.2rem;
 }
-@media only screen and (max-width: 600px) {
-    .cust-col {
-        flex: 0 0 33.33333%;
-        max-width: 33.33333%;
-    }
-    .i {
-        display: none;
-    }
-    .cards{
-       text-align:center;
-       padding:7px 0px;
-       width:23vw;
-       border-radius:0px;
-    }
-    .mainTextLink {
-        display: none;
-    }
-    .has-search{
-        width:100%;
-    }
-    .firstType {
-        display: none;
-    }
-    .cardContaint{
-        font-size:13px;
-    }
-    .cardRow {
-        text-align: center;
-    }
-    .type{
-        font-size:6px;
-       width:18vw;
-    }
-    
-    .formbasetab, .sidetabdashboard {
-        display: block;
-    }
-    .tableHead {
-        display: block;
-        margin:0vw 1vw;
-    }
-    .adminDashTable{
-        display:none;
-    }
-    .adminDashBtn {
-        background-color: #228b22;
-    }
-
-    .adminDashBtn2 {
-        background-color: #145545;
-    }
-
-    .adminDashBtn3 {
-        background-color: #ee9125;
-    }
-    .mobileDashBtn {
-        border-radius: 12px;
-        border:none;
-        color:white;
-        font-weight:500;
-        font-size:10px;
-        width:70vw;
-        padding:4px 14px;
-        margin:1vw 1vw;
-    }
-    .z{
-        display:flex;
-        justify-content:center;
-    }
-    .viewCaseBtn {
-        background-color: #e4e8f3;
-        color: #5069ae;
-        border: 1px solid #5069ae;
-        border-radius:10px;
-        position:relative;
-        top:-30px;
-       
-    }
-
-  
+.menuDashboard>*{
+    margin-bottom:0.5rem;
 }
-@media only screen and (min-width: 601px) {
-    .cards {
-        padding: 8px 5px;
-        width:15vw;
-        text-align:left;
-    }
-    .adminDashMobile{
-        display:none;
-    }
-    
-    .type{
-        font-size:10px;
-    }
-    .formbasetab{
-        justify-content:end;
-    }
-    .tableHead {
-        display: flex;
-        align-items: baseline;
-    }
-    .tableHead>* {
-       margin-right:12px;
-    }
-    
+.menuDashboard > li:hover 
+{
+
+background-color:lightgray;
 }
 
+    @media only screen and (max-width: 600px) {
+        .cust-col {
+            flex: 0 0 33.33333%;
+            max-width: 33.33333%;
+        }
 
-/*#endregion*/
-/*#region patient css*/
-body {
+        .i {
+            display: none;
+        }
+
+        .cards {
+            text-align: center;
+            padding: 7px 0px;
+            width: 23vw;
+            border-radius: 0px;
+        }
+
+        .mainTextLink {
+            display: none;
+        }
+
+        .has-search {
+            width: 100%;
+        }
+
+        .firstType {
+            display: none;
+        }
+
+        .cardContaint {
+            font-size: 13px;
+        }
+
+        .cardRow {
+            text-align: center;
+        }
+
+        .type {
+            font-size: 6px;
+            width: 18vw;
+        }
+
+        .formbasetab, .sidetabdashboard {
+            display: block;
+        }
+
+        .tableHead {
+            display: block;
+            margin: 0vw 1vw;
+        }
+
+        .adminDashTable {
+            display: none;
+        }
+
+        .adminDashBtn {
+            background-color: #228b22;
+        }
+
+        .adminDashBtn2 {
+            background-color: #145545;
+        }
+
+        .adminDashBtn3 {
+            background-color: #ee9125;
+        }
+
+        .mobileDashBtn {
+            border-radius: 12px;
+            border: none;
+            color: white;
+            font-weight: 500;
+            font-size: 10px;
+            width: 70vw;
+            padding: 4px 14px;
+            margin: 1vw 1vw;
+        }
+
+        .z {
+            display: flex;
+            justify-content: center;
+        }
+
+        .viewCaseBtn {
+            background-color: #e4e8f3;
+            color: #5069ae;
+            border: 1px solid #5069ae;
+            border-radius: 10px;
+            position: relative;
+            top: -30px;
+        }
+    }
+
+    @media only screen and (min-width: 601px) {
+        .cards {
+            padding: 8px 5px;
+            width: 15vw;
+            text-align: left;
+        }
+
+        .adminDashMobile {
+            display: none;
+        }
+
+        .type {
+            font-size: 10px;
+        }
+
+        .formbasetab {
+            justify-content: end;
+        }
+
+        .tableHead {
+            display: flex;
+            align-items: baseline;
+        }
+
+            .tableHead > * {
+                margin-right: 12px;
+            }
+    }
+    /*#endregion*/
+    /*#region patient css*/
+    body {
     margin: 0;
     padding: 0;
     background-color: rgba(255, 255, 255, 0.61);

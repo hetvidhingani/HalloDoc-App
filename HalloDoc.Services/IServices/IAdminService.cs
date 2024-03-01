@@ -29,5 +29,6 @@ namespace HalloDoc.Services.IServices
         Task<object> AddNotes(AdminDashboardViewModel viewmodel, int id);
         Task<object> CancelCase(CancelCaseViewModel viewModel, int id);
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
+        Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
     }
 }

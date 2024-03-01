@@ -9,5 +9,7 @@ namespace HalloDoc.Repository.IRepository
 {
     public interface IPhysicianRepository:IGenericRepository<Physician>
     {
+
+        Task<List<Physician>> GetPhysician();
     }
 }

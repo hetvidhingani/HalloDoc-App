@@ -26,6 +26,7 @@ namespace HalloDoc.Services.Services
         private readonly IRequestNotesRepository _requestNotesRepository;
         private readonly ICaseTagRepository _caseTagRepository;
         private readonly IRequestStatusLogRepository _requestStatusLogRepository;
+        private readonly IRegionRepository _regionRepository;
 
         #region constructor
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
@@ -33,7 +34,7 @@ namespace HalloDoc.Services.Services
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
                                IConciergeRepository conciergeRepository,
                                IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository, 
-                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository)
+                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository,IRegionRepository regionRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -47,6 +48,7 @@ namespace HalloDoc.Services.Services
             _requestNotesRepository = requestNotesRepository;
             _caseTagRepository = caseTagRepository;
             _requestStatusLogRepository = requestStatusLogRepository;
+            _regionRepository = regionRepository;
         }
         #endregion
         
@@ -369,6 +371,23 @@ namespace HalloDoc.Services.Services
             await _requestRepository.UpdateAsync(request);
 
             return "Dashboard";
+
+        }
+        #endregion
+
+        #region Assign Case
+        public async Task<object> AssignCase(AssignCaseViewModel viewModel, int id)
+        {
+
+            RequestClient patient = await _requestclientRepository.CheckUserByID(id);
+
+          
+            viewModel.RequestClientID = id;
+            viewModel.Region = await _regionRepository.GetRegions();
+            viewModel.Physician = await _physicianRepository.GetPhysician();
+
+
+            return viewModel;
 
         }
         #endregion

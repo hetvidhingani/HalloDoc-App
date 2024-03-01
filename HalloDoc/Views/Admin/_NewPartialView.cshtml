@@ -8,6 +8,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="AssignCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BlockCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 <div class="row mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div class="sectionHeading">
@@ -165,17 +181,19 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu ">
-                                        <div class="d-flex flex-column  align-items-center">
+                                        <div class="d-flex flex-column  align-items-center menuDashboard">
 
-                                        <li>Assign Case</li>
                                         <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" data-bs-target="#CancelCase" id=@request.requestID>
-
+                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                                Assign Case
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.requestID style="text-decoration:none;color:black;">
                                                 Cancle Case
                                             </a>
                                         </li>
-
-                                        <li>
+                                         <li>
                                             <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
                                                 View Case
                                             </a>
@@ -185,7 +203,11 @@
                                                 View Notes
                                             </a>
                                         </li>
-                                        <li>Block Patient</li>
+                                        <li>
+                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                                Block Patient
+                                            </a>
+                                        </li>
                                 </div>
 
 
@@ -271,8 +293,34 @@
             data: { id: id },
             url: "@(Url.Action("CancelCase", "Admin"))",
             success: function (data) {
-                console.log("abc");
+              
                 $("#CancelCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Assign').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("AssignCase", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                $("#AssignCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Block').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("BlockCase", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                $("#BlockCase").find('.modal-content').html(data);
             }
         });
     });
