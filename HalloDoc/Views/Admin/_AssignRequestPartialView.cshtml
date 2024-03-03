@@ -9,7 +9,7 @@
         <small>To Assign this Request, search and select another Physician.</small>
       
         <div class=" d-flex justify-content-center flex-column  ">
-            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID">
+            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID" id="regionSelect">
                 <option>Open this select menu</option>
                 @foreach (var r in Model.Region)
                 {
@@ -19,14 +19,11 @@
                 }
             </select>
 
-            <select class="form-select mb-3 h-50" aria-label="Default select example" name="physicianID" asp-for="physicianID">
+            <select class="form-select mb-3 h-50"  name="physicianID" id="physicianSelect">
                 <option>Open this select menu</option>
-                @foreach (var r in Model.Physician)
-                {
-                    <option value="@r.PhysicianId">
-                        @r.FirstName
-                    </option>
-                }
+                
+                    
+                
             </select>
             <div class="form-floating form-group  rounded-3">
                 <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
@@ -54,3 +51,32 @@
 
     </div>
 </form>
+<script>
+    $(document).ready(function () {
+        $("#regionSelect").change(function () {
+            var regionId = $(this).val();
+            var url = "/Admin/GetPhysiciansByRegion?regionId=" + regionId;
+           
+           
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#physicianSelect option").remove();
+                    $("#physicianSelect").append('<option value="0">option selected</option>');
+
+                    data.map((x) => {
+                        
+
+                        $("#physicianSelect").append('<option value="' + x.physicainId + '">' + x.firstName + '</option>');
+                    })
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+    });
+</script>

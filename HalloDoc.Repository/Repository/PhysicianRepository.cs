@@ -22,5 +22,13 @@ namespace HalloDoc.Repository.Repository
         {
             return _context.Physicians.ToList();
         }
+        public async Task<List<Physician>> GetPhysiciansByRegion(int regionId)
+        {
+            var physicians = await _context.Physicians
+                .Where(p => p.RegionId == regionId)
+                .ToListAsync();
+
+            return physicians;
+        }
     }
 }

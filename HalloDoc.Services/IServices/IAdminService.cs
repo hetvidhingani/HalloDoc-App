@@ -31,5 +31,8 @@ namespace HalloDoc.Services.IServices
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
         Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
         Task<string> AssignRequest(AssignCaseViewModel viewModel, int id);
+        Task<List<Physician>> GetPhysiciansByRegion(int regionId);
+        Task<object> BlockCase(CancelCaseViewModel viewModel, int id);
+        Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id);
     }
 }

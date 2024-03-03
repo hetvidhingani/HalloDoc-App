@@ -11,5 +11,7 @@ namespace HalloDoc.Repository.IRepository
     {
 
         Task<List<Physician>> GetPhysician();
+        Task<List<Physician>> GetPhysiciansByRegion(int regionId);
+
     }
 }

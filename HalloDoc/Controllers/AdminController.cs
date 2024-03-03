@@ -1,6 +1,7 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Entities.ViewModels;
 using HalloDoc.Services.IServices;
+using HalloDoc.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Contracts;
 
@@ -170,6 +171,27 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
         {
             var result = await _admin.AssignRequest(viewModel, id);
+            return RedirectToAction("Dashboard");
+        }
+        #endregion
+        [HttpGet]
+        public async Task<IActionResult> GetPhysiciansByRegion(int regionId)
+        {
+            var physicians = await _admin.GetPhysiciansByRegion(regionId);
+            // Do something with the physicians list, like returning it as JSON
+            return Json(physicians);
+        }
+        #region Block Case
+
+        public async Task<IActionResult> BlockCase(CancelCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.BlockCase(viewModel, id);
+            return PartialView("_BlockCasePartialView", result);
+        }
+
+        public async Task<IActionResult> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.BlockCaseRequest(viewModel, id);
             return RedirectToAction("Dashboard");
         }
         #endregion

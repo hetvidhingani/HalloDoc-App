@@ -1,5 +1,28 @@
 ﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
+<div class="modal fade" id="CancelCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
 
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AssignCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BlockCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 <div class="row mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div class="sectionHeading">
@@ -158,25 +181,41 @@
                                     <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
-                                    <ul class="dropdown-menu">
-                                        <div class="d-flex flex-column  align-items-center">
+                                    <ul class="dropdown-menu ">
+                                        <div class="d-flex flex-column  align-items-center menuDashboard">
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
                                                 View Case
                                             </a>
                                         </li>
-                                        <li>View Uploads</li>
-
-                                        <li>View Notes</li>
-                                        <li>Transfer</li>
-                                        <li>Clear Case</li>
-
+                                        <li>
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
+                                                View Uploads
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                                View Notes
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                               Transfer
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                                Clear Case
+                                            </a>
+                                        </li>
                                         
-                                        <li>Send Agreement</li>
-                                </div>
+                                       
+                                        <li>
+                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.requestID style="text-decoration:none;color:black;">
+                                               Send Agreement
+                                            </a>
+                                        </li>
 
-
-                                </ul>
                                 </div>
 
                             </td>
@@ -246,3 +285,49 @@
 
     </div>
 </div>
+
+
+
+<script>
+
+    $('.Cancel1').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("CancelCase", "Admin"))",
+            success: function (data) {
+
+                $("#CancelCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Assign').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("AssignCase", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                $("#AssignCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Block').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("BlockCase", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                $("#BlockCase").find('.modal-content').html(data);
+            }
+        });
+    });
+
+</script>

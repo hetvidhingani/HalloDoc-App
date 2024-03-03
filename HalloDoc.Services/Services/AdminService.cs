@@ -378,25 +378,16 @@ namespace HalloDoc.Services.Services
         #region Assign Case
         public async Task<object> AssignCase(AssignCaseViewModel viewModel, int id)
         {
-
             RequestClient patient = await _requestclientRepository.CheckUserByID(id);
-
-          
             viewModel.RequestClientID = id;
             viewModel.Region = await _regionRepository.GetRegions();
             viewModel.Physician = await _physicianRepository.GetPhysician();
-
-
             return viewModel;
-
         }
         public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
-
-
             if (requestNote1 != null)
             {
                 requestNote1.Status = 2;
@@ -412,6 +403,61 @@ namespace HalloDoc.Services.Services
                 requesStatusLog.RequestId = req.RequestId;
                 requesStatusLog.Notes = viewModel.AdditionalNotes;
                 requesStatusLog.CreatedDate = DateTime.Now;
+                await _requestStatusLogRepository.AddAsync(requesStatusLog);
+            }
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+
+            request.Status = 2;
+            request.PhysicianId = viewModel.physicianID;
+            request.CaseTag = viewModel.CaseTagID;
+            await _requestRepository.UpdateAsync(request);
+
+            return "Dashboard";
+
+        }
+        #endregion
+        public async Task<List<Physician>> GetPhysiciansByRegion(int regionId)
+        {
+            return await _physicianRepository.GetPhysiciansByRegion(regionId);
+        }
+        #region Block case
+        public async Task<object> BlockCase(CancelCaseViewModel viewModel, int id)
+        {
+
+            RequestClient patient = await _requestclientRepository.CheckUserByID(id);
+
+            viewModel.PatientName = patient.FirstName + " " + patient.LastName;
+            viewModel.RequestClientID = id;
+            
+
+            return viewModel;
+
+        }
+        public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+
+            RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
+
+
+            if (requestNote1 != null)
+            {
+                requestNote1.Status = 11;
+                requestNote1.AdminId = 1;
+                requestNote1.Notes = viewModel.AdditionalNotes;
+                await _requestStatusLogRepository.UpdateAsync(requestNote1);
+
+
+            }
+            else
+            {
+                RequestStatusLog requesStatusLog = new RequestStatusLog();
+                requesStatusLog.Status = 11;
+                requesStatusLog.AdminId = 1;
+                requesStatusLog.RequestId = req.RequestId;
+                requesStatusLog.Notes = viewModel.AdditionalNotes;
+                requesStatusLog.CreatedDate = DateTime.Now;
 
                 await _requestStatusLogRepository.AddAsync(requesStatusLog);
             }
@@ -419,8 +465,7 @@ namespace HalloDoc.Services.Services
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
 
-            request.Status = 2;
-            request.PhysicianId = viewModel.physicianID;
+            request.Status = 11;
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
