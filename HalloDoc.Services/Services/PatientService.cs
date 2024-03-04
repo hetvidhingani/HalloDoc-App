@@ -807,7 +807,7 @@ namespace HalloDoc.Services.Services
 
         public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
         {
-
+            selectedFiles = selectedFiles.Distinct();
 
             using (MemoryStream memoryStream = new MemoryStream())
             {

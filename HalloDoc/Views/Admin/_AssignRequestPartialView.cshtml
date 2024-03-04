@@ -19,10 +19,8 @@
                 }
             </select>
 
-            <select class="form-select mb-3 h-50"  name="physicianID" id="physicianSelect">
-                <option>Open this select menu</option>
-                
-                    
+            <select class="form-select mb-3 h-50"  name="physicianID" asp-for="physicianID" id="physicianSelect">
+                <option>Select Physician</option>
                 
             </select>
             <div class="form-floating form-group  rounded-3">
@@ -65,12 +63,12 @@
                 dataType: 'json',
                 success: function (data) {
                     $("#physicianSelect option").remove();
-                    $("#physicianSelect").append('<option value="0">option selected</option>');
+                    $("#physicianSelect").append('<option value="0">Selected Physician</option>');
 
                     data.map((x) => {
                         
-
-                        $("#physicianSelect").append('<option value="' + x.physicainId + '">' + x.firstName + '</option>');
+                        console.log(x);
+                        $("#physicianSelect").append('<option value="' + x.physicianId + '">' + x.firstName + '</option>');
                     })
                 },
                 error: function (jqXHR, textStatus, errorThrown) {

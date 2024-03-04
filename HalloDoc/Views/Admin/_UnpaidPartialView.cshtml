@@ -61,7 +61,9 @@
             <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
                 <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
                     <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control " placeholder="Search">
+                    <input type="text" class="form-control " placeholder="Search" id="search-input" oninput="searchFunction()">
+
+
                 </div>
                 <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
                     <select class="form-select" aria-label="Default select example">
@@ -82,7 +84,7 @@
         </div>
         @* admin dashboard Desktop *@
         <div class="table-responsive mt-5 adminDashTable">
-            <table class="table table-borderless">
+            <table class="table " id="patientTable">
 
                 <thead class="table-secondary">
                     <tr>
@@ -122,7 +124,8 @@
                     <tbody>
 
                         <tr class="@bgColor" style="color:white;">
-                            <td>@request.PatientName</td>
+                            <td id="PatientName">@request.PatientName</td>
+
                             <td>@request.PhysicianName</td>
                             <td>@request.RequestedDate</td>
                             <td>
@@ -143,13 +146,17 @@
                                     else if (request.RequestTypeID == 1)
                                     {
                                         requestor = "";
-                                        display = "none";
+                                      
 
                                     }
                                     else
                                     {
                                         requestor = "Business";
 
+                                    }
+                                    if (request.RequestorPhone == null)
+                                    {
+                                        display = "none";
                                     }
                                 }
                                 <div class="dashboardBTN">
@@ -183,12 +190,12 @@
                                     <ul class="dropdown-menu ">
                                         <div class="d-flex flex-column  align-items-center menuDashboard">
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" >
                                                 View Case
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" >
                                                 View Uploads
                                             </a>
                                         </li>
@@ -274,7 +281,20 @@
 
 
 <script>
+    function searchFunction() {
+        var inputVal = document.getElementById("search-input").value.toLowerCase();
 
+        var rows = document.getElementById("patientTable").rows;
+        for (var i = 1; i < rows.length; i++) {
+            var patientName = rows[i].cells[0].innerText.toLowerCase();
+
+            if (patientName.indexOf(inputVal) == -1) {
+                rows[i].style.display = "none";
+            } else {
+                rows[i].style.display = "";
+            }
+        }
+    }
     $('.Cancel1').click(function () {
         var id = this.id;
         $.ajax({

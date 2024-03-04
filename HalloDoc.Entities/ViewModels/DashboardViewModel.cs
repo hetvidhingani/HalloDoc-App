@@ -9,6 +9,9 @@
         public string Username { get; set; }
         public string LastName { get; set; }
         public int? FileCount { get; set; }
+        public string FirstName { get; set; }
+        public int RequestWiseFileID { get; set; }
+
 
 
     }

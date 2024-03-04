@@ -7,13 +7,14 @@
            
             <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign1 " id="New" data-view-name="_NewPartialView">
+                    <button class="cards active-card cardDesign1 " id="New" data-view-name="_NewPartialView">
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
                                 <strong class="cardContaint" >
                                     NEW
                                 </strong>
+                                <span class="triangle"></span>
                             </div>
                         </div>
                         <div class="row">
@@ -30,6 +31,8 @@
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
                                 <strong class="cardContaint">PENDING</strong>
+                                <span class="triangle"></span>
+
                             </div>
                         </div>
                         <div class="row">
@@ -128,8 +131,14 @@
     }
  
         $(document).ready(function () {
+        $("#New").addClass("active");
+
             load();
             $('#New').click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#Pending, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
+           
                 $.ajax({
                     url: "/Admin/New",
                     type: "POST",
@@ -145,7 +154,11 @@
             });
 
         $('#Pending').click(function () {
-                $.ajax({
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#New, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
+
+            $.ajax({
                     url: "/Admin/Pending",
                     type: "POST",
                     dataType: "html",
@@ -160,7 +173,11 @@
             });
 
             $('#Active').click(function () {
-                $.ajax({
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#New, #Pending, #Conclude, #ToClose, #Unpaid').removeClass("active");
+
+            $.ajax({
                     url: "/Admin/Active",
                     type: "POST",
                     dataType: "html",
@@ -175,7 +192,11 @@
             });
 
             $('#Conclude').click(function () {
-                $.ajax({
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#New, #Pending, #Active, #ToClose, #Unpaid').removeClass("active");
+
+            $.ajax({
                     url: "/Admin/Conclude",
                     type: "POST",
                     dataType: "html",
@@ -191,7 +212,11 @@
 
 
             $('#ToClose').click(function () {
-                $.ajax({
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#New, #Pending, #Active, #Conclude, #Unpaid').removeClass("active");
+
+            $.ajax({
                     url: "/Admin/ToClose",
                     type: "POST",
                     dataType: "html",
@@ -206,7 +231,11 @@
             });
 
             $('#Unpaid').click(function () {
-                $.ajax({
+            $(this).addClass("active").siblings().removeClass("active");
+
+            $('#New, #Pending, #Active, #Conclude, #ToClose').removeClass("active");
+
+            $.ajax({
                     url: "/Admin/Unpaid",
                     type: "POST",
                     dataType: "html",

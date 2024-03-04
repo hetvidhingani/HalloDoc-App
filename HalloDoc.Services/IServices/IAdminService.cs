@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Entities.ViewModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace HalloDoc.Services.IServices
     {
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
         Task<User> GetUser(string email);
-       
+        Task<T> GetTempData<T>(string key);
         List<AdminDashboardViewModel> New();
         List<AdminDashboardViewModel> Pending();
         List<AdminDashboardViewModel> Active();
@@ -31,8 +32,16 @@ namespace HalloDoc.Services.IServices
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
         Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
         Task<string> AssignRequest(AssignCaseViewModel viewModel, int id);
-        Task<List<Physician>> GetPhysiciansByRegion(int regionId);
         Task<object> BlockCase(CancelCaseViewModel viewModel, int id);
         Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id);
+        Task<List<Physician>> GetPhysiciansByRegion(int regionId);
+        List<DashboardViewModel> ViewDocument(int Id);
+        Task<string> ViewDocument(IFormFile a, int Id);
+        Task<RequestWiseFile> FindFile(string email);
+        Task<RequestWiseFile> DownloadFile(string name);
+        Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles);
+        Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid);
+
+        Task<object> DeleteFile(int name);
     }
 }

@@ -162,6 +162,7 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard" );
         }
         #endregion
+        
         #region Assign Case
         public async Task<IActionResult> AssignCase(AssignCaseViewModel viewModel, int id)
         {
@@ -173,14 +174,17 @@ namespace HalloDoc.Controllers
             var result = await _admin.AssignRequest(viewModel, id);
             return RedirectToAction("Dashboard");
         }
-        #endregion
+     
+    
         [HttpGet]
         public async Task<IActionResult> GetPhysiciansByRegion(int regionId)
         {
             var physicians = await _admin.GetPhysiciansByRegion(regionId);
-            // Do something with the physicians list, like returning it as JSON
+           
             return Json(physicians);
         }
+        #endregion
+       
         #region Block Case
 
         public async Task<IActionResult> BlockCase(CancelCaseViewModel viewModel, int id)
@@ -195,5 +199,60 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard");
         }
         #endregion
+
+        #region View Uploads
+
+        public async Task<IActionResult> ViewUploads(int Id)
+        {
+            var result = _admin.ViewDocument(Id);
+            return View(result);
+        }
+       
+        [HttpPost]
+        public async Task<IActionResult> ViewUploads(IFormFile a, int Id)
+        {
+            await _admin.ViewDocument(a, Id);
+            return RedirectToAction("ViewUploads");
+        }
+
+        public async Task<FileResult> DownloadFile(string name, string filename)
+        {
+
+            RequestWiseFile reqw = await _admin.DownloadFile(name);
+            if (reqw != null)
+            {
+                filename = reqw.FileName;
+            }
+
+            var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", filename);
+            byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
+        }
+
+        public async Task<FileResult> DownloadAll(IEnumerable<string> selectedFiles)
+        {
+            if (selectedFiles.Count() > 0)
+            {
+                byte[] fileBytes = await _admin.DownloadAllByChecked(selectedFiles);
+                return File(fileBytes, "application/zip", "download.zip");
+
+            }
+            else
+            {
+                int? requestid = HttpContext.Session.GetInt32("reqID");
+                byte[] fileBytes = await _admin.DownloadAll(selectedFiles, requestid);
+                return File(fileBytes, "application/zip", "download.zip");
+            }
+        }
+
+        public async Task<IActionResult> DeleteFile(int name,int requestID)
+        {
+            var result = await _admin.DeleteFile(name);
+          
+            return RedirectToAction("ViewUploads", new { Id = requestID });
+        }
+        #endregion
+       
     }
 }

@@ -2,9 +2,11 @@
 using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,8 +74,17 @@ namespace HalloDoc.Services.Services
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId);
         }
+        public async Task<RequestWiseFile> FindFile(string fileName)
+        {
+            RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
+            return file;
+        }
+        public async Task<T> GetTempData<T>(string key)
+        {
+            return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
+        }
         #endregion
-       
+
         #region Dashboard
         public List<AdminDashboardViewModel> New()
         {
@@ -121,8 +132,9 @@ namespace HalloDoc.Services.Services
                   Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId
-
+                  RequestTypeID = r.RequestTypeId,
+                  RequstClientId   = rec.RequestClientId,
+                  requestID = rec.RequestId
 
 
               }).ToList();
@@ -148,7 +160,8 @@ namespace HalloDoc.Services.Services
                   Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId
+                  RequestTypeID = r.RequestTypeId,
+                  requestID = rec.RequestClientId
 
 
 
@@ -175,7 +188,8 @@ namespace HalloDoc.Services.Services
                   Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId
+                  RequestTypeID = r.RequestTypeId,
+                  requestID = rec.RequestClientId
 
 
 
@@ -202,7 +216,8 @@ namespace HalloDoc.Services.Services
                     Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                     Notes = rec.Notes,
                     PhysicianName = subPhy.FirstName + " " + subPhy.LastName,
-                    RequestTypeID = r.RequestTypeId
+                    RequestTypeID = r.RequestTypeId,
+                    requestID = rec.RequestClientId
                 }).ToList();
             return tabledashboard1;
         }
@@ -226,7 +241,8 @@ namespace HalloDoc.Services.Services
                   Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId
+                  RequestTypeID = r.RequestTypeId,
+                  requestID = rec.RequestClientId
 
 
 
@@ -416,11 +432,12 @@ namespace HalloDoc.Services.Services
             return "Dashboard";
 
         }
-        #endregion
         public async Task<List<Physician>> GetPhysiciansByRegion(int regionId)
         {
             return await _physicianRepository.GetPhysiciansByRegion(regionId);
         }
+        #endregion
+      
         #region Block case
         public async Task<object> BlockCase(CancelCaseViewModel viewModel, int id)
         {
@@ -437,7 +454,6 @@ namespace HalloDoc.Services.Services
         public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
 
 
@@ -447,7 +463,6 @@ namespace HalloDoc.Services.Services
                 requestNote1.AdminId = 1;
                 requestNote1.Notes = viewModel.AdditionalNotes;
                 await _requestStatusLogRepository.UpdateAsync(requestNote1);
-
 
             }
             else
@@ -464,14 +479,140 @@ namespace HalloDoc.Services.Services
 
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
-
             request.Status = 11;
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
-
             return "Dashboard";
 
         }
         #endregion
+
+        #region View Uploads
+       
+        public List<DashboardViewModel> ViewDocument(int Id)
+        {
+            var requestClient =  _requestclientRepository.GetRequestClientIDByRequestID(Id);
+            var tableData = (from r in _requestRepository.GetAll()
+                             join rwf in _requestwisefileRepository.GetAll()
+                             on r.RequestId equals rwf.RequestId
+                             where r.RequestId == Id
+                             select new
+                             {
+                                 r.FirstName,
+                                 r.LastName,
+                                 r.RequestId,
+                                 r.CreatedDate,
+                                 r.Status,
+                                 rwf.RequestWiseFileId,
+                                 rwf.FileName
+                             }).ToList();
+
+            List<DashboardViewModel> list = new List<DashboardViewModel>();
+            foreach (var e in tableData)
+            {
+                DashboardViewModel model = new DashboardViewModel();
+                model.Username = e.FirstName + " " + e.LastName;
+                model.RequstId = e.RequestId;
+                model.CreatedDate = DateTime.Now.ToShortDateString();
+                model.FileName = e.FileName;
+                model.Status = e.Status;
+                model.RequestWiseFileID = e.RequestWiseFileId;
+                model.FirstName = requestClient;
+                _aspnetuserRepository.SetTempData("reqID", model.RequstId);
+
+                list.Add(model);
+            }
+
+
+            return list;
+        }
+        public async Task<string> ViewDocument(IFormFile a, int Id)
+        {
+            if (a != null && a.Length > 0)
+            {
+                var fileName = Path.GetFileName(a.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    a.CopyTo(fileStream);
+                }
+                var newRequestWiseFile = new RequestWiseFile
+                {
+                    RequestId = Id,
+                    FileName = fileName,
+                    CreatedDate = DateTime.Now
+                };
+                await _requestwisefileRepository.AddAsync(newRequestWiseFile);
+            }
+            return "";
+        }
+
+
+        public async Task<RequestWiseFile> DownloadFile(string name)
+        {
+            RequestWiseFile reqw = await _requestwisefileRepository.FindFile(name);
+
+            return reqw;
+        }
+
+
+
+        public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
+        {
+            selectedFiles = selectedFiles.Distinct();
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    foreach (var file in selectedFiles)
+                    {
+                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                        byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
+
+                        var zipEntry = zipArchive.CreateEntry(file);
+                        using (var zipEntryStream = zipEntry.Open())
+                        {
+                            zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
+                        }
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                return memoryStream.ToArray();
+            }
+        }
+        public async Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid)
+        {
+            var filesRow = await _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
+            MemoryStream ms = new MemoryStream();
+            using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                filesRow.ForEach(file =>
+                {
+                    var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
+                    ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
+                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    using (Stream zipEntryStream = zipEntry.Open())
+                    {
+                        fs.CopyTo(zipEntryStream);
+                    }
+                });
+            ms.Seek(0, SeekOrigin.Begin);
+
+            return ms.ToArray();
+        }
+       
+        public async Task<object> DeleteFile(int  name)
+        {
+            RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(name);
+            var result =  _requestwisefileRepository.DeleteByRequestIdAndFileName(file.FileName);
+            return result;
+        }
+        #endregion
+
+        
+
+       
     }
 }

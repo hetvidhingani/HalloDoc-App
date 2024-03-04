@@ -50,7 +50,53 @@ input[type=password]::-ms-clear {
     border: 1px solid #937ab3;
     border-radius: 10px;
 }
+#New.active, #New:hover {
+    background-color: #203f9a;
+    color: white;
 
+}
+#Pending.active, #Pending:hover {
+    background-color: #00adef;
+    color: white;
+}
+#Active.active, #Active:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+#Conclude.active, #Conclude:hover {
+    background-color: #da0f82;
+    color: white;
+}
+#ToClose.active, #ToClose:hover {
+    background-color: #0370d7;
+    color: white;
+}
+#Unpaid.active, #Unpaid:hover {
+    background-color: #9966cd;
+    color: white;
+}
+
+.cards {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.card:not(.active) .triangle {
+    display: none;
+}
+.card:hover .triangle, .card.active .triangle {
+    display: block;
+}
+
+.card.active .triangle {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 0 5px 5px 5px;
+    border-style: solid;
+    border-color: transparent transparent #007bff transparent;
+    width: 0;
+    height: 0;
+}
 .mainTextLink {
     text-decoration: none;
     background-color: #06b9df;

@@ -27,5 +27,18 @@ namespace HalloDoc.Repository.Repository
         {
             return _context.RequestWiseFiles.Where(x => x.RequestId == requestID);
         }
+        public async Task<List<RequestWiseFile>> GetAllByRequestId(int Id)
+        {
+            return await _context.RequestWiseFiles.Where(x => x.RequestId == Id).ToListAsync();
+        }
+        public async Task DeleteByRequestIdAndFileName( string fileName)
+        {
+            var file = await _context.RequestWiseFiles.FirstOrDefaultAsync(f =>  f.FileName == fileName);
+            if (file != null)
+            {
+                _context.RequestWiseFiles.Remove(file);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

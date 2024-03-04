@@ -33,5 +33,18 @@ namespace HalloDoc.Repository.Repository
 
             return user;
         }
+        public  string GetRequestClientIDByRequestID(int id)
+        {
+            RequestClient user = _context.RequestClients.Where(x => x.RequestId == id).FirstOrDefault();
+
+            if (user != null)
+            {
+                return user.FirstName;
+            }
+            else
+            {
+                return "";
+            }
+        }
     }
 }

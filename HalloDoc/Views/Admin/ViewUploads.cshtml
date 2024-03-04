@@ -1,0 +1,174 @@
+﻿
+@model IEnumerable<HalloDoc.Entities.ViewModels.DashboardViewModel>;
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Documents</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <form asp-controller="Admin" asp-action="ViewUploads" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <div class="row">
+
+                    <h6>Patient Name:</h6>
+
+                    <div class="col-12 fw-bold">
+
+                       
+                            @Model.FirstOrDefault().FirstName
+                      
+                        (MD051023TETE0001)
+                    </div>
+                    <div class="col-12">
+                        <p>Check here for any files that you or the doctors of your subsequents requestors have attached for you to review.</p>
+                    </div>
+                </div>
+
+
+                <div class="row ">
+                    <div class="col-12 col-sm-12">
+                    
+                        <input type="file" name="a">
+                        <button type="submit" class="upload-btn">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <span class="btntxtupload">&nbsp;Upload</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <form asp-action="DownloadAll" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                <div class="row ">
+                    <div class="col-6 d-flex align-items-center">
+                        <h3>Documents</h3>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                        <input type="submit" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll">
+                        <button type="submit" class="logoutIcon normalbtn mt-2 mb-3 p-2" value="DownloadAll">
+                            <i class="bi bi-cloud-arrow-down"></i>
+                        </button>
+
+
+                    </div>
+                </div>
+
+                <div class="dashboardtbl table-responsive">
+                    <table class="table table-hover">
+
+                        <thead style="background-color:#F0F0F0">
+                            <tr>
+                                <th scope="col"> <input type="checkbox" onclick="toggle(this)"></th>
+                                
+                                <th scope="col">Upload Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+
+                        </thead>
+                        @foreach (var r in Model)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>
+
+                                        <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                                    </td>
+
+
+                                   
+                                    <td>@r.CreatedDate</td>
+                                    <td>
+                                        <a href="@Url.Action("DownloadFile", "Admin", new { name = r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                            <i class="bi bi-cloud-arrow-down"></i>
+                                        </a>
+                                        <a href="@Url.Action("DeleteFile", "Admin", new { name = r.RequestWiseFileID,requestID = r.RequstId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                     @*    <button type="button" class="btn btn-outline-danger delete-link" id="@r.RequstId" onclick="deleteFile('@r.FileName','@r.RequstId')">
+                                            <i class="bi bi-trash"></i>
+                                        </button> *@
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        }
+                    </table>
+
+                </div>
+
+                <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
+
+                    @foreach (var r in Model)
+                    {
+
+                        <div class="mobileviewdashboard my-2 p-3" style="background-color:white">
+
+                            <button type="button" class="table-btn collapsible" style="background-color:white">
+                                <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+
+                            </button>
+                            <div class="content mx-2">
+                                <div class="provider d-flex gap-2">
+                                    @r.Username <span></span>
+                                </div>
+                                <div class="provider d-flex gap-2">
+
+                                    @r.CreatedDate
+
+                                </div>
+                                <div class="provider d-flex pt-2 gap-2">
+                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link">
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+
+                    }
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    //to collapse table
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        });
+    }
+
+    // For Download File
+    function toggle(source) {
+        checkboxes = document.getElementsByClassName('checkboxForAll');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+    
+   
+</script>

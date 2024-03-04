@@ -56,12 +56,12 @@
 
 </div>
 <div class="container-fluid rounded formshadow px-2 py-1">
-    <div class="row mt-3">
+          <div class="row mt-3">
         <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
             <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
                 <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
                     <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control " placeholder="Search">
+                    <input type="text" class="form-control " placeholder="Search" id="search-input" oninput="searchFunction()">
                 </div>
                 <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
                     <select class="form-select" aria-label="Default select example">
@@ -82,7 +82,7 @@
         </div>
         @* admin dashboard Desktop *@
         <div class="table-responsive mt-5 adminDashTable">
-            <table class="table ">
+            <table class="table " id="patientTable">
             <thead class="table-secondary">
                     <tr>
                         <th scope="col">Name1</th>
@@ -124,7 +124,7 @@
                 <tbody>
                     
                         <tr class="@bgColor" style="color:white;">
-                            <td>@request.PatientName</td>
+                            <td id="PatientName">@request.PatientName</td>
                             <td>@request.DateOfBirth</td>
                             <td>@request.Requestor</td>
                             <td>@request.PhysicianName</td>
@@ -155,6 +155,10 @@
                                         requestor = "Business";
 
                                     }
+                                    if (request.RequestorPhone == null)
+                                    {
+                                        display = "none";
+                                    }
                                 }
                                 <div class="dashboardBTN">
                                     @request.PatientPhone
@@ -184,37 +188,39 @@
                                     <ul class="dropdown-menu ">
                                         <div class="d-flex flex-column  align-items-center menuDashboard">
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Case
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" class="Cancel1">
+                                            <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
                                                 View Uploads
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Notes
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                Transfer
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                 Clear Case
                                             </a>
                                         </li>
                                         
                                        
                                         <li>
-                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                Send Agreement
                                             </a>
                                         </li>
+                                        </div>
+                                        </ul>
 
                                 </div>
 
@@ -223,8 +229,11 @@
                     
                 </tbody>
                 }
-            </table>
+                </table>
         </div>
+       
+        
+        
         @* admin dashboard Mobile *@
         <div class="adminDashMobile">
             <div class="mobileviewdashboard my-3 p-2">
@@ -283,15 +292,31 @@
         </div>
 
 
-    </div>
+    
 </div>
 
 
 
 <script>
 
+  
+        function searchFunction() {
+            var inputVal = document.getElementById("search-input").value.toLowerCase();
+
+            var rows = document.getElementById("patientTable").rows;
+            for (var i = 1; i < rows.length; i++) {
+                var patientName = rows[i].cells[0].innerText.toLowerCase();
+
+                if (patientName.indexOf(inputVal) == -1) {
+                    rows[i].style.display = "none";
+                } else {
+                    rows[i].style.display = "";
+                }
+            }
+        }
+
     $('.Cancel1').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -304,7 +329,7 @@
         });
     });
     $('.Assign').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -317,7 +342,7 @@
         });
     });
     $('.Block').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
         $.ajax({
             type: "POST",
             dataType: "html",
