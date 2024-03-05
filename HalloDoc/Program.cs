@@ -27,6 +27,11 @@ builder.Services.AddScoped<IRequestNotesRepository, RequestNotesRepository>();
 builder.Services.AddScoped<ICaseTagRepository,CaseTagRepository>();
 builder.Services.AddScoped<IRequestStatusLogRepository, RequestStatusLogRepository>();
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+builder.Services.AddScoped<IHealthProfessionalTypeRepository, HealthProfessionalTypeRepository>();
+builder.Services.AddScoped<IHealthProfessionalsRepository,HealthProfessionalsRepository>();
+builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
+builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
+
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

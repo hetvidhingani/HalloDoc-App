@@ -251,6 +251,42 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ViewUploads", new { Id = requestID });
         }
         #endregion
-       
+
+        #region Send Order
+
+        public async Task<IActionResult> SendOrder(SendOrderViewModel viewModel, int Id)
+        {
+            try
+            {
+                var result =await _admin.SendOrder(viewModel, Id);
+                return View(result);
+            }
+            catch (Exception ex)
+            {
+                return View(ex);
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetBusinessByProfession(int ProfessionID)
+        {
+            var physicians = await _admin.GetBusinessByProfession(ProfessionID);
+
+            return Json(physicians);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetBusinessDetails(int BusinessId)
+        {
+            var result = await _admin.GetBusinessDetails(BusinessId);
+            return Json(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
+        {
+           
+                 await _admin.SendOrderDetails(viewModel, Id);
+                return RedirectToAction("Dashboard");
+            
+        }
+        #endregion
     }
 }

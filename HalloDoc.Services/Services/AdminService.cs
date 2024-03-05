@@ -19,7 +19,6 @@ namespace HalloDoc.Services.Services
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAdminRepository _adminRepository;
-
         private readonly IRequestRepository _requestRepository;
         private readonly IRequestClientRepository _requestclientRepository;
         private readonly IRequestWiseFilesRepository _requestwisefileRepository;
@@ -30,6 +29,10 @@ namespace HalloDoc.Services.Services
         private readonly ICaseTagRepository _caseTagRepository;
         private readonly IRequestStatusLogRepository _requestStatusLogRepository;
         private readonly IRegionRepository _regionRepository;
+        private readonly IOrderDetailsRepository _orderDetailsRepository;
+        private readonly IHealthProfessionalsRepository _healthProfessionalsRepository;
+        private readonly IHealthProfessionalTypeRepository _healthProfessionalTypeRepository;
+        private readonly IBlockRequestRepository _blockRequestRepository;
 
         #region constructor
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
@@ -37,7 +40,9 @@ namespace HalloDoc.Services.Services
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
                                IConciergeRepository conciergeRepository,
                                IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository, 
-                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository,IRegionRepository regionRepository)
+                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository,IRegionRepository regionRepository,
+                               IOrderDetailsRepository orderDetailsRepository,IHealthProfessionalsRepository healthProfessionalsRepository,
+                               IHealthProfessionalTypeRepository healthProfessionalTypeRepository,IBlockRequestRepository blockRequestRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -52,6 +57,10 @@ namespace HalloDoc.Services.Services
             _caseTagRepository = caseTagRepository;
             _requestStatusLogRepository = requestStatusLogRepository;
             _regionRepository = regionRepository;
+            _orderDetailsRepository = orderDetailsRepository;
+            _healthProfessionalsRepository = healthProfessionalsRepository;
+            _healthProfessionalTypeRepository = healthProfessionalTypeRepository;
+            _blockRequestRepository = blockRequestRepository;
         }
         #endregion
         
@@ -162,7 +171,8 @@ namespace HalloDoc.Services.Services
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
                   RequestTypeID = r.RequestTypeId,
-                  requestID = rec.RequestClientId
+                  RequstClientId = rec.RequestClientId,
+                  requestID = rec.RequestId
 
 
 
@@ -457,7 +467,6 @@ namespace HalloDoc.Services.Services
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
 
-
             if (requestNote1 != null)
             {
                 requestNote1.Status = 11;
@@ -474,15 +483,20 @@ namespace HalloDoc.Services.Services
                 requesStatusLog.RequestId = req.RequestId;
                 requesStatusLog.Notes = viewModel.AdditionalNotes;
                 requesStatusLog.CreatedDate = DateTime.Now;
-
                 await _requestStatusLogRepository.AddAsync(requesStatusLog);
             }
-
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 11;
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
+
+            BlockRequest blockRequest = new BlockRequest();
+            blockRequest.PhoneNumber=
+
+
+
+
             return "Dashboard";
 
         }
@@ -638,7 +652,40 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Send Order
+        public async Task<List<HealthProfessional>> GetBusinessByProfession(int professionId)
+        {
+            return await _healthProfessionalsRepository.GetBusinessByProfession(professionId);
+        }
+        public async Task<HealthProfessional> GetBusinessDetails(object BusinessId)
+        {
+            HealthProfessional business = await _healthProfessionalsRepository.GetByIdAsync(BusinessId);
+            return business;
+        }
+        public async Task<object> SendOrder(SendOrderViewModel viewModel, int Id)
+        {
 
+            viewModel.RequestID = Id;
+
+            viewModel.Profession = await _healthProfessionalTypeRepository.GetProfession();
+            viewModel.Business = await _healthProfessionalsRepository.GetVendor();
+            return viewModel;
+        }
+        public async Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id)
+        {
+            OrderDetail order = new OrderDetail();
+            order.VendorId = viewModel.BusinessID;
+            order.FaxNumber = viewModel.FaxNumber;
+            order.RequestId = id;
+            order.Email= viewModel.Email;
+            order.BusinessContact = viewModel.Contact;
+            order.Prescription = viewModel.OrderDetails;
+            order.NoOfRefill = viewModel.Refill;
+            order.CreatedDate=DateTime.Now;
+            await _orderDetailsRepository.AddAsync(order);
+            return "";
+        }
+        #endregion
 
 
     }

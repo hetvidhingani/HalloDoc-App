@@ -35,9 +35,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-end">
-        @*  <a class="createNewReqBtn submitBtn" href="@Url.Action("ConfirmCancelCase", "Admin", new { id = Model.RequestClientID })">
-        Confirm
-        </a> *@
+      
         <button class="createNewReqBtn submitBtn" type="submit">
             Confirm
         </button>
@@ -66,8 +64,7 @@
                     $("#physicianSelect").append('<option value="0">Selected Physician</option>');
 
                     data.map((x) => {
-                        
-                        console.log(x);
+                      
                         $("#physicianSelect").append('<option value="' + x.physicianId + '">' + x.firstName + '</option>');
                     })
                 },
