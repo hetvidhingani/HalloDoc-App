@@ -77,6 +77,7 @@
                         </thead>
                         @foreach (var r in Model)
                         {
+                            
                             <tbody>
                                 <tr>
                                     <td>
@@ -91,7 +92,7 @@
                                         <a href="@Url.Action("DownloadFile", "Admin", new { name = r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
-                                        <a href="@Url.Action("DeleteFile", "Admin", new { name = r.RequestWiseFileID,requestID = r.RequstId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DeleteFile", "Admin", new { fileID = r.RequestWiseFileID,requestID = r.RequstId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                      @*    <button type="button" class="btn btn-outline-danger delete-link" id="@r.RequstId" onclick="deleteFile('@r.FileName','@r.RequstId')">

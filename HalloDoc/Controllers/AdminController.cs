@@ -118,14 +118,12 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewCase(int Id)
         {
-           // int user = await _admin.GetUserByRequestClientID(Id);
             var result = await _admin.ViewCase(Id);
             return View(result);
         }
         [HttpPost]
         public async Task<IActionResult> ViewCase(ViewCaseViewModel viewmodel, int Id)
         {
-            // int user = await _admin.GetUserByRequestClientID(Id);
             var result = await _admin.EditNewRequest(viewmodel,Id);
             return View(result);
         }
@@ -246,9 +244,9 @@ namespace HalloDoc.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteFile(int name,int requestID)
+        public async Task<IActionResult> DeleteFile(int fileID, int requestID)
         {
-            var result = await _admin.DeleteFile(name);
+             await _admin.DeleteFile(fileID);
           
             return RedirectToAction("ViewUploads", new { Id = requestID });
         }

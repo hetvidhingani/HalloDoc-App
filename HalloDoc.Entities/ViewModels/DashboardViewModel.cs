@@ -11,6 +11,7 @@
         public int? FileCount { get; set; }
         public string FirstName { get; set; }
         public int RequestWiseFileID { get; set; }
+        public bool isdeleted { get; set; }
 
 
 

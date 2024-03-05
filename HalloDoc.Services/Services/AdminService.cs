@@ -5,6 +5,7 @@ using HalloDoc.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
@@ -488,15 +489,31 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Uploads
-       
-        public List<DashboardViewModel> ViewDocument(int Id)
+        public bool IsDeleted(BitArray? isDeleted)
         {
+            if (isDeleted == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < isDeleted.Length; i++)
+            {
+                if (isDeleted[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public List<DashboardViewModel> ViewDocument(int Id)
+        { 
             var requestClient =  _requestclientRepository.GetRequestClientIDByRequestID(Id);
             var tableData = (from r in _requestRepository.GetAll()
                              join rwf in _requestwisefileRepository.GetAll()
                              on r.RequestId equals rwf.RequestId
-                             where r.RequestId == Id
-                             select new
+                             where r.RequestId == Id && rwf.IsDeleted==null
+                    select new
                              {
                                  r.FirstName,
                                  r.LastName,
@@ -504,13 +521,16 @@ namespace HalloDoc.Services.Services
                                  r.CreatedDate,
                                  r.Status,
                                  rwf.RequestWiseFileId,
-                                 rwf.FileName
+                                 rwf.FileName,
+                                 rwf.IsDeleted
                              }).ToList();
 
             List<DashboardViewModel> list = new List<DashboardViewModel>();
+     
             foreach (var e in tableData)
             {
                 DashboardViewModel model = new DashboardViewModel();
+               
                 model.Username = e.FirstName + " " + e.LastName;
                 model.RequstId = e.RequestId;
                 model.CreatedDate = DateTime.Now.ToShortDateString();
@@ -518,6 +538,7 @@ namespace HalloDoc.Services.Services
                 model.Status = e.Status;
                 model.RequestWiseFileID = e.RequestWiseFileId;
                 model.FirstName = requestClient;
+               
                 _aspnetuserRepository.SetTempData("reqID", model.RequstId);
 
                 list.Add(model);
@@ -603,16 +624,22 @@ namespace HalloDoc.Services.Services
             return ms.ToArray();
         }
        
-        public async Task<object> DeleteFile(int  name)
+       
+        public async Task<object> DeleteFile(int fileID)
         {
-            RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(name);
-            var result =  _requestwisefileRepository.DeleteByRequestIdAndFileName(file.FileName);
-            return result;
+            RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
+            if (IsDeleted(file.IsDeleted))
+            {
+                return new { Success = false, Message = "File is already deleted" };
+            }
+
+            file.IsDeleted = new BitArray(new bool[] { true });
+            return file;
         }
         #endregion
 
-        
 
-       
+
+
     }
 }
