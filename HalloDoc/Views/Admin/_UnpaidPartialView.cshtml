@@ -190,17 +190,17 @@
                                     <ul class="dropdown-menu ">
                                         <div class="d-flex flex-column  align-items-center menuDashboard">
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" >
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Case
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" >
+                                            <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
                                                 View Uploads
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Notes
                                             </a>
                                         </li>

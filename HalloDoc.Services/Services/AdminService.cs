@@ -116,7 +116,7 @@ namespace HalloDoc.Services.Services
                   Notes = p.Notes,
                   RequestTypeID = r.RequestTypeId,
                   Status = r.Status,
-                  requestID = p.RequestClientId
+                  RequstClientId = p.RequestClientId
 
 
               }).ToList();
@@ -200,8 +200,8 @@ namespace HalloDoc.Services.Services
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
                   RequestTypeID = r.RequestTypeId,
-                  requestID = rec.RequestClientId
-
+                  RequstClientId = rec.RequestClientId,
+                  requestID = rec.RequestId
 
 
               }).ToList();
@@ -228,7 +228,8 @@ namespace HalloDoc.Services.Services
                     Notes = rec.Notes,
                     PhysicianName = subPhy.FirstName + " " + subPhy.LastName,
                     RequestTypeID = r.RequestTypeId,
-                    requestID = rec.RequestClientId
+                    RequstClientId = rec.RequestClientId,
+                    requestID = rec.RequestId
                 }).ToList();
             return tabledashboard1;
         }
@@ -253,9 +254,8 @@ namespace HalloDoc.Services.Services
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
                   RequestTypeID = r.RequestTypeId,
-                  requestID = rec.RequestClientId
-
-
+                  RequstClientId = rec.RequestClientId,
+                  requestID = rec.RequestId
 
               }).ToList();
             return tabledashboard1;
@@ -491,8 +491,8 @@ namespace HalloDoc.Services.Services
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
-            BlockRequest blockRequest = new BlockRequest();
-            blockRequest.PhoneNumber=
+            //BlockRequest blockRequest = new BlockRequest();
+            //blockRequest.PhoneNumber=
 
 
 
@@ -648,6 +648,7 @@ namespace HalloDoc.Services.Services
             }
 
             file.IsDeleted = new BitArray(new bool[] { true });
+            _requestwisefileRepository.UpdateAsync(file);
             return file;
         }
         #endregion

@@ -27,9 +27,14 @@
                     <div class="col-12 fw-bold">
 
                        
+                        @if (Model.FirstOrDefault() != null)
+                        {
                             @Model.FirstOrDefault().FirstName
-                      
-                        (MD051023TETE0001)
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        } (MD051023TETE0001)
                     </div>
                     <div class="col-12">
                         <p>Check here for any files that you or the doctors of your subsequents requestors have attached for you to review.</p>

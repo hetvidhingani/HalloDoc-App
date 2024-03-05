@@ -190,27 +190,27 @@
                                         <div class="d-flex flex-column  align-items-center menuDashboard">
 
                                         <li>
-                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                 Assign Case
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                 Cancle Case
                                             </a>
                                         </li>
                                          <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;" >
+                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Case
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
                                                 View Notes
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                 Block Patient
                                             </a>
                                         </li>
