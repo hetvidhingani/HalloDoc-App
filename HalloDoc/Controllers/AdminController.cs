@@ -202,7 +202,7 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(int Id)
         {
-            var result = _admin.ViewDocument(Id);
+            var result =await _admin.ViewDocument(Id);
             return View(result);
         }
        
@@ -243,12 +243,23 @@ namespace HalloDoc.Controllers
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
-
+      
         public async Task<IActionResult> DeleteFile(int fileID, int requestID)
         {
              await _admin.DeleteFile(fileID);
           
             return RedirectToAction("ViewUploads", new { Id = requestID });
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
+        {
+            foreach(var items in  documentValues)
+            {
+
+                await _admin.DeleteFile(items);
+            }
+
+            return Json(documentValues);
         }
         #endregion
 

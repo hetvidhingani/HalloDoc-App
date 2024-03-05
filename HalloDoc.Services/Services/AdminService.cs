@@ -454,11 +454,8 @@ namespace HalloDoc.Services.Services
         {
 
             RequestClient patient = await _requestclientRepository.CheckUserByID(id);
-
             viewModel.PatientName = patient.FirstName + " " + patient.LastName;
             viewModel.RequestClientID = id;
-            
-
             return viewModel;
 
         }
@@ -527,46 +524,24 @@ namespace HalloDoc.Services.Services
 
             return false;
         }
-        public List<DashboardViewModel> ViewDocument(int Id)
+        public async Task<DashboardViewModel> ViewDocument(int Id)
         { 
-            var requestClient =  _requestclientRepository.GetRequestClientIDByRequestID(Id);
-            var tableData = (from r in _requestRepository.GetAll()
-                             join rwf in _requestwisefileRepository.GetAll()
-                             on r.RequestId equals rwf.RequestId
-                             where r.RequestId == Id && rwf.IsDeleted==null
-                    select new
-                             {
-                                 r.FirstName,
-                                 r.LastName,
-                                 r.RequestId,
-                                 r.CreatedDate,
-                                 r.Status,
-                                 rwf.RequestWiseFileId,
-                                 rwf.FileName,
-                                 rwf.IsDeleted
-                             }).ToList();
+            DashboardViewModel viewModel = new DashboardViewModel();
+            Request req = await _requestRepository.GetByIdAsync(Id);
+            RequestClient requestClient = await _requestclientRepository.GetByIdAsync(req.RequestId);
+            viewModel.FirstName = requestClient.FirstName;
+            
+            viewModel.RequestWiseFiles = (
+                                         from rwf in _requestwisefileRepository.GetAll()
+                                         where rwf.RequestId == Id && rwf.IsDeleted==null
+                                         select new RequestWiseFile
+                                         {
+                                             CreatedDate = rwf.CreatedDate,
+                                             FileName = rwf.FileName,
+                                             RequestWiseFileId = rwf.RequestWiseFileId
 
-            List<DashboardViewModel> list = new List<DashboardViewModel>();
-     
-            foreach (var e in tableData)
-            {
-                DashboardViewModel model = new DashboardViewModel();
-               
-                model.Username = e.FirstName + " " + e.LastName;
-                model.RequstId = e.RequestId;
-                model.CreatedDate = DateTime.Now.ToShortDateString();
-                model.FileName = e.FileName;
-                model.Status = e.Status;
-                model.RequestWiseFileID = e.RequestWiseFileId;
-                model.FirstName = requestClient;
-               
-                _aspnetuserRepository.SetTempData("reqID", model.RequstId);
-
-                list.Add(model);
-            }
-
-
-            return list;
+                                         }).ToList();
+            return viewModel;
         }
         public async Task<string> ViewDocument(IFormFile a, int Id)
         {
@@ -590,15 +565,12 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-
         public async Task<RequestWiseFile> DownloadFile(string name)
         {
             RequestWiseFile reqw = await _requestwisefileRepository.FindFile(name);
 
             return reqw;
         }
-
-
 
         public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
         {
@@ -645,7 +617,6 @@ namespace HalloDoc.Services.Services
             return ms.ToArray();
         }
        
-       
         public async Task<object> DeleteFile(int fileID)
         {
             RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
@@ -658,6 +629,7 @@ namespace HalloDoc.Services.Services
             _requestwisefileRepository.UpdateAsync(file);
             return file;
         }
+
         #endregion
 
         #region Send Order

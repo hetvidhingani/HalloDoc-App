@@ -35,7 +35,7 @@ namespace HalloDoc.Services.IServices
         Task<object> BlockCase(CancelCaseViewModel viewModel, int id);
         Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id);
         Task<List<Physician>> GetPhysiciansByRegion(int regionId);
-        List<DashboardViewModel> ViewDocument(int Id);
+        Task<DashboardViewModel> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id);
         Task<RequestWiseFile> FindFile(string email);
         Task<RequestWiseFile> DownloadFile(string name);
