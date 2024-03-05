@@ -466,7 +466,7 @@ namespace HalloDoc.Services.Services
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
-
+            Request requestor = await _requestRepository.GetByIdAsync(req.RequestId);
             if (requestNote1 != null)
             {
                 requestNote1.Status = 11;
@@ -491,8 +491,15 @@ namespace HalloDoc.Services.Services
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
-            //BlockRequest blockRequest = new BlockRequest();
-            //blockRequest.PhoneNumber=
+            BlockRequest blockRequest = new BlockRequest();
+            blockRequest.PhoneNumber = requestor.PhoneNumber;
+            blockRequest.CreatedDate = DateTime.Now;
+            blockRequest.Email = requestor.Email;
+            blockRequest.Reason = viewModel.AdditionalNotes;
+            blockRequest.RequestId =Convert.ToString( req.RequestId);
+            await _blockRequestRepository.AddAsync(blockRequest);
+
+
 
 
 
