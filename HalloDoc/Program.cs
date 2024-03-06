@@ -31,10 +31,17 @@ builder.Services.AddScoped<IHealthProfessionalTypeRepository, HealthProfessional
 builder.Services.AddScoped<IHealthProfessionalsRepository,HealthProfessionalsRepository>();
 builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
-
-
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(option =>
+{
+    option.IOTimeout = TimeSpan.FromSeconds(5);
+    option.Cookie.HttpOnly = true;
+    option.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
