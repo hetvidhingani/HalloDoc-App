@@ -26,10 +26,10 @@ namespace HalloDoc.Controllers
         #region Login
         public IActionResult AdminLogin()
         {
-            if (HttpContext.Session.GetInt32("AdminSession") != null)
-            {
-                return RedirectToAction("DashBoard");
-            }
+            //if (HttpContext.Session.GetInt32("AdminSession") != null)
+            //{
+            //    return RedirectToAction("DashBoard");
+            //}
             return View();
         }
         [HttpPost]
@@ -39,11 +39,12 @@ namespace HalloDoc.Controllers
 
             if (myUser != null)
             {
-                var jwtToken = _jwtService.GenerateJwtToken(myUser.Email,myUser.Id,Convert.ToString(myUser.Id),true,false,false);
+                Admin userID = await _admin.GetAdmin(myUser.Email);
+                var jwtToken = _jwtService.GenerateJwtToken(myUser.Email,myUser.Id,userID.FirstName,userID.LastName , Convert.ToString(myUser.Id),true,false,false);
                 Response.Cookies.Append("jwt", jwtToken);
-                //HttpContext.Session.SetString("UserName", myUser.UserName);
-                //Admin userID = await _admin.GetAdmin(myUser.Email);
-                //HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
+                HttpContext.Session.SetString("UserName", myUser.UserName);
+               
+                HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
                 return RedirectToAction("Dashboard");
             }
             else

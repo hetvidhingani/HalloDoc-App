@@ -19,13 +19,14 @@ namespace HalloDoc.Services.Services
         {
             this.configuration = configuration;
         }
-        public string GenerateJwtToken(string Email, string AspNetUserId, string Id, bool IsAdmin, bool IsPhysician, bool IsPatient)
+        public string GenerateJwtToken(string Email, string AspNetUserId,string FirstName, string LastName, string Id, bool IsAdmin, bool IsPhysician, bool IsPatient)
         {
             var claims = new List<Claim>()
             {
                  new Claim(ClaimTypes.Email, Email),
                 new Claim("AspNetUserId", AspNetUserId),
-                new Claim("UserId", Id)
+                new Claim("UserId", Id),
+                new Claim("UserName",FirstName+" "+LastName)
              };
 
             if (IsAdmin)
@@ -48,14 +49,14 @@ namespace HalloDoc.Services.Services
             }
 
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JwtKey:bdlalccf8095037f361a4d351e7c0de65f0776bfc2f478ea8d312c763bb6caca"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires =
                 DateTime.Now.AddMinutes(20);
 
             var token = new JwtSecurityToken(
-               configuration["JwtIssuer:Issuer"],
-                configuration["JwtAudience:Audience"],
+               configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
                 claims,
                 expires: expires,
                 signingCredentials: creds
@@ -73,7 +74,7 @@ namespace HalloDoc.Services.Services
                 return false;
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("JwtKey:bdlalccf8095037f361a4d351e7c0de65f0776bfc2f478ea8d312c763bb6caca");
+            var key = Encoding.ASCII.GetBytes(configuration["Jwt:Key"]);
             try
             {
                 tokenHandler.ValidateToken(token, new TokenValidationParameters

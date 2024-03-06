@@ -31,7 +31,7 @@ namespace HalloDoc.Repository.Repository
             var token = request.Cookies["jwt"];
             if (token == null || !jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Admin", action = "AdminLogin" }));
                 return;
             }
             var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
@@ -40,9 +40,10 @@ namespace HalloDoc.Repository.Repository
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Admin", action = "AdminLogin" }));
                 return;
             }
+
             if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Home", action = "Index" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Admin", action = "AdminLogin" }));
                 return;
             }
         }
