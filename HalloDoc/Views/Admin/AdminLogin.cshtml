@@ -1,4 +1,5 @@
-﻿@model HalloDoc.Entities.DataModels.AspNetUser
+﻿
+@model HalloDoc.Entities.DataModels.AspNetUser
 
 @{
     Layout = null;
@@ -71,7 +72,7 @@
                         </h3>
                     </div>
 
-                    <form asp-controller="Admin" asp-action="AdminLogin" method="post">
+                    <form asp-controller="Custom" asp-action="AdminLogin" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                         <div class=" form-floating form-group">
