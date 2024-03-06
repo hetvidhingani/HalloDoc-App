@@ -528,9 +528,9 @@ namespace HalloDoc.Services.Services
         { 
             DashboardViewModel viewModel = new DashboardViewModel();
             Request req = await _requestRepository.GetByIdAsync(Id);
-            RequestClient requestClient = await _requestclientRepository.GetByIdAsync(req.RequestId);
+            RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
             viewModel.FirstName = requestClient.FirstName;
-            
+            viewModel.RequstId = Id;
             viewModel.RequestWiseFiles = (
                                          from rwf in _requestwisefileRepository.GetAll()
                                          where rwf.RequestId == Id && rwf.IsDeleted==null

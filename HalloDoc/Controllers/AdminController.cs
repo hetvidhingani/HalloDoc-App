@@ -244,11 +244,11 @@ namespace HalloDoc.Controllers
             }
         }
       
-        public async Task<IActionResult> DeleteFile(int fileID, int requestID)
+        public async Task<IActionResult> DeleteFile(int fileID, int RequstId)
         {
              await _admin.DeleteFile(fileID);
           
-            return RedirectToAction("ViewUploads", new { Id = requestID });
+            return RedirectToAction("ViewUploads", new { Id = RequstId });
         }
         [HttpPost]
         public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
