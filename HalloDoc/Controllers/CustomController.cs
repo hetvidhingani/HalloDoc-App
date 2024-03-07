@@ -47,9 +47,10 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-        public IActionResult FamilyFriendRequest()
+        public async Task<IActionResult> FamilyFriendRequest()
         {
-            return View();
+            var result = await _patient.RegionList();
+            return View(result);
         }
         public IActionResult ConciergeRequest()
         {
@@ -201,15 +202,18 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterdPatientLogin(AspNetUser user)
+        public async Task<IActionResult> RegisterdPatientLogin(LoginViewModel viewModel)
         {
-            AspNetUser myUser = await _patient.checkEmailPassword(user);
-
+     
+            var myUser = await _patient.checkEmailPassword(viewModel.Email,viewModel.PasswordHash);
+           
             if (myUser != null)
             {
-                User userID = await _patient.GetUser(myUser.Email);
+               
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
                 Response.Cookies.Append("jwt", jwtToken);
+
+                User userID = await _patient.GetUser(myUser.Email);
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
 

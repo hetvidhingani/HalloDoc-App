@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.DataModels.AspNetUser
+﻿@model HalloDoc.Entities.ViewModels.LoginViewModel
 @{
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
 }
@@ -31,7 +31,7 @@
 
         <div class=" form-floating form-group">
             <i class="bi bi-person-circle loginIconfrom"></i>
-            <input asp-for="Email" type="text" id="email" class="form-control " placeholder=" " />
+            <input asp-for="Email" type="email" id="email" class="form-control " placeholder=" " />
             <label for="email">Email</label>
             <span asp-validation-for="Email" class="text-danger"></span>
 

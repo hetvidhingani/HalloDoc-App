@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -17,6 +18,8 @@ namespace HalloDoc.Services.Services
 {
     public class PatientService : IPatientService
     {
+
+        #region constuctor
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRequestRepository _requestRepository;
@@ -25,12 +28,13 @@ namespace HalloDoc.Services.Services
         private readonly IBusinessRepository _businessRepository;
         private readonly IConciergeRepository _conciergeRepository;
         private readonly IAspNetUserRolesRepository _userRolesRepository;
+        private readonly IRegionRepository _regionRepository;
 
-        #region constuctor
+
         public PatientService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                 IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                 IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
-                                IConciergeRepository conciergeRepository, IAspNetUserRolesRepository userRolesRepository)
+                                IConciergeRepository conciergeRepository, IAspNetUserRolesRepository userRolesRepository, IRegionRepository regionRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -40,6 +44,7 @@ namespace HalloDoc.Services.Services
             _businessRepository = businessRepository;
             _conciergeRepository = conciergeRepository;
             _userRolesRepository = userRolesRepository;
+            _regionRepository = regionRepository;
         }
         #endregion
 
@@ -58,31 +63,38 @@ namespace HalloDoc.Services.Services
             RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
             return file;
         }
+        public async Task<object> RegionList()
+        {
+            OtherRequestViewModel viewModel = new OtherRequestViewModel();
+            viewModel.State = await _regionRepository.GetRegions();
+            return viewModel;
+        }
         #endregion
 
         #region PatientRequest
         public async Task<object> PatientRequest(int? userId)
         {
+            PatientRequestViewModel viewModel = new PatientRequestViewModel();
+            viewModel.State = await _regionRepository.GetRegions();
             if (userId != null)
             {
                 User user = await _userRepository.GetByIdAsync(userId);
-                PatientRequestViewModel viewModel = new PatientRequestViewModel();
                 if (user != null)
                 {
                     viewModel.FirstName = user.FirstName;
                     viewModel.LastName = user.LastName;
                     viewModel.City = user.City;
-                    viewModel.State = user.State;
+                    viewModel.State = await _regionRepository.GetRegions();
                     viewModel.Street = user.Street;
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
                     viewModel.ZipCode = user.ZipCode;
                     viewModel.DateOfBirth = user.DateOfBirth;
-
                     return viewModel;
                 }
             }
-            return "";
+
+            return viewModel;
         }
         public async Task<string> PatientRequest(PatientRequestViewModel viewModel)
         {
@@ -98,18 +110,16 @@ namespace HalloDoc.Services.Services
             };
             await _requestRepository.AddAsync(request);
 
-            int id = request.RequestId;
-
             RequestClient requestClient = new RequestClient
             {
                 RequestId = request.RequestId,
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
-                RegionId = 1,
+                RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
-                State = viewModel.State,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
@@ -121,12 +131,6 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                using (var stream = System.IO.File.Create(filePath))
-                {
-                    viewModel.File.CopyTo(stream);
-
-
                     RequestWiseFile newFile = new RequestWiseFile
                     {
                         RequestId = request.RequestId,
@@ -136,7 +140,7 @@ namespace HalloDoc.Services.Services
                     };
 
                     await _requestwisefileRepository.AddAsync(newFile);
-                }
+                
             }
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
@@ -179,7 +183,7 @@ namespace HalloDoc.Services.Services
                     DateOfBirth = viewModel.DateOfBirth,
                     CreatedBy = "Admin",
                     CreatedDate = DateTime.Now,
-                    RegionId = 1
+                    RegionId = viewModel.RegionId
                 };
                 await _userRepository.AddAsync(user1);
 
@@ -217,10 +221,10 @@ namespace HalloDoc.Services.Services
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
-                RegionId = 1,
+                RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
-                State = viewModel.State,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 DateOfBirth = viewModel.DateOfBirth,
@@ -232,21 +236,18 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                using (var stream = System.IO.File.Create(filePath))
+                RequestWiseFile newFile = new RequestWiseFile
                 {
-                    viewModel.File.CopyTo(stream);
-                    RequestWiseFile newFile = new RequestWiseFile
-                    {
-                        RequestId = request.RequestId,
-                        FileName = viewModel.File.FileName,
-                        CreatedDate = DateTime.Now,
-                        DocType = 1,
-                    };
+                    RequestId = request.RequestId,
+                    FileName = viewModel.File.FileName,
+                    CreatedDate = DateTime.Now,
+                    DocType = 1,
+                };
 
-                    await _requestwisefileRepository.AddAsync(newFile);
-                }
+                await _requestwisefileRepository.AddAsync(newFile);
+
             }
+
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
@@ -304,7 +305,7 @@ namespace HalloDoc.Services.Services
             Business business = new Business
             {
                 Name = viewModel.ClientProperty,
-                RegionId = 1,
+                RegionId = viewModel.RegionId,
                 PhoneNumber = viewModel.ClientPhoneNumber,
                 CreatedDate = DateTime.Now,
                 CreatedBy = "Admin",
@@ -319,10 +320,10 @@ namespace HalloDoc.Services.Services
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
-                RegionId = 1,
+                RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
-                State = viewModel.State,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
@@ -335,21 +336,18 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                using (var stream = System.IO.File.Create(filePath))
+                RequestWiseFile newFile = new RequestWiseFile
                 {
-                    viewModel.File.CopyTo(stream);
-                    RequestWiseFile newFile = new RequestWiseFile
-                    {
-                        RequestId = request.RequestId,
-                        FileName = viewModel.File.FileName,
-                        CreatedDate = DateTime.Now,
-                        DocType = 1,
-                    };
+                    RequestId = request.RequestId,
+                    FileName = viewModel.File.FileName,
+                    CreatedDate = DateTime.Now,
+                    DocType = 1,
+                };
 
-                    await _requestwisefileRepository.AddAsync(newFile);
-                }
+                await _requestwisefileRepository.AddAsync(newFile);
+
             }
+
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
@@ -406,12 +404,12 @@ namespace HalloDoc.Services.Services
                 ConciergeName = viewModel.ClientFirstName + " " + viewModel.ClientLastName,
                 CreatedDate = DateTime.Now,
                 Address = viewModel.ClientProperty,
-                Street = viewModel.ClientStreet,
+                Street = await _regionRepository.FindState(viewModel.RegionId),
                 State = viewModel.ClientState,
                 City = viewModel.ClientCity,
                 ZipCode = viewModel.ClientZipCode,
 
-                RegionId = 1
+                RegionId = viewModel.RegionId,
 
             };
             await _conciergeRepository.AddAsync(concierge);
@@ -422,10 +420,10 @@ namespace HalloDoc.Services.Services
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
-                RegionId = 1,
-                Street = viewModel.Street,
+                RegionId = viewModel.RegionId,
+                Street =viewModel.Street,
                 City = viewModel.City,
-                State = viewModel.State,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
@@ -437,20 +435,18 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
-                using (var stream = System.IO.File.Create(filePath))
+                RequestWiseFile newFile = new RequestWiseFile
                 {
-                    viewModel.File.CopyTo(stream);
-                    RequestWiseFile newFile = new RequestWiseFile
-                    {
-                        RequestId = request.RequestId,
-                        FileName = viewModel.File.FileName,
-                        CreatedDate = DateTime.Now,
-                        DocType = 1,
-                    };
-                    await _requestwisefileRepository.AddAsync(newFile);
-                }
+                    RequestId = request.RequestId,
+                    FileName = viewModel.File.FileName,
+                    CreatedDate = DateTime.Now,
+                    DocType = 1,
+                };
+
+                await _requestwisefileRepository.AddAsync(newFile);
+
             }
+
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
             {
@@ -505,10 +501,10 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Login
-        public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
+        public async Task<AspNetUser> checkEmailPassword(string email,string password)
         {
 
-            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); ;
+            return await _aspnetuserRepository.Login(email, password); 
         }
         public async Task<User> GetUser(string email)
         {
@@ -597,10 +593,10 @@ namespace HalloDoc.Services.Services
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
-                RegionId = 1,
+                RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
-                State = viewModel.State,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 DateOfBirth = viewModel.DateOfBirth,
@@ -725,14 +721,12 @@ namespace HalloDoc.Services.Services
                 requestViewModel.FirstName = user.FirstName;
                 requestViewModel.LastName = user.LastName;
                 requestViewModel.City = user.City;
-                requestViewModel.State = user.State;
+                requestViewModel.State = await _regionRepository.GetRegions();
                 requestViewModel.Street = user.Street;
                 requestViewModel.Email = user.Email;
                 requestViewModel.PhoneNumber = user.Mobile;
                 requestViewModel.ZipCode = user.ZipCode;
-                string storedStrMonth = user.StrMonth;
-                int? storedIntYear = user.IntYear;
-                int? storedIntDate = user.IntDate;
+              
                 return requestViewModel;
 
             }
@@ -750,7 +744,7 @@ namespace HalloDoc.Services.Services
                 user.Street = patientRequestViewModel.Street;
                 user.City = patientRequestViewModel.City;
                 user.Mobile = patientRequestViewModel.PhoneNumber;
-                user.State = patientRequestViewModel.State;
+                user.State = await _regionRepository.FindState(patientRequestViewModel.RegionId);
                 user.ZipCode = patientRequestViewModel.ZipCode;
                 user.StrMonth = patientRequestViewModel.DateOfBirth.Value.ToString();
                 user.IntDate = patientRequestViewModel.DateOfBirth.Value.Day;

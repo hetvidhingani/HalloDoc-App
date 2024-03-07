@@ -21,53 +21,6 @@ namespace HalloDoc.Services.Services
             this.configuration = configuration;
             _context = context;
         }
-        //public string GenerateJwtToken(string Email, string AspNetUserId,string FirstName, string LastName, string Id, bool IsAdmin, bool IsPhysician, bool IsPatient)
-        //{
-        //    var claims = new List<Claim>()
-        //    {
-        //         new Claim(ClaimTypes.Email, Email),
-        //        new Claim("AspNetUserId", AspNetUserId),
-        //        new Claim("UserId", Id),
-        //        new Claim("UserName",FirstName+" "+LastName)
-        //     };
-
-        //    if (IsAdmin)
-        //    {
-        //        {
-        //            claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-        //        };
-        //    }
-        //    if (IsPhysician)
-        //    {
-        //        {
-        //            claims.Add(new Claim(ClaimTypes.Role, "Physician"));
-        //        };
-        //    }
-        //    if (IsPatient)
-        //    {
-        //        {
-        //            claims.Add(new Claim(ClaimTypes.Role, "Patient"));
-        //        };
-        //    }
-
-
-        //    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-        //    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        //    var expires =
-        //        DateTime.Now.AddMinutes(20);
-
-        //    var token = new JwtSecurityToken(
-        //       configuration["Jwt:Issuer"],
-        //        configuration["Jwt:Audience"],
-        //        claims,
-        //        expires: expires,
-        //        signingCredentials: creds
-        //    );
-
-        //    return new JwtSecurityTokenHandler().WriteToken(token);
-
-
-        //}
         public string GenerateJwtToken(AspNetUser user)
         {
             var userRole = _context.AspNetUserRoles.FirstOrDefault(u=>u.UserId==user.Id);

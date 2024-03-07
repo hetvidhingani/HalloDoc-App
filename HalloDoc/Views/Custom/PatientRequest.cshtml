@@ -80,6 +80,7 @@
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
                             class="form-control"  placeholder=" ">
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -97,6 +98,7 @@
                             <div class="form-floating form-group">
                                 <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
                                 <label for=" " id="passwordFieldslable1">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
 
                             </div>
                         </div>
@@ -104,6 +106,8 @@
                             <div class="form-floating form-group">
                                 <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
                                 <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
                             </div>
                         </div>
                     
@@ -124,16 +128,24 @@
                             <label for=" ">City </label>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="State" type="text" class="form-control"  placeholder=" ">
-                            <label for=" ">State</label>
-                        </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+                       @*  <select class="form-select mb-3 " aria-label="Default select example" name="RegionId" asp-for="RegionId" id="RegionId">
+                            <option>State</option>
+                            @foreach (var r in Model.State)
+                            {
+                                <option value="@r.RegionId">
+                                    @r.Name
+                                </option>
+                            }
+                        </select> *@
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="ZipCode" type="text" class="form-control"  placeholder=" ">
                             <label for=" ">Zip code</label>
+                            <span asp-validation-for="ZipCode" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -161,7 +173,7 @@
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
                         <input type="submit" class="createNewReqBtn submitBtn" value="Submit" onclick="continueToPage()" />
 
-                        <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
+                        <a asp-action="PatientSubmitRequest" asp-controller="Custom" class="btn ">
                             <button type="button" class="createNewReqBtn">
                                 Cancle
                             </button>

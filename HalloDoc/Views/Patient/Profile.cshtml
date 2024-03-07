@@ -100,10 +100,16 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
+                        @* <div class="form-floating form-group">
                                 <input asp-for="State" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">State</label>
-                        </div>
+                        </div> *@
+                        @foreach (var r in Model.State)
+                        {
+                            <option value="@r.RegionId">
+                                @r.Name
+                            </option>
+                        }
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">

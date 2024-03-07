@@ -11,13 +11,14 @@ namespace HalloDoc.Services.IServices
 {
     public interface IPatientService
     {
+        Task<object> RegionList();
         Task<object> PatientRequest(int? userId);
         Task<string> PatientRequest(PatientRequestViewModel viewModel);
         Task<string> FamilyFriendRequest(OtherRequestViewModel viewModel);
         Task<string> BusinessRequest(OtherRequestViewModel viewModel);
         Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
         string? CheckEmail(string email);
-        Task<AspNetUser> checkEmailPassword(AspNetUser user);
+        Task<AspNetUser> checkEmailPassword(string email, string password);
         Task<User> GetUser(string email);
         Task<AspNetUser> GetAspNetUser(string email);
         Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel);

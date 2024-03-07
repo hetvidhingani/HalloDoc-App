@@ -80,12 +80,8 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="ClientState"   type="text" class="form-control" id=" " placeholder=" ">
-                            <label for=" ">State</label>
-                            <span asp-validation-for="ClientState" class="text-danger"></span>
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
 
-                        </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
