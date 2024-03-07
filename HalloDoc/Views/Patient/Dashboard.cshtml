@@ -174,7 +174,7 @@
     function continueToPage() {
         if (selectedOption == 'me') {
             sessionStorage.setItem("currentId", "me");
-            window.location.href = '@Url.Action("PatientRequest","Patient" )';
+            window.location.href = '@Url.Action("PatientRequest","Custom" )';
 
         } else {
             sessionStorage.setItem("currentId", "else");

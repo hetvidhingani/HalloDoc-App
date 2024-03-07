@@ -11,7 +11,7 @@
 }
 <div class="backkButton">
 
-    <a asp-controller="Patient" asp-action="PatientSite" class="SiteColor">
+    <a asp-controller="Custom" asp-action="PatientSite" class="SiteColor">
         <i class="bi bi-chevron-left SiteColor"></i>
         Back
     </a>
@@ -27,7 +27,7 @@
         </h3>
     </div>
 
-    <form asp-controller="Patient" asp-action="CreateAccountRequest" method="post">
+    <form asp-controller="Custom" asp-action="CreateAccountRequest" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         @* <input type="hidden" id="requestID" value="@TempData["id"]" asp-for="RequestID"/> *@
         <div class=" form-floating form-group">

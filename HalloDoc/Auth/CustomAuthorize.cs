@@ -24,26 +24,26 @@ namespace HalloDoc.Repository.Repository
             var jwtService = context.HttpContext.RequestServices.GetService<Services.IServices.IJwtService>();
             if (jwtService == null)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "AdminLogin" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
             var request = context.HttpContext.Request;
             var token = request.Cookies["jwt"];
             if (token == null || !jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "AdminLogin" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
             var roleClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
             if (roleClaim == null)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "AdminLogin" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
             {
-                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "AdminLogin" }));
+                context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
         }

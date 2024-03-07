@@ -40,4 +40,47 @@
     <ProjectReference Include="..\HalloDoc.Services\HalloDoc.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Custom\PatientSite.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Custom\PatientSubmitRequest.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="Views\Custom\RegisterdPatientLogin.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Custom\ConciergeRequest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Custom\ConciergeRequest.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Custom\CreateAccountPatient.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Custom\FamilyFriendRequest.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Custom\PatientForgotPassword.cshtml" />
+    <_ContentIncludedByDefault Remove="Views\Custom\PatientRequest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Custom\CreateAccountPatient.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Custom\FamilyFriendRequest.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Custom\PatientForgotPassword.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Views\Custom\PatientRequest.cshtml" />
+  </ItemGroup>
+
 </Project>

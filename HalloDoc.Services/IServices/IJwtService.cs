@@ -10,7 +10,7 @@ namespace HalloDoc.Services.IServices
 {
     public interface  IJwtService
     {
-        string GenerateJwtToken(string Email, string AspNetUserId, string FirstName, string LastName, string Id, bool IsAdmin, bool IsPhysician, bool IsPatient);
+        string GenerateJwtToken(AspNetUser user);
 
 
         bool ValidateToken(string token, out JwtSecurityToken jwtSecurityToken);

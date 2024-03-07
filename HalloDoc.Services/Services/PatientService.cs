@@ -24,12 +24,13 @@ namespace HalloDoc.Services.Services
         private readonly IRequestWiseFilesRepository _requestwisefileRepository;
         private readonly IBusinessRepository _businessRepository;
         private readonly IConciergeRepository _conciergeRepository;
+        private readonly IAspNetUserRolesRepository _userRolesRepository;
 
         #region constuctor
         public PatientService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                 IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                 IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
-                                IConciergeRepository conciergeRepository)
+                                IConciergeRepository conciergeRepository, IAspNetUserRolesRepository userRolesRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -38,6 +39,7 @@ namespace HalloDoc.Services.Services
             _requestwisefileRepository = requestwisefileRepository;
             _businessRepository = businessRepository;
             _conciergeRepository = conciergeRepository;
+            _userRolesRepository = userRolesRepository;
         }
         #endregion
 
@@ -154,9 +156,14 @@ namespace HalloDoc.Services.Services
                     Email = viewModel.Email,
                     CreatedDate = DateTime.Now
                 };
-
                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId="2"
 
+                };
+                await _userRolesRepository.AddAsync(userRole);
                 User user1 = new User
                 {
                     Id = newaspNetUSer.Id,
@@ -262,7 +269,13 @@ namespace HalloDoc.Services.Services
                 };
 
                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId = "2"
 
+                };
+                await _userRolesRepository.AddAsync(userRole);
                 return "PatientSite";
 
             }
@@ -342,7 +355,7 @@ namespace HalloDoc.Services.Services
             if (user != null)
             {
                 request.UserId = user.UserId;
-                _requestRepository.UpdateAsync(request);
+                await _requestRepository.UpdateAsync(request);
 
             }
             AspNetUser userExist = await _aspnetuserRepository.CheckUserByEmail(viewModel.Email);
@@ -357,8 +370,14 @@ namespace HalloDoc.Services.Services
                     CreatedDate = DateTime.Now
                 };
 
-                _aspnetuserRepository.AddAsync(newaspNetUSer);
+                await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId = "2"
 
+                };
+                await _userRolesRepository.AddAsync(userRole);
                 return "PatientSite";
 
             }
@@ -453,6 +472,14 @@ namespace HalloDoc.Services.Services
                 };
 
                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
+
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId = "2"
+
+                };
+                await _userRolesRepository.AddAsync(userRole);
                 return "PatientSite";
 
             }

@@ -31,6 +31,7 @@ builder.Services.AddScoped<IHealthProfessionalTypeRepository, HealthProfessional
 builder.Services.AddScoped<IHealthProfessionalsRepository,HealthProfessionalsRepository>();
 builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
+builder.Services.AddScoped<IAspNetUserRolesRepository, AspNetUserRolesRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IJwtService, JwtService>();

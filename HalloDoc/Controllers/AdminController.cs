@@ -8,7 +8,7 @@ using System.Diagnostics.Contracts;
 
 namespace HalloDoc.Controllers
 {
-    [CustomAuthorize("Admin")]
+    [CustomAuthorize("1")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,8 +30,8 @@ namespace HalloDoc.Controllers
         {
             if (HttpContext.Session.GetString("AdminSession") != null)
             {
-                HttpContext.Session.Remove("AdminSession");
-                return RedirectToAction("AdminLogin");
+                Response.Cookies.Delete("jwt");
+                return RedirectToAction("AdminLogin", "Custom");
             }
             return View();
         }
