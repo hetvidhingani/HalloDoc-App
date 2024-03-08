@@ -187,8 +187,32 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Transfer Case
+       
+
+        public async Task<IActionResult> TransferCase(AssignCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.TransferCase(viewModel, id);
+            return PartialView("_AssignRequestPartialView", result);
+        }
+
+        //public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
+        //{
+        //    var result = await _admin.AssignRequest(viewModel, id);
+        //    return RedirectToAction("Dashboard");
+        //}
+
+        #endregion
+
+        #region Clear Case
+        public async Task<IActionResult> ClearCase()
+        {
+            
+            return PartialView("_ClearCasePartialView");
+        }
+        #endregion
         #region View Uploads
-      
+
         public async Task<IActionResult> ViewUploads(int Id)
         {
             HttpContext.Session.SetInt32("reqID", Id);

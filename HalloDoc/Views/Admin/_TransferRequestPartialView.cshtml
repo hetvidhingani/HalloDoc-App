@@ -1,0 +1,77 @@
+﻿@model HalloDoc.Entities.ViewModels.AssignCaseViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Assign Request</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form asp-controller="Admin" asp-action="AssignRequest" asp-route-id="@Model.RequestClientID">
+    <div class="modal-body">
+        <small>To Assign this Request, search and select another Physician.</small>
+
+        <div class=" d-flex justify-content-center flex-column  ">
+            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID" id="regionSelect">
+                <option>Open this select menu</option>
+                @foreach (var r in Model.Region)
+                {
+                    <option value="@r.RegionId">
+                        @r.Name
+                    </option>
+                }
+            </select>
+
+            <select class="form-select mb-3 h-50" name="physicianID" asp-for="physicianID" id="physicianSelect">
+                <option>Select Physician</option>
+
+            </select>
+            <div class="form-floating form-group  rounded-3">
+                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <label class="form-label" for="textAreaExample2">
+                    Discription
+                </label>
+
+            </div>
+
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+
+        <button class="createNewReqBtn submitBtn" type="submit">
+            Confirm
+        </button>
+
+        <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+            Cancle
+        </button>
+
+
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        $("#regionSelect").change(function () {
+            var regionId = $(this).val();
+            var url = "/Admin/GetPhysiciansByRegion?regionId=" + regionId;
+
+
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#physicianSelect option").remove();
+                    $("#physicianSelect").append('<option value="0">Selected Physician</option>');
+
+                    data.map((x) => {
+
+                        $("#physicianSelect").append('<option value="' + x.physicianId + '">' + x.firstName + '</option>');
+                    })
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+    });
+</script>

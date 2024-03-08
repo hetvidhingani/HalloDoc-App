@@ -23,6 +23,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="ClearCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="TransferCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
 <div class="row mt-4">
     <div class="d-flex justify-content-between align-items-center">
         <div class="sectionHeading">
@@ -203,12 +220,12 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <a class="Transfer" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                Transfer
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                                 Clear Case
                                             </a>
                                         </li>
@@ -354,5 +371,30 @@
             }
         });
     });
+    $('.Transfer').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("TransferCase", "Admin"))",
+            success: function (data) {
+               
+                $("#TransferCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Clear').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("ClearCase", "Admin"))",
+            success: function (data) {
 
+                $("#ClearCase").find('.modal-content').html(data);
+            }
+        });
+    });
 </script>

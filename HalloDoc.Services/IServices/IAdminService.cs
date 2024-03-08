@@ -47,5 +47,6 @@ namespace HalloDoc.Services.IServices
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
         Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id);
+        Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
     }
 }

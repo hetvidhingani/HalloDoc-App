@@ -511,6 +511,17 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Transfer Case
+        public async Task<object> TransferCase(AssignCaseViewModel viewModel, int id)
+        {
+            RequestClient patient = await _requestclientRepository.CheckUserByID(id);
+            viewModel.RequestClientID = id;
+            viewModel.Region = await _regionRepository.GetRegions();
+            viewModel.Physician = await _physicianRepository.GetPhysician();
+            return viewModel;
+        }
+        #endregion
+
         #region View Uploads
         public bool IsDeleted(BitArray? isDeleted)
         {
@@ -671,6 +682,7 @@ namespace HalloDoc.Services.Services
             return "";
         }
         #endregion
+
 
 
     }
