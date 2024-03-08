@@ -28,7 +28,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-
+       
         public IActionResult ResetPassword()
         {
             return View();
@@ -37,9 +37,10 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        public IActionResult BusinessRequest()
+        public async Task<IActionResult> BusinessRequest()
         {
-            return View();
+            var result = await _patient.RegionList();
+            return View(result);
         }
 
         public IActionResult CreateAccountPatient()
@@ -52,9 +53,10 @@ namespace HalloDoc.Controllers
             var result = await _patient.RegionList();
             return View(result);
         }
-        public IActionResult ConciergeRequest()
+        public async Task<IActionResult> ConciergeRequest()
         {
-            return View();
+            var result = await _patient.RegionList();
+            return View(result);
         }
         #endregion
 
@@ -188,7 +190,6 @@ namespace HalloDoc.Controllers
         //}
         #endregion
 
-
         #region Login
 
         public IActionResult RegisterdPatientLogin()
@@ -275,18 +276,22 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> FamilyFriendRequest(OtherRequestViewModel viewModel)
         {
-            var result = await _patient.FamilyFriendRequest(viewModel);
-            if (result == "")
+            if (ModelState.IsValid)
             {
-                await LinkToCreateAccount(new CreateAccountViewModel
+                var result = await _patient.FamilyFriendRequest(viewModel);
+                if (result == "")
                 {
-                    Email = viewModel.Email
-                });
-                return View("PatientSite");
+                    await LinkToCreateAccount(new CreateAccountViewModel
+                    {
+                        Email = viewModel.Email
+                    });
+                    return View("PatientSite");
+                }
             }
+          
 
 
-            return View(result);
+            return View("PatientSite");
         }
 
         #endregion
@@ -319,8 +324,7 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> ConciergeRequest(OtherRequestViewModel viewModel)
         {
-            if (ModelState.IsValid)
-            {
+           
 
                 var result = await _patient.ConciergeRequest(viewModel);
                 if (result == "")
@@ -332,8 +336,8 @@ namespace HalloDoc.Controllers
                     return View("PatientSite");
                 }
 
-            }
-            return View("RegisterdPatientLogin");
+
+            return View(result);
         }
 
 

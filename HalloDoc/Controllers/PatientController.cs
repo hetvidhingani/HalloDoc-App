@@ -37,15 +37,16 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-       
-        public IActionResult SubmitInformationSomeoneElse()
+
+        public async Task<IActionResult> SubmitInformationSomeoneElse()
         {
-            return View();
+            var result = await _patient.RegionListUser();
+            return View(result);
 
         }
         #endregion
 
-       
+
         #region Dashboard
         public async Task<IActionResult> Dashboard()
         {

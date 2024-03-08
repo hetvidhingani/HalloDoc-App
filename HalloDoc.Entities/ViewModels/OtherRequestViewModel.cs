@@ -42,7 +42,7 @@ namespace HalloDoc.Entities.ViewModels
            
         }
 
-        [RegularExpression(@"^[1-9]\d{6}$", ErrorMessage = "Invalid Indian zip code")]
+        [RegularExpression(@"^[1-9]\d{5}$", ErrorMessage = "Invalid  zip code")]
         public string? ZipCode { get; set; }
 
         [Required(ErrorMessage = "Enter First Name Here")]
@@ -62,11 +62,11 @@ namespace HalloDoc.Entities.ViewModels
         public string? ClientProperty { get; set; }
         public string? ClientCaseNo { get; set; }
 
-        [RegularExpression(@"^[1-9]\d{6}$", ErrorMessage = "Invalid Indian zip code")]
+    //    [RegularExpression(@"^[1-9]\d{5}$", ErrorMessage = "Invalid  zip code")]
         public string? ClientZipCode { get; set; }
-        public string? ClientState { get; set; }
+        public string? ClientStreet { get; set; }
         public string? ClientCity { get; set; }
-        public List<Region> ClientStreet { get; set; }
+        
         
     }
 }

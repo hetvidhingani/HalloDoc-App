@@ -100,16 +100,8 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        @* <div class="form-floating form-group">
-                                <input asp-for="State" type="text" class="form-control" placeholder=" " readonly>
-                            <label for=" ">State</label>
-                        </div> *@
-                        @foreach (var r in Model.State)
-                        {
-                            <option value="@r.RegionId">
-                                @r.Name
-                            </option>
-                        }
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))" disabled></select>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -147,9 +139,14 @@
     editButton.addEventListener("click", function () {
         var form = editButton.closest("form");
         var inputs = form.querySelectorAll("input[readonly]");
+        var select = form.querySelectorAll("select[disabled]");
+
         var saveButton = form.querySelector("input[type='submit']");
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");
+        });
+        select.forEach(function (select) {
+            select.removeAttribute("disabled");
         });
         saveButton.removeAttribute("disabled");
         saveButton.style.display = "block";

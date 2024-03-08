@@ -93,12 +93,14 @@
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                   
+                      @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") == null)
+                        {
+
                         <div class="col-lg-6 col-md-6 col-sm-12" id="hide1">
                             <div class="form-floating form-group">
                                 <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
                                 <label for=" " id="passwordFieldslable1">Password</label>
-                            <span asp-validation-for="Password" class="text-danger"></span>
+                                <span asp-validation-for="Password" class="text-danger"></span>
 
                             </div>
                         </div>
@@ -106,11 +108,11 @@
                             <div class="form-floating form-group">
                                 <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
                                 <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 
                             </div>
                         </div>
-                    
+                        }
                 </div>
 
                 <h3>Patient Location</h3>
@@ -129,15 +131,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
-                       @*  <select class="form-select mb-3 " aria-label="Default select example" name="RegionId" asp-for="RegionId" id="RegionId">
-                            <option>State</option>
-                            @foreach (var r in Model.State)
-                            {
-                                <option value="@r.RegionId">
-                                    @r.Name
-                                </option>
-                            }
-                        </select> *@
+                   
                         <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -218,6 +212,7 @@
             .catch(error => console.error('Error:', error));
     }
 
+
     if (localStorage.getItem("Mytheme")) { 
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
@@ -233,7 +228,6 @@
        
         var input = document.querySelector("#phone");
         input.removeAttribute("title");
-
 
     }
 </script>

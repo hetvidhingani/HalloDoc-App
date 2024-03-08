@@ -69,6 +69,12 @@ namespace HalloDoc.Services.Services
             viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
+        public async Task<object> RegionListUser()
+        {
+            PatientRequestViewModel viewModel = new PatientRequestViewModel();
+            viewModel.State = await _regionRepository.GetRegions();
+            return viewModel;
+        }
         #endregion
 
         #region PatientRequest
@@ -234,6 +240,7 @@ namespace HalloDoc.Services.Services
             };
             await _requestclientRepository.AddAsync(requestClient);
 
+
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
                 RequestWiseFile newFile = new RequestWiseFile
@@ -248,6 +255,7 @@ namespace HalloDoc.Services.Services
 
             }
 
+          
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
@@ -376,7 +384,7 @@ namespace HalloDoc.Services.Services
 
                 };
                 await _userRolesRepository.AddAsync(userRole);
-                return "PatientSite";
+                return "";
 
             }
             return "RegisterdPatientLogin";
@@ -388,7 +396,6 @@ namespace HalloDoc.Services.Services
         {
             Request request = new Request
             {
-
                 RequestTypeId = 3,
                 FirstName = viewModel.ClientFirstName,
                 LastName = viewModel.ClientLastName,
@@ -403,13 +410,12 @@ namespace HalloDoc.Services.Services
             {
                 ConciergeName = viewModel.ClientFirstName + " " + viewModel.ClientLastName,
                 CreatedDate = DateTime.Now,
+                RegionId = viewModel.RegionId,
                 Address = viewModel.ClientProperty,
-                Street = await _regionRepository.FindState(viewModel.RegionId),
-                State = viewModel.ClientState,
+                Street = viewModel.ClientStreet,
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 City = viewModel.ClientCity,
                 ZipCode = viewModel.ClientZipCode,
-
-                RegionId = viewModel.RegionId,
 
             };
             await _conciergeRepository.AddAsync(concierge);
@@ -421,14 +427,14 @@ namespace HalloDoc.Services.Services
                 LastName = viewModel.LastName,
                 PhoneNumber = viewModel.PhoneNumber,
                 RegionId = viewModel.RegionId,
-                Street =viewModel.Street,
-                City = viewModel.City,
-                State = await _regionRepository.FindState(viewModel.RegionId),
-                ZipCode = viewModel.ZipCode,
+                Street = concierge.Street,
+                City = concierge.City,
+                State = concierge.State,
+                ZipCode = concierge.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
                 DateOfBirth = viewModel.DateOfBirth,
-                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
+                Address = concierge.Street + "," + concierge.City + "," + concierge.ZipCode
 
             };
             await _requestclientRepository.AddAsync(requestClient);
@@ -476,11 +482,11 @@ namespace HalloDoc.Services.Services
 
                 };
                 await _userRolesRepository.AddAsync(userRole);
-                return "PatientSite";
+                return "";
 
             }
 
-            return "RegisterdPatientLogin";
+            return "PatientSite";
 
 
         }

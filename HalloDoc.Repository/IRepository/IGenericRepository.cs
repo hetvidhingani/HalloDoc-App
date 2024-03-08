@@ -14,5 +14,6 @@ namespace HalloDoc.Repository.IRepository
         Task<T> GetByIdAsync(object id);
         void SetTempData(string key, object value);
         T GetTempData<T>(string key);
+       
     }
 }

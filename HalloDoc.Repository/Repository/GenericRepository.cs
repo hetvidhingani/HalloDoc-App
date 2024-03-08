@@ -1,6 +1,7 @@
 ﻿ using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,10 @@ namespace HalloDoc.Repository.Repository
         }
         public async Task AddAsync(T entity)
         {
-            _context.Add(entity);
-            await _context.SaveChangesAsync();
+                _context.Add(entity);
+                await _context.SaveChangesAsync();
         }
+      
         public async Task UpdateAsync(T entity)
         {
             _context.Update(entity);
