@@ -64,6 +64,6 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
      // pattern: "{controller=Patient}/{action=PatientSite}/{id?}");
-   pattern: "{controller=Custom}/{action=RegisterdPatientLogin}/{id?}");
+   pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
 
 app.Run();

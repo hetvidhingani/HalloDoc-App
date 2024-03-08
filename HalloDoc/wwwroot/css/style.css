@@ -342,7 +342,7 @@ background-color:lightgray;
 /*#region media queries*/
 @media only screen and (max-width: 576px) {
     .PatientInfo {
-        width: 90%;
+        width: 95%;
     }
 
     .button {
@@ -352,7 +352,7 @@ background-color:lightgray;
 
 @media only screen and (min-width: 577px) and (max-width:768px) {
     .PatientInfo {
-        width: 90%;
+        width: 95%;
     }
 
     .button {
@@ -806,9 +806,14 @@ form > div > div {
 }
 .mainContent2{
     margin:15vh 0vh;
-    width:90%;
+    width:100%;
 }
-
+.patientDashboardMargin {
+    /*margin: 18vh 0vh;*/
+    position:relative;
+    top:150px;
+    width: 90%;
+}
 .createNewReqBtn {
     text-decoration: none;
     color: #00bbe8;
@@ -994,7 +999,7 @@ form > div > div {
         position: absolute;
         right: 0;
         top: 0;
-        padding: 17px;
+        padding: 22px;
         content: '';
         background: url('../images/cloud-arrow-up.svg') no-repeat center center;
         display: inline-block;
