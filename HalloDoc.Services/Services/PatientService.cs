@@ -18,7 +18,6 @@ namespace HalloDoc.Services.Services
 {
     public class PatientService : IPatientService
     {
-
         #region constuctor
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
@@ -29,7 +28,6 @@ namespace HalloDoc.Services.Services
         private readonly IConciergeRepository _conciergeRepository;
         private readonly IAspNetUserRolesRepository _userRolesRepository;
         private readonly IRegionRepository _regionRepository;
-
 
         public PatientService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                 IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -881,7 +879,6 @@ namespace HalloDoc.Services.Services
 
     
         #endregion
-
 
     }
 }

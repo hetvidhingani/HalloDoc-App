@@ -23,67 +23,9 @@
         </div>
     </div>
 </div>
-<div class="row mt-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="sectionHeading">
-            <strong class="tableHead ">
-                <h3 class="">Patients</h3>
-                <h5 style="color:#203e84;font-size:14px" class="">(Pending)</h5>
-            </strong>
-        </div>
-        <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-            <a href="#" class="mainTextLink">
-                <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-                Request DTY Support
-            </a>
-            <a href="#" class="mainTextLink">
-                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
 
-
-                Export All
-            </a>
-            <a href="#" class="mainTextLink">
-                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
-            </a>
-            <a href="#" class="mainTextLink"><i class="bi bi-file-earmark iconLink"></i>Create Requests</a>
-            <a href="#" class="mainTextLink">
-                <i class="bi bi-send iconLink"></i>
-
-                Send Link
-            </a>
-        </div>
-    </div>
-
-</div>
-<div class="container-fluid rounded formshadow px-2 py-1">
-    <div class="row mt-3">
-        <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
-            <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
-                <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control " placeholder="Search" id="search-input" oninput="searchFunction()">
-
-
-                </div>
-                <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>All Regions</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
-                <div class=""> <button class="firstType"> All   </button></div>
-                <button class="btn type"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
-                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
-                <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
-            </div>
-        </div>
         @* admin dashboard Desktop *@
-        <div class="table-responsive mt-5 adminDashTable">
+        <div class="table-responsive mt-3 adminDashTable">
             <table class="table " id="patientTable">
 
                 <thead class="table-secondary">
@@ -257,10 +199,6 @@
             </div>
 
         </div>
-
-
-    </div>
-</div>
 
 
 <script>

@@ -4,7 +4,6 @@
     <div class="modal-dialog modal-dialog-centered">
 
         <div class="modal-content">
-           
         </div>
     </div>
 </div>
@@ -24,269 +23,209 @@
         </div>
     </div>
 </div>
-<div class="row mt-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="sectionHeading">
-            <strong class="tableHead ">
-                <h3 class="">Patients</h3>
-                <h5 style="color:#203e84;font-size:14px" class="">(New)</h5>
-            </strong>
-        </div>
-        <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-            <a href="#" class="mainTextLink">
-                <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-                Request DTY Support
-            </a>
-            <a href="#" class="mainTextLink">
-                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
 
-
-                Export All
-            </a>
-            <a href="#" class="mainTextLink">
-                <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
-            </a>
-            <a href="#" class="mainTextLink"><i class="bi bi-file-earmark iconLink"></i>Create Requests</a>
-            <a href="#" class="mainTextLink">
-                <i class="bi bi-send iconLink"></i>
-
-                Send Link
-            </a>
-        </div>
-    </div>
-
-</div>
-<div class="container-fluid rounded formshadow px-2 py-1">
-    <div class="row mt-3">
-        <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
-            <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
-                <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
-                    <span class="fa fa-search form-control-feedback"></span>
-                    <input type="text" class="form-control " placeholder="Search" id="search-input" oninput="searchFunction()">
-
-                </div>
-                <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>All Regions</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
-                <div class=""> <button class="firstType"> All   </button></div>
-                <button class="btn type request-type-btn" data-requesttype="1"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
-                <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
-                <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
-
-            </div>
-        </div>
-        @* admin dashboard Desktop *@
-        <div class=" table-responsive mt-5 adminDashTable">
-            <table class="table" id="patientTable">
-                <thead class="table-secondary">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Date Of Birth</th>
-                        <th scope="col">Requester</th>
-                        <th scope="col">Requested Date</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Notes</th>
-                        <th scope="col">Chat With</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-
-
-                @foreach (var request in Model)
-                {
-
-                    var bgColor = "";
-
-                    switch (request.RequestTypeID)
-                    {
-                        case 1:
-                            bgColor = "green";
-                            break;
-                        case 2:
-                            bgColor = "orange"; //rgb(75, 223, 75)
-                            break;
-                        case 3:
-                            bgColor = "blue";
-                            break;
-                        case 4:
-                            bgColor = "pink";
-                            break;
-                        default:
-                            bgColor = " ";
-                            break;
-                    }
-
-                    <tbody>
-
-                        <tr class="@bgColor" style="color:white;">
-                            <td id="PatientName">@request.PatientName</td>
-                            <td>@request.DateOfBirth</td>
-                            <td>@request.Requestor</td>
-                            <td>@request.RequestedDate</td>
-
-                            <td>
-                                @{
-                                    var requestor = "";
-                                    var display = "block";
-                                    if (request.RequestTypeID == 2)
-                                    {
-                                        requestor = "Family/Friend";
-
-
-                                    }
-                                    else if (request.RequestTypeID == 3)
-                                    {
-                                        requestor = "Concierge";
-
-                                    }
-                                    else if (request.RequestTypeID == 1)
-                                    {
-                                        requestor = "";
-                                        display = "none";
-
-                                    }
-                                    else
-                                    {
-                                        requestor = "Business";
-
-                                    }
-                                    if (request.RequestorPhone == null)
-                                    {
-                                        display = "none";
-                                    }
-                                }
-                                <div class="dashboardBTN">
-                                    @request.PatientPhone
-                                </div>
-                                (Patient)
-                                
-                                <div style="display:@display">
-
-                                    <br>
-                                    <div class="dashboardBTN">
-                                        @request.RequestorPhone
-                                    </div>
-                                    (@requestor)
-                                </div>
-                            </td>
-                            <td>@request.Address</td>
-                            <td>@request.Notes</td>
-                            <td><button class="dashboardBTN">Provider</button></td>
-                            <td>
-                                <div class="btn-group dropstart">
-                                    <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Actions
-                                    </button>
-                                    <ul class="dropdown-menu ">
-                                        <div class="d-flex flex-column  align-items-center menuDashboard">
-
-                                        <li>
-                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Assign Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Cancle Case
-                                            </a>
-                                        </li>
-                                         <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Notes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Block Patient
-                                            </a>
-                                        </li>
-                                </div>
-
-
-                                </ul>
-            </div>
-            </td>
+@* admin dashboard Desktop *@
+<div class=" table-responsive mt-3 adminDashTable">
+    <table class="table" id="patientTable">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Date Of Birth</th>
+                <th scope="col">Requester</th>
+                <th scope="col">Requested Date</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Chat With</th>
+                <th scope="col">Actions</th>
             </tr>
+        </thead>
 
-            </tbody>
 
-                }
+        @foreach (var request in Model)
+        {
+
+            var bgColor = "";
+
+            switch (request.RequestTypeID)
+            {
+                case 1:
+                    bgColor = "green";
+                    break;
+                case 2:
+                    bgColor = "orange"; //rgb(75, 223, 75)
+                    break;
+                case 3:
+                    bgColor = "blue";
+                    break;
+                case 4:
+                    bgColor = "pink";
+                    break;
+                default:
+                    bgColor = " ";
+                    break;
+            }
+
+            <tbody>
+
+                <tr class="@bgColor" style="color:white;">
+                    <td id="PatientName">@request.PatientName</td>
+                    <td>@request.DateOfBirth</td>
+                    <td>@request.Requestor</td>
+                    <td>@request.RequestedDate</td>
+
+                    <td>
+                        @{
+                            var requestor = "";
+                            var display = "block";
+                            if (request.RequestTypeID == 2)
+                            {
+                                requestor = "Family/Friend";
+
+
+                            }
+                            else if (request.RequestTypeID == 3)
+                            {
+                                requestor = "Concierge";
+
+                            }
+                            else if (request.RequestTypeID == 1)
+                            {
+                                requestor = "";
+                                display = "none";
+
+                            }
+                            else
+                            {
+                                requestor = "Business";
+
+                            }
+                            if (request.RequestorPhone == null)
+                            {
+                                display = "none";
+                            }
+                        }
+                        <div class="dashboardBTN">
+                            @request.PatientPhone
+                        </div>
+                        (Patient)
+
+                        <div style="display:@display">
+
+                            <br>
+                            <div class="dashboardBTN">
+                                @request.RequestorPhone
+                            </div>
+                            (@requestor)
+                        </div>
+                    </td>
+                    <td>@request.Address</td>
+                    <td>@request.Notes</td>
+                    <td><button class="dashboardBTN">Provider</button></td>
+                    <td>
+                        <div class="btn-group dropstart">
+                            <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu ">
+                                <div class="d-flex flex-column  align-items-center menuDashboard">
+
+                                <li>
+                                    <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Assign Case
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Cancle Case
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        View Case
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        View Notes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Block Patient
+                                    </a>
+                                </li>
+                        </div>
+
+
+                        </ul>
+    </div>
+                </td>
+                </tr>
+
+                </tbody>
+
+        }
         </table>
     </div>
-        @* admin dashboard Mobile *@
-    <div class="adminDashMobile">
-        <div class="mobileviewdashboard my-3 p-2">
-            <button type="button" class="table-btn collapsible d-flex flex-column">
-                <span>
-                    Patient Name
-                </span>
-                Address
-            </button>
+@* admin dashboard Mobile *@
+<div class="adminDashMobile">
+    <div class="mobileviewdashboard my-3 p-2">
+        <button type="button" class="table-btn collapsible d-flex flex-column">
+            <span>
+                Patient Name
+            </span>
+            Address
+        </button>
 
-            <div class="content" style="display:none">
-                <hr />
-                <div class="d-flex justify-content-end">
-                    <button class="viewCaseBtn">View Case</button>
-                </div>
-                <div class="">
-                    <i class="bi bi-calendar"></i>
-                    Date Of Birth: <span>-</span>
-                </div>
-                <div class="">
-                    <i class="bi bi-envelope"></i>
-                    Email:
-                    <br />
-                    Current Status:
-                    <br />
-                    <i class="bi bi-telephone"></i>
-                    Patient:
-                    <br />
-                    <i class="bi bi-calendar"></i>
-
-                    Date Of Service:
-                    <br />
-                    <i class="bi bi-person"></i>
-                    Physician:
-                    <br />
-
-                    Requestor:
-                </div>
+        <div class="content" style="display:none">
+            <hr />
+            <div class="d-flex justify-content-end">
+                <button class="viewCaseBtn">View Case</button>
+            </div>
+            <div class="">
+                <i class="bi bi-calendar"></i>
+                Date Of Birth: <span>-</span>
+            </div>
+            <div class="">
+                <i class="bi bi-envelope"></i>
+                Email:
                 <br />
-                <div class=" row z ">
-                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                </div>
-                <div>
-                    Chat With:
-                    <button class="bg-transparent normalbtn">Patient</button>
-                    <button class="bg-transparent normalbtn">Provider</button>
-                </div>
+                Current Status:
+                <br />
+                <i class="bi bi-telephone"></i>
+                Patient:
+                <br />
+                <i class="bi bi-calendar"></i>
+
+                Date Of Service:
+                <br />
+                <i class="bi bi-person"></i>
+                Physician:
+                <br />
+
+                Requestor:
+            </div>
+            <br />
+            <div class=" row z ">
+                <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+            </div>
+            <div>
+                Chat With:
+                <button class="bg-transparent normalbtn">Patient</button>
+                <button class="bg-transparent normalbtn">Provider</button>
             </div>
         </div>
-
     </div>
 
+</div>
 
-</div>
-</div>
+
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
@@ -314,7 +253,7 @@
             data: { id: id },
             url: "@(Url.Action("CancelCase", "Admin"))",
             success: function (data) {
-              
+
                 $("#CancelCase").find('.modal-content').html(data);
             }
         });
@@ -345,5 +284,5 @@
             }
         });
     });
-    
+
 </script>
