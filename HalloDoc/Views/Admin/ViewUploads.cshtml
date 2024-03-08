@@ -47,6 +47,7 @@
                 </div>
             </form>
             <form asp-action="DownloadAll" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="RequstId" />
                 <div class="row ">
                     <div class="col-6 d-flex align-items-center">
                         <h3>Documents</h3>
@@ -85,7 +86,7 @@
                                 <tr>
                                     <td>
 
-                                        <input type="checkbox" value="@r.RequestWiseFileId" class="checkboxForAll" name="selectedFiles">  
+                                        <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  
                                     </td>
                                     <td>
                                         @r.FileName
@@ -97,10 +98,13 @@
                                         <a href="@Url.Action("DownloadFile", "Admin", new { name = @r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
-                                        <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId, RequstId = @r.RequestId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                    
+
+                                       @*  <a asp-route-fileID="@r.RequestWiseFileId" asp-action="DeleteFile" asp-controller="Admin" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
+                                            <i class="bi bi-trash"></i>
+                                        </a> *@
                                     </td>
 
                                 </tr>
@@ -167,6 +171,7 @@
     }
 
     // For Download File
+    
     function toggle(source) {
         checkboxes = document.getElementsByClassName('checkboxForAll');
         for (var i = 0, n = checkboxes.length; i < n; i++) {

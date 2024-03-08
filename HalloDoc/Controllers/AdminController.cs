@@ -191,6 +191,8 @@ namespace HalloDoc.Controllers
       
         public async Task<IActionResult> ViewUploads(int Id)
         {
+            HttpContext.Session.SetInt32("reqID", Id);
+            ViewBag.MySession = HttpContext.Session.GetString("UserName");
             var result =await _admin.ViewDocument(Id);
             return View(result);
         }
@@ -229,16 +231,18 @@ namespace HalloDoc.Controllers
             else
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
+              
                 byte[] fileBytes = await _admin.DownloadAll(selectedFiles, requestid);
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
       
-        public async Task<IActionResult> DeleteFile(int fileID, int RequstId)
+        public async Task<IActionResult> DeleteFile(int fileID)
         {
+                int? requstId = HttpContext.Session.GetInt32("reqID");
              await _admin.DeleteFile(fileID);
-          
-            return RedirectToAction("ViewUploads", new { Id = RequstId });
+
+            return RedirectToAction("ViewUploads", new { Id = requstId });
         }
         [HttpPost]
       

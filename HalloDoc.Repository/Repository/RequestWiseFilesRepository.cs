@@ -25,8 +25,9 @@ namespace HalloDoc.Repository.Repository
         }
         public IQueryable<RequestWiseFile> FindFileByRequestID(int? requestID)
         {
-            return _context.RequestWiseFiles.Where(x => x.RequestId == requestID);
+            return _context.RequestWiseFiles.Where(x => x.RequestId == requestID && x.IsDeleted == null);
         }
+        
         public async Task<List<RequestWiseFile>> GetAllByRequestId(int Id)
         {
             return await _context.RequestWiseFiles.Where(x => x.RequestId == Id).ToListAsync();
