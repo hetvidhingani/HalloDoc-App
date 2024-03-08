@@ -244,22 +244,35 @@ namespace HalloDoc.Controllers
 
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
-        [HttpPost]
-      
-        public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
-        {
-            foreach(var items in  documentValues)
-            {
 
-                await _admin.DeleteFile(items);
+
+
+
+        public async Task<IActionResult> DeleteFileByChecked(List<string> documentValues)
+        {
+            int? requstId = HttpContext.Session.GetInt32("reqID");
+         
+            if (documentValues != null && documentValues.Any())
+            {
+                foreach (var fileName in documentValues)
+                {
+                    //find file
+                    var file = await _admin.FindFile(fileName,requstId);
+                  
+                    //pass id
+                    if (file != null)
+                    {
+                        await _admin.DeleteFile(file.RequestWiseFileId);
+                    }
+                }
             }
 
-            return Json(documentValues);
+            return Ok();
         }
         #endregion
 
         #region Send Order
-      
+
         public async Task<IActionResult> SendOrder(SendOrderViewModel viewModel, int Id)
         {
             try

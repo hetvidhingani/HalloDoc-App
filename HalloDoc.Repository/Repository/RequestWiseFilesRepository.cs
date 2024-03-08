@@ -23,6 +23,12 @@ namespace HalloDoc.Repository.Repository
 
             return file;
         }
+        public async Task<RequestWiseFile> FindFileByID(string fileName,int? ID)
+        {
+            RequestWiseFile file = _context.RequestWiseFiles.Where(x => x.FileName == fileName && x.RequestId==ID).FirstOrDefault();
+
+            return file;
+        }
         public IQueryable<RequestWiseFile> FindFileByRequestID(int? requestID)
         {
             return _context.RequestWiseFiles.Where(x => x.RequestId == requestID && x.IsDeleted == null);

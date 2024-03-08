@@ -178,6 +178,31 @@
             checkboxes[i].checked = source.checked;
         }
     }
+    // function DeleteAll() {
+    //     var checkbox = $('input[class="checkboxForAll"]:checked');
+    //     console.log(checkbox);
+
+    //     var documentValues = checkbox.map(function () {
+    //         return $(this).val();
+    //     }).get();
+    //     console.log(documentValues);
+    //     if (documentValues.length) {
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "@Url.Action("DeleteFileByChecked", "Admin")",
+    //             data: { documentValues: documentValues },
+    //             success: function (response) {
+    //                 console.log(response);
+    //                 location.reload();
+    //             },
+    //             error: function () {
+    //                 console.log("response");
+    //                 location.reload();
+    //             }
+    //         });
+    //     }
+    // }
+
     function DeleteAll() {
         var checkbox = $('input[class="checkboxForAll"]:checked');
         console.log(checkbox);
@@ -201,7 +226,6 @@
                 }
             });
         }
+        return false; // prevent default form submission behavior
     }
-
-    
 </script>

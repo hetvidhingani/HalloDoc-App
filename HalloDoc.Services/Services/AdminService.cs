@@ -89,6 +89,11 @@ namespace HalloDoc.Services.Services
             RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
             return file;
         }
+        public async Task<RequestWiseFile> FindFile(string fileName,int? ID)
+        {
+            RequestWiseFile file = await _requestwisefileRepository.FindFileByID(fileName,ID);
+            return file;
+        }
         public async Task<T> GetTempData<T>(string key)
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
@@ -626,7 +631,7 @@ namespace HalloDoc.Services.Services
             }
 
             file.IsDeleted = new BitArray(new bool[] { true });
-            _requestwisefileRepository.UpdateAsync(file);
+            await _requestwisefileRepository.UpdateAsync(file);
             return file;
         }
 
