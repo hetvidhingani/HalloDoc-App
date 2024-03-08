@@ -40,240 +40,232 @@
     </div>
 </div>
 
-        @* admin dashboard Desktop *@
-        <div class="table-responsive mt-3 adminDashTable">
-            <table class="table " id="patientTable">
-            <thead class="table-secondary">
-                    <tr>
-                        <th scope="col">Name1</th>
-                        <th scope="col">Date Of Birth</th>
-                        <th scope="col">Requester</th>
-                        <th scope="col">PhysicianName</th>
+@* admin dashboard Desktop *@
+<div class="table-responsive mt-3 adminDashTable">
+    <table class="table " id="patientTable">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Name1</th>
+                <th scope="col">Date Of Birth</th>
+                <th scope="col">Requester</th>
+                <th scope="col">PhysicianName</th>
 
-                        <th scope="col">Date Of Service</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Notes</th>
-                        <th scope="col">Chat With</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                @foreach (var request in Model)
+                <th scope="col">Date Of Service</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+                <th scope="col">Notes</th>
+                <th scope="col">Chat With</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model)
+            {
+
+                var bgColor = "";
+
+                switch (request.RequestTypeID)
                 {
-
-                    var bgColor = "";
-
-                    switch (request.RequestTypeID)
-                    {
-                        case 1:
-                            bgColor = "green";
-                            break;
-                        case 2:
-                            bgColor = "orange"; //rgb(75, 223, 75)
-                            break;
-                        case 3:
-                            bgColor = "blue";
-                            break;
-                        case 4:
-                            bgColor = "pink";
-                            break;
-                        default:
-                            bgColor = " ";
-                            break;
-                    }
-                <tbody>
-                    
-                        <tr class="@bgColor" style="color:white;">
-                            <td id="PatientName">@request.PatientName</td>
-                            <td>@request.DateOfBirth</td>
-                            <td>@request.Requestor</td>
-                            <td>@request.PhysicianName</td>
-                            <td>@request.RequestedDate</td>
-                            <td>
-                                @{
-                                    var requestor = "";
-                                    var display = "block";
-                                    if (request.RequestTypeID == 2)
-                                    {
-                                        requestor = "Family/Friend";
-
-
-                                    }
-                                    else if (request.RequestTypeID == 3)
-                                    {
-                                        requestor = "Concierge";
-
-                                    }
-                                    else if (request.RequestTypeID == 1)
-                                    {
-                                        requestor = "";
-                                        display = "none";
-
-                                    }
-                                    else
-                                    {
-                                        requestor = "Business";
-
-                                    }
-                                    if (request.RequestorPhone == null)
-                                    {
-                                        display = "none";
-                                    }
-                                }
-                                <div class="dashboardBTN">
-                                    @request.PatientPhone
-                                </div>
-                                (Patient)
-                                <div style="display:@display">
-
-                                    <br>
-                                    <div class="dashboardBTN">
-                                        @request.RequestorPhone
-                                    </div>
-                                    (@requestor)
-                                </div>
-                            </td>
-                            <td>@request.Address</td>
-                            <td>@request.Notes</td>
-                            <td>
-                                <button class="dashboardBTN">Patient</button>
-                                <button class="dashboardBTN">Provider</button>
-                            </td>
-                            <td>
-
-                                <div class="btn-group dropstart">
-                                    <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Actions
-                                    </button>
-                                    <ul class="dropdown-menu ">
-                                        <div class="d-flex flex-column  align-items-center menuDashboard">
-                                        <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
-                                                View Uploads
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Notes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Transfer" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                               Transfer
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Clear Case
-                                            </a>
-                                        </li>
-                                        
-                                       
-                                        <li>
-                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                               Send Agreement
-                                            </a>
-                                        </li>
-                                        </div>
-                                        </ul>
-
-                                </div>
-
-                            </td>
-                        </tr>
-                    
-                </tbody>
+                    case 1:
+                        bgColor = "green";
+                        break;
+                    case 2:
+                        bgColor = "orange"; //rgb(75, 223, 75)
+                        break;
+                    case 3:
+                        bgColor = "blue";
+                        break;
+                    case 4:
+                        bgColor = "pink";
+                        break;
+                    default:
+                        bgColor = " ";
+                        break;
                 }
-                </table>
-        </div>
-       
-        
-        
-        @* admin dashboard Mobile *@
-        <div class="adminDashMobile">
-            <div class="mobileviewdashboard my-3 p-2">
-                <button type="button" class="table-btn collapsible d-flex flex-column">
-                    <span>
-                        Patient Name
-                    </span>
-                    Address
-                </button>
 
-                <div class="content" style="display:none">
-                    <hr />
-                    <div class="d-flex justify-content-end">
-                        <button class="viewCaseBtn">View Case</button>
-                    </div>
-                    <div class="">
-                        <i class="bi bi-calendar"></i>
-                        Date Of Birth: <span>-</span>
-                    </div>
-                    <div class="">
-                        <i class="bi bi-envelope"></i>
-                        Email:
-                        <br />
-                        Current Status:
-                        <br />
-                        <i class="bi bi-telephone"></i>
-                        Patient:
-                        <br />
-                        <i class="bi bi-calendar"></i>
 
-                        Date Of Service:
-                        <br />
-                        <i class="bi bi-person"></i>
-                        Physician:
-                        <br />
+                <tr class="@bgColor" style="color:white;">
+                    <td id="PatientName">@request.PatientName</td>
+                    <td>@request.DateOfBirth</td>
+                    <td>@request.Requestor</td>
+                    <td>@request.PhysicianName</td>
+                    <td>@request.RequestedDate</td>
+                    <td>
+                        @{
+                            var requestor = "";
+                            var display = "block";
+                            if (request.RequestTypeID == 2)
+                            {
+                                requestor = "Family/Friend";
 
-                        Requestor:
-                    </div>
-                    <br />
-                    <div class=" row z ">
-                        <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                        <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                    </div>
-                    <div>
-                        Chat With:
-                        <button class="bg-transparent normalbtn">Patient</button>
-                        <button class="bg-transparent normalbtn">Provider</button>
-                    </div>
-                </div>
+
+                            }
+                            else if (request.RequestTypeID == 3)
+                            {
+                                requestor = "Concierge";
+
+                            }
+                            else if (request.RequestTypeID == 1)
+                            {
+                                requestor = "";
+                                display = "none";
+
+                            }
+                            else
+                            {
+                                requestor = "Business";
+
+                            }
+                            if (request.RequestorPhone == null)
+                            {
+                                display = "none";
+                            }
+                        }
+                        <div class="dashboardBTN">
+                            @request.PatientPhone
+                        </div>
+                        (Patient)
+                        <div style="display:@display">
+
+                            <br>
+                            <div class="dashboardBTN">
+                                @request.RequestorPhone
+                            </div>
+                            (@requestor)
+                        </div>
+                    </td>
+                    <td>@request.Address</td>
+                    <td>@request.Notes</td>
+                    <td>
+                        <button class="dashboardBTN">Patient</button>
+                        <button class="dashboardBTN">Provider</button>
+                    </td>
+                    <td>
+
+                        <div class="btn-group dropstart">
+                            <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu ">
+                                <div class="d-flex flex-column  align-items-center menuDashboard">
+                                <li>
+                                    <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        View Case
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                        View Uploads
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        View Notes
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="Transfer" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Transfer
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Clear Case
+                                    </a>
+                                </li>
+
+
+                                <li>
+                                    <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        Send Agreement
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>
+
+@* admin dashboard Mobile *@
+<div class="adminDashMobile">
+    <div class="mobileviewdashboard my-3 p-2">
+        <button type="button" class="table-btn collapsible d-flex flex-column">
+            <span>
+                Patient Name
+            </span>
+            Address
+        </button>
+
+        <div class="content" style="display:none">
+            <hr />
+            <div class="d-flex justify-content-end">
+                <button class="viewCaseBtn">View Case</button>
             </div>
+            <div class="">
+                <i class="bi bi-calendar"></i>
+                Date Of Birth: <span>-</span>
+            </div>
+            <div class="">
+                <i class="bi bi-envelope"></i>
+                Email:
+                <br />
+                Current Status:
+                <br />
+                <i class="bi bi-telephone"></i>
+                Patient:
+                <br />
+                <i class="bi bi-calendar"></i>
 
+                Date Of Service:
+                <br />
+                <i class="bi bi-person"></i>
+                Physician:
+                <br />
+
+                Requestor:
+            </div>
+            <br />
+            <div class=" row z ">
+                <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+            </div>
+            <div>
+                Chat With:
+                <button class="bg-transparent normalbtn">Patient</button>
+                <button class="bg-transparent normalbtn">Provider</button>
+            </div>
         </div>
+    </div>
 
-
-    
-
-
-
+</div>
 
 <script>
 
-  
-        function searchFunction() {
-            var inputVal = document.getElementById("search-input").value.toLowerCase();
 
-            var rows = document.getElementById("patientTable").rows;
-            for (var i = 1; i < rows.length; i++) {
-                var patientName = rows[i].cells[0].innerText.toLowerCase();
+    function searchFunction() {
+        var inputVal = document.getElementById("search-input").value.toLowerCase();
 
-                if (patientName.indexOf(inputVal) == -1) {
-                    rows[i].style.display = "none";
-                } else {
-                    rows[i].style.display = "";
-                }
+        var rows = document.getElementById("patientTable").rows;
+        for (var i = 1; i < rows.length; i++) {
+            var patientName = rows[i].cells[0].innerText.toLowerCase();
+
+            if (patientName.indexOf(inputVal) == -1) {
+                rows[i].style.display = "none";
+            } else {
+                rows[i].style.display = "";
             }
         }
+    }
 
     $('.Cancel1').click(function () {
         var id = $(this).data('id');
@@ -322,7 +314,7 @@
             data: { id: id },
             url: "@(Url.Action("TransferCase", "Admin"))",
             success: function (data) {
-               
+
                 $("#TransferCase").find('.modal-content').html(data);
             }
         });

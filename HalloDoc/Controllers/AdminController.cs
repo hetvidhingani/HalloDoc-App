@@ -269,9 +269,6 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
 
-
-
-
         public async Task<IActionResult> DeleteFileByChecked(List<string> documentValues)
         {
             int? requstId = HttpContext.Session.GetInt32("reqID");
@@ -290,7 +287,6 @@ namespace HalloDoc.Controllers
                     }
                 }
             }
-
             return Ok();
         }
         #endregion
