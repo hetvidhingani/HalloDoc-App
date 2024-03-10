@@ -40,8 +40,8 @@ namespace HalloDoc.Services.IServices
         Task<RequestWiseFile> FindFile(string email);
         Task<RequestWiseFile> FindFile(string fileName, int? ID);
         Task<RequestWiseFile> DownloadFile(string name);
-        Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles);
-        Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid);
+        Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
+        Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
         Task<object> DeleteFile(int name);
         Task<object> SendOrder(SendOrderViewModel viewModel, int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);

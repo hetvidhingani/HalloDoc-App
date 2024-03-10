@@ -102,4 +102,3 @@ function changeTheme() {
         document.cookie = "theme=dark";
     }
 }
-

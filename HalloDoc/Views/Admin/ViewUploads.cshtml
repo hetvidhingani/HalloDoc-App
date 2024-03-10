@@ -1,5 +1,4 @@
-﻿
-@model HalloDoc.Entities.ViewModels.DashboardViewModel;
+﻿@model HalloDoc.Entities.ViewModels.DashboardViewModel;
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -26,7 +25,7 @@
 
                     <div class="col-12 fw-bold">
 
-                       @Model.FirstName
+                        @Model.FirstName
                         (MD051023TETE0001)
                     </div>
                     <div class="col-12">
@@ -37,7 +36,7 @@
 
                 <div class="row ">
                     <div class="col-12 col-sm-12">
-                    
+
                         <input type="file" name="a">
                         <button type="submit" class="upload-btn">
                             <i class="bi bi-cloud-arrow-up"></i>
@@ -53,13 +52,13 @@
                         <h3>Documents</h3>
                     </div>
                     <div class="col-6 d-flex justify-content-end align-items-center">
-                        <input type="submit" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll"/>
-                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2"  onclick="DeleteAll()">Delete All</button>
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll" onclick="DownloadAll()">Download All</button>
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" onclick="DeleteAll()">Delete All</button>
 
                         <button type="submit" class="logoutIcon normalbtn mt-2 mb-3 p-2" value="DownloadAll">
                             <i class="bi bi-cloud-arrow-down"></i>
                         </button>
-                        <button type="button" class="logoutIcon normalbtn mt-2 mb-3 p-2"  onclick="DeleteAll()">
+                        <button type="button" class="logoutIcon normalbtn mt-2 mb-3 p-2" onclick="DeleteAll()">
                             <i class="bi bi-cloud-arrow-down"></i>
                         </button>
 
@@ -81,18 +80,18 @@
                         </thead>
                         @foreach (var r in Model.RequestWiseFiles)
                         {
-                            
+
                             <tbody>
                                 <tr>
                                     <td>
 
-                                        <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  
+                                        <input type="checkbox" value="@r.RequestWiseFileId" class="checkboxForAll" name="selectedFiles">
                                     </td>
                                     <td>
                                         @r.FileName
                                     </td>
 
-                                   
+
                                     <td>@r.CreatedDate</td>
                                     <td>
                                         <a href="@Url.Action("DownloadFile", "Admin", new { name = @r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
@@ -102,9 +101,9 @@
                                             <i class="bi bi-trash"></i>
                                         </a>
 
-                                       @*  <a asp-route-fileID="@r.RequestWiseFileId" asp-action="DeleteFile" asp-controller="Admin" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
-                                            <i class="bi bi-trash"></i>
-                                        </a> *@
+                                        @*  <a asp-route-fileID="@r.RequestWiseFileId" asp-action="DeleteFile" asp-controller="Admin" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
+                                    <i class="bi bi-trash"></i>
+                                    </a> *@
                                     </td>
 
                                 </tr>
@@ -171,7 +170,7 @@
     }
 
     // For Download File
-    
+
     function toggle(source) {
         checkboxes = document.getElementsByClassName('checkboxForAll');
         for (var i = 0, n = checkboxes.length; i < n; i++) {
@@ -221,8 +220,40 @@
                     location.reload();
                 },
                 error: function () {
-                    console.log("response");
-                    location.reload();
+                    
+                }
+            });
+        }
+        return false; // prevent default form submission behavior
+    }
+    function DownloadAll() {
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+
+
+        var documentValues = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+
+        if (documentValues.length) {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DownloadAll", "Admin")",
+                data: { documentValues: documentValues },
+                success: function (response) {
+                    if (response.success) {
+                        var link = document.createElement('a');
+                        link.href = 'data:application/zip;base64,' + response.zipFileData;
+                        link.download = 'Documents.zip';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        console.error('Error:', response.error);
+                    }
+                },
+                error: function (response) {
+
+                    console.log("hi");
                 }
             });
         }

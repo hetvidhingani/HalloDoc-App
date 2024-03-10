@@ -1,5 +1,46 @@
 ﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel
+@* model *@
+<div class="modal fade" id="CancelCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
 
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AssignCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="BlockCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ClearCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="TransferCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+@* model end *@
 <main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
         <div>
@@ -11,7 +52,7 @@
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
                                 <strong class="cardContaint" >
-                                    NEW  @User.FindFirst("UserName")?.Value
+                                    NEW  
                                 </strong>
                                 <span class="triangle"></span>
                             </div>
@@ -190,6 +231,20 @@
                 content.style.display = "none";
             }
         });
+    }
+    function searchFunction() {
+        var inputVal = document.getElementById("search-input").value.toLowerCase();
+
+        var rows = document.getElementById("patientTable").rows;
+        for (var i = 1; i < rows.length; i++) {
+            var patientName = rows[i].cells[0].innerText.toLowerCase();
+
+            if (patientName.indexOf(inputVal) == -1) {
+                rows[i].style.display = "none";
+            } else {
+                rows[i].style.display = "";
+            }
+        }
     }
  
         $(document).ready(function () {

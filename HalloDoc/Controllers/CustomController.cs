@@ -114,25 +114,7 @@ namespace HalloDoc.Controllers
             }
         }
 
-        private const int TokenExpirationHours = 24;
-
-        public string GenerateToken()
-        {
-            byte[] tokenBytes = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(tokenBytes);
-            }
-
-            string token = Convert.ToBase64String(tokenBytes);
-
-            return token;
-        }
-
-        public DateTime GetTokenExpiration()
-        {
-            return DateTime.UtcNow.AddHours(TokenExpirationHours);
-        }
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetpasswordRequest(CreateAccountViewModel req)
@@ -143,8 +125,8 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("PatientForgotPassword", "Patient");
 
             }
-            var resetToken = GenerateToken();
-            var resetLink = "<a href=" + Url.Action("PatientForgotPassword", "Patient", new { email = req.Email, code = resetToken }, "http") + ">Reset Password</a>";
+           
+            var resetLink = "<a href=" + Url.Action("PatientForgotPassword", "Patient", new { email = req.Email}, "http") + ">Reset Password</a>";
             var subject = "Password Reset Request";
             var body = "<b>Please find the Password Reset Link.</b><br/>" + resetLink;
 
@@ -162,8 +144,8 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("CreateAccountRequest", "Patient");
 
             }
-            var resetToken = GenerateToken();
-            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Patient", new { email = req.Email, code = resetToken }, "http") + ">Create account</a>";
+           
+            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Patient", new { email = req.Email }, "http") + ">Create account</a>";
             var subject = "Create Patient Account";
             var body = "<b>Please Create Account Link.</b><br/>" + resetLink;
 

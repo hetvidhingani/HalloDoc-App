@@ -30,6 +30,8 @@ namespace HalloDoc.Controllers
         {
             if (HttpContext.Session.GetString("AdminSession") != null)
             {
+                HttpContext.Session.Remove("AdminSession");
+                HttpContext.Session.Clear();
                 Response.Cookies.Delete("jwt");
                 return RedirectToAction("AdminLogin", "Custom");
             }
@@ -244,19 +246,20 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
       
-        public async Task<FileResult> DownloadAll(IEnumerable<string> selectedFiles)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues)
         {
-            if (selectedFiles.Count() > 0)
+            if (documentValues.Count() > 0)
             {
-                byte[] fileBytes = await _admin.DownloadAllByChecked(selectedFiles);
-                return File(fileBytes, "application/zip", "download.zip");
+                byte[] fileBytes = await _admin.DownloadAllByChecked(documentValues);
+                string zipFileData = Convert.ToBase64String(fileBytes); 
+                return Json(new { success = true, zipFileData });
 
             }
             else
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
               
-                byte[] fileBytes = await _admin.DownloadAll(selectedFiles, requestid);
+                byte[] fileBytes = await _admin.DownloadAll(documentValues, requestid);
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
@@ -269,25 +272,16 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
 
-        public async Task<IActionResult> DeleteFileByChecked(List<string> documentValues)
+        [HttpPost]
+        public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
         {
-            int? requstId = HttpContext.Session.GetInt32("reqID");
-         
-            if (documentValues != null && documentValues.Any())
+            foreach (var items in documentValues)
             {
-                foreach (var fileName in documentValues)
-                {
-                    //find file
-                    var file = await _admin.FindFile(fileName,requstId);
-                  
-                    //pass id
-                    if (file != null)
-                    {
-                        await _admin.DeleteFile(file.RequestWiseFileId);
-                    }
-                }
+
+                await _admin.DeleteFile(items);
             }
-            return Ok();
+
+            return Json(documentValues);
         }
         #endregion
 

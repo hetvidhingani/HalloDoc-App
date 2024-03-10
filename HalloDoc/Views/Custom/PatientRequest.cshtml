@@ -131,9 +131,13 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
-                   
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
-                    </div>
+                      
+                            <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
+                      
+                       
+                                
+                                </div>
+
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="ZipCode" type="text" class="form-control"  placeholder=" ">
@@ -230,4 +234,13 @@
         input.removeAttribute("title");
 
     }
+    // This script won't directly change the native select dropdown behavior
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectElement = document.querySelector('.dropdownState .form-select');
+        selectElement.addEventListener('click', function () {
+            // Attempt to manipulate the dropdown here
+            // However, note that this won't effectively limit the visible options for a native select dropdown
+        });
+    });
+
 </script>

@@ -588,20 +588,21 @@ namespace HalloDoc.Services.Services
             return reqw;
         }
 
-        public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
+        public async Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues)
         {
-            selectedFiles = selectedFiles.Distinct();
+            //selectedFiles = selectedFiles.Distinct();
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    foreach (var file in selectedFiles)
+                    foreach (var file in documentValues)
                     {
-                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                        var temp = await _requestwisefileRepository.GetByIdAsync(file);
+                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", temp.FileName);
                         byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
 
-                        var zipEntry = zipArchive.CreateEntry(file);
+                        var zipEntry = zipArchive.CreateEntry(temp.FileName);
                         using (var zipEntryStream = zipEntry.Open())
                         {
                             zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
@@ -613,7 +614,7 @@ namespace HalloDoc.Services.Services
                 return memoryStream.ToArray();
             }
         }
-        public async Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid)
+        public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
             var filesRow = await _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
             MemoryStream ms = new MemoryStream();
@@ -645,6 +646,7 @@ namespace HalloDoc.Services.Services
             await _requestwisefileRepository.UpdateAsync(file);
             return file;
         }
+
 
         #endregion
 

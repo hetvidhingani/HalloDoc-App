@@ -1,28 +1,5 @@
 ﻿@model IEnumerable<HalloDoc.Entities.ViewModels.AdminDashboardViewModel>;
-<div class="modal fade" id="CancelCase" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
 
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="AssignCase" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="BlockCase" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
 
 @* admin dashboard Desktop *@
 <div class=" table-responsive mt-3 adminDashTable">
@@ -224,29 +201,10 @@
     </div>
 
 </div>
-
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-
+<script src="~/js/custom.js"></script>
 <script>
-    function searchFunction() {
-        var inputVal = document.getElementById("search-input").value.toLowerCase();
-
-        var rows = document.getElementById("patientTable").rows;
-        for (var i = 1; i < rows.length; i++) {
-            var patientName = rows[i].cells[0].innerText.toLowerCase();
-
-            if (patientName.indexOf(inputVal) == -1) {
-                rows[i].style.display = "none";
-            } else {
-                rows[i].style.display = "";
-            }
-        }
-    }
     $('.Cancel1').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -259,7 +217,8 @@
         });
     });
     $('.Assign').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
+        console.log(id);
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -272,7 +231,8 @@
         });
     });
     $('.Block').click(function () {
-        var id = this.id;
+        var id = $(this).data('id');
+        console.log(id);
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -281,6 +241,32 @@
             success: function (data) {
                 console.log("abc");
                 $("#BlockCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Transfer').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("TransferCase", "Admin"))",
+            success: function (data) {
+
+                $("#TransferCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.Clear').click(function () {
+        var id = $(this).data('id');
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("ClearCase", "Admin"))",
+            success: function (data) {
+
+                $("#ClearCase").find('.modal-content').html(data);
             }
         });
     });
