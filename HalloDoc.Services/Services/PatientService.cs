@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -877,8 +879,83 @@ namespace HalloDoc.Services.Services
             return ms.ToArray();
         }
 
-    
+
         #endregion
 
+        public string SendEmail(string email, string link)
+        {
+            try
+            {
+                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
+                var senderPassword = "Hkd$9503";
+
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(senderMail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
+                    Subject = "Reset Account Password",
+                    IsBodyHtml = true,
+                    Body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your passwrod",
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+                var abc = "Success";
+
+                return abc;
+            }
+            catch (Exception ex)
+            {
+                var abc = "Success";
+                return ex.Message.ToString();
+            }
+        }
+
+        public string SendEmailCreateAccount(string email, string link)
+        {
+            try
+            {
+                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
+                var senderPassword = "Hkd$9503";
+
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(senderMail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderMail, "HalloDoc Create Account"),
+                    Subject = "Create Account",
+                    IsBodyHtml = true,
+                    Body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!",
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+                var abc = "Success";
+
+                return abc;
+            }
+            catch (Exception ex)
+            {
+                var abc = "Success";
+                return ex.Message.ToString();
+            }
+        }
     }
 }

@@ -40,6 +40,14 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="SendAgreement" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 @* model end *@
 <main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
@@ -268,8 +276,7 @@
 
         $('#New').click(function () {
             $(this).addClass("active").siblings().removeClass("active");
-            $('.triangle').removeClass("active");
-            $(this).find('.triangle').addClass("active");
+          
             $('#Pending, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
 
             $.ajax({
@@ -309,8 +316,7 @@
 
             $('#Active').click(function () {
             $(this).addClass("active").siblings().removeClass("active");
-            $('.triangle').removeClass("active");
-            $(this).find('.triangle').addClass("active");
+            
             $('#New, #Pending, #Conclude, #ToClose, #Unpaid').removeClass("active");
 
             $.ajax({

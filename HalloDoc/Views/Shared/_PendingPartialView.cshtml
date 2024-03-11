@@ -137,7 +137,7 @@
 
 
                                 <li>
-                                    <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                    <a class="SendAgreement" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
                                         Send Agreement
                                     </a>
                                 </li>
@@ -236,6 +236,19 @@
             success: function (data) {
 
                 $("#ClearCase").find('.modal-content').html(data);
+            }
+        });
+    });
+    $('.SendAgreement').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id },
+            url: "@(Url.Action("SendAgreement", "Admin"))",
+            success: function (data) {
+
+                $("#SendAgreement").find('.modal-content').html(data);
             }
         });
     });

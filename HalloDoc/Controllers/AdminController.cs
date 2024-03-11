@@ -4,6 +4,7 @@ using HalloDoc.Repository.Repository;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using System.Diagnostics.Contracts;
 
 namespace HalloDoc.Controllers
@@ -16,15 +17,18 @@ namespace HalloDoc.Controllers
         private IJwtService _jwtService;
 
 
-        public AdminController(ApplicationDbContext context,IAdminService admin,IJwtService jwtService)
+        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService)
         {
             _context = context;
             _admin = admin;
             _jwtService = jwtService;
         }
-     
-        
-       
+
+        public async Task<IActionResult> ReviewAgreement()
+        {
+            return View();
+        }
+
         #region Logout
         public IActionResult Logout()
         {
@@ -42,7 +46,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Dashboard
-      
+
         public async Task<IActionResult> Dashboard()
         {
             var viewModel = new AdminDashboardViewModel
@@ -57,41 +61,41 @@ namespace HalloDoc.Controllers
 
             return View(viewModel);
         }
-      
+
         public IActionResult New()
         {
             List<AdminDashboardViewModel> list = _admin.New();
             return PartialView("_NewPartialView", list);
         }
-      
+
         public IActionResult Pending()
         {
             List<AdminDashboardViewModel> list = _admin.Pending();
 
             return PartialView("_PendingPartialView", list);
         }
-      
+
         public IActionResult Active()
         {
             List<AdminDashboardViewModel> list = _admin.Active();
 
             return PartialView("_ActivePartialView", list);
         }
-      
+
         public IActionResult Conclude()
         {
             List<AdminDashboardViewModel> list = _admin.Conclude();
 
             return PartialView("_ConcludePartialView", list);
         }
-      
+
         public IActionResult ToClose()
         {
             List<AdminDashboardViewModel> list = _admin.ToClose();
 
             return PartialView("_ToClosePartialView", list);
         }
-      
+
         public IActionResult Unpaid()
         {
             List<AdminDashboardViewModel> list = _admin.Unpaid();
@@ -102,86 +106,86 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region View Case
-      
+
         public async Task<IActionResult> ViewCase(int Id)
         {
             var result = await _admin.ViewCase(Id);
             return View(result);
         }
         [HttpPost]
-      
+
         public async Task<IActionResult> ViewCase(ViewCaseViewModel viewmodel, int Id)
         {
-            var result = await _admin.EditNewRequest(viewmodel,Id);
+            var result = await _admin.EditNewRequest(viewmodel, Id);
             return View(result);
         }
 
         #endregion
 
         #region View Notes
-      
-        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel,int Id)
+
+        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel, int Id)
         {
             var result = await _admin.ViewNotes(viewModel, Id);
             return View(result);
         }
-      
+
         [HttpPost]
-        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel,int Id,int x)
+        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel, int Id, int x)
         {
-         var result =  await _admin.AddNotes(viewModel, Id);
+            var result = await _admin.AddNotes(viewModel, Id);
             return View(result);
         }
         #endregion
 
         #region Cancel Case
-      
+
         public async Task<IActionResult> CancelCase(CancelCaseViewModel viewModel, int id)
         {
-            var result = await _admin.CancelCase(viewModel,id);
+            var result = await _admin.CancelCase(viewModel, id);
             return PartialView("_CancelCasePartialView", result);
         }
-      
-        public async Task<IActionResult> ConfirmCancelCase(CancelCaseViewModel viewModel ,int id)
+
+        public async Task<IActionResult> ConfirmCancelCase(CancelCaseViewModel viewModel, int id)
         {
             var result = await _admin.ConfirmCancelCase(viewModel, id);
-            return RedirectToAction("Dashboard" );
+            return RedirectToAction("Dashboard");
         }
         #endregion
 
         #region Assign Case
-      
+
         public async Task<IActionResult> AssignCase(AssignCaseViewModel viewModel, int id)
         {
             var result = await _admin.AssignCase(viewModel, id);
             return PartialView("_AssignRequestPartialView", result);
         }
-      
+
         public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
         {
-           await _admin.AssignRequest(viewModel, id);
+            await _admin.AssignRequest(viewModel, id);
             return RedirectToAction("Dashboard");
         }
-     
-    
+
+
         [HttpGet]
-      
+
         public async Task<IActionResult> GetPhysiciansByRegion(int regionId)
         {
             var physicians = await _admin.GetPhysiciansByRegion(regionId);
-           
+
             return Json(physicians);
         }
         #endregion
 
         #region Block Case
-      
+
         public async Task<IActionResult> BlockCase(CancelCaseViewModel viewModel, int id)
         {
             var result = await _admin.BlockCase(viewModel, id);
             return PartialView("_BlockCasePartialView", result);
         }
-      
+
         public async Task<IActionResult> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
         {
             var result = await _admin.BlockCaseRequest(viewModel, id);
@@ -190,7 +194,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Transfer Case
-       
+
 
         public async Task<IActionResult> TransferCase(AssignCaseViewModel viewModel, int id)
         {
@@ -200,7 +204,7 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> TransferRequest(AssignCaseViewModel viewModel, int id)
         {
-             await _admin.TransferRequest(viewModel, id);
+            await _admin.TransferRequest(viewModel, id);
             return RedirectToAction("Dashboard");
         }
 
@@ -216,7 +220,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> ClearRequest()
         {
             var id = HttpContext.Session.GetInt32("requestID");
-         
+
             await _admin.ClearRequest(id);
             return RedirectToAction("Dashboard");
 
@@ -229,18 +233,18 @@ namespace HalloDoc.Controllers
         {
             HttpContext.Session.SetInt32("reqID", Id);
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            var result =await _admin.ViewDocument(Id);
+            var result = await _admin.ViewDocument(Id);
             return View(result);
         }
-       
+
         [HttpPost]
-      
+
         public async Task<IActionResult> ViewUploads(IFormFile a, int Id)
         {
             await _admin.ViewDocument(a, Id);
             return RedirectToAction("ViewUploads");
         }
-      
+
         public async Task<FileResult> DownloadFile(string name, string filename)
         {
 
@@ -255,29 +259,29 @@ namespace HalloDoc.Controllers
 
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
-      
+
         public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues)
         {
             if (documentValues.Count() > 0)
             {
                 byte[] fileBytes = await _admin.DownloadAllByChecked(documentValues);
-                string zipFileData = Convert.ToBase64String(fileBytes); 
+                string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
 
             }
             else
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
-              
+
                 byte[] fileBytes = await _admin.DownloadAll(documentValues, requestid);
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
-      
+
         public async Task<IActionResult> DeleteFile(int fileID)
         {
-                int? requstId = HttpContext.Session.GetInt32("reqID");
-             await _admin.DeleteFile(fileID);
+            int? requstId = HttpContext.Session.GetInt32("reqID");
+            await _admin.DeleteFile(fileID);
 
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
@@ -301,7 +305,7 @@ namespace HalloDoc.Controllers
         {
             try
             {
-                var result =await _admin.SendOrder(viewModel, Id);
+                var result = await _admin.SendOrder(viewModel, Id);
                 return View(result);
             }
             catch (Exception ex)
@@ -310,7 +314,7 @@ namespace HalloDoc.Controllers
             }
         }
         [HttpGet]
-      
+
         public async Task<IActionResult> GetBusinessByProfession(int ProfessionID)
         {
             var physicians = await _admin.GetBusinessByProfession(ProfessionID);
@@ -319,20 +323,52 @@ namespace HalloDoc.Controllers
         }
 
         [HttpGet]
-      
+
         public async Task<IActionResult> GetBusinessDetails(int BusinessId)
         {
             var result = await _admin.GetBusinessDetails(BusinessId);
             return Json(result);
         }
         [HttpPost]
-      
+
         public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
         {
-           
-                 await _admin.SendOrderDetails(viewModel, Id);
-                return RedirectToAction("Dashboard");
-            
+
+            await _admin.SendOrderDetails(viewModel, Id);
+            return RedirectToAction("Dashboard");
+
+        }
+        #endregion
+
+        #region send agreement
+        public async Task<IActionResult> SendAgreement(ViewCaseViewModel viewModel, int id)
+        {
+            ViewBag.AgreementIdToClient = id;   
+            var result = await _admin.sendAgreement(viewModel, id);
+            return PartialView("_SendAgreementPartialView", result);
+        }
+
+
+        public async Task<IActionResult> SendAgreementLink(ViewCaseViewModel viewModel)
+        {
+            if (viewModel.Email == null)
+            {
+                TempData["emptyemail"] = "Please enter Email";
+                return RedirectToAction("SendAgreement", "Admin");
+            }
+
+            var link = Request.Scheme + "://" + Request.Host + "/Admin/ReviewAgreement/" + viewModel.Email;
+            var msg = _admin.SendEmailAgreement(viewModel.Email, link);
+
+            TempData["emailsend"] = "Email is sent successfully to your email account";
+            return RedirectToAction("Dashboard", "Admin");
+        }
+
+        public async Task<IActionResult> AcceptAgreement()
+        {
+            var id = ViewBag.AgreementIdToClient;
+            var result =await _admin.AcceptAgreement(id);
+            return View(result);
         }
         #endregion
     }

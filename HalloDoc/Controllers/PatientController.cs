@@ -46,7 +46,6 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-
         #region Dashboard
         public async Task<IActionResult> Dashboard()
         {
@@ -159,8 +158,6 @@ namespace HalloDoc.Controllers
 
         #endregion
         
-       
-       
         #region Logout
         public IActionResult Logout()
         {

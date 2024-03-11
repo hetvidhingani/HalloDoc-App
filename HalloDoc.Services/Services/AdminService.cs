@@ -10,6 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -766,7 +768,61 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Send Agreement
+        public async Task<object> sendAgreement(ViewCaseViewModel viewModel,int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            viewModel.Email = req.Email;
+            viewModel.PhoneNumber=req.PhoneNumber;
+            return viewModel;
+        }
+        public string SendEmailAgreement(string email, string link)
+        {
+            try
+            {
+                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
+                var senderPassword = "Hkd$9503";
 
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(senderMail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
+                    Subject = "Review Agreement",
+                    IsBodyHtml = true,
+                    Body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!",
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+                var abc = "Success";
+
+                return abc;
+            }
+            catch (Exception ex)
+            {
+                var abc = "Success";
+                return ex.Message.ToString();
+            }
+        }
+
+        public async Task<object> AcceptAgreement(int id)
+        {
+            RequestClient req =await _requestclientRepository.GetByIdAsync(id);
+            Request request =await _requestRepository.GetByIdAsync(req.RequestId);
+            request.Status = 4;
+            await _requestRepository.UpdateAsync(request);
+            return "Dashboard";
+        }
+        #endregion
 
     }
 }

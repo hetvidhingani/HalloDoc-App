@@ -51,7 +51,7 @@ input[type=password]::-ms-clear {
     border: 1px solid #937ab3;
     border-radius: 10px;
 }
-#New.active, #New:hover {
+#New.active, #New:hover,.triangleNew.active {
     background-color: #203f9a;
     color: white;
 
@@ -81,18 +81,17 @@ input[type=password]::-ms-clear {
     transition: background-color 0.3s ease, color 0.3s ease;
 
 }
- .triangle{
+/* .triangle{
     width: 0;
     height: 0;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
     border-top: 20px solid #203f9a;
-    visibility:hidden;
+  
+}*/
 
-}
-
-.cards.active .triangle.active {
-    visibility:visible;
+.cards.active .triangle.active  {
+    visibility: visible;
 }
 .card:not(.active) {
     display: none;

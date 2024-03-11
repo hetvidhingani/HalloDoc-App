@@ -35,7 +35,8 @@ namespace HalloDoc.Services.IServices
         Task<RequestWiseFile> DownloadFile(string name);
         Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles);
         Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid);
-
+        string SendEmail(string email, string link);
+        string SendEmailCreateAccount(string email, string link);
 
     }
 }

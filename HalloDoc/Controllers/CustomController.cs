@@ -28,7 +28,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-       
+
         public IActionResult ResetPassword()
         {
             return View();
@@ -51,7 +51,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> FamilyFriendRequest()
         {
             var result = await _patient.RegionList();
-            
+
             return View(result);
         }
         public async Task<IActionResult> ConciergeRequest()
@@ -64,7 +64,7 @@ namespace HalloDoc.Controllers
         #region Admin Login
         public IActionResult AdminLogin()
         {
-            
+
             return View("~/Views/Admin/AdminLogin.cshtml");
         }
 
@@ -81,7 +81,7 @@ namespace HalloDoc.Controllers
                 HttpContext.Session.SetString("UserName", myUser.UserName);
 
                 HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
-                return RedirectToAction("Dashboard","Admin");
+                return RedirectToAction("Dashboard", "Admin");
             }
             else
             {
@@ -92,13 +92,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region EmailSending
-        public async Task SendEmailfgpasswordAsync(string toEmail, string subject, string body)
-        {
-            await _admin.SendMail(toEmail, subject, body);
-            
-        }
-
-    
+     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetpasswordRequest(CreateAccountViewModel req)
@@ -106,18 +100,15 @@ namespace HalloDoc.Controllers
             if (req.Email == null)
             {
                 ViewBag.emailEnter = "Please enter Email";
-                return RedirectToAction("PatientForgotPassword", "Patient");
-
+                return RedirectToAction("PatientForgotPassword", "Custom");
             }
-           
-            var resetLink = "<a href=" + Url.Action("PatientForgotPassword", "Patient", new { email = req.Email}, "http") + ">Reset Password</a>";
-            var subject = "Password Reset Request";
-            var body = "<b>Please find the Password Reset Link.</b><br/>" + resetLink;
 
-            await SendEmailfgpasswordAsync(req.Email, subject, body);
-            TempData["sent"] = "Reset Password link is Successfully sent to your email!";
-            return RedirectToAction("ResetPassword", "Patient");
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + req.Email;
+            var msg = _patient.SendEmail(req.Email, link);
+
+            return RedirectToAction("ResetPassword", "Custom");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LinkToCreateAccount(CreateAccountViewModel req)
@@ -128,12 +119,10 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("CreateAccountRequest", "Custom");
 
             }
-           
-            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Custom", new { email = req.Email }, "http") + ">Create account</a>";
-            var subject = "Create Patient Account";
-            var body = "<b>Please Create Account Link.</b><br/>" + resetLink;
 
-            await SendEmailfgpasswordAsync(req.Email, subject, body);
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
+            var msg = _patient.SendEmailCreateAccount(req.Email, link);
+
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
         }
@@ -163,7 +152,7 @@ namespace HalloDoc.Controllers
             if (HttpContext.Session.GetInt32("UserSession") != null)
             {
 
-                return RedirectToAction("DashBoard","Patient");
+                return RedirectToAction("DashBoard", "Patient");
             }
             return View();
         }
@@ -171,12 +160,12 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterdPatientLogin(LoginViewModel viewModel)
         {
-     
-            var myUser = await _patient.checkEmailPassword(viewModel.Email,viewModel.PasswordHash);
-           
+
+            var myUser = await _patient.checkEmailPassword(viewModel.Email, viewModel.PasswordHash);
+
             if (myUser != null)
             {
-               
+
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
                 Response.Cookies.Append("jwt", jwtToken);
 
@@ -184,7 +173,7 @@ namespace HalloDoc.Controllers
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
 
-                return RedirectToAction("DashBoard","Patient");
+                return RedirectToAction("DashBoard", "Patient");
             }
             else
             {
@@ -244,16 +233,15 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                 await _patient.FamilyFriendRequest(viewModel);
-                
-                    await LinkToCreateAccount(new CreateAccountViewModel
-                    {
-                        Email = viewModel.Email
-                    });
-                    return View("PatientSite");
-                
+                await _patient.FamilyFriendRequest(viewModel);
+
+                await LinkToCreateAccount(new CreateAccountViewModel
+                {
+                    Email = viewModel.Email
+                });
+                return View("PatientSite");
+
             }
-          
 
 
             return View("PatientSite");
@@ -266,19 +254,15 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> BusinessRequest(OtherRequestViewModel viewModel)
         {
 
+           await _patient.BusinessRequest(viewModel);
 
-            var result = await _patient.BusinessRequest(viewModel);
-         
-                await LinkToCreateAccount(new CreateAccountViewModel
-                {
-                    Email = viewModel.Email
-                });
-                return View("PatientSite");
+            await LinkToCreateAccount(new CreateAccountViewModel
+            {
+                Email = viewModel.Email
+            });
+            return View("PatientSite");
+
             
-
-
-
-            return View(result);
         }
 
 
@@ -288,19 +272,15 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> ConciergeRequest(OtherRequestViewModel viewModel)
         {
-           
 
-                var result = await _patient.ConciergeRequest(viewModel);
-               
-                    await LinkToCreateAccount(new CreateAccountViewModel
-                    {
-                        Email = viewModel.Email
-                    });
-                    return View("PatientSite");
-                
+            await _patient.ConciergeRequest(viewModel);
 
+            await LinkToCreateAccount(new CreateAccountViewModel
+            {
+                Email = viewModel.Email
+            });
+            return View("PatientSite");
 
-            return View(result);
         }
 
 

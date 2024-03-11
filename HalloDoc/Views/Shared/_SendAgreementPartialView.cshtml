@@ -1,1 +1,46 @@
-﻿
+﻿@model HalloDoc.Entities.ViewModels.ViewCaseViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Send Agreement</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
+    <div class="modal-body">
+        <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
+
+        <div class=" d-flex justify-content-center flex-column  ">
+           
+
+          
+            <div class="form-floating form-group">
+                <input asp-for="PhoneNumber" type="text" class="form-control" id=" " placeholder=" ">
+                <label for=" ">Your First Name</label>
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+            </div>
+     
+            <div class="form-floating form-group">
+                <input asp-for="Email" type="text" class="form-control" id=" " placeholder=" ">
+                <label for=" ">Your First Name</label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+
+        <button class="createNewReqBtn submitBtn" type="submit">
+            Confirm
+        </button>
+
+        <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+            Cancle
+        </button>
+
+
+    </div>
+</form>
+<script>
+   
+</script>
