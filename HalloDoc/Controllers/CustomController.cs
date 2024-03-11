@@ -51,6 +51,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> FamilyFriendRequest()
         {
             var result = await _patient.RegionList();
+            
             return View(result);
         }
         public async Task<IActionResult> ConciergeRequest()
@@ -124,17 +125,17 @@ namespace HalloDoc.Controllers
             if (req.Email == null)
             {
                 TempData["emptyemail"] = "Please enter Email";
-                return RedirectToAction("CreateAccountRequest", "Patient");
+                return RedirectToAction("CreateAccountRequest", "Custom");
 
             }
            
-            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Patient", new { email = req.Email }, "http") + ">Create account</a>";
+            var resetLink = "<a href=" + Url.Action("CreateAccountPatient", "Custom", new { email = req.Email }, "http") + ">Create account</a>";
             var subject = "Create Patient Account";
             var body = "<b>Please Create Account Link.</b><br/>" + resetLink;
 
             await SendEmailfgpasswordAsync(req.Email, subject, body);
             TempData["emailsend"] = "Email is sent successfully to your email account";
-            return RedirectToAction("PatientSite", "Patient");
+            return RedirectToAction("PatientSite", "Custom");
         }
 
 
@@ -243,15 +244,14 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _patient.FamilyFriendRequest(viewModel);
-                if (result == "")
-                {
+                 await _patient.FamilyFriendRequest(viewModel);
+                
                     await LinkToCreateAccount(new CreateAccountViewModel
                     {
                         Email = viewModel.Email
                     });
                     return View("PatientSite");
-                }
+                
             }
           
 
@@ -268,14 +268,13 @@ namespace HalloDoc.Controllers
 
 
             var result = await _patient.BusinessRequest(viewModel);
-            if (result == "")
-            {
+         
                 await LinkToCreateAccount(new CreateAccountViewModel
                 {
                     Email = viewModel.Email
                 });
                 return View("PatientSite");
-            }
+            
 
 
 
@@ -292,14 +291,13 @@ namespace HalloDoc.Controllers
            
 
                 var result = await _patient.ConciergeRequest(viewModel);
-                if (result == "")
-                {
+               
                     await LinkToCreateAccount(new CreateAccountViewModel
                     {
                         Email = viewModel.Email
                     });
                     return View("PatientSite");
-                }
+                
 
 
             return View(result);

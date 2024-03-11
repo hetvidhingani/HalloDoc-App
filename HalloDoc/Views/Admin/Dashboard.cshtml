@@ -46,7 +46,7 @@
         <div>
            
             <div class="row cardRow g-2 ">
-                <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
+                <div class="col-lg-2 col-md-2 col-sm-2 cust-col ">
                     <button class="cards active-card cardDesign1 " id="New" data-view-name="_NewPartialView">
                         <div class="row">
                             <div class="col-12">
@@ -54,7 +54,7 @@
                                 <strong class="cardContaint" >
                                     NEW  
                                 </strong>
-                                <span class="triangle"></span>
+                               
                             </div>
                         </div>
                         <div class="row">
@@ -64,6 +64,7 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView">
@@ -71,7 +72,6 @@
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
                                 <strong class="cardContaint">PENDING</strong>
-                                <span class="triangle"></span>
 
                             </div>
                         </div>
@@ -82,6 +82,8 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
+
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign3  " id="Active">
@@ -98,6 +100,9 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
+
+
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign4  " id="Conclude">
@@ -114,6 +119,9 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
+
+
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign5  " id="ToClose">
@@ -130,6 +138,8 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
+
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign6  " id="Unpaid">
@@ -146,6 +156,9 @@
                             </div>
                         </div>
                     </button>
+                    <div class="triangle mx-auto"></div>
+
+
                 </div>
 
             </div>
@@ -251,28 +264,31 @@
         $("#New").addClass("active");
 
             load();
-            $('#New').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
 
+
+        $('#New').click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $('.triangle').removeClass("active");
+            $(this).find('.triangle').addClass("active");
             $('#Pending, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
-           
-                $.ajax({
-                    url: "/Admin/New",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
+
+            $.ajax({
+                url: "/Admin/New",
+                type: "POST",
+                dataType: "html",
+                success: function (data) {
+                    $("#admindata").html(data);
+                },
+                error: function () {
+                    alert("No Projects Found");
+                    $("#admindata").html('An error has occurred');
+                }
             });
+        });
 
         $('#Pending').click(function () {
             $(this).addClass("active").siblings().removeClass("active");
-
+           
             $('#New, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
 
             $.ajax({
@@ -281,6 +297,8 @@
                     dataType: "html",
                     success: function (data) {
                         $("#admindata").html(data);
+                   
+
                     },
                     error: function () {
                         alert("No Projects Found");
@@ -291,7 +309,8 @@
 
             $('#Active').click(function () {
             $(this).addClass("active").siblings().removeClass("active");
-
+            $('.triangle').removeClass("active");
+            $(this).find('.triangle').addClass("active");
             $('#New, #Pending, #Conclude, #ToClose, #Unpaid').removeClass("active");
 
             $.ajax({

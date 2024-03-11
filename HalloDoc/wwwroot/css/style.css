@@ -81,15 +81,27 @@ input[type=password]::-ms-clear {
     transition: background-color 0.3s ease, color 0.3s ease;
 
 }
+ .triangle{
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 20px solid #203f9a;
+    visibility:hidden;
 
-.card:not(.active) .triangle {
+}
+
+.cards.active .triangle.active {
+    visibility:visible;
+}
+.card:not(.active) {
     display: none;
 }
-.card:hover .triangle, .card.active .triangle {
-    display: block;
+.card:hover , .card.active {
+    display: block ;
 }
 
-.card.active .triangle {
+.card.active  {
     position: absolute;
     top: 100%;
     left: 50%;
