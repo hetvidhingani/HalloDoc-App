@@ -93,26 +93,8 @@ namespace HalloDoc.Controllers
         #region EmailSending
         public async Task SendEmailfgpasswordAsync(string toEmail, string subject, string body)
         {
-            var result = _admin.SenMail(toEmail, subject, body);
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("HalloDoc", "t12281554@gmail.com"));
-            message.To.Add(new MailboxAddress("HalloDocMember", toEmail));
-            message.Subject = subject;
-
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = body;
-
-
-            message.Body = bodyBuilder.ToMessageBody();
-            ViewBag.emailsend = "Email is sent successfully to your email account";
-
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
-            {
-                await client.ConnectAsync("smtp.gmail.com", 587, false);
-                await client.AuthenticateAsync("t12281554@gmail.com", "vbdhvlywjczuttbh");
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
-            }
+            await _admin.SendMail(toEmail, subject, body);
+            
         }
 
     

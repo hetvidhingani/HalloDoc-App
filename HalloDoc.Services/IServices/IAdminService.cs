@@ -50,5 +50,6 @@ namespace HalloDoc.Services.IServices
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
         Task<string> ClearRequest(int? id);
+        Task SendMail(string toEmail, string subject, string body);
     }
 }

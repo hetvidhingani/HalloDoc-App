@@ -4,6 +4,7 @@ using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -97,6 +98,31 @@ namespace HalloDoc.Services.Services
         public async Task<T> GetTempData<T>(string key)
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
+        }
+        #endregion
+
+        #region Send Mail
+        public async Task SendMail(string toEmail, string subject, string body)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("HalloDoc", "t12281554@gmail.com"));
+            message.To.Add(new MailboxAddress("HalloDocMember", toEmail));
+            message.Subject = subject;
+
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.HtmlBody = body;
+
+
+            message.Body = bodyBuilder.ToMessageBody();
+           // ViewBag.emailsend = "Email is sent successfully to your email account";
+
+            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            {
+                await client.ConnectAsync("smtp.gmail.com", 587, false);
+                await client.AuthenticateAsync("t12281554@gmail.com", "vbdhvlywjczuttbh");
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
         }
         #endregion
 
@@ -576,6 +602,7 @@ namespace HalloDoc.Services.Services
 
         }
         #endregion
+
         #region View Uploads
         public bool IsDeleted(BitArray? isDeleted)
         {
