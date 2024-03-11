@@ -774,6 +774,7 @@ namespace HalloDoc.Services.Services
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             viewModel.Email = req.Email;
             viewModel.PhoneNumber=req.PhoneNumber;
+            viewModel.requestclientID = id;
             return viewModel;
         }
         public string SendEmailAgreement(string email, string link)
@@ -822,6 +823,7 @@ namespace HalloDoc.Services.Services
             await _requestRepository.UpdateAsync(request);
             return "Dashboard";
         }
+
         #endregion
 
     }

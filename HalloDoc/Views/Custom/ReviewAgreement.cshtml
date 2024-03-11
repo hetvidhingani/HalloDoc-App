@@ -1,11 +1,11 @@
-﻿
+﻿@model HalloDoc.Entities.ViewModels.ReviewAgreementViewModel
 <div class="mainContent2 " style="margin-top:10%" >
 <div class="d-flex justify-content-center align-items-center" >
   
        <div class="container w-50 ">
             <p style="font-weight:500"> To provide best medical service, we cannot determine the cost right away. If you agree to our service, so we will provide care and follow-up until all care is completed. So with this points, if you like us to provide care to you click on “Agree” and we’ll get started immediately, if you do not agree simply click “Cancel”. </p>
            <div class="d-flex justify-content-around">
-                <button type="button" class="btn btn-success">I agree</button>
+                <button type="button" class="btn btn-success" id="sendAgreement">I agree</button>
                 <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal">Cancle</button>
            </div>
 
@@ -16,7 +16,7 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-
+            @* <input type="hidden" asp-for="@Model.RequestClientID" /> *@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Cancle Confirmation</h5>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-end">
-                    <button type="button" class="createNewReqBtn submitBtn " id="#sendAgreement" >
+                    <button type="button" class="createNewReqBtn submitBtn " >
                         Confirm
                     </button>
 
@@ -49,14 +49,19 @@
 
 </div>
 <script>
+    
     $('#sendAgreement').click(function () {
-       
+        console.log("abc");
         $.ajax({
             type: "POST",
-            dataType: "html",
+            url: '@Url.Action("AcceptAgreement", "Custom")',
+            data: { id: @Model.RequestClientID },
+            success: function (response) {
+                console.log("success");
+            }
            
-            url: "@(Url.Action("AcceptAgreement", "Admin"))",
             
         });
     });
+   
 </script>

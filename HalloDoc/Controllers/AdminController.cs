@@ -24,11 +24,7 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
         }
 
-        public async Task<IActionResult> ReviewAgreement()
-        {
-            return View();
-        }
-
+      
         #region Logout
         public IActionResult Logout()
         {
@@ -357,19 +353,14 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("SendAgreement", "Admin");
             }
 
-            var link = Request.Scheme + "://" + Request.Host + "/Admin/ReviewAgreement/" + viewModel.Email;
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" +viewModel.requestclientID;
             var msg = _admin.SendEmailAgreement(viewModel.Email, link);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("Dashboard", "Admin");
         }
 
-        public async Task<IActionResult> AcceptAgreement()
-        {
-            var id = ViewBag.AgreementIdToClient;
-            var result =await _admin.AcceptAgreement(id);
-            return View(result);
-        }
+       
         #endregion
     }
 }
