@@ -48,5 +48,7 @@ namespace HalloDoc.Services.IServices
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
         Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id);
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
+        Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
+        Task<string> ClearRequest(int? id);
     }
 }

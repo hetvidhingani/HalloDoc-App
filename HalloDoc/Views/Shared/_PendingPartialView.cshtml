@@ -130,7 +130,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                    <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID style="text-decoration:none;color:black;">
                                         Clear Case
                                     </a>
                                 </li>
@@ -141,9 +141,9 @@
                                         Send Agreement
                                     </a>
                                 </li>
-                            </ul>
                         </div>
-
+                            </ul>
+                            </div>
 
                     </td>
                 </tr>
@@ -214,11 +214,11 @@
 
 
     $('.Transfer').click(function () {
-        var id = $(this).data('id');
+        var id = this.id;
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id: id },
+            data: { id},
             url: "@(Url.Action("TransferCase", "Admin"))",
             success: function (data) {
 
@@ -227,11 +227,11 @@
         });
     });
     $('.Clear').click(function () {
-        var id = $(this).data('id');
+        var id = this.id;
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id: id },
+            data: { id},
             url: "@(Url.Action("ClearCase", "Admin"))",
             success: function (data) {
 

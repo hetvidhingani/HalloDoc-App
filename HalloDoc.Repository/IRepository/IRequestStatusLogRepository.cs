@@ -10,5 +10,7 @@ namespace HalloDoc.Repository.IRepository
     public interface IRequestStatusLogRepository:IGenericRepository<RequestStatusLog>
     {
         Task<RequestStatusLog> CheckByRequestID(int id);
+        Task<List<RequestStatusLog>> GetNotes(int id);
+        Task<List<Physician>> GetPhysicianNames(int requestId);
     }
 }

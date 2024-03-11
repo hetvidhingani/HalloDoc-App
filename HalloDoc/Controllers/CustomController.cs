@@ -93,6 +93,7 @@ namespace HalloDoc.Controllers
         #region EmailSending
         public async Task SendEmailfgpasswordAsync(string toEmail, string subject, string body)
         {
+            var result = _admin.SenMail(toEmail, subject, body);
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress("HalloDoc", "t12281554@gmail.com"));
             message.To.Add(new MailboxAddress("HalloDocMember", toEmail));

@@ -133,9 +133,9 @@
                                     </a>
                                 </li>
                         </div>
-
-
                         </ul>
+
+
     </div>
                 </td>
                 </tr>
@@ -204,11 +204,12 @@
 <script src="~/js/custom.js"></script>
 <script>
     $('.Cancel1').click(function () {
-        var id = $(this).data('id');
+        var id = this.id;
+
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id: id },
+            data: { id },
             url: "@(Url.Action("CancelCase", "Admin"))",
             success: function (data) {
 
@@ -217,26 +218,30 @@
         });
     });
     $('.Assign').click(function () {
-        var id = $(this).data('id');
-        console.log(id);
+        var id = this.id;
+     
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id: id },
+            data: { id },
             url: "@(Url.Action("AssignCase", "Admin"))",
             success: function (data) {
                 console.log("abc");
                 $("#AssignCase").find('.modal-content').html(data);
+            },
+            error: function () {
+                console.log("error");
             }
         });
     });
     $('.Block').click(function () {
-        var id = $(this).data('id');
+        var id = this.id;
+
         console.log(id);
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id: id },
+            data: { id },
             url: "@(Url.Action("BlockCase", "Admin"))",
             success: function (data) {
                 console.log("abc");
@@ -244,31 +249,6 @@
             }
         });
     });
-    $('.Transfer').click(function () {
-        var id = $(this).data('id');
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id: id },
-            url: "@(Url.Action("TransferCase", "Admin"))",
-            success: function (data) {
-
-                $("#TransferCase").find('.modal-content').html(data);
-            }
-        });
-    });
-    $('.Clear').click(function () {
-        var id = $(this).data('id');
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id: id },
-            url: "@(Url.Action("ClearCase", "Admin"))",
-            success: function (data) {
-
-                $("#ClearCase").find('.modal-content').html(data);
-            }
-        });
-    });
+   
 
 </script>

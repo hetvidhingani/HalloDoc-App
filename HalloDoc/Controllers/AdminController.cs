@@ -159,7 +159,7 @@ namespace HalloDoc.Controllers
       
         public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
         {
-            var result = await _admin.AssignRequest(viewModel, id);
+           await _admin.AssignRequest(viewModel, id);
             return RedirectToAction("Dashboard");
         }
      
@@ -195,24 +195,34 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> TransferCase(AssignCaseViewModel viewModel, int id)
         {
             var result = await _admin.TransferCase(viewModel, id);
-            return PartialView("_AssignRequestPartialView", result);
+            return PartialView("_TransferRequestPartialView", result);
         }
 
-        //public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
-        //{
-        //    var result = await _admin.AssignRequest(viewModel, id);
-        //    return RedirectToAction("Dashboard");
-        //}
+        public async Task<IActionResult> TransferRequest(AssignCaseViewModel viewModel, int id)
+        {
+             await _admin.TransferRequest(viewModel, id);
+            return RedirectToAction("Dashboard");
+        }
 
         #endregion
 
         #region Clear Case
-        public async Task<IActionResult> ClearCase()
+        public async Task<IActionResult> ClearCase(int id)
         {
-            
+            HttpContext.Session.SetInt32("requestID", id);
+
             return PartialView("_ClearCasePartialView");
         }
+        public async Task<IActionResult> ClearRequest()
+        {
+            var id = HttpContext.Session.GetInt32("requestID");
+         
+            await _admin.ClearRequest(id);
+            return RedirectToAction("Dashboard");
+
+        }
         #endregion
+
         #region View Uploads
 
         public async Task<IActionResult> ViewUploads(int Id)

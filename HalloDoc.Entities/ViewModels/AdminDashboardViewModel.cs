@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HalloDoc.Entities.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public string? AdminNotes { get; set; }
         public string? PhysicianNotes { get; set; }
-        public string? TransferNotes { get; set; }
+        public List<Physician> TransferNotes { get; set; }
         public string? AdditionalNotes { get; set; }
 
 

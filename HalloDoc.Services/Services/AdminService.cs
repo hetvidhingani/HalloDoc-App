@@ -39,10 +39,10 @@ namespace HalloDoc.Services.Services
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
                                IConciergeRepository conciergeRepository,
-                               IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository, 
-                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository,IRegionRepository regionRepository,
-                               IOrderDetailsRepository orderDetailsRepository,IHealthProfessionalsRepository healthProfessionalsRepository,
-                               IHealthProfessionalTypeRepository healthProfessionalTypeRepository,IBlockRequestRepository blockRequestRepository)
+                               IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository,
+                               ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository, IRegionRepository regionRepository,
+                               IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
+                               IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -63,7 +63,7 @@ namespace HalloDoc.Services.Services
             _blockRequestRepository = blockRequestRepository;
         }
         #endregion
-        
+
         #region common methods
         public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
         {
@@ -89,9 +89,9 @@ namespace HalloDoc.Services.Services
             RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
             return file;
         }
-        public async Task<RequestWiseFile> FindFile(string fileName,int? ID)
+        public async Task<RequestWiseFile> FindFile(string fileName, int? ID)
         {
-            RequestWiseFile file = await _requestwisefileRepository.FindFileByID(fileName,ID);
+            RequestWiseFile file = await _requestwisefileRepository.FindFileByID(fileName, ID);
             return file;
         }
         public async Task<T> GetTempData<T>(string key)
@@ -148,7 +148,7 @@ namespace HalloDoc.Services.Services
                   Notes = rec.Notes,
                   PhysicianName = phy.FirstName + " " + phy.LastName,
                   RequestTypeID = r.RequestTypeId,
-                  RequstClientId   = rec.RequestClientId,
+                  RequstClientId = rec.RequestClientId,
                   requestID = rec.RequestId
 
 
@@ -266,7 +266,7 @@ namespace HalloDoc.Services.Services
             return tabledashboard1;
         }
         #endregion
-        
+
         #region View Case
         public async Task<int> GetUserByRequestClientID(int id)
         {
@@ -312,18 +312,37 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Notes
+        //public async Task<object> ViewNotes(AdminDashboardViewModel viewmodel, int id)
+        //{
+        //    RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+        //    List<RequestStatusLog> reqLog = await _requestStatusLogRepository.GetNotes(req.RequestId);
+        //    viewmodel.TransferNotes= reqLog;
+        //    RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
+        //    if (requestNote != null)
+        //    {
+        //        viewmodel.AdminNotes = requestNote.AdminNotes;
+
+        //    }
+        //    return viewmodel;
+        //}
         public async Task<object> ViewNotes(AdminDashboardViewModel viewmodel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+           
+
+           
+            var physicianNames = await _requestStatusLogRepository.GetPhysicianNames(req.RequestId);
+
+         
+            viewmodel.TransferNotes = physicianNames;
+
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
             if (requestNote != null)
             {
                 viewmodel.AdminNotes = requestNote.AdminNotes;
-                
             }
             return viewmodel;
         }
-
         public async Task<object> AddNotes(AdminDashboardViewModel viewmodel, int Id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(Id);
@@ -334,8 +353,8 @@ namespace HalloDoc.Services.Services
             {
                 requestNote.AdminNotes = viewmodel.AdditionalNotes;
                 await _requestNotesRepository.UpdateAsync(requestNote);
-                viewmodel.AdminNotes=requestNote.AdminNotes;
-               
+                viewmodel.AdminNotes = requestNote.AdminNotes;
+
             }
             else
             {
@@ -346,10 +365,10 @@ namespace HalloDoc.Services.Services
                 requestNote1.CreatedBy = "admin";
                 await _requestNotesRepository.AddAsync(requestNote1);
                 viewmodel.AdminNotes = requestNote1.AdminNotes;
-               
+
 
             }
-            viewmodel.AdditionalNotes= string.Empty;
+            viewmodel.AdditionalNotes = string.Empty;
             return viewmodel;
         }
         #endregion
@@ -358,23 +377,23 @@ namespace HalloDoc.Services.Services
         public async Task<object> CancelCase(CancelCaseViewModel viewModel, int id)
         {
 
-            RequestClient patient =await _requestclientRepository.CheckUserByID(id);
-           
+            RequestClient patient = await _requestclientRepository.CheckUserByID(id);
+
             viewModel.PatientName = patient.FirstName + " " + patient.LastName;
             viewModel.RequestClientID = id;
-            viewModel.Case = await _caseTagRepository.GetCases() ;
-          
-             return viewModel;
-           
+            viewModel.Case = await _caseTagRepository.GetCases();
+
+            return viewModel;
+
         }
-        public async Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel , int id)
+        public async Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
 
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
 
-          
-            if(requestNote1 != null)
+
+            if (requestNote1 != null)
             {
                 requestNote1.Status = 3;
                 requestNote1.AdminId = 1;
@@ -385,19 +404,19 @@ namespace HalloDoc.Services.Services
             }
             else
             {
-               RequestStatusLog requesStatusLog = new RequestStatusLog();
+                RequestStatusLog requesStatusLog = new RequestStatusLog();
                 requesStatusLog.Status = 3;
                 requesStatusLog.AdminId = 1;
                 requesStatusLog.RequestId = req.RequestId;
                 requesStatusLog.Notes = viewModel.AdditionalNotes;
                 requesStatusLog.CreatedDate = DateTime.Now;
-       
+
                 await _requestStatusLogRepository.AddAsync(requesStatusLog);
             }
-           
-           
-            Request request =await _requestRepository.GetByIdAsync(req.RequestId);
-            
+
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+
             request.Status = 3;
             request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
@@ -453,7 +472,7 @@ namespace HalloDoc.Services.Services
             return await _physicianRepository.GetPhysiciansByRegion(regionId);
         }
         #endregion
-      
+
         #region Block case
         public async Task<object> BlockCase(CancelCaseViewModel viewModel, int id)
         {
@@ -498,7 +517,7 @@ namespace HalloDoc.Services.Services
             blockRequest.CreatedDate = DateTime.Now;
             blockRequest.Email = requestor.Email;
             blockRequest.Reason = viewModel.AdditionalNotes;
-            blockRequest.RequestId =Convert.ToString( req.RequestId);
+            blockRequest.RequestId = Convert.ToString(req.RequestId);
             await _blockRequestRepository.AddAsync(blockRequest);
 
 
@@ -520,8 +539,43 @@ namespace HalloDoc.Services.Services
             viewModel.Physician = await _physicianRepository.GetPhysician();
             return viewModel;
         }
+        public async Task<string> TransferRequest(AssignCaseViewModel viewModel, int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+
+            RequestStatusLog requesStatusLog = new RequestStatusLog
+            {
+                Status = 2,
+                AdminId = 1,
+                RequestId = req.RequestId,
+                Notes = viewModel.AdditionalNotes,
+                TransToPhysicianId = viewModel.physicianID,
+                CreatedDate = DateTime.Now
+            };
+            await _requestStatusLogRepository.AddAsync(requesStatusLog);
+
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.PhysicianId = viewModel.physicianID;
+            await _requestRepository.UpdateAsync(request);
+
+            return "Dashboard";
+
+        }
         #endregion
 
+        #region ClearCase
+        public async Task<string> ClearRequest( int? id)
+        {
+      
+            Request request = await _requestRepository.GetByIdAsync(id);
+            request.Status = 10;
+            await _requestRepository.UpdateAsync(request);
+
+            return "Dashboard";
+
+        }
+        #endregion
         #region View Uploads
         public bool IsDeleted(BitArray? isDeleted)
         {
@@ -541,7 +595,7 @@ namespace HalloDoc.Services.Services
             return false;
         }
         public async Task<DashboardViewModel> ViewDocument(int Id)
-        { 
+        {
             DashboardViewModel viewModel = new DashboardViewModel();
             Request req = await _requestRepository.GetByIdAsync(Id);
             RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
@@ -549,7 +603,7 @@ namespace HalloDoc.Services.Services
             viewModel.RequstId = Id;
             viewModel.RequestWiseFiles = (
                                          from rwf in _requestwisefileRepository.GetAll()
-                                         where rwf.RequestId == Id && rwf.IsDeleted==null
+                                         where rwf.RequestId == Id && rwf.IsDeleted == null
                                          select new RequestWiseFile
                                          {
                                              CreatedDate = rwf.CreatedDate,
@@ -633,7 +687,7 @@ namespace HalloDoc.Services.Services
 
             return ms.ToArray();
         }
-       
+
         public async Task<object> DeleteFile(int fileID)
         {
             RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
@@ -675,11 +729,11 @@ namespace HalloDoc.Services.Services
             order.VendorId = viewModel.BusinessID;
             order.FaxNumber = viewModel.FaxNumber;
             order.RequestId = id;
-            order.Email= viewModel.Email;
+            order.Email = viewModel.Email;
             order.BusinessContact = viewModel.Contact;
             order.Prescription = viewModel.OrderDetails;
             order.NoOfRefill = viewModel.Refill;
-            order.CreatedDate=DateTime.Now;
+            order.CreatedDate = DateTime.Now;
             await _orderDetailsRepository.AddAsync(order);
             return "";
         }
