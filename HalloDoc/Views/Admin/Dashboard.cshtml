@@ -58,7 +58,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong class="cardContaint" >
+                                <strong class="cardContaint " >
                                     NEW  
                                 </strong>
                                
@@ -66,7 +66,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="newCountDisplay"></strong>
+                                <strong class="cardContaint font " id="newCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="pendingCountDisplay"></strong>
+                                <strong class="cardContaint font" id="pendingCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="ActiveCount"></strong>
+                                <strong class="cardContaint font" id="ActiveCount"></strong>
 
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="ConcludeCount"></strong>
+                                <strong class="cardContaint font" id="ConcludeCount"></strong>
 
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="ToCloseCount"></strong>
+                                <strong class="cardContaint font" id="ToCloseCount"></strong>
 
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint fs-3" id="UnpaidCount"></strong>
+                                <strong class="cardContaint font" id="UnpaidCount"></strong>
 
                             </div>
                         </div>
@@ -174,45 +174,56 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="sectionHeading">
                         <strong class="tableHead ">
-                            <h3 class="">Patients</h3>
-                            <h5 style="color:#203e84;font-size:14px" id="status"></h5>
+                            <div class="headerfontDash">Patients</div>
+                            <div style="color:#203e84;font-size:9px" id="status"></div>
                         </strong>
                     </div>
-                    <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
-                        <a href="#" class="mainTextLink">
-                            <img src="~/images/man-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-                            Request DTY Support
-                        </a>
-                        <a href="#" class="mainTextLink">
-                            <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />
-
-
-                            Export All
-                        </a>
-                        <a href="#" class="mainTextLink">
-                            <img src="~/images/export-svgrepo-com.png" class="iconLink " style="width:25px;color:white" />Export
-                        </a>
-                        <a href="#" class="mainTextLink"><i class="bi bi-file-earmark iconLink"></i>Create Requests</a>
-                        <a href="#" class="mainTextLink">
+                    <div class="dashboardLinks d-flex  flex-wrap " style="float:right">
+                        <button class="btn btn-info ">
                             <i class="bi bi-send iconLink"></i>
+                            <span class="tabIcon">
+                                Send Link
 
-                            Send Link
-                        </a>
+                            </span>
+                        </button>
+                        <button class="btn btn-info ">
+                            <i class="bi bi-file-earmark "></i>
+                            <span class="tabIcon"> Create Requests</span>
+                        </button>
+                        <button class="btn btn-info ">
+                            <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" /><span class="tabIcon">Export</span>
+                        </button>
+                        <button class="btn btn-info ">
+                            <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" />
+
+                            <span class="tabIcon">
+                                Export All
+
+                            </span>
+                        </button>
+
+                        <button class="btn  btn-info " >
+                            <img src="~/images/man-svgrepo-com.png"  style="width:22px;color:white" />
+                            <span class="tabIcon">Request DTY Support</span>
+                        </button>
+                       
+                      
+                        
                     </div>
                 </div>
 
             </div>
             <div class="container-fluid rounded formshadow px-2 py-1 ">
-                <div class="row mt-3">
+                <div class="row mt-2">
                     <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
-                        <div class="d-flex flex-wrap col-lg-6 col-md-12 col-sm-12 searchDiv">
-                            <div class="form-group has-search col-lg-4 col-md-6 col-sm-6">
+                        <div class="d-flex flex-wrap col-lg-5 col-md-3 col-sm-12 searchDiv">
+                            <div class="form-group has-search col-lg-5 col-md-6 col-sm-6" >
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control " placeholder="Search" id="search-input" oninput="searchFunction()">
+                                <input type="text" class="form-control w-100" placeholder="Search" id="search-input" oninput="searchFunction()">
 
                             </div>
-                            <div class="has-search col-lg-4 col-md-6 col-sm-6 ">
-                                <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" >
+                            <div class="has-search col-lg-5 col-md-6 col-sm-6 ">
+                                <select class="form-select form-select-sm w-100 h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" >
                                     <option value="0" selected>All Regions</option>
                                     
                                     @foreach (var region in Model.State)
@@ -222,7 +233,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12 d-flex flex-wrap align-items-center formbasetab">
+                        <div class="col-lg-6 col-sm-12 col-md-9 d-flex flex-wrap align-items-center formbasetab">
                             <div class=""> <button class="firstType"> All   </button></div>
                             <button class="btn type request-type-btn" data-requesttype="1"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
                             <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>

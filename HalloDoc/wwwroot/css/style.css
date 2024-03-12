@@ -6,14 +6,18 @@ input[type=password]::-ms-clear {
 /*#region admin css*/
 
 .mainSectionMargin {
-    margin: 180px 15px;
+    margin: 150px 0px;
+}
+.tabactive
+{
+    background-color:red;
 }
 .firstType {
     font-size: 12px;
     margin-right: 10px;
     padding-top: 4px;
-    border:none;
-    background:none;
+    border: none;
+    background: none;
 }
 .cardDesign1 {
     background-color: #e9eaef;
@@ -180,23 +184,22 @@ input[type=password]::-ms-clear {
     text-decoration: none;
     background-color: #06b9df;
     color: white;
-    font-size:14px;
+    font-size:12px;
     font-weight: 400;
-    font-weight: 400;
-    padding: 5px;
-    border-radius: 6px;
-    margin: 0px 3px;
-}
-.iconLink {
-    text-decoration: none;
-    background-color: #06b9df;
-    color: white;
-    font-weight: 500;
     padding: 4px;
-    border-radius: 5px;
-    margin: 0px 1px;
+    border-radius: 3px;
+    align-content:center;
+    margin: 0px 2px;
 }
-
+.dashboardLinks>*{
+    margin-right:3px;
+}
+.dashboardLinks>button{
+    padding:3px;
+    font-size:11px;
+    color:white;
+    font-weight:600;
+}
 .has-search .form-control {
     padding-left: 2.375rem;
 }
@@ -241,7 +244,7 @@ input[type=password]::-ms-clear {
     display: inline-block;
 }
 .type>span{
-    font-size:11px;
+   
     margin:2px;
    vertical-align:middle;
    
@@ -284,27 +287,28 @@ background-color:lightgray;
 
     @media only screen and (max-width: 600px) {
         .mainSectionMargin {
-            margin: 120px 0px;
+            margin: 100px 0px;
         }
         .cust-col {
             flex: 0 0 33.33333%;
             max-width: 33.33333%;
         }
-
+        .tabIcon{
+            display:none;
+        }
         .i {
             display: none;
         }
-
+        .sidetabdashboard{
+           font-size:8px;
+        }
         .cards {
             text-align: center;
-            padding: 7px 0px;
             width: 23vw;
             border-radius: 0px;
         }
 
-        .mainTextLink {
-            display: none;
-        }
+       
 
         .has-search {
             width: 100%;
@@ -314,10 +318,15 @@ background-color:lightgray;
             display: none;
         }
 
-        .cardContaint {
+        .cardContaint.font {
             font-size: 13px;
         }
-
+            .cardContaint{
+               font-size: 11px;
+            }
+        .headerfontDash {
+            font-size: 15px;
+        }
         .cardRow {
             text-align: center;
         }
@@ -389,7 +398,12 @@ background-color:lightgray;
             width: 15vw;
             text-align: left;
         }
-
+        .sidetabdashboard {
+            font-size: 10px;
+        }
+        .headerfontDash {
+            font-size: 20px;
+        }
         .adminDashMobile {
             display: none;
         }
