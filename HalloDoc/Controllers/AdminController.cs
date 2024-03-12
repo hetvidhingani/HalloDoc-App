@@ -354,7 +354,9 @@ namespace HalloDoc.Controllers
             }
 
             var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" +viewModel.requestclientID;
-            var msg = _admin.SendEmailAgreement(viewModel.Email, link);
+            var subject = "Review Agreement";
+            var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
+           _admin.SendEmail(viewModel.Email, link,subject,body);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("Dashboard", "Admin");

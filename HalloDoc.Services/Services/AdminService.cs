@@ -19,6 +19,7 @@ namespace HalloDoc.Services.Services
 {
     public class AdminService : IAdminService
     {
+        #region constructor
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAdminRepository _adminRepository;
@@ -37,7 +38,7 @@ namespace HalloDoc.Services.Services
         private readonly IHealthProfessionalTypeRepository _healthProfessionalTypeRepository;
         private readonly IBlockRequestRepository _blockRequestRepository;
 
-        #region constructor
+       
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -101,29 +102,49 @@ namespace HalloDoc.Services.Services
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
         }
+        public async Task<RequestClient> GetRequestClientByID(int id)
+        {
+            RequestClient result = await _requestclientRepository.GetByIdAsync(id);
+            return result;
+        }
         #endregion
 
         #region Send Mail
-        public async Task SendMail(string toEmail, string subject, string body)
+        public string SendEmail(string email, string link, string subject, string body)
         {
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("HalloDoc", "t12281554@gmail.com"));
-            message.To.Add(new MailboxAddress("HalloDocMember", toEmail));
-            message.Subject = subject;
-
-            var bodyBuilder = new BodyBuilder();
-            bodyBuilder.HtmlBody = body;
-
-
-            message.Body = bodyBuilder.ToMessageBody();
-           // ViewBag.emailsend = "Email is sent successfully to your email account";
-
-            using (var client = new MailKit.Net.Smtp.SmtpClient())
+            try
             {
-                await client.ConnectAsync("smtp.gmail.com", 587, false);
-                await client.AuthenticateAsync("t12281554@gmail.com", "vbdhvlywjczuttbh");
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
+                var senderPassword = "Hkd$9503";
+
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(senderMail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
+                    Subject = subject,
+                    IsBodyHtml = true,
+                    Body = body,
+                };
+
+                mailMessage.To.Add(email);
+
+                smtpClient.Send(mailMessage);
+                var abc = "Success";
+
+                return abc;
+            }
+            catch (Exception ex)
+            {
+                var abc = "Success";
+                return ex.Message.ToString();
             }
         }
         #endregion
@@ -777,44 +798,7 @@ namespace HalloDoc.Services.Services
             viewModel.requestclientID = id;
             return viewModel;
         }
-        public string SendEmailAgreement(string email, string link)
-        {
-            try
-            {
-                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
-                var senderPassword = "Hkd$9503";
-
-                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(senderMail, senderPassword),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false
-                };
-
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
-                    Subject = "Review Agreement",
-                    IsBodyHtml = true,
-                    Body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!",
-                };
-
-                mailMessage.To.Add(email);
-
-                smtpClient.Send(mailMessage);
-                var abc = "Success";
-
-                return abc;
-            }
-            catch (Exception ex)
-            {
-                var abc = "Success";
-                return ex.Message.ToString();
-            }
-        }
-
+       
         public async Task<object> AcceptAgreement(int id)
         {
             RequestClient req =await _requestclientRepository.GetByIdAsync(id);
@@ -835,6 +819,22 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
+        public async Task<object> ConfirmCancelAgreement(int id , string note)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync (id);
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.Status = 3;
+            await _requestRepository.UpdateAsync(request);
+
+            RequestStatusLog log = new RequestStatusLog
+            {
+                RequestId= req.RequestId,
+                Status = 3,
+                Notes="Declined By Patient:"+ note,
+            };
+            await _requestStatusLogRepository.AddAsync (log);
+            return "";
+        }
         #endregion
 
     }

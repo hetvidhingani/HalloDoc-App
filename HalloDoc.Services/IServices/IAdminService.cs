@@ -14,6 +14,7 @@ namespace HalloDoc.Services.IServices
     {
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
         Task<User> GetUser(string email);
+        Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
         List<AdminDashboardViewModel> New();
         List<AdminDashboardViewModel> Pending();
@@ -50,9 +51,10 @@ namespace HalloDoc.Services.IServices
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
         Task<string> ClearRequest(int? id);
-        Task SendMail(string toEmail, string subject, string body);
+        string SendEmail(string email, string link, string subject, string body);
         Task<object> sendAgreement(ViewCaseViewModel viewModel, int id);
-        string SendEmailAgreement(string email, string link);
+       
         Task<object> AcceptAgreement(int id);
+        Task<object> ConfirmCancelAgreement(int id, string note);
     }
 }

@@ -105,8 +105,11 @@ namespace HalloDoc.Controllers
             }
 
             var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + req.Email;
-            var msg = _patient.SendEmail(req.Email, link);
-
+            var subject = "Reset Account Password";
+            var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your passwrod";
+            await _patient.SendEmail(req.Email, link ,subject,body);
+           string mail= await _patient.GetTempData<string>("mail");
+            TempData["Mail"] = mail;
             return RedirectToAction("ResetPassword", "Custom");
         }
 
@@ -122,7 +125,9 @@ namespace HalloDoc.Controllers
             }
 
             var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
-            var msg = _patient.SendEmailCreateAccount(req.Email, link);
+            var subject = "Create Account";
+            var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
+            _patient.SendEmail(req.Email, link, subject, body);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
@@ -307,13 +312,10 @@ namespace HalloDoc.Controllers
 
         #region send Agreement
         [HttpGet]
-        public async Task<IActionResult> ReviewAgreement(int requestClinetID)
+        public async Task<IActionResult> ReviewAgreement()
         {
-            ReviewAgreementViewModel model = new ReviewAgreementViewModel
-            {
-                RequestClientID = requestClinetID,
-            };
-            return View(model);
+            
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> AcceptAgreement(int id)
@@ -321,6 +323,20 @@ namespace HalloDoc.Controllers
           
             await _admin.AcceptAgreement(id);
             return null;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CancelAgreement(int id)
+        {
+           var result =  await _admin.GetRequestClientByID(id);
+            var name = result.FirstName + " " + result.LastName;
+            return Json(name);
+        }
+        [HttpPost]
+        public async Task<string> ConfirmCancelAgreement(int id, string note)
+        {
+            await _admin.ConfirmCancelAgreement(id,note);
+            return "";
         }
         #endregion
 

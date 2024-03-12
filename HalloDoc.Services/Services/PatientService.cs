@@ -882,7 +882,7 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
-        public string SendEmail(string email, string link)
+        public async Task<string> SendEmail(string email, string link,string subject, string body)
         {
             try
             {
@@ -901,16 +901,16 @@ namespace HalloDoc.Services.Services
                 MailMessage mailMessage = new MailMessage
                 {
                     From = new MailAddress(senderMail, "HalloDoc Reset Password"),
-                    Subject = "Reset Account Password",
+                    Subject = subject,
                     IsBodyHtml = true,
-                    Body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your passwrod",
+                    Body = body,
                 };
 
                 mailMessage.To.Add(email);
 
                 smtpClient.Send(mailMessage);
                 var abc = "Success";
-
+               _aspnetuserRepository.SetTempData("mail", "Link is successfully sent to your Registerd Email!");
                 return abc;
             }
             catch (Exception ex)
@@ -920,42 +920,6 @@ namespace HalloDoc.Services.Services
             }
         }
 
-        public string SendEmailCreateAccount(string email, string link)
-        {
-            try
-            {
-                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
-                var senderPassword = "Hkd$9503";
-
-                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(senderMail, senderPassword),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false
-                };
-
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderMail, "HalloDoc Create Account"),
-                    Subject = "Create Account",
-                    IsBodyHtml = true,
-                    Body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!",
-                };
-
-                mailMessage.To.Add(email);
-
-                smtpClient.Send(mailMessage);
-                var abc = "Success";
-
-                return abc;
-            }
-            catch (Exception ex)
-            {
-                var abc = "Success";
-                return ex.Message.ToString();
-            }
-        }
+        
     }
 }

@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
 </head>
 <body>
-@model HalloDoc.Entities.ViewModels.ReviewAgreementViewModel
+
 <div class="mainContent2 " style="margin-top:10%" >
 <div class="d-flex justify-content-center align-items-center" >
   
@@ -33,7 +33,7 @@
             <p style="font-weight:500"> To provide best medical service, we cannot determine the cost right away. If you agree to our service, so we will provide care and follow-up until all care is completed. So with this points, if you like us to provide care to you click on “Agree” and we’ll get started immediately, if you do not agree simply click “Cancel”. </p>
            <div class="d-flex justify-content-around">
                 <button type="button" class="btn btn-success" id="sendAgreement">I agree</button>
-                <button type="button" class="btn btn-danger"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="cancelAgreement">Cancel</button>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal" id="cancelAgreement">Cancel</button>
            </div>
 
        </div>
@@ -43,16 +43,15 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            @* <input type="hidden" asp-for="@Model.RequestClientID" /> *@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Cancle Confirmation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                 </div>
                 <div class="modal-body">
 
                     <p class="">
-                       Test Test,
+                            <span id="name"></span>
                     </p>
                     <div class=" d-flex justify-content-center ">
                         <textarea placeholder="Please provide a brief explanation for your cancelation" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8"></textarea>
@@ -60,7 +59,7 @@
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-end">
-                    <button type="button" class="createNewReqBtn submitBtn " >
+                        <button type="button" class="createNewReqBtn submitBtn " id="ConfirmCancleAgreement" >
                         Confirm
                     </button>
 
@@ -81,26 +80,44 @@
     <script src="~/js/custom.js" asp-append-version="true"></script>
     <script>
         var urlParams = new URLSearchParams(window.location.search);
-        var requestClientID = urlParams.get("requestClientID");
+        var requestClientID = urlParams.get("requestClinetID");
+       
         $('#sendAgreement').click(function () {
            
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("AcceptAgreement", "Custom")',
                 data: { id: requestClientID }
-              
-
-
+            
             });
         });
         $('#cancelAgreement').click(function () {
-           
+
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: '@Url.Action("CancelAgreement", "Custom")',
-                data: { id: @Model.RequestClientID }
+                data: { id: requestClientID },
+                success: function (name) {
+
+                    $('#name').text(name);
+                  
+                    $('#exampleModal').modal('show');
+                }
+
             });
         });
+        $('#ConfirmCancleAgreement').click(function () {
+            var note = $('#textAreaExample2').val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("ConfirmCancelAgreement", "Custom")',
+                data: { id: requestClientID, note: note },
+                       success: function () {
+                    location.reload();
+                }
+            });
+        });
+        
         
         $(document).ready(function () {
             var theme = getCookie("theme");
