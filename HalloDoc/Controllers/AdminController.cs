@@ -25,7 +25,10 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
         }
 
-      
+        public IActionResult EncounterForm()
+        {
+            return View();
+        }
         #region Logout
         public IActionResult Logout()
         {
@@ -60,47 +63,53 @@ namespace HalloDoc.Controllers
             return View(result);
         }
 
-        public IActionResult New()
+   
+        public IActionResult GetTable(string state)
         {
-            List<AdminDashboardViewModel> list = _admin.New();
-            return PartialView("_NewPartialView", list);
+            List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
+
+            switch (state)
+            {
+                case "New":
+                    ViewBag.state = "New";
+                    var result=_admin.Admintbl(list, 1);
+                    return PartialView("_TablePartialView", result);
+                case "Pending":
+                    ViewBag.state = "Pending";
+                    var resultPending = _admin.Admintbl(list, 2);
+                    return PartialView("_TablePartialView", resultPending);
+
+                case "Active":
+                    ViewBag.state = "Active";
+                    var resultActive=_admin.Admintbl(list, 4);
+                    //var resultActive2 = _admin.Admintbl(list, 5);
+                    return PartialView("_TablePartialView", resultActive);
+
+
+                case "Conclude":
+                    ViewBag.state = "Conclude";
+                     var resultConclude=_admin.Admintbl(list, 6);
+                    return PartialView("_TablePartialView", resultConclude);
+
+                case "Toclose":
+                    ViewBag.state = "Toclose";
+                     var resultToClose=_admin.Admintbl(list, 3);
+                     //var result=_admin.Admintbl(list, 7);
+                     //var result=_admin.Admintbl(list, 8);
+                    return PartialView("_TablePartialView", resultToClose);
+
+                case "Unpaid":
+                    ViewBag.state = "Unpaid";
+                     var resultUnpaid=_admin.Admintbl(list, 9);
+                    return PartialView("_TablePartialView", resultUnpaid);
+
+
+               
+                default:
+                    return PartialView("_TablePartialView", list);
+            }
+
         }
-
-        public IActionResult Pending()
-        {
-            List<AdminDashboardViewModel> list = _admin.Pending();
-
-            return PartialView("_PendingPartialView", list);
-        }
-
-        public IActionResult Active()
-        {
-            List<AdminDashboardViewModel> list = _admin.Active();
-
-            return PartialView("_ActivePartialView", list);
-        }
-
-        public IActionResult Conclude()
-        {
-            List<AdminDashboardViewModel> list = _admin.Conclude();
-
-            return PartialView("_ConcludePartialView", list);
-        }
-
-        public IActionResult ToClose()
-        {
-            List<AdminDashboardViewModel> list = _admin.ToClose();
-
-            return PartialView("_ToClosePartialView", list);
-        }
-
-        public IActionResult Unpaid()
-        {
-            List<AdminDashboardViewModel> list = _admin.Unpaid();
-
-            return PartialView("_UnpaidPartialView", list);
-        }
-
         #endregion
 
         #region View Case

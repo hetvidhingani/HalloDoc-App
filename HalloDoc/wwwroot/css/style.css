@@ -55,6 +55,7 @@ input[type=password]::-ms-clear {
     background-color: #203f9a;
     color: white;
 
+
 }
 #Pending.active, #Pending:hover {
     background-color: #00adef;
@@ -78,21 +79,85 @@ input[type=password]::-ms-clear {
 }
 
 .cards {
+    position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
-
 }
-/* .triangle{
+#New.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
     width: 0;
     height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 20px solid #203f9a;
-  
-}*/
-
-.cards.active .triangle.active  {
-    visibility: visible;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #203f9a;
 }
+#Pending.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #00adef;
+}
+#Active.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #4CAF50;
+}
+#Conclude.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #da0f82;
+}
+#ToClose.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #0370d7;
+}
+#Unpaid.cards.active::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%) rotate(0deg);
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #9966cd;
+}
+   
+    .cards.active .triangle.active {
+        visibility: visible;
+    }
 .card:not(.active) {
     display: none;
 }
@@ -218,6 +283,9 @@ background-color:lightgray;
 }
 
     @media only screen and (max-width: 600px) {
+        .mainSectionMargin {
+            margin: 120px 0px;
+        }
         .cust-col {
             flex: 0 0 33.33333%;
             max-width: 33.33333%;
@@ -307,7 +375,12 @@ background-color:lightgray;
             border-radius: 10px;
             position: relative;
             top: -30px;
+
         }
+        #New.cards.active::after, #Pending.cards.active::after, #Active.cards.active::after, #Unpaid.cards.active::after, #Conclude.cards.active::after, #ToClose.cards.active::after {
+            display: none;
+        }
+         
     }
 
     @media only screen and (min-width: 601px) {

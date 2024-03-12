@@ -38,7 +38,7 @@ namespace HalloDoc.Services.Services
         private readonly IHealthProfessionalTypeRepository _healthProfessionalTypeRepository;
         private readonly IBlockRequestRepository _blockRequestRepository;
 
-       
+
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -107,7 +107,7 @@ namespace HalloDoc.Services.Services
             RequestClient result = await _requestclientRepository.GetByIdAsync(id);
             return result;
         }
-        
+
         #endregion
 
         #region Send Mail
@@ -151,176 +151,47 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
+        public List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status)
+
+        {
+            var tabledashboard = (
+                 from r in _requestRepository.GetAll()
+                 join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+                 join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
+                 from phy in physicianGroup.DefaultIfEmpty()
+
+                 where r.Status == status
+
+                 select new AdminDashboardViewModel
+                 {
+                     PatientName = rec.FirstName + "," + rec.LastName,
+                     DateOfBirth = rec.DateOfBirth,
+                     Requestor = r.FirstName + "," + r.LastName,
+                     RequestedDate = r.CreatedDate,
+                     PatientPhone = rec.PhoneNumber,
+                     RequestorPhone = r.PhoneNumber,
+                     Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                     Notes = rec.Notes,
+                     PhysicianName = phy.FirstName + " " + phy.LastName,
+                     RequestTypeID = r.RequestTypeId,
+                     RequstClientId = rec.RequestClientId,
+                     requestID = rec.RequestId
+
+
+                 }).ToList();
+
+           
+           
+            return tabledashboard;
+        }
+
         public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
         {
-            viewModel.State=await _regionRepository.GetRegions();
+            viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
 
-        public List<AdminDashboardViewModel> New()
-        {
-
-            var tabledashboard1 = (
-
-              from r in _requestRepository.GetAll()
-              join p in _requestclientRepository.GetAll() on r.RequestId equals p.RequestId
-              where r.Status == 1
-              select new AdminDashboardViewModel
-              {
-                  PatientName = p.FirstName + "," + p.LastName,
-                  DateOfBirth = p.DateOfBirth,
-                  Requestor = r.FirstName + "," + r.LastName,
-                  RequestedDate = r.CreatedDate,
-                  PatientPhone = p.PhoneNumber,
-                  RequestorPhone = r.PhoneNumber,
-                  Address = p.Street + "," + p.City + "," + p.State + "," + p.ZipCode,
-                  Notes = p.Notes,
-                  RequestTypeID = r.RequestTypeId,
-                  Status = r.Status,
-                  RequstClientId = p.RequestClientId
-
-
-              }).ToList();
-            return tabledashboard1;
-        }
-        public List<AdminDashboardViewModel> Pending()
-        {
-
-            var tabledashboard1 = (
-              from r in _requestRepository.GetAll()
-              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 2
-
-              select new AdminDashboardViewModel
-              {
-                  PatientName = rec.FirstName + "," + rec.LastName,
-                  DateOfBirth = rec.DateOfBirth,
-                  Requestor = r.FirstName + "," + r.LastName,
-                  RequestedDate = r.CreatedDate,
-                  PatientPhone = rec.PhoneNumber,
-                  RequestorPhone = r.PhoneNumber,
-                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                  Notes = rec.Notes,
-                  PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId,
-                  RequstClientId = rec.RequestClientId,
-                  requestID = rec.RequestId
-
-
-              }).ToList();
-            return tabledashboard1;
-        }
-        public List<AdminDashboardViewModel> Active()
-        {
-
-            var tabledashboard1 = (
-              from r in _requestRepository.GetAll()
-              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 4
-
-              select new AdminDashboardViewModel
-              {
-                  PatientName = rec.FirstName + "," + rec.LastName,
-                  DateOfBirth = rec.DateOfBirth,
-                  Requestor = r.FirstName + "," + r.LastName,
-                  RequestedDate = r.CreatedDate,
-                  PatientPhone = rec.PhoneNumber,
-                  RequestorPhone = r.PhoneNumber,
-                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                  Notes = rec.Notes,
-                  PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId,
-                  RequstClientId = rec.RequestClientId,
-                  requestID = rec.RequestId
-
-
-
-              }).ToList();
-            return tabledashboard1;
-        }
-        public List<AdminDashboardViewModel> Conclude()
-        {
-
-            var tabledashboard1 = (
-              from r in _requestRepository.GetAll()
-              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 6
-
-              select new AdminDashboardViewModel
-              {
-                  PatientName = rec.FirstName + "," + rec.LastName,
-                  DateOfBirth = rec.DateOfBirth,
-                  Requestor = r.FirstName + "," + r.LastName,
-                  RequestedDate = r.CreatedDate,
-                  PatientPhone = rec.PhoneNumber,
-                  RequestorPhone = r.PhoneNumber,
-                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                  Notes = rec.Notes,
-                  PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId,
-                  RequstClientId = rec.RequestClientId,
-                  requestID = rec.RequestId
-
-
-              }).ToList();
-            return tabledashboard1;
-        }
-        public List<AdminDashboardViewModel> ToClose()
-        {
-            var tabledashboard1 = (
-                from r in _requestRepository.GetAll()
-                join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-                join phy in _physicianRepository.GetAll().DefaultIfEmpty() on r.PhysicianId equals phy.PhysicianId into leftJoin
-                from subPhy in leftJoin.DefaultIfEmpty()
-                where r.Status == 3
-
-                select new AdminDashboardViewModel
-                {
-                    PatientName = rec.FirstName + "," + rec.LastName,
-                    DateOfBirth = rec.DateOfBirth,
-                    Requestor = r.FirstName + "," + r.LastName,
-                    RequestedDate = r.CreatedDate,
-                    PatientPhone = rec.PhoneNumber,
-                    RequestorPhone = r.PhoneNumber,
-                    Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                    Notes = rec.Notes,
-                    PhysicianName = subPhy.FirstName + " " + subPhy.LastName,
-                    RequestTypeID = r.RequestTypeId,
-                    RequstClientId = rec.RequestClientId,
-                    requestID = rec.RequestId
-                }).ToList();
-            return tabledashboard1;
-        }
-        public List<AdminDashboardViewModel> Unpaid()
-        {
-
-            var tabledashboard1 = (
-              from r in _requestRepository.GetAll()
-              join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-              join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId
-              where r.Status == 9
-
-              select new AdminDashboardViewModel
-              {
-                  PatientName = rec.FirstName + "," + rec.LastName,
-                  DateOfBirth = rec.DateOfBirth,
-                  Requestor = r.FirstName + "," + r.LastName,
-                  RequestedDate = r.CreatedDate,
-                  PatientPhone = rec.PhoneNumber,
-                  RequestorPhone = r.PhoneNumber,
-                  Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                  Notes = rec.Notes,
-                  PhysicianName = phy.FirstName + " " + phy.LastName,
-                  RequestTypeID = r.RequestTypeId,
-                  RequstClientId = rec.RequestClientId,
-                  requestID = rec.RequestId
-
-              }).ToList();
-            return tabledashboard1;
-        }
+       
         #endregion
 
         #region View Case
@@ -384,12 +255,12 @@ namespace HalloDoc.Services.Services
         public async Task<object> ViewNotes(AdminDashboardViewModel viewmodel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-           
 
-           
+
+
             var physicianNames = await _requestStatusLogRepository.GetPhysicianNames(req.RequestId);
 
-         
+
             viewmodel.TransferNotes = physicianNames;
 
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
@@ -621,9 +492,9 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region ClearCase
-        public async Task<string> ClearRequest( int? id)
+        public async Task<string> ClearRequest(int? id)
         {
-      
+
             Request request = await _requestRepository.GetByIdAsync(id);
             request.Status = 10;
             await _requestRepository.UpdateAsync(request);
@@ -797,19 +668,19 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Send Agreement
-        public async Task<object> sendAgreement(ViewCaseViewModel viewModel,int id)
+        public async Task<object> sendAgreement(ViewCaseViewModel viewModel, int id)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             viewModel.Email = req.Email;
-            viewModel.PhoneNumber=req.PhoneNumber;
+            viewModel.PhoneNumber = req.PhoneNumber;
             viewModel.requestclientID = id;
             return viewModel;
         }
-       
+
         public async Task<object> AcceptAgreement(int id)
         {
-            RequestClient req =await _requestclientRepository.GetByIdAsync(id);
-            Request request =await _requestRepository.GetByIdAsync(req.RequestId);
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 4;
 
             await _requestRepository.UpdateAsync(request);
@@ -826,20 +697,20 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-        public async Task<object> ConfirmCancelAgreement(int id , string note)
+        public async Task<object> ConfirmCancelAgreement(int id, string note)
         {
-            RequestClient req = await _requestclientRepository.GetByIdAsync (id);
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 3;
             await _requestRepository.UpdateAsync(request);
 
             RequestStatusLog log = new RequestStatusLog
             {
-                RequestId= req.RequestId,
+                RequestId = req.RequestId,
                 Status = 3,
-                Notes="Declined By Patient:"+ note,
+                Notes = "Declined By Patient:" + note,
             };
-            await _requestStatusLogRepository.AddAsync (log);
+            await _requestStatusLogRepository.AddAsync(log);
             return "";
         }
         #endregion

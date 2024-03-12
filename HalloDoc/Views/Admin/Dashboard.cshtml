@@ -52,10 +52,9 @@
 <main class="mainSectionMargin">
     <div class="container-fluid dashboardMain ">
         <div>
-           
             <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col ">
-                    <button class="cards active-card cardDesign1 " id="New" data-view-name="_NewPartialView">
+                    <button class="cards active cardDesign1 " id="New" data-view-name="_NewPartialView" onclick="loadTable('New')">
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -75,7 +74,7 @@
                     <div class="triangle mx-auto"></div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView">
+                    <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView" onclick="loadTable('Pending')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -93,8 +92,8 @@
                     <div class="triangle mx-auto"></div>
 
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign3  " id="Active">
+                <div class="col-lg-2 col-md-2 col-sm-2 cust-col" >
+                    <button class="cards cardDesign3  " id="Active" onclick="loadTable('Active')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -113,7 +112,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign4  " id="Conclude">
+                    <button class="cards cardDesign4  " id="Conclude" onclick="loadTable('Conclude')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -132,7 +131,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign5  " id="ToClose">
+                    <button class="cards cardDesign5  " id="ToClose" onclick="loadTable('Toclose')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -150,7 +149,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign6  " id="Unpaid">
+                    <button class="cards cardDesign6  " id="Unpaid" onclick="loadTable('Unpaid')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -176,7 +175,7 @@
                     <div class="sectionHeading">
                         <strong class="tableHead ">
                             <h3 class="">Patients</h3>
-                            <h5 style="color:#203e84;font-size:14px" class="">(New)</h5>
+                            <h5 style="color:#203e84;font-size:14px" id="status"></h5>
                         </strong>
                     </div>
                     <div class="dashboardLinks d-flex flex-row-reverse flex-wrap " style="float:right">
@@ -234,13 +233,46 @@
                     </div>
             @* table *@
                     <div id="admindata" class="mb-5"></div>
-
+                    
                 </div>
             </div>
         </div>
     </div>
 </main>
 <script>
+    $(document).ready(function () {
+        $(".cards").click(function () {
+           
+            $(".cards").removeClass("active");
+
+          
+            $(this).addClass("active");
+        });
+    });
+
+       
+    $(document).ready(function () {
+        loadTable('New');
+    });
+    function loadTable(state) {
+        document.getElementById('status').innerText ="( "+ state +" )";
+        $.ajax({
+            url:'/Admin/GetTable',
+            method:'GET',
+            data: {state:state},
+            success: function (data) {
+                $("#admindata").html(data);
+             
+
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error:', error);
+            }
+        })
+    }
+
+
+
     var coll = document.getElementsByClassName("collapsible");
     var i;
 
@@ -270,145 +302,7 @@
         }
     }
  
-        $(document).ready(function () {
-        $("#New").addClass("active");
-
-            load();
-
-
-        $('#New').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-          
-            $('#Pending, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
-
-            $.ajax({
-                url: "/Admin/New",
-                type: "POST",
-                dataType: "html",
-                success: function (data) {
-                    $("#admindata").html(data);
-                },
-                error: function () {
-                    alert("No Projects Found");
-                    $("#admindata").html('An error has occurred');
-                }
-            });
-        });
-
-        $('#Pending').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-           
-            $('#New, #Active, #Conclude, #ToClose, #Unpaid').removeClass("active");
-
-            $.ajax({
-                    url: "/Admin/Pending",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                   
-
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
-            });
-
-            $('#Active').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-            
-            $('#New, #Pending, #Conclude, #ToClose, #Unpaid').removeClass("active");
-
-            $.ajax({
-                    url: "/Admin/Active",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
-            });
-
-            $('#Conclude').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-
-            $('#New, #Pending, #Active, #ToClose, #Unpaid').removeClass("active");
-
-            $.ajax({
-                    url: "/Admin/Conclude",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
-            });
-
-
-            $('#ToClose').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-
-            $('#New, #Pending, #Active, #Conclude, #Unpaid').removeClass("active");
-
-            $.ajax({
-                    url: "/Admin/ToClose",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
-            });
-
-            $('#Unpaid').click(function () {
-            $(this).addClass("active").siblings().removeClass("active");
-
-            $('#New, #Pending, #Active, #Conclude, #ToClose').removeClass("active");
-
-            $.ajax({
-                    url: "/Admin/Unpaid",
-                    type: "POST",
-                    dataType: "html",
-                    success: function (data) {
-                        $("#admindata").html(data);
-                    },
-                    error: function () {
-                        alert("No Projects Found");
-                        $("#admindata").html('An error has occurred');
-                    }
-                });
-            });
-        });
-
-    function load() {
-        $.ajax({
-            url: "/Admin/New",
-            type: "POST",
-            dataType: "html",
-            success: function (data) {
-                $("#admindata").html(data);
-            },
-            error: function () {
-                alert("No Projects Found");
-                $("#admindata").html('An error has occurred');
-            }
-        });
       
-    }
     document.getElementById("newCountDisplay").innerText = @Model.NewCount;
     document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;
     document.getElementById("ActiveCount").innerText = @Model.ActiveCount;
