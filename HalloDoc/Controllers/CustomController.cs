@@ -14,15 +14,7 @@ namespace HalloDoc.Controllers
         public IPatientService _patient;
         private IAdminService _admin;
         private IJwtService _jwtService;
-        [HttpGet]
-        public async Task<IActionResult> ReviewAgreement(int requestClinetID)
-        {
-            ReviewAgreementViewModel model = new ReviewAgreementViewModel
-            {
-                RequestClientID = requestClinetID,
-            };
-            return View(model);
-        }
+       
 
         #region constructor
         public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService)
@@ -312,6 +304,17 @@ namespace HalloDoc.Controllers
 
 
         #endregion
+
+        #region send Agreement
+        [HttpGet]
+        public async Task<IActionResult> ReviewAgreement(int requestClinetID)
+        {
+            ReviewAgreementViewModel model = new ReviewAgreementViewModel
+            {
+                RequestClientID = requestClinetID,
+            };
+            return View(model);
+        }
         [HttpPost]
         public async Task<IActionResult> AcceptAgreement(int id)
         {
@@ -319,6 +322,8 @@ namespace HalloDoc.Controllers
             await _admin.AcceptAgreement(id);
             return null;
         }
+        #endregion
+
 
     }
 }

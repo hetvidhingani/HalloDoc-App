@@ -820,8 +820,19 @@ namespace HalloDoc.Services.Services
             RequestClient req =await _requestclientRepository.GetByIdAsync(id);
             Request request =await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 4;
+
             await _requestRepository.UpdateAsync(request);
-            return "Dashboard";
+
+            RequestStatusLog log = new RequestStatusLog
+            {
+                RequestId = req.RequestId,
+                Status = 4,
+                Notes = "Accepted By Patient",
+                CreatedDate = DateTime.Now
+
+            };
+            await _requestStatusLogRepository.AddAsync(log);
+            return "";
         }
 
         #endregion
