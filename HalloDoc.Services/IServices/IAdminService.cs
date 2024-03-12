@@ -53,7 +53,7 @@ namespace HalloDoc.Services.IServices
         Task<string> ClearRequest(int? id);
         string SendEmail(string email, string link, string subject, string body);
         Task<object> sendAgreement(ViewCaseViewModel viewModel, int id);
-       
+        Task<object> DashboardRegions(AdminDashboardViewModel viewModel);
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);
     }

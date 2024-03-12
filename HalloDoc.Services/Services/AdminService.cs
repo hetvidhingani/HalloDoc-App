@@ -107,6 +107,7 @@ namespace HalloDoc.Services.Services
             RequestClient result = await _requestclientRepository.GetByIdAsync(id);
             return result;
         }
+        
         #endregion
 
         #region Send Mail
@@ -150,6 +151,12 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
+        public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
+        {
+            viewModel.State=await _regionRepository.GetRegions();
+            return viewModel;
+        }
+
         public List<AdminDashboardViewModel> New()
         {
 

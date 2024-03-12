@@ -1,5 +1,6 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Entities.ViewModels;
+using HalloDoc.Repository.IRepository;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
@@ -52,10 +53,11 @@ namespace HalloDoc.Controllers
                 ActiveCount = await _admin.GetCount(4),
                 ConcludeCount = await _admin.GetCount(6),
                 ToCloseCount = await _admin.GetCount(3),
-                UnpaidCount = await _admin.GetCount(9)
-            };
-
-            return View(viewModel);
+                UnpaidCount = await _admin.GetCount(9),
+               
+        };
+            var result= await _admin.DashboardRegions(viewModel);
+            return View(result);
         }
 
         public IActionResult New()
