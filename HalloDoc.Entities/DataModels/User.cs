@@ -79,8 +79,6 @@ public partial class User
     [Column(TypeName = "bit(1)")]
     public BitArray? IsRequestWithEmail { get; set; }
 
-    public DateOnly? DateOfBirth { get; set; }
-
     [ForeignKey("Id")]
     [InverseProperty("UserIdNavigations")]
     public virtual AspNetUser? IdNavigation { get; set; }

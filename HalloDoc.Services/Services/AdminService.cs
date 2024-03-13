@@ -154,6 +154,7 @@ namespace HalloDoc.Services.Services
         public List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status)
 
         {
+
             var tabledashboard = (
                  from r in _requestRepository.GetAll()
                  join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
@@ -165,7 +166,7 @@ namespace HalloDoc.Services.Services
                  select new AdminDashboardViewModel
                  {
                      PatientName = rec.FirstName + "," + rec.LastName,
-                     DateOfBirth = rec.DateOfBirth,
+                     DateOfBirth = new DateTime((int)rec.IntYear, Convert.ToInt32(rec.StrMonth), (int)rec.IntDate),
                      Requestor = r.FirstName + "," + r.LastName,
                      RequestedDate = r.CreatedDate,
                      PatientPhone = rec.PhoneNumber,
@@ -180,9 +181,9 @@ namespace HalloDoc.Services.Services
 
                  }).ToList();
 
-           
-           
-            return tabledashboard;
+
+
+            return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
         }
 
         public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
@@ -191,7 +192,7 @@ namespace HalloDoc.Services.Services
             return viewModel;
         }
 
-       
+
         #endregion
 
         #region View Case
@@ -205,6 +206,8 @@ namespace HalloDoc.Services.Services
         {
             ViewCaseViewModel viewmodel = new ViewCaseViewModel();
             RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
+            DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
+
             if (user != null)
             {
                 viewmodel.Symptoms = user.Notes;
@@ -215,7 +218,7 @@ namespace HalloDoc.Services.Services
                 viewmodel.PhoneNumber = user.PhoneNumber;
                 viewmodel.Address = user.Street + "," + user.City + "," + user.ZipCode;
                 viewmodel.requestclientID = user.RequestClientId;
-
+                viewmodel.DateOfBirth = dob;
                 return viewmodel;
             }
             return "ViewCase";
@@ -504,6 +507,70 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region CLose Case
+        public async Task<CloseCaseViewModel> CloseCase(int Id)
+        {
+
+            CloseCaseViewModel viewModel = new CloseCaseViewModel();
+            Request req = await _requestRepository.GetByIdAsync(Id);
+            RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
+            DateTime dob = new DateTime((int)requestClient.IntYear, Convert.ToInt32(requestClient.StrMonth), (int)requestClient.IntDate);
+            viewModel.FirstName = requestClient.FirstName;
+            viewModel.LastName = requestClient.LastName;
+            viewModel.PhoneNumber = requestClient.PhoneNumber;
+            viewModel.Email = requestClient.Email;
+            viewModel.DateOfBirth = dob;
+            viewModel.RequstId = Id;
+            viewModel.RequestClientID = requestClient.RequestClientId;
+            viewModel.RequestWiseFiles = (
+                                         from rwf in _requestwisefileRepository.GetAll()
+                                         where rwf.RequestId == Id && rwf.IsDeleted == null
+                                         select new RequestWiseFile
+                                         {
+                                             CreatedDate = rwf.CreatedDate,
+                                             FileName = rwf.FileName,
+                                             RequestWiseFileId = rwf.RequestWiseFileId
+
+                                         }).ToList();
+            return viewModel;
+
+        }
+        public async Task<object> EditClose(CloseCaseViewModel viewModel, int Id)
+        {
+
+
+            RequestClient user = await _requestclientRepository.GetByIdAsync(Id);
+            if (user != null)
+            {
+
+                user.Email = viewModel.Email;
+
+                user.PhoneNumber = viewModel.PhoneNumber;
+
+                await _requestclientRepository.UpdateAsync(user);
+
+            }
+            return user.RequestId;
+        }
+        public async Task<string> ConfirmCloseCase(int id)
+        {
+            Request req = await _requestRepository.GetByIdAsync(id);
+            req.Status = 9;
+            await _requestRepository.UpdateAsync(req);
+            RequestStatusLog log = new RequestStatusLog()
+            {
+                RequestId = req.RequestId,
+                Status = req.Status,
+                AdminId = 1,
+                CreatedDate = DateTime.Now,
+            };
+            await _requestStatusLogRepository.AddAsync(log);
+            return "Dashboard";
+        }
+
+
+        #endregion
+
         #region View Uploads
         public bool IsDeleted(BitArray? isDeleted)
         {
@@ -714,6 +781,23 @@ namespace HalloDoc.Services.Services
             return "";
         }
         #endregion
+
+        public async Task<object> AdminMyProfile(int adminId)
+        {
+            Admin admin = await _adminRepository.GetByIdAsync(adminId);
+            AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
+            AdminMyProfileViewModel model = new AdminMyProfileViewModel()
+            {
+                UserName = aspNetUser.UserName,
+                Password=aspNetUser.PasswordHash,
+
+
+            };
+            return "";
+
+            
+        }
+
 
     }
 }

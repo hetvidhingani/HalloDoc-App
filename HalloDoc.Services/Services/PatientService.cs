@@ -82,11 +82,14 @@ namespace HalloDoc.Services.Services
         {
             PatientRequestViewModel viewModel = new PatientRequestViewModel();
             viewModel.State = await _regionRepository.GetRegions();
+            viewModel.DateOfBirth = new DateTime(2000, 1, 1);
             if (userId != null)
             {
                 User user = await _userRepository.GetByIdAsync(userId);
+
                 if (user != null)
                 {
+                DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
                     viewModel.FirstName = user.FirstName;
                     viewModel.LastName = user.LastName;
                     viewModel.City = user.City;
@@ -95,7 +98,7 @@ namespace HalloDoc.Services.Services
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
                     viewModel.ZipCode = user.ZipCode;
-                    viewModel.DateOfBirth = user.DateOfBirth;
+                    viewModel.DateOfBirth =dob;
                     return viewModel;
                 }
             }
@@ -129,7 +132,9 @@ namespace HalloDoc.Services.Services
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City +"," + viewModel.ZipCode
 
             };
@@ -186,7 +191,9 @@ namespace HalloDoc.Services.Services
                     State = requestClient.State,
                     ZipCode = requestClient.ZipCode,
 
-                    DateOfBirth = viewModel.DateOfBirth,
+                   IntDate = requestClient.IntDate,
+                   IntYear= requestClient.IntYear,
+                   StrMonth= requestClient.StrMonth,
                     CreatedBy = "Admin",
                     CreatedDate = DateTime.Now,
                     RegionId = viewModel.RegionId
@@ -233,7 +240,9 @@ namespace HalloDoc.Services.Services
                 State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
-                DateOfBirth = viewModel.DateOfBirth,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Email = viewModel.Email,
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
 
@@ -335,7 +344,9 @@ namespace HalloDoc.Services.Services
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
 
 
@@ -433,7 +444,9 @@ namespace HalloDoc.Services.Services
                 ZipCode = concierge.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
-                DateOfBirth = viewModel.DateOfBirth,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = concierge.Street + "," + concierge.City + "," + concierge.ZipCode
 
             };
@@ -605,7 +618,7 @@ namespace HalloDoc.Services.Services
                 State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
-                DateOfBirth = viewModel.DateOfBirth,
+               // DateOfBirth = viewModel.DateOfBirth,
                 Email = viewModel.Email,
             };
             await _requestclientRepository.AddAsync(requestClient);
@@ -684,7 +697,9 @@ namespace HalloDoc.Services.Services
                         City = requestClient.City,
                         State = requestClient.State,
                         ZipCode = requestClient.ZipCode,
-                        DateOfBirth = requestClient.DateOfBirth,
+                        IntDate = requestClient.IntDate,
+                        IntYear = requestClient.IntYear,
+                        StrMonth = requestClient.StrMonth,
                         CreatedBy = "Admin",
                         CreatedDate = DateTime.Now,
                         RegionId = 1
@@ -722,6 +737,7 @@ namespace HalloDoc.Services.Services
         public async Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId)
         {
             User user = await _userRepository.GetByIdAsync(userId);
+            DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate) ;
             if (user != null)
             {
                 requestViewModel.FirstName = user.FirstName;
@@ -732,7 +748,7 @@ namespace HalloDoc.Services.Services
                 requestViewModel.Email = user.Email;
                 requestViewModel.PhoneNumber = user.Mobile;
                 requestViewModel.ZipCode = user.ZipCode;
-              
+                requestViewModel.DateOfBirth = dob;
                 return requestViewModel;
 
             }
@@ -752,9 +768,9 @@ namespace HalloDoc.Services.Services
                 user.Mobile = patientRequestViewModel.PhoneNumber;
                 user.State = await _regionRepository.FindState(patientRequestViewModel.RegionId);
                 user.ZipCode = patientRequestViewModel.ZipCode;
-                user.StrMonth = patientRequestViewModel.DateOfBirth.Value.ToString();
-                user.IntDate = patientRequestViewModel.DateOfBirth.Value.Day;
-                user.IntYear = patientRequestViewModel.DateOfBirth.Value.Year;
+                user.IntDate = patientRequestViewModel.DateOfBirth.Day;
+                user.IntYear = patientRequestViewModel.DateOfBirth.Year;
+                user.StrMonth = patientRequestViewModel.DateOfBirth.Month.ToString();
                 user.ModifiedDate = DateTime.Now;
 
                 await _userRepository.UpdateAsync(user);

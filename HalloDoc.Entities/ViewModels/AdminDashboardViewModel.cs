@@ -14,7 +14,7 @@ namespace HalloDoc.Entities.ViewModels
         public int RequestTypeID { get; set; }
         public int? RequstClientId { get; set; }
         public string PatientName { get; set; }
-        public DateOnly? DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string? Requestor { get; set; }
         public DateTime RequestedDate { get; set; }
         public string PatientPhone { get; set; }

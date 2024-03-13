@@ -1,0 +1,227 @@
+﻿@model HalloDoc.Entities.ViewModels.AdminMyProfileViewModel
+
+<div class="mainSectionMargin ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
+            <h3>My Profile</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
+            <form  method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="AdminID" />
+
+                <h3>Account Information</h3>
+             
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="UserName" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">UserName</label>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Password" type="password" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Status" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Status</label>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Role" type="text" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Role</label>
+                            <span asp-validation-for="Role" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-outline-info">Reset Password</button>
+                </div>
+
+                <h3> Administrator Information</h3>
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="FirstName" type="text" class="form-control edit" placeholder=" "  readonly>
+                            <label for=" ">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="LastName" type="text" class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email"
+                                   id="Email" onblur="AlertName()" type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Email</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="ConfirmEmail"
+                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Confirm Email</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    
+                  
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info" id="edit-button" type="button">Edit</button>
+                    <button class="btn btn-info savebtn "style="display:none;" disabled>Save</button>
+                </div>
+              
+                <h3> Mailing & Billing Information</h3>
+
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Address1" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Address1</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Address2" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Address2 </label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="City" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">City </label>
+                        </div>
+                    </div>
+                   @*  <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.State)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                    </div> *@
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group"> 
+                            <input asp-for="Zip" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Zip code</label>
+                            <span asp-validation-for="Zip" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit2" readonly />
+
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
+                    <button class="btn btn-info savebtn2 " style="display:none;" disabled>Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+  
+    
+
+    //dark theme
+    if (localStorage.getItem("Mytheme")) {
+        body.classList.toggle(localStorage.getItem("Mytheme"));
+    }
+    //phone number flag
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+    const phoneInputField1 = document.querySelector("#phone2");
+    const phoneInput1 = window.intlTelInput(phoneInputField1, {
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+
+  
+    //save-edit button
+    var editButton = document.getElementById("edit-button");
+    editButton.addEventListener("click", function () {
+        var form = editButton.closest("form");
+        var inputs = form.querySelectorAll(".edit");
+        var saveButton = form.querySelector(".savebtn");
+      
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+        });
+        saveButton.removeAttribute("disabled");
+        saveButton.style.display = "block";
+
+        editButton.style.display = "none";
+
+    });
+    var editButton2 = document.getElementById("edit-button2");
+    editButton2.addEventListener("click", function () {
+        console.log("clicked");
+        var form1 = editButton2.closest("form");
+        var inputs = form1.querySelectorAll(".edit2");
+        var saveButton1 = form1.querySelector(".savebtn2");
+        console.log(saveButton1);
+
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+            console.log("in");
+
+        });
+        saveButton1.removeAttribute("disabled");
+        saveButton1.style.display = "block";
+
+        editButton2.style.display = "none";
+
+    });
+</script>

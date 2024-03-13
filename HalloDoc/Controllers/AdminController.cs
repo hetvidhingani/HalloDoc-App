@@ -29,6 +29,7 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+
         #region Logout
         public IActionResult Logout()
         {
@@ -57,13 +58,13 @@ namespace HalloDoc.Controllers
                 ConcludeCount = await _admin.GetCount(6),
                 ToCloseCount = await _admin.GetCount(3),
                 UnpaidCount = await _admin.GetCount(9),
-               
-        };
-            var result= await _admin.DashboardRegions(viewModel);
+
+            };
+            var result = await _admin.DashboardRegions(viewModel);
             return View(result);
         }
 
-   
+
         public IActionResult GetTable(string state)
         {
             List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
@@ -72,7 +73,7 @@ namespace HalloDoc.Controllers
             {
                 case "New":
                     ViewBag.state = "New";
-                    var result=_admin.Admintbl(list, 1);
+                    var result = _admin.Admintbl(list, 1);
                     return PartialView("_TablePartialView", result);
                 case "Pending":
                     ViewBag.state = "Pending";
@@ -81,30 +82,30 @@ namespace HalloDoc.Controllers
 
                 case "Active":
                     ViewBag.state = "Active";
-                    var resultActive=_admin.Admintbl(list, 4);
+                    var resultActive = _admin.Admintbl(list, 4);
                     //var resultActive2 = _admin.Admintbl(list, 5);
                     return PartialView("_TablePartialView", resultActive);
 
 
                 case "Conclude":
                     ViewBag.state = "Conclude";
-                     var resultConclude=_admin.Admintbl(list, 6);
+                    var resultConclude = _admin.Admintbl(list, 6);
                     return PartialView("_TablePartialView", resultConclude);
 
                 case "Toclose":
                     ViewBag.state = "Toclose";
-                     var resultToClose=_admin.Admintbl(list, 3);
-                     //var result=_admin.Admintbl(list, 7);
-                     //var result=_admin.Admintbl(list, 8);
+                    var resultToClose = _admin.Admintbl(list, 3);
+                    //var result=_admin.Admintbl(list, 7);
+                    //var result=_admin.Admintbl(list, 8);
                     return PartialView("_TablePartialView", resultToClose);
 
                 case "Unpaid":
                     ViewBag.state = "Unpaid";
-                     var resultUnpaid=_admin.Admintbl(list, 9);
+                    var resultUnpaid = _admin.Admintbl(list, 9);
                     return PartialView("_TablePartialView", resultUnpaid);
 
 
-               
+
                 default:
                     return PartialView("_TablePartialView", list);
             }
@@ -234,6 +235,25 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Close Case
+        public async Task<IActionResult> CloseCase(int Id)
+        {
+            var result = await _admin.CloseCase(Id);
+            return View(result);
+        }
+        public async Task<IActionResult> EditCloseCase(CloseCaseViewModel viewModel, int id)
+        {
+            var result = await _admin.EditClose(viewModel, id);
+            return RedirectToAction("CloseCase", new { Id = result });
+        }
+
+        public async Task<IActionResult> ConfirmCloseCase(int id)
+        {
+            var result = await _admin.ConfirmCloseCase(id);
+            return RedirectToAction(result);
+        }
+        #endregion
+
         #region View Uploads
 
         public async Task<IActionResult> ViewUploads(int Id)
@@ -350,7 +370,7 @@ namespace HalloDoc.Controllers
         #region send agreement
         public async Task<IActionResult> SendAgreement(ViewCaseViewModel viewModel, int id)
         {
-            ViewBag.AgreementIdToClient = id;   
+            ViewBag.AgreementIdToClient = id;
             var result = await _admin.sendAgreement(viewModel, id);
             return PartialView("_SendAgreementPartialView", result);
         }
@@ -364,16 +384,25 @@ namespace HalloDoc.Controllers
                 return RedirectToAction("SendAgreement", "Admin");
             }
 
-            var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" +viewModel.requestclientID;
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" + viewModel.requestclientID;
             var subject = "Review Agreement";
             var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
-           _admin.SendEmail(viewModel.Email, link,subject,body);
+            _admin.SendEmail(viewModel.Email, link, subject, body);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("Dashboard", "Admin");
         }
 
-       
+
+        #endregion
+
+        #region Admin MyProfile
+        public async Task<IActionResult> AdminMyProfile()
+        {
+            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var result = await _admin.AdminMyProfile(AdminId);
+            return View(result);
+        }
         #endregion
     }
 }

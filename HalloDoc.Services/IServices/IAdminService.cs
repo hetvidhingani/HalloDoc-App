@@ -16,7 +16,7 @@ namespace HalloDoc.Services.IServices
         Task<User> GetUser(string email);
         Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
-      
+        Task<object> AdminMyProfile(int adminId);
         Task<int> GetCount(int statusId);
         Task<object> ViewCase( int userId);
         Task<int> GetUserByRequestClientID(int id);
@@ -52,5 +52,8 @@ namespace HalloDoc.Services.IServices
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);
         List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status);
+        Task<CloseCaseViewModel> CloseCase(int Id);
+        Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
+        Task<string> ConfirmCloseCase(int id);
     }
 }

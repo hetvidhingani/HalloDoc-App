@@ -58,7 +58,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? CLientEmail { get; set; }
 
      
-        public DateOnly? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string? ClientProperty { get; set; }
         public string? ClientCaseNo { get; set; }
 
@@ -66,7 +66,9 @@ namespace HalloDoc.Entities.ViewModels
         public string? ClientZipCode { get; set; }
         public string? ClientStreet { get; set; }
         public string? ClientCity { get; set; }
-        
-        
+        public int? IntDate { get; set; }
+        public int? IntYear { get; set; }
+        public string? StrMonth { get; set; }
+
     }
 }

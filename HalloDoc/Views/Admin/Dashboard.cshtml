@@ -251,6 +251,25 @@
     </div>
 </main>
 <script>
+    //request type search
+    var state = "1"; // Variable to store the selected state
+    var requesttype = 0;
+    $(document).ready(function () {
+        // Event handler for state buttons
+        filterData(state, requesttype);
+        $(".btn-state").click(function () {
+            state = $(this).data("state");
+            filterData(state, requesttype);
+        });
+
+        // Event handler for request type buttons
+        $(".request-type-btn").click(function () {
+            var requesttype = $(this).data("requesttype");
+            filterData(state, requesttype);
+        });
+    });
+
+    //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
            
@@ -261,7 +280,7 @@
         });
     });
 
-       
+     //partialview  
     $(document).ready(function () {
         loadTable('New');
     });
@@ -283,7 +302,7 @@
     }
 
 
-
+    //responsive mobile view
     var coll = document.getElementsByClassName("collapsible");
     var i;
 
@@ -298,6 +317,8 @@
             }
         });
     }
+
+    //search box
     function searchFunction() {
         var inputVal = document.getElementById("search-input").value.toLowerCase();
 
@@ -313,7 +334,7 @@
         }
     }
  
-      
+   //display count   
     document.getElementById("newCountDisplay").innerText = @Model.NewCount;
     document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;
     document.getElementById("ActiveCount").innerText = @Model.ActiveCount;

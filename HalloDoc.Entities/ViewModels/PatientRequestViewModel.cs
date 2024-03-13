@@ -26,7 +26,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? ZipCode { get; set; }
 
        
-        public DateOnly? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Enter First Name Here")]
         public string FirstName { get; set; }
@@ -52,7 +52,9 @@ namespace HalloDoc.Entities.ViewModels
         {
             State = new List<Region>();
         }
-
+        public int? IntDate { get; set; }
+        public int? IntYear { get; set; }
+        public string? StrMonth { get; set; }
 
     }
 

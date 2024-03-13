@@ -118,11 +118,11 @@
                         <a asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Dashboard</a>
                         <a asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Provider Location</a>
 
-                        <a asp-action="Profile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">My Profile</a>
-                        <a asp-action="Profile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9"> Providers</a>
-                        <a asp-action="Profile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Partners</a>
-                        <a asp-action="Profile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Access</a>
-                        <a asp-action="Profile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Records</a>
+                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">My Profile</a>
+                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9"> Providers</a>
+                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Partners</a>
+                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Access</a>
+                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Records</a>
 
 
 
@@ -171,14 +171,14 @@
             }
         }
             $(document).ready(function () {
-            console.log("abc");
+           
 
                 $(".nav-link").click(function () {
-                    console.log("abc2");
-                    // Remove 'active' class from all nav links
+                   
+                
                     $(".nav-link").removeClass("tabactive");
 
-                    // Add 'active' class to the clicked link
+                   
                     $(this).addClass("tabactive");
                 });
             });

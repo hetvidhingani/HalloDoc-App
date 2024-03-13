@@ -1,0 +1,201 @@
+﻿@model HalloDoc.Entities.ViewModels.CloseCaseViewModel;
+
+
+<div class="mainSection ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo">
+            <a asp-action="Dashboard" asp-controller="Admin" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
+                <button class="back mb-3">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-4 formshadow mb-3  rounded h-100 PatientInfo">
+          
+                <div class="row">
+
+                    <h6>Patient Name:</h6>
+
+                    <div class="col-12 fw-bold">
+
+       @*                  @Model.FirstName *@
+                        (MD051023TETE0001)
+                    </div>
+                    <div class="col-12">
+                        <p>Check here for any files that you or the doctors of your subsequents requestors have attached for you to review.</p>
+                    </div>
+                </div>
+
+
+               
+        
+            <div class="dashboardtbl table-responsive mt-3">
+                <table class="table table-hover">
+
+                    <thead style="background-color:#F0F0F0">
+                        <tr>
+                            
+                            <th>File</th>
+                            <th scope="col">Upload Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+
+                    </thead>
+                    @foreach (var r in Model.RequestWiseFiles)
+                    {
+
+                        <tbody>
+                            <tr>
+                              
+                                <td>
+                                    @r.FileName
+                                </td>
+
+
+                                <td>@r.CreatedDate</td>
+                                <td>
+                                    <a href="@Url.Action("downloadfile", "admin", new { name = @r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </a>
+                                   
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    }
+                </table>
+
+            </div>
+
+            <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
+
+                @foreach (var r in Model.RequestWiseFiles)
+                {
+
+                    <div class="mobileviewdashboard my-2 p-3 bg-info" >
+
+                        <button type="button" class="table-btn collapsible">
+                             @r.FileName
+
+                        </button>
+                        <div class="content mx-2">
+                            <div class="provider d-flex gap-2">
+                                @r.FileName <span></span>
+                            </div>
+                            <div class="provider d-flex gap-2">
+
+                                @r.CreatedDate
+
+                            </div>
+                            <div class="provider d-flex pt-2 gap-2">
+                                <a href="@Url.Action("DownloadFile", "Admin", new { name = r.FileName })" class="btn btn-outline-info download-link">
+                                    <i class="bi bi-cloud-arrow-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                }
+
+            </div>
+
+          
+            <form asp-controller="Admin" asp-action="EditCloseCase" asp-route-id="@Model.RequestClientID" method="post" enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row mt-3">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder=" "  readonly>
+                            <label for=" ">First Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder=" " readonly >
+                            <label for=" ">Last Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " readonly>
+                            <label for=" ">Date Of Birth</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email"
+                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Email</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row ">
+
+                    <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+                        <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
+
+
+                        <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />
+                        <button type="button" class="btn btn-outline-info closeCase" id="@Model.RequstId">Close Case</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        utilsScript:
+            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    });
+    //Edit-Save Button
+    var editButton = document.getElementById("edit-button");
+    editButton.addEventListener("click", function () {
+        var form = editButton.closest("form");
+        var inputs = form.querySelectorAll(".edit");
+        var saveButton = form.querySelector("input[type='submit']");
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+        });
+        saveButton.removeAttribute("disabled");
+        saveButton.style.display = "block";
+
+        editButton.style.display = "none";
+
+    });
+    //Close Case
+    $('.closeCase').click(function () {
+        var id = this.id;
+        console.log(id);
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id },
+            url: "@(Url.Action("ConfirmCloseCase", "Admin"))"
+            
+        });
+    });
+</script>
