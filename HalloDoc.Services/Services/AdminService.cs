@@ -151,41 +151,35 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
-        public List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status)
-
+        public List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status, int? requestType = null)
         {
-
             var tabledashboard = (
-                 from r in _requestRepository.GetAll()
-                 join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-                 join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
-                 from phy in physicianGroup.DefaultIfEmpty()
+                from r in _requestRepository.GetAll()
+                join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+                join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
+                from phy in physicianGroup.DefaultIfEmpty()
 
-                 where r.Status == status
+                where r.Status == status && (requestType == null || requestType == 0 || r.RequestTypeId == requestType)
 
-                 select new AdminDashboardViewModel
-                 {
-                     PatientName = rec.FirstName + "," + rec.LastName,
-                     DateOfBirth = new DateTime((int)rec.IntYear, Convert.ToInt32(rec.StrMonth), (int)rec.IntDate),
-                     Requestor = r.FirstName + "," + r.LastName,
-                     RequestedDate = r.CreatedDate,
-                     PatientPhone = rec.PhoneNumber,
-                     RequestorPhone = r.PhoneNumber,
-                     Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                     Notes = rec.Notes,
-                     PhysicianName = phy.FirstName + " " + phy.LastName,
-                     RequestTypeID = r.RequestTypeId,
-                     RequstClientId = rec.RequestClientId,
-                     requestID = rec.RequestId
+                select new AdminDashboardViewModel
+                {
+                    PatientName = rec.FirstName + "," + rec.LastName,
+                    DateOfBirth = new DateTime((int)rec.IntYear, Convert.ToInt32(rec.StrMonth), (int)rec.IntDate),
+                    Requestor = r.FirstName + "," + r.LastName,
+                    RequestedDate = r.CreatedDate,
+                    PatientPhone = rec.PhoneNumber,
+                    RequestorPhone = r.PhoneNumber,
+                    Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                    Notes = rec.Notes,
+                    PhysicianName = phy.FirstName + " " + phy.LastName,
+                    RequestTypeID = r.RequestTypeId,
+                    RequstClientId = rec.RequestClientId,
+                    requestID = rec.RequestId
 
-
-                 }).ToList();
-
-
+                }).ToList();
 
             return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
         }
-
         public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
         {
             viewModel.State = await _regionRepository.GetRegions();

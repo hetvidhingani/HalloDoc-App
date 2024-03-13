@@ -54,7 +54,7 @@
         <div>
             <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col ">
-                    <button class="cards active cardDesign1 " id="New" data-view-name="_NewPartialView" onclick="loadTable('New')">
+                    <button class="cards active cardDesign1 " data-state="New" id="New" data-view-name="_NewPartialView" onclick="loadTable('New')">
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -74,7 +74,7 @@
                     <div class="triangle mx-auto"></div>
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView" onclick="loadTable('Pending')">
+                    <button class="cards cardDesign2  " id="Pending" data-view-name="_PendingPartialView" data-state="Pending" onclick="loadTable('Pending')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -93,7 +93,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col" >
-                    <button class="cards cardDesign3  " id="Active" onclick="loadTable('Active')">
+                    <button class="cards cardDesign3  " id="Active" data-state="Active" onclick="loadTable('Active')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" id="ActiveCount"></strong>
+                                <strong class="cardContaint font" data-state="Pending"  id="ActiveCount"></strong>
 
                             </div>
                         </div>
@@ -112,7 +112,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign4  " id="Conclude" onclick="loadTable('Conclude')">
+                    <button class="cards cardDesign4  " id="Conclude" data-state="Conclude" onclick="loadTable('Conclude')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -131,7 +131,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign5  " id="ToClose" onclick="loadTable('Toclose')">
+                    <button class="cards cardDesign5  " id="ToClose" data-state="Toclose" onclick="loadTable('Toclose')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -149,7 +149,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign6  " id="Unpaid" onclick="loadTable('Unpaid')">
+                    <button class="cards cardDesign6  " id="Unpaid" data-state="Unpaid" onclick="loadTable('Unpaid')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -234,11 +234,11 @@
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-md-9 d-flex flex-wrap align-items-center formbasetab">
-                            <div class=""> <button class="firstType"> All   </button></div>
+                            @*  <div class=""> *@ <button class="btn request-type-btn" data-requesttype="0" data-state="All"> All   </button>@* /div> *@
                             <button class="btn type request-type-btn" data-requesttype="1"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
-                            <button class="btn type"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                            <button class="btn type"><span class="dot4 "></span><span class="sidetabdashboard">Concierge</span></button>
-                            <button class="btn type"><span class="dot3 "></span><span class="sidetabdashboard">Business</span></button>
+                            <button class="btn type request-type-btn" data-requesttype="2"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
+                            <button class="btn type request-type-btn" data-requesttype="3"><span class="dot4 " ></span><span class="sidetabdashboard">Concierge</span></button>
+                            <button class="btn type request-type-btn "data-requesttype="4"><span class="dot3 " ></span><span class="sidetabdashboard">Business</span></button>
 
                         </div>
                     </div>
@@ -251,24 +251,70 @@
     </div>
 </main>
 <script>
-    //request type search
-    var state = "1"; // Variable to store the selected state
-    var requesttype = 0;
+
+    //partialview
     $(document).ready(function () {
-        // Event handler for state buttons
+        loadTable('New');
+    });
+    function loadTable(state, requestType) {
+        if (state === 'All') {
+            var test = document.getElementById('status').innerText;
+            var cleanStatus = test.slice(1, -1);
+            state = cleanStatus;
+        }
+
+        var test= document.getElementById('status').innerText = "( " + (state || 'All') + " )";
+        $.ajax({
+            url: '/Admin/GetTable',
+            method: 'GET',
+            data: { state: state, requestType: requestType },
+            success: function (data) {
+                $("#admindata").html(data);
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error:', error);
+            }
+        });
+    }
+
+    var state = "New";
+    var requesttype = "0";
+  
+    $(document).ready(function () {
+       
         filterData(state, requesttype);
-        $(".btn-state").click(function () {
+        $(".cards").click(function () {
             state = $(this).data("state");
+            
+            requesttype = 0; 
             filterData(state, requesttype);
+            loadTable(state, requesttype);
         });
 
-        // Event handler for request type buttons
+    
         $(".request-type-btn").click(function () {
-            var requesttype = $(this).data("requesttype");
-            filterData(state, requesttype);
+            requesttype = $(this).data("requesttype");
+          
+            
+            loadTable(state, requesttype);
         });
     });
+    function filterData(state, requesttype) {
+        var test = document.getElementById('status');
+      
+        var table = $('table');
+        table.find('tr').filter(function () {
+            var rowState = $(this).data('state');
+            var rowRequestType = $(this).data('requesttype');
+            return rowState !== state || (requesttype !== 0 && rowRequestType !== requesttype);
+        }).hide();
 
+        table.find('tr').filter(function () {
+            var rowState = $(this).data('state');
+            var rowRequestType = $(this).data('requesttype');
+            return rowState === state && (requesttype === 0 || rowRequestType === requesttype);
+        }).show();
+    }
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
@@ -279,27 +325,6 @@
             $(this).addClass("active");
         });
     });
-
-     //partialview  
-    $(document).ready(function () {
-        loadTable('New');
-    });
-    function loadTable(state) {
-        document.getElementById('status').innerText ="( "+ state +" )";
-        $.ajax({
-            url:'/Admin/GetTable',
-            method:'GET',
-            data: {state:state},
-            success: function (data) {
-                $("#admindata").html(data);
-             
-
-            },
-            error: function (xhr, status, error) {
-                console.log('AJAX error:', error);
-            }
-        })
-    }
 
 
     //responsive mobile view

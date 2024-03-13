@@ -51,7 +51,7 @@ namespace HalloDoc.Services.IServices
         Task<object> DashboardRegions(AdminDashboardViewModel viewModel);
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);
-        List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status);
+        List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status, int? requestType = null);
         Task<CloseCaseViewModel> CloseCase(int Id);
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id);

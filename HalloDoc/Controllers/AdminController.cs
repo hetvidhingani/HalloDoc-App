@@ -65,7 +65,7 @@ namespace HalloDoc.Controllers
         }
 
 
-        public IActionResult GetTable(string state)
+        public IActionResult GetTable(string state, int? requestType)
         {
             List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
 
@@ -73,43 +73,37 @@ namespace HalloDoc.Controllers
             {
                 case "New":
                     ViewBag.state = "New";
-                    var result = _admin.Admintbl(list, 1);
+                    var result = _admin.Admintbl(list, 1, requestType);
                     return PartialView("_TablePartialView", result);
                 case "Pending":
                     ViewBag.state = "Pending";
-                    var resultPending = _admin.Admintbl(list, 2);
+                    var resultPending = _admin.Admintbl(list, 2, requestType);
                     return PartialView("_TablePartialView", resultPending);
 
                 case "Active":
                     ViewBag.state = "Active";
-                    var resultActive = _admin.Admintbl(list, 4);
-                    //var resultActive2 = _admin.Admintbl(list, 5);
+                    var resultActive = _admin.Admintbl(list, 4, requestType);
                     return PartialView("_TablePartialView", resultActive);
-
 
                 case "Conclude":
                     ViewBag.state = "Conclude";
-                    var resultConclude = _admin.Admintbl(list, 6);
+                    var resultConclude = _admin.Admintbl(list, 6, requestType);
                     return PartialView("_TablePartialView", resultConclude);
 
                 case "Toclose":
                     ViewBag.state = "Toclose";
-                    var resultToClose = _admin.Admintbl(list, 3);
-                    //var result=_admin.Admintbl(list, 7);
-                    //var result=_admin.Admintbl(list, 8);
+                    var resultToClose = _admin.Admintbl(list, 3, requestType);
                     return PartialView("_TablePartialView", resultToClose);
 
                 case "Unpaid":
                     ViewBag.state = "Unpaid";
-                    var resultUnpaid = _admin.Admintbl(list, 9);
+                    var resultUnpaid = _admin.Admintbl(list, 9, requestType);
                     return PartialView("_TablePartialView", resultUnpaid);
 
-
-
                 default:
-                    return PartialView("_TablePartialView", list);
+                    var resultAll = _admin.Admintbl(list,1, requestType);
+                    return PartialView("_TablePartialView", resultAll);
             }
-
         }
         #endregion
 
@@ -397,12 +391,12 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Admin MyProfile
-        public async Task<IActionResult> AdminMyProfile()
-        {
-            var AdminId = HttpContext.Session.GetInt32("AdminSession");
-            var result = await _admin.AdminMyProfile(AdminId);
-            return View(result);
-        }
+        //public async Task<IActionResult> AdminMyProfile()
+        //{
+        //    var AdminId = HttpContext.Session.GetInt32("AdminSession");
+        //    var result = await _admin.AdminMyProfile(AdminId);
+        //    return View(result);
+        //}
         #endregion
     }
 }
