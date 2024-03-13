@@ -1,6 +1,7 @@
-﻿using System;
+﻿using HalloDoc.Entities.DataModels;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace HalloDoc.Entities.ViewModels
     public class AdminMyProfileViewModel
     {
         public string UserName { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -776,18 +776,30 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public async Task<object> AdminMyProfile(int adminId)
+        public async Task<object> AdminMyProfile(int? adminId)
         {
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
             {
                 UserName = aspNetUser.UserName,
-                Password=aspNetUser.PasswordHash,
-
+                Password = aspNetUser.PasswordHash,
+                Status = (int)admin.Status,
+                Role = "Admin",
+                FirstName = admin.FirstName,
+                LastName = admin.LastName,
+                Email = admin.Email,
+                ConfirmEmail = admin.Email,
+                PhoneNumber = admin.Mobile,
+                Address1 = admin.Address1,
+                Address2 = admin.Address2,
+                City = admin.City,
+                State = await _regionRepository.GetRegions(),
+                Zip=admin.Zip,
+                BillingPhoneNumber=admin.AltPhone
 
             };
-            return "";
+            return model;
 
             
         }

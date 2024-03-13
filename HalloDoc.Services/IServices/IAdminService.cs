@@ -16,7 +16,7 @@ namespace HalloDoc.Services.IServices
         Task<User> GetUser(string email);
         Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
-        Task<object> AdminMyProfile(int adminId);
+        Task<object> AdminMyProfile(int? adminId);
         Task<int> GetCount(int statusId);
         Task<object> ViewCase( int userId);
         Task<int> GetUserByRequestClientID(int id);

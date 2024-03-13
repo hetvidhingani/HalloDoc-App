@@ -391,12 +391,12 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Admin MyProfile
-        //public async Task<IActionResult> AdminMyProfile()
-        //{
-        //    var AdminId = HttpContext.Session.GetInt32("AdminSession");
-        //    var result = await _admin.AdminMyProfile(AdminId);
-        //    return View(result);
-        //}
+        public async Task<IActionResult> AdminMyProfile()
+        {
+            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var result = await _admin.AdminMyProfile(AdminId);
+            return View(result);
+        }
         #endregion
     }
 }
