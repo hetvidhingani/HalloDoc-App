@@ -74,9 +74,29 @@
                         {
                                 <tr>
                                     <td> @r.CreatedDate</td>
-                                    @if (@r.Status == 1)
+                                @switch (@r.Status)
                                 {
-                                    status = "pending";
+                                    case 1:
+                                        status = "New";
+                                        break;
+                                    case 2:
+                                        status = "Pending";
+                                        break;
+                                    case 4:
+                                        status = "Active";
+                                        break;
+                                    case 6:
+                                        status = "Conclude";
+                                        break;
+                                    case 3:
+                                        status = "To Close";
+                                        break;
+                                    case 9:
+                                        status = "Unpaid";
+                                        break;
+                                    default:
+                                        status = " ";
+                                        break;
                                 }
                                     <td>@status </td>
                                     <td>
@@ -123,9 +143,30 @@
                         <div class="icons">
                             <i class="bi bi-check-circle"></i>
                         </div>
-                        @if (@r.Status == 1)
+                        
+                        @switch (@r.Status)
                         {
-                            status = "pending";
+                            case 1:
+                                status = "new";
+                                break;
+                            case 2:
+                                status = "pending";
+                                break;
+                            case 4:
+                                status = "active";
+                                break;
+                            case 6:
+                                status = "conclude";
+                                break;
+                            case 3:
+                                status = "toclose";
+                                break;
+                            case 9:
+                                status = "unpaid";
+                                break;
+                            default:
+                                status = "abc";
+                                break;
                         }
                         Current Status: @status
                     </div>

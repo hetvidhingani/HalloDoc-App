@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                                <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " >
+                                <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " readonly>
                             <label for=" ">Date Of Birth</label>
 
                         </div>
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -150,6 +150,8 @@
         var saveButton = form.querySelector("input[type='submit']");
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+
         });
         select.forEach(function (select) {
             select.removeAttribute("disabled");

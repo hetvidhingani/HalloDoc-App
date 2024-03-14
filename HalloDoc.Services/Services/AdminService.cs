@@ -75,7 +75,7 @@ namespace HalloDoc.Services.Services
         public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
         {
 
-            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); ;
+            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); 
         }
         public async Task<User> GetUser(string email)
         {
@@ -620,7 +620,8 @@ namespace HalloDoc.Services.Services
                 {
                     RequestId = Id,
                     FileName = fileName,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    AdminId=1,
                 };
                 await _requestwisefileRepository.AddAsync(newRequestWiseFile);
             }
@@ -788,7 +789,7 @@ namespace HalloDoc.Services.Services
             {
                 AdminID = admin.AdminId,
                 UserName = aspNetUser.UserName,
-                Password = aspNetUser.PasswordHash,
+                Password = _aspnetuserRepository.DecodeFrom64(aspNetUser.PasswordHash),
                 Status = (int)admin.Status,
                 Role = "Admin",
                 FirstName = admin.FirstName,
@@ -813,7 +814,7 @@ namespace HalloDoc.Services.Services
         {
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
-            user.PasswordHash = model.Password;
+            user.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password);
             user.ModifiedDate=DateTime.Now;
             await _aspnetuserRepository.UpdateAsync(user);
             return user;

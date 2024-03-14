@@ -21,6 +21,8 @@ namespace HalloDoc.Services.Services
     public class PatientService : IPatientService
     {
         #region constuctor
+        private readonly IAdminRepository _adminRepository;
+
         private readonly IAspNetUserRepository _aspnetuserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRequestRepository _requestRepository;
@@ -34,7 +36,8 @@ namespace HalloDoc.Services.Services
         public PatientService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                 IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                 IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
-                                IConciergeRepository conciergeRepository, IAspNetUserRolesRepository userRolesRepository, IRegionRepository regionRepository)
+                                IConciergeRepository conciergeRepository, IAspNetUserRolesRepository userRolesRepository, IRegionRepository regionRepository,
+                                IAdminRepository adminRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -45,6 +48,7 @@ namespace HalloDoc.Services.Services
             _conciergeRepository = conciergeRepository;
             _userRolesRepository = userRolesRepository;
             _regionRepository = regionRepository;
+            _adminRepository = adminRepository;
         }
         #endregion
 
@@ -76,6 +80,7 @@ namespace HalloDoc.Services.Services
             return viewModel;
         }
         #endregion
+
 
         #region PatientRequest
         public async Task<object> PatientRequest(int? userId)
@@ -167,7 +172,7 @@ namespace HalloDoc.Services.Services
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = viewModel.FirstName,
-                    PasswordHash = viewModel.Password,
+                    PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(viewModel.Password),
                     PhoneNumber = viewModel.PhoneNumber,
                     Email = viewModel.Email,
                     CreatedDate = DateTime.Now
@@ -682,7 +687,7 @@ namespace HalloDoc.Services.Services
                 if (aspNetuser != null)
 
                 {
-                    aspNetuser.PasswordHash = createAccountViewModel.PasswordHash;
+                    aspNetuser.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(createAccountViewModel.PasswordHash);
                     await _aspnetuserRepository.UpdateAsync(aspNetuser);
 
                     RequestClient requestClient = await _requestclientRepository.CheckUserByEmail(createAccountViewModel.Email);
@@ -785,13 +790,14 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Document
-        public List<DashboardViewModel> ViewDocument(int Id)
+        public async Task<List<DashboardViewModel>> ViewDocument(int Id)
         {
-
             var tableData = (from r in _requestRepository.GetAll()
-                             join rwf in _requestwisefileRepository.GetAll()
+                             join rwf in _requestwisefileRepository.GetAll().Where(rwf => rwf.RequestId == Id)
                              on r.RequestId equals rwf.RequestId
-                             where r.RequestId == Id
+                             join admin in _adminRepository.GetAll()
+                             on rwf.AdminId equals admin.AdminId into gj
+                             from subAdmin in gj.DefaultIfEmpty()
                              select new
                              {
                                  r.FirstName,
@@ -799,14 +805,16 @@ namespace HalloDoc.Services.Services
                                  r.RequestId,
                                  r.CreatedDate,
                                  r.Status,
-                                 rwf.FileName
+                                 rwf.FileName,
+                                 UploaderName = subAdmin != null ? subAdmin.FirstName + " " + subAdmin.LastName : null,
+                                
                              }).ToList();
 
             List<DashboardViewModel> list = new List<DashboardViewModel>();
             foreach (var e in tableData)
             {
                 DashboardViewModel model = new DashboardViewModel();
-                model.Username = e.FirstName + " " + e.LastName;
+                model.Username = e.UploaderName ?? e.FirstName + " " + e.LastName;
                 model.RequstId = e.RequestId;
                 model.CreatedDate = DateTime.Now.ToShortDateString();
                 model.FileName = e.FileName;
@@ -815,7 +823,6 @@ namespace HalloDoc.Services.Services
 
                 list.Add(model);
             }
-
 
             return list;
         }

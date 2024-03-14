@@ -96,7 +96,7 @@ namespace HalloDoc.Controllers
         {
             HttpContext.Session.SetInt32("reqID", Id);
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            var result =  _patient.ViewDocument(Id);
+            var result =await  _patient.ViewDocument(Id);
             return View(result);
         }
         [HttpPost]

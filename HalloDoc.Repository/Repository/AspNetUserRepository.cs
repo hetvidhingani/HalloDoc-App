@@ -23,8 +23,10 @@ namespace HalloDoc.Repository.Repository
         }
         public async Task<AspNetUser> Login(string email,string password)
         {
-            AspNetUser user = _context.AspNetUsers.Where(x => x.Email == email && x.PasswordHash==password).FirstOrDefault();
+            AspNetUser user1 = await CheckUserByEmail(email);
 
+            var pwd =DecodeFrom64(user1.PasswordHash);
+            AspNetUser user = _context.AspNetUsers.Where(x => x.Email == email && pwd==password).FirstOrDefault();
             return user;
         }
        
