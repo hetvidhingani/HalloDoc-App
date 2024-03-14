@@ -1,4 +1,5 @@
 ﻿@model HalloDoc.Entities.ViewModels.EncounterViewModel
+@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="mainSectionMargin ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -20,7 +21,7 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="FirstName" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder=" "  >
                             <label for=" ">First Name</label>
                             <span asp-validation-for="FirstName" class="text-danger"></span>
 
@@ -28,7 +29,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="LastName" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder=" "  >
                             <label for=" ">Last Name</label>
                             <span asp-validation-for="LastName" class="text-danger"></span>
 
@@ -36,7 +37,7 @@
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Location" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="Location" type="text" class="form-control" placeholder=" "  >
                             <label for=" ">Location</label>
                             <span asp-validation-for="Location" class="text-danger"></span>
 
@@ -44,7 +45,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" ">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" "  >
                             <label for=" ">Date Of Birth</label>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 
@@ -52,7 +53,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Date" type="date" class="form-control" placeholder=" ">
+                            <input asp-for="Date" type="date" class="form-control" placeholder=" "  >
                             <label for=" ">Date </label>
                             <span asp-validation-for="Date" class="text-danger"></span>
 
@@ -60,7 +61,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" />
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit"  />
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -69,14 +70,14 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">Email</label>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="HistoryOfPresentIllness" class="form-control " id="textAreaExample2" style="height: 100px;" rows="4" placeholder=" "></textarea>
+                            <textarea asp-for="HistoryOfPresentIllness" class="form-control " id="textAreaExample2" style="height: 100px;" rows="4" placeholder=" "  ></textarea>
                             <label class="form-label fs-6" for="textAreaExample2">
                                 HistoryOfPresentIllness
 
@@ -87,7 +88,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="MedicalHistory" class="form-control " id="textAreaExample2" style="height: 100px;" rows="4" placeholder=" "></textarea>
+                            <textarea asp-for="MedicalHistory" class="form-control " id="textAreaExample2" style="height: 100px;" rows="4" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 MedicalHistory
 
@@ -98,7 +99,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Medications" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Medications" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Medications
 
@@ -109,7 +110,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Allergies" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Allergies" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Allergies
 
@@ -123,7 +124,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Temp"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">Temp</label>
 
                         </div>
@@ -132,7 +133,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Hr"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">Hr</label>
 
                         </div>
@@ -141,7 +142,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Rr"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">RR</label>
 
                         </div>
@@ -150,7 +151,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="BloodPressureSystolic"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">BloodPressureSystolic</label>
 
                         </div>
@@ -159,7 +160,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="BloodPressureDiastolic"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">BloodPressureDiastolic</label>
 
                         </div>
@@ -168,7 +169,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="o2"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">o2</label>
 
                         </div>
@@ -177,7 +178,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Pain"
                                    id="patientEmail"   type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" ">
+                                   class="form-control edit" placeholder=" "  >
                             <label for=" ">Pain</label>
 
                         </div>
@@ -185,7 +186,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Heent" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Heent" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Heent
 
@@ -196,7 +197,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Cv" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Cv" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 CV
 
@@ -206,7 +207,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Chest" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Chest" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Chest
 
@@ -216,7 +217,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="ABD" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="ABD" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 ABD
 
@@ -226,7 +227,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Extr" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Extr" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Extr
 
@@ -236,7 +237,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Skin" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Skin" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Skin
 
@@ -246,7 +247,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Neuro" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Neuro" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Neuro
 
@@ -256,7 +257,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Other" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Other" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Other
 
@@ -266,7 +267,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Diagnosis" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Diagnosis" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Diagnosis
 
@@ -276,7 +277,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="TreatmentPlan" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="TreatmentPlan" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 TreatmentPlan
 
@@ -286,7 +287,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="MedicationsDispensed" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="MedicationsDispensed" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 MedicationsDispensed
 
@@ -296,7 +297,7 @@
                         </div>
                     </div><div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Procedures" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Procedures" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Procedures
 
@@ -306,7 +307,7 @@
                         </div>
                     </div><div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="Followup" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "></textarea>
+                            <textarea asp-for="Followup" class="form-control " id="textAreaExample2" style="height: 60px;" rows="2" placeholder=" "  ></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Followup
 
@@ -318,13 +319,17 @@
 
 
                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
-                        <input type="button" id="edit-button" style=" color: white;" class="btn btn-info  p-2 m-2" value="Save Changes">
-                        <input type="button" id="edit-button" style=" background-color: purple;color: white;width: 90px;height: 50px;" class="btn p-2 m-2" value="Finalize">
-                        <input type="button" id="edit-button"  class="btn btn-outline-info  p-2 m-2" value="Cancel">
+                        <input type="button" id="@Model.RequestID"  style=" color: white;" class="btn btn-info savechanges  m-2" value="Save Changes">
+                        @if(@HttpContextAccessor?.HttpContext?.Session.GetString("AdminSession") !=null)
+                        {
 
+                        <input type="button"  style=" background-color: purple;color: white;width: 90px;height: 50px;" class="btn m-2" value="Finalize" disabled>
+                        }
+                        <a type="button" asp-action="Dashboard" asp-controller="Admin"   class="btn btn-outline-info align-items-center m-2" value="Cancel">
+                            Cancle
+                            </a>
 
-
-                        <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />
+                        
                     </div>
                 </div>
 
@@ -353,18 +358,15 @@
 
 
     }
-    var editButton = document.getElementById("edit-button");
-    editButton.addEventListener("click", function () {
-        var form = editButton.closest("form");
-        var inputs = form.querySelectorAll(".edit");
-        var saveButton = form.querySelector("input[type='submit']");
-        inputs.forEach(function (input) {
-            input.removeAttribute(" ");
+    $('.savechanges').click(function () {
+        var id = this.id;
+
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id },
+            url: "@(Url.Action("EncounterFormSaveChanges", "Admin"))",
+           
         });
-        saveButton.removeAttribute("disabled");
-        saveButton.style.display = "block";
-
-        editButton.style.display = "none";
-
     });
 </script>

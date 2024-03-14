@@ -15,7 +15,7 @@ namespace HalloDoc.Entities.ViewModels
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string AdminID { get; set; }
+        public int AdminID { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Role { get; set; }
@@ -25,7 +25,7 @@ namespace HalloDoc.Entities.ViewModels
         public string Zip { get; set; }
         public string Address2 { get; set; }
         public string BillingPhoneNumber { get; set; }
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
         public string ConfirmEmail { get; set; }
     }
 }

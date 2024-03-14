@@ -43,7 +43,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public IFormFile? File { get; set; }
         public string? RelationName { get; set; }
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
 
         public string? City { get; set; }
         public string? Street { get; set; }

@@ -18,7 +18,7 @@ namespace HalloDoc.Services.IServices
         Task<T> GetTempData<T>(string key);
         Task<object> AdminMyProfile(int? adminId);
         Task<int> GetCount(int statusId);
-        Task<object> ViewCase( int userId);
+        Task<object> ViewCase(int userId);
         Task<int> GetUserByRequestClientID(int id);
         Task<Admin> GetAdmin(string email);
         Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
@@ -55,5 +55,11 @@ namespace HalloDoc.Services.IServices
         Task<CloseCaseViewModel> CloseCase(int Id);
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id);
+        Task<object> ResetPasswordAdmin(AdminMyProfileViewModel model);
+        Task<object> SaveAdminInfo(AdminMyProfileViewModel model);
+        Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
+        Task<object> EncounterForm(int RequestId);
+
+        Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID);
     }
 }

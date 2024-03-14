@@ -25,10 +25,7 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
         }
 
-        public IActionResult EncounterForm()
-        {
-            return View();
-        }
+       
 
         #region Logout
         public IActionResult Logout()
@@ -396,6 +393,34 @@ namespace HalloDoc.Controllers
             var AdminId = HttpContext.Session.GetInt32("AdminSession");
             var result = await _admin.AdminMyProfile(AdminId);
             return View(result);
+        }
+        public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
+        {
+           await _admin.ResetPasswordAdmin(model);
+            return RedirectToAction("AdminMyProfile");
+        }
+        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
+        {
+            await _admin.SaveAdminInfo(model);
+            return RedirectToAction("AdminMyProfile");
+        }
+        public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
+        {
+            await _admin.SaveBillingInfo(model);
+            return RedirectToAction("AdminMyProfile");
+        }
+        #endregion
+
+        #region Encounter Form
+        public async Task<IActionResult> EncounterForm(int RequestId)
+        {
+            var result = await _admin.EncounterForm(RequestId);
+            return View(result);
+        }
+        public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model, int id)
+        {
+            await _admin.EncounterFormSaveChanges(model, id);
+            return RedirectToAction("EncounterForm");
         }
         #endregion
     }

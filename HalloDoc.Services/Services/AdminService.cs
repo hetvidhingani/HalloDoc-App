@@ -14,6 +14,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Ocsp;
 
 namespace HalloDoc.Services.Services
 {
@@ -37,6 +38,7 @@ namespace HalloDoc.Services.Services
         private readonly IHealthProfessionalsRepository _healthProfessionalsRepository;
         private readonly IHealthProfessionalTypeRepository _healthProfessionalTypeRepository;
         private readonly IBlockRequestRepository _blockRequestRepository;
+        private readonly IEncounterRepository _encounterRepository;
 
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
@@ -46,7 +48,7 @@ namespace HalloDoc.Services.Services
                                IPhysicianRepository physicianRepository, IAdminRepository adminRepository, IRequestNotesRepository requestNotesRepository,
                                ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository, IRegionRepository regionRepository,
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
-                               IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository)
+                               IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,IEncounterRepository encounterRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -65,6 +67,7 @@ namespace HalloDoc.Services.Services
             _healthProfessionalsRepository = healthProfessionalsRepository;
             _healthProfessionalTypeRepository = healthProfessionalTypeRepository;
             _blockRequestRepository = blockRequestRepository;
+            _encounterRepository = encounterRepository;
         }
         #endregion
 
@@ -776,12 +779,14 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Admin My Profile
         public async Task<object> AdminMyProfile(int? adminId)
         {
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
             {
+                AdminID = admin.AdminId,
                 UserName = aspNetUser.UserName,
                 Password = aspNetUser.PasswordHash,
                 Status = (int)admin.Status,
@@ -794,16 +799,152 @@ namespace HalloDoc.Services.Services
                 Address1 = admin.Address1,
                 Address2 = admin.Address2,
                 City = admin.City,
+                RegionId = admin.RegionId,
                 State = await _regionRepository.GetRegions(),
-                Zip=admin.Zip,
-                BillingPhoneNumber=admin.AltPhone
+                Zip = admin.Zip,
+                BillingPhoneNumber = admin.AltPhone
 
             };
             return model;
 
-            
+
+        }
+        public async Task<object> ResetPasswordAdmin(AdminMyProfileViewModel model)
+        {
+            Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+            AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
+            user.PasswordHash = model.Password;
+            user.ModifiedDate=DateTime.Now;
+            await _aspnetuserRepository.UpdateAsync(user);
+            return user;
         }
 
+        public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model)
+        {
+            Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+            AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
 
+            admin.FirstName= model.FirstName;
+            admin.LastName= model.LastName;
+            admin.Email= model.Email;
+            admin.Mobile=model.PhoneNumber; 
+            admin.ModifiedDate=DateTime.Now;
+            await _adminRepository.UpdateAsync(admin);
+
+            user.Email= model.Email;
+            user.PhoneNumber= model.PhoneNumber;
+            user.ModifiedDate=DateTime.Now;
+            await _aspnetuserRepository.UpdateAsync(user);
+
+            return user;
+        }
+        public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model)
+        {
+            Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+            AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
+            admin.Address1 = model.FirstName;
+            admin.Address2 = model.LastName;
+            admin.Email = model.Email;
+            admin.Mobile = model.BillingPhoneNumber;
+            admin.City = model.City;
+            admin.RegionId=model.RegionId;
+
+            await _adminRepository.UpdateAsync(admin);
+            return user;
+        }
+        #endregion
+
+        #region Encounter Form
+        public async Task<object> EncounterForm(int RequestId)
+        {
+            Request req = await _requestRepository.GetByIdAsync(RequestId);
+            RequestClient client = await _requestclientRepository.CheckUserByClientID(RequestId);
+            Encounter encounter = await _encounterRepository.checkBYRequestID(req.RequestId);
+            DateTime dob = new DateTime((int)client.IntYear, Convert.ToInt32(client.StrMonth), (int)client.IntDate);
+          
+
+            EncounterViewModel model = new EncounterViewModel()
+            {
+                RequestID = req.RequestId,
+                FirstName = encounter.Firstname,
+                LastName = encounter.Lastname,
+                Location = encounter.Location,
+                DateOfBirth = dob,
+                PhoneNumber = encounter.Phonenumber,
+                MedicalReport = encounter.Medicalreport,
+                Date = encounter.Date,
+                Email = encounter.Email,
+                HistoryOfPresentIllness = encounter.Historyofpresentillness,
+                MedicalHistory = encounter.Medicalhistory,
+                Medications = encounter.Medications,
+                Temp = encounter.Temp,
+                BloodPressureSystolic = encounter.Bloodpressuresystolic,
+                BloodPressureDiastolic = encounter.Bloodpressurediastolic,
+                Heent = encounter.Heent,
+                Chest = encounter.Chest,
+                Hr = encounter.Hr,
+                Allergies = encounter.Allergies,
+                Cv = encounter.Cv,
+              
+                ABD = encounter.Abd,
+                Extr = encounter.Extr,
+                Skin = encounter.Skin,
+                Neuro = encounter.Neuro,
+                Diagnosis = encounter.Diagnosis,
+                MedicationsDispensed = encounter.Medicationsdispensed,
+                Followup = encounter.Followup,
+                Other = encounter.Other,
+                TreatmentPlan = encounter.Treatmentplan,
+                Procedures = encounter.Procedures,
+                Rr = encounter.Rr,
+                Pain = encounter.Pain,
+                IsChanged = encounter.Ischanged,
+                IsFinalized = encounter.Isfinalized
+           
+        };
+            return model;
+        }
+
+        public async Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID)
+        {
+            Encounter encounter = await _encounterRepository.checkBYRequestID(reqID);
+            encounter.Firstname = model.FirstName;
+            encounter.Lastname = model.LastName;
+            encounter.Location = model.Location;
+            //encounter.Dateofbirth = model.DateOfBirth;
+            encounter.Phonenumber = model.PhoneNumber;
+            encounter.Medicalreport = model.MedicalReport;
+            encounter.Date = model.Date.Value; 
+            encounter.Email = model.Email;
+            encounter.Historyofpresentillness = model.HistoryOfPresentIllness;
+            encounter.Medicalhistory = model.MedicalHistory;
+            encounter.Medications = model.Medications;
+            encounter.Temp = model.Temp.Value; 
+            encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value; 
+            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value; 
+            encounter.Heent = model.Heent;
+            encounter.Chest = model.Chest;
+            encounter.Hr = model.Hr.Value; 
+            encounter.Allergies = model.Allergies;
+            encounter.Cv = model.Cv;
+            encounter.Abd = model.ABD;
+            encounter.Extr = model.Extr;
+            encounter.Skin = model.Skin;
+            encounter.Neuro = model.Neuro;
+            encounter.Diagnosis = model.Diagnosis;
+            encounter.Medicationsdispensed = model.MedicationsDispensed;
+            encounter.Followup = model.Followup;
+            encounter.Other = model.Other;
+            encounter.Treatmentplan = model.TreatmentPlan;
+            encounter.Procedures = model.Procedures;
+            encounter.Rr = model.Rr.Value; 
+            encounter.Pain = model.Pain.Value; 
+            encounter.Ischanged = model.IsChanged.Value; 
+            encounter.Isfinalized = model.IsFinalized.Value; 
+            await _encounterRepository.UpdateAsync(encounter);
+
+            return encounter;
+        }
+        #endregion
     }
 }

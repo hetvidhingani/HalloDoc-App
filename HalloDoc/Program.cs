@@ -32,6 +32,8 @@ builder.Services.AddScoped<IHealthProfessionalsRepository,HealthProfessionalsRep
 builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
 builder.Services.AddScoped<IAspNetUserRolesRepository, AspNetUserRolesRepository>();
+builder.Services.AddScoped<IEncounterRepository, EncounterRepository>();
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
@@ -64,8 +66,8 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
      
-   //pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
-pattern: "{controller=Custom}/{action=AdminLogin}/{id?}");
+   pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
+//pattern: "{controller=Custom}/{action=AdminLogin}/{id?}");
 
 
 app.Run();

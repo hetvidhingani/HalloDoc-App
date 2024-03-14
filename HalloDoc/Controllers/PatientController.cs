@@ -153,7 +153,7 @@ namespace HalloDoc.Controllers
             int? userId = HttpContext.Session.GetInt32("UserSession");
             var result = await _patient.EditUser(patientRequestViewModel, userId);
 
-            return View(result);
+            return RedirectToAction("Profile",result);
         }
 
         #endregion

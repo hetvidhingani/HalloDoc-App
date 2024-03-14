@@ -28,7 +28,7 @@ namespace HalloDoc.Services.IServices
         Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel,int? userId);
         Task<string> CreateAccountRequest(CreateAccountViewModel createAccountViewModel);
         Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId);
-        Task<string> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId);
+        Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId);
         List<DashboardViewModel> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id);
         Task<RequestWiseFile> FindFile(string email);

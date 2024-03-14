@@ -97,6 +97,7 @@ namespace HalloDoc.Services.Services
                     viewModel.Street = user.Street;
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
+                    viewModel.RegionId = user.RegionId;
                     viewModel.ZipCode = user.ZipCode;
                     viewModel.DateOfBirth =dob;
                     return viewModel;
@@ -124,7 +125,7 @@ namespace HalloDoc.Services.Services
                 RequestId = request.RequestId,
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
-                PhoneNumber = viewModel.PhoneNumber,
+                PhoneNumber ="+"+ viewModel.PhoneNumber,
                 RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
@@ -702,7 +703,7 @@ namespace HalloDoc.Services.Services
                         StrMonth = requestClient.StrMonth,
                         CreatedBy = "Admin",
                         CreatedDate = DateTime.Now,
-                        RegionId = 1
+                        RegionId = requestClient.RegionId,
                     };
                     await _userRepository.AddAsync(user);
 
@@ -743,6 +744,7 @@ namespace HalloDoc.Services.Services
                 requestViewModel.FirstName = user.FirstName;
                 requestViewModel.LastName = user.LastName;
                 requestViewModel.City = user.City;
+                requestViewModel.RegionId = user.RegionId;
                 requestViewModel.State = await _regionRepository.GetRegions();
                 requestViewModel.Street = user.Street;
                 requestViewModel.Email = user.Email;
@@ -755,7 +757,7 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-        public async Task<string> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId)
+        public async Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId)
         {
             User user = await _userRepository.GetByIdAsync(userId);
             if (user != null)
@@ -766,6 +768,7 @@ namespace HalloDoc.Services.Services
                 user.Street = patientRequestViewModel.Street;
                 user.City = patientRequestViewModel.City;
                 user.Mobile = patientRequestViewModel.PhoneNumber;
+                user.RegionId=patientRequestViewModel.RegionId;
                 user.State = await _regionRepository.FindState(patientRequestViewModel.RegionId);
                 user.ZipCode = patientRequestViewModel.ZipCode;
                 user.IntDate = patientRequestViewModel.DateOfBirth.Day;
@@ -776,7 +779,7 @@ namespace HalloDoc.Services.Services
                 await _userRepository.UpdateAsync(user);
 
             }
-            return "Profile";
+            return user;
         }
 
         #endregion
@@ -898,6 +901,7 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
+        #region Email
         public async Task<string> SendEmail(string email, string link,string subject, string body)
         {
             try
@@ -936,6 +940,6 @@ namespace HalloDoc.Services.Services
             }
         }
 
-        
+        #endregion
     }
 }

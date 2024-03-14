@@ -13,7 +13,7 @@
             </a>
         </div>
         <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
-            <form  method="post" enctype="multipart/form-data">
+            <form asp-action="ResetAdminPassword" asp-controller="Admin" asp-route-id="@Model.AdminID" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="AdminID" />
 
@@ -30,7 +30,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Password" type="password" class="form-control" placeholder=" " readonly>
+                            <input asp-for="Password" type="password" class="form-control" placeholder=" " >
                             <label for=" ">Password</label>
                             <span asp-validation-for="Password" class="text-danger"></span>
 
@@ -54,10 +54,14 @@
                     </div>
                     </div>
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-outline-info">Reset Password</button>
+                    <button class="btn btn-outline-info ResetPassword" type="submit">Reset Password</button>
                 </div>
 
+            </form>
+            <form asp-action="SaveAdminInfo" asp-controller="Admin">
+
                 <h3> Administrator Information</h3>
+                <input type="hidden" asp-for="AdminID" />
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -105,10 +109,13 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info" id="edit-button" type="button">Edit</button>
-                    <button class="btn btn-info savebtn "style="display:none;" disabled>Save</button>
+                    <button class="btn btn-info savebtn SaveAdminInfo"style="display:none;" type="submit" disabled>Save</button>
                 </div>
-              
+
+            </form>
+            <form asp-action="SaveBillingInfo" asp-controller="Admin">
                 <h3> Mailing & Billing Information</h3>
+                <input type="hidden" asp-for="AdminID" />
 
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -131,7 +138,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -161,7 +168,7 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
-                    <button class="btn btn-info savebtn2 " style="display:none;" disabled>Save</button>
+                    <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
                 </div>
             </form>
         </div>
@@ -169,9 +176,7 @@
 </div>
 
 <script>
-  
-    
-
+ 
     //dark theme
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
@@ -198,6 +203,8 @@
       
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+
         });
         saveButton.removeAttribute("disabled");
         saveButton.style.display = "block";
@@ -207,15 +214,16 @@
     });
     var editButton2 = document.getElementById("edit-button2");
     editButton2.addEventListener("click", function () {
-        console.log("clicked");
+      
         var form1 = editButton2.closest("form");
         var inputs = form1.querySelectorAll(".edit2");
         var saveButton1 = form1.querySelector(".savebtn2");
-        console.log(saveButton1);
+       
 
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");
-            console.log("in");
+            input.removeAttribute("disabled");
+
 
         });
         saveButton1.removeAttribute("disabled");
