@@ -1052,10 +1052,14 @@ form > div > div {
 
 .mobileviewdashboard {
     background-color: #ebfafd;
+    word-wrap: break-word;
 }
 .table-btn {
     border: none;
     background-color: #ebfafd;
+    white-space: normal;
+    word-wrap: break-word;
+
 }
 @media screen and (max-width: 768px) {
     .dashboardtbl

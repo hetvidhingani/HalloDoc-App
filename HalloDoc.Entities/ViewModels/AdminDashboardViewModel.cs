@@ -37,7 +37,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? AdditionalNotes { get; set; }
         public List<Region> State { get; set; }
 
-
+        public string Email { get; set; }
 
     }
 }

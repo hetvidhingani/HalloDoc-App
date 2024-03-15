@@ -177,7 +177,8 @@ namespace HalloDoc.Services.Services
                     PhysicianName = phy.FirstName + " " + phy.LastName,
                     RequestTypeID = r.RequestTypeId,
                     RequstClientId = rec.RequestClientId,
-                    requestID = rec.RequestId
+                    requestID = rec.RequestId,
+                    Email=rec.Email,
 
                 }).ToList();
 
@@ -843,10 +844,10 @@ namespace HalloDoc.Services.Services
         {
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
-            admin.Address1 = model.FirstName;
-            admin.Address2 = model.LastName;
-            admin.Email = model.Email;
-            admin.Mobile = model.BillingPhoneNumber;
+            admin.Address1 = model.Address1;
+            admin.Address2 = model.Address2;
+            admin.Zip=model.Zip;
+            admin.AltPhone = model.BillingPhoneNumber;
             admin.City = model.City;
             admin.RegionId=model.RegionId;
 

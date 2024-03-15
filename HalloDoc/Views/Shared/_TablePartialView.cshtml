@@ -175,33 +175,33 @@
                                 <div class="d-flex flex-column  align-items-center menuDashboard">
                                     @if (ViewBag.state == "New")
                                     {
-                                        <li>
-                                            <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Assign Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Cancle Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Case
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
-                                                View Notes
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
-                                                Block Patient
-                                            </a>
-                                        </li>
+                                    <li>
+                                        <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            Assign Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            Cancle Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            View Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            View Notes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            Block Patient
+                                        </a>
+                                    </li>
                                     }
-                                    @if(ViewBag.state == "Pending")
+                                    @if (ViewBag.state == "Pending")
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
@@ -265,7 +265,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})"  id=@request.requestID style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID style="text-decoration:none;color:black;">
                                             Encounter
                                         </a>
                                     </li>
@@ -369,73 +369,93 @@
 
                                     }
                                 </div>
-                        </ul>
+                                </ul>
+                            </div>
+                    </td>
+                </tr>
 
-
-    </div>
-                        </td>
-                        </tr>
-
-                        </tbody>
+            </tbody>
 
         }
-        </table>
-    </div>
+    </table>
+</div>
 @* admin dashboard Mobile *@
 <div class="adminDashMobile">
-    <div class="mobileviewdashboard my-3 p-2">
-        <button type="button" class="table-btn collapsible d-flex flex-column">
-            <span>
-                Patient Name
-            </span>
-            Address
-        </button>
+     @foreach (var request in Model)
+    {
 
-        <div class="content" style="display:none">
-            <hr />
-            <div class="d-flex justify-content-end">
-                <button class="viewCaseBtn">View Case</button>
-            </div>
-            <div class="">
-                <i class="bi bi-calendar"></i>
-                Date Of Birth: <span>-</span>
-            </div>
-            <div class="">
-                <i class="bi bi-envelope"></i>
-                Email:
-                <br />
-                Current Status:
-                <br />
-                <i class="bi bi-telephone"></i>
-                Patient:
-                <br />
-                <i class="bi bi-calendar"></i>
+        var bgColor = "";
 
-                Date Of Service:
-                <br />
-                <i class="bi bi-person"></i>
-                Physician:
-                <br />
+        switch (request.RequestTypeID)
+        {
+            case 1:
+                bgColor = "green";
+                break;
+            case 2:
+                bgColor = "orange"; //rgb(75, 223, 75)
+                break;
+            case 3:
+                bgColor = "blue";
+                break;
+            case 4:
+                bgColor = "pink";
+                break;
+            default:
+                bgColor = " ";
+                break;
+        }
+        <div class="mobileviewdashboard my-3 p-2 ">
+            <button type="button" class="table-btn collapsible d-flex flex-column ">
+                <div class="">
+                    @request.PatientName
+                </div>
+                @request.Address
+            </button>
 
-                Requestor:
-            </div>
-            <br />
-            <div class=" row z ">
-                <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-            </div>
-            <div>
-                Chat With:
-                <button class="bg-transparent normalbtn">Patient</button>
-                <button class="bg-transparent normalbtn">Provider</button>
+            <div class="content" style="display:none">
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" class="viewCaseBtn">View Case</a>
+                </div>
+                <div class="">
+                    <i class="bi bi-calendar"></i>
+                    Date Of Birth: <span>@request.DateOfBirth</span>
+                </div>
+                <div class="">
+                    <i class="bi bi-envelope"></i>
+                    Email: @request.Email
+                    <br />
+                   
+                    <i class="bi bi-telephone"></i>
+                    Patient:@request.PatientPhone
+                    <br />
+                    <i class="bi bi-calendar"></i>
+
+                    Date Of Service:@request.DateOfService
+                    <br />
+                    <i class="bi bi-person"></i>
+                    Physician:@request.PhysicianName
+                    <br />
+
+                    Requestor:@request.Requestor
+                </div>
+                <br />
+                <div class=" row z ">
+                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
+                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                </div>
+                <div>
+                    Chat With:
+                    <button class="bg-transparent normalbtn">Patient</button>
+                    <button class="bg-transparent normalbtn">Provider</button>
+                </div>
             </div>
         </div>
-    </div>
-
+    }
 </div>
 
 <script>
