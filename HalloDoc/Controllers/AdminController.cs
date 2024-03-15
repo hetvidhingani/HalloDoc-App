@@ -58,6 +58,7 @@ namespace HalloDoc.Controllers
 
             };
             var result = await _admin.DashboardRegions(viewModel);
+
             return View(result);
         }
 
