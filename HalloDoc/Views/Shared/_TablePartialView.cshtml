@@ -12,35 +12,35 @@
                     <th scope="col">Date&nbsp;of&nbsp;birth</th>
 
                 }
-                 @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
+                @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
                 {
-                    
-                <th scope="col" >Requestor</th>
+
+                    <th scope="col" >Requestor</th>
                 }
                 @if (@ViewBag.state == "New")
                 {
-                    <th  scope="col">Requested Date</th>
+                    <th scope="col">Requested Date</th>
 
                 }
                 @if (@ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                 {
-                    <th  scope="col">Physician Name</th>
-                    <th  scope="col">Date Of Service</th>
+                    <th scope="col">Physician Name</th>
+                    <th scope="col">Date Of Service</th>
 
                 }
                 @if (@ViewBag.state == "Toclose")
                 {
-                    <th scope="col" >Region</th>
+                    <th scope="col">Region</th>
                 }
                 <th scope="col">Phone</th>
-                <th  scope="col">Address</th>
+                <th scope="col">Address</th>
                 @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
                 {
-                    <th  scope="col">Notes</th>
+                    <th scope="col">Notes</th>
 
                 }
-                <th  scope="col">Chat with</th>
-                <th  scope="col">Actions</th>
+                <th scope="col">Chat with</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
 
@@ -79,8 +79,8 @@
                     }
                     @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
                     {
-                        
-                    <td>@request.Requestor</td>
+
+                        <td>@request.Requestor</td>
                     }
 
                     @if (@ViewBag.state == "New")
@@ -97,7 +97,7 @@
                     @if (@ViewBag.state == "Toclose")
                     {
                         <td>Gujarat</td>
-     
+
                     }
                     <td>
                         @{
@@ -150,16 +150,16 @@
                         <td>@request.Notes</td>
                     }
                     <td>
-                        <div class="btn-group d-flex flex-column">
+                        <div class=" d-flex flex-column justify-content-center">
                             @if (@ViewBag.state == "Toclose" || @ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                             {
 
-                                <button class="btn btn-transparent text-white border-white btn-sm d-flex align-items-center" type="button"  aria-expanded="false" style="border-radius: 9px;">
+                                <button class="btn btn-transparent text-white border-white btn-sm d-flex align-items-center" type="button"  style="border-radius: 9px;">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                     Patient
                                 </button>
                             }
-                            <button class="btn btn-transparent text-white border-white btn-sm d-flex align-items-center" type="button"  aria-expanded="false" style="border-radius: 9px;">
+                            <button class="btn btn-transparent text-white border-white mt-1 btn-sm  d-flex align-items-center" type="button" aria-expanded="false" style="border-radius: 9px;">
                                 <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                 Provider
                             </button>
@@ -368,48 +368,62 @@
                                     </li>
 
                                     }
-                                </div>
-                                </ul>
-                            </div>
-                    </td>
-                </tr>
+                        </div>
+                        </ul>
+    </div>
+                                            </td>
+                                        </tr>
 
-            </tbody>
+                                    </tbody>
 
         }
     </table>
 </div>
 @* admin dashboard Mobile *@
-<div class="adminDashMobile">
-     @foreach (var request in Model)
+<div class="adminDashMobile mb-5">
+    @foreach (var request in Model)
     {
 
-        var bgColor = "";
-
+        var added = "";
+        var type = "";
         switch (request.RequestTypeID)
         {
             case 1:
-                bgColor = "green";
+                added = "dot1";
+                type = "Patient";
                 break;
             case 2:
-                bgColor = "orange"; //rgb(75, 223, 75)
+                added = "dot2"; //rgb(75, 223, 75)
+                type = "Family/Friend";
+
                 break;
             case 3:
-                bgColor = "blue";
+                added = "dot4";
+                type = "Concierge";
+
                 break;
             case 4:
-                bgColor = "pink";
+                added = "dot3";
+                type = "Business";
+
                 break;
             default:
-                bgColor = " ";
+                added = " ";
                 break;
         }
-        <div class="mobileviewdashboard my-3 p-2 ">
-            <button type="button" class="table-btn collapsible d-flex flex-column ">
-                <div class="">
-                    @request.PatientName
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block ">
+                    <div class="">
+                        @request.PatientName
+                    </div>
+                    @request.Address
                 </div>
-                @request.Address
+                <div class="d-flex align-items-center justify-content-end  ">
+                    <div> @type</div>
+                    <div class="@added mx-1">
+                    </div>
+                </div>
             </button>
 
             <div class="content" style="display:none">
@@ -417,149 +431,266 @@
                 <div class="d-flex justify-content-end">
                     <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" class="viewCaseBtn">View Case</a>
                 </div>
-                <div class="">
-                    <i class="bi bi-calendar"></i>
-                    Date Of Birth: <span>@request.DateOfBirth</span>
-                </div>
-                <div class="">
-                    <i class="bi bi-envelope"></i>
-                    Email: @request.Email
-                    <br />
-                   
-                    <i class="bi bi-telephone"></i>
-                    Patient:@request.PatientPhone
-                    <br />
-                    <i class="bi bi-calendar"></i>
+                @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Date Of Birth:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">@request.DateOfBirth</div>
+                    </div>
+                } 
+             
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Email:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">  @request.Email</div>
+                    </div>
+               
+                @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-telephone mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Patient:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">  @request.PatientPhone</div>
+                    </div>
+                }
+                @if (@ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose" || @ViewBag.state == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
 
-                    Date Of Service:@request.DateOfService
-                    <br />
-                    <i class="bi bi-person"></i>
-                    Physician:@request.PhysicianName
-                    <br />
+                            Date Of Service:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">   @request.DateOfService</div>
+                    </div>
+                }
+                @if (@ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose" || @ViewBag.state == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Physician:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">  @request.PhysicianName</div>
+                    </div>
+                }
+                @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
 
-                    Requestor:@request.Requestor
-                </div>
-                <br />
-                <div class=" row z ">
-                    <button class="col-5 mobileDashBtn adminDashBtn">View Notes</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">View Uploads</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">Encounter</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn3">Orders</button>
-                    <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                </div>
-                <div>
-                    Chat With:
-                    <button class="bg-transparent normalbtn">Patient</button>
-                    <button class="bg-transparent normalbtn">Provider</button>
+                            Requestor :
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">
+                            @request.Requestor
+                        </div>
+                    </div>
+                }
+                @if ( @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" )
+                {
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Transfer Note :
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">@request.Notes</div>
+                </div>} 
+                @if ( @ViewBag.state == "Toclose")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Region :
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">@request.RegionId</div>
+                    </div>
+                } 
+                    <div class=" row  justify-content-between mx-auto  mt-3">
+                        @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose" || ViewBag.state == "Unpaid")
+                        {
+                        <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Notes</a>
+                        }
+
+                        @if (ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose")
+                        {
+                            <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                        }
+                        @if (@ViewBag.state == "Unpaid" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose")
+                        {
+                        <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Uploads</a>
+                        }
+                        @if (ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose")
+                        {
+                        <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">Encounter</a>
+                        }
+                        @if (ViewBag.state == "Active" || @ViewBag.state == "Conclude")
+                        {
+                        <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn3" style="text-align:center;text-decoration:none;">Orders</a>
+                        }
+                        @if (@ViewBag.state == "New")
+                        {
+                        <button data-bs-toggle="modal" data-bs-target="#AssignCase" id=@request.RequstClientId class="Assign col-5 mobileDashBtn adminDashBtn">Assign</button>
+                       
+                        <button  data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId class="Cancel1 col-5 mobileDashBtn bg-danger">Cancel Case</button>
+                        
+                        <button  data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId class="Block col-5 mobileDashBtn bg-danger">Block Patient</button>
+                        }
+                     @*    @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose" || ViewBag.state == "Unpaid")
+                        {
+                            <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                        } *@
+                        @if (@ViewBag.state == "Pending")
+                        {
+                        <button  data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId class="SendAgreement col-5 mobileDashBtn adminDashBtn3">Send Agreement</button>
+                       
+                        <button  data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId class="Transfer col-5 mobileDashBtn bg-info">Transfer</button>
+                        }
+                        @if (@ViewBag.state == "Pending" || @ViewBag.state == "Toclose")
+                        {
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID class="Clear col-5 mobileDashBtn adminDashBtn3">Clear Case</button>
+                        }
+
+                        @if (@ViewBag.state == "Toclose")
+                        {
+                        <a href="@Url.Action("CloseCase", "Admin", new { Id = @request.requestID })" style="text-align:center;text-decoration:none;" class="col-5 mobileDashBtn bg-danger">Close Case</a>
+
+                        }
+
+
+
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center mt-2">
+                        <div>
+                            Chat With:
+                        </div>
+                        <button class="mx-1 bg-transparent btn btn-sm btn-outline-info">Patient</button>
+                        <button class="bg-transparent btn btn-sm btn-outline-info">Provider</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
-
-<script>
-
+                }
+    </div>
+    <script src="~/js/custom.js"></script>
+    <script>
+        //mobile view cards
     var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
+
     var i;
 
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
-            if (content.style.display === "none") {
-                content.style.display = "block";
-            } else {
-                content.style.display = "none";
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
             }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            
         });
     }
 
-    $('.Cancel1').click(function () {
-        var id = this.id;
+        //popup box
+        $('.Cancel1').click(function () {
+            var id = this.id;
 
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("CancelCase", "Admin"))",
-            success: function (data) {
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("CancelCase", "Admin"))",
+                success: function (data) {
 
-                $("#CancelCase").find('.modal-content').html(data);
-            }
+                    $("#CancelCase").find('.modal-content').html(data);
+                }
+            });
         });
-    });
-    $('.Assign').click(function () {
-        var id = this.id;
+        $('.Assign').click(function () {
+            var id = this.id;
+            console.log(id);
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("AssignCase", "Admin"))",
+                success: function (data) {
+                console.log("success");
 
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("AssignCase", "Admin"))",
-            success: function (data) {
-                
-                $("#AssignCase").find('.modal-content').html(data);
-            },
-            error: function () {
-                console.log("error");
-            }
+                    $("#AssignCase").find('.modal-content').html(data);
+                },
+                error: function () {
+                    console.log("error");
+                }
+            });
         });
-    });
-    $('.Block').click(function () {
-        var id = this.id;
+        $('.Block').click(function () {
+            var id = this.id;
 
-      
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("BlockCase", "Admin"))",
-            success: function (data) {
-                 
-                $("#BlockCase").find('.modal-content').html(data);
-            }
+
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("BlockCase", "Admin"))",
+                success: function (data) {
+
+                    $("#BlockCase").find('.modal-content').html(data);
+                }
+            });
         });
-    });
-    $('.Transfer').click(function () {
-        var id = this.id;
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("TransferCase", "Admin"))",
-            success: function (data) {
+        $('.Transfer').click(function () {
+            var id = this.id;
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("TransferCase", "Admin"))",
+                success: function (data) {
 
-                $("#TransferCase").find('.modal-content').html(data);
-            }
+                    $("#TransferCase").find('.modal-content').html(data);
+                }
+            });
         });
-    });
-    $('.Clear').click(function () {
-        var id = this.id;
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("ClearCase", "Admin"))",
-            success: function (data) {
+        $('.Clear').click(function () {
+            var id = this.id;
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("ClearCase", "Admin"))",
+                success: function (data) {
 
-                $("#ClearCase").find('.modal-content').html(data);
-            }
+                    $("#ClearCase").find('.modal-content').html(data);
+                }
+            });
         });
-    });
-    $('.SendAgreement').click(function () {
-        var id = this.id;
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            data: { id },
-            url: "@(Url.Action("SendAgreement", "Admin"))",
-            success: function (data) {
+        $('.SendAgreement').click(function () {
+            var id = this.id;
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("SendAgreement", "Admin"))",
+                success: function (data) {
 
-                $("#SendAgreement").find('.modal-content').html(data);
-            }
+                    $("#SendAgreement").find('.modal-content').html(data);
+                }
+            });
         });
-    });
 
 
-</script>
+    </script>

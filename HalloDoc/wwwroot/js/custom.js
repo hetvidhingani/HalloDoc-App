@@ -18,7 +18,6 @@
 
 
 
-
 //    ) {
 //        $("body").removeClass("darkMode");
 //        $(".mainSection").removeClass("darkMode");

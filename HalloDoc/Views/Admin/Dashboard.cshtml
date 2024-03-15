@@ -58,15 +58,15 @@
                         <div class="row">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
-                                <strong class="cardContaint " >
-                                    NEW  
+                                <strong class="cardContaint ">
+                                    NEW
                                 </strong>
-                               
+
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font " id="newCountDisplay"></strong>
+                                <strong class="cardContaint font fs-3" id="newCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" id="pendingCountDisplay"></strong>
+                                <strong class="cardContaint font fs-3" id="pendingCountDisplay"></strong>
 
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                     <div class="triangle mx-auto"></div>
 
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-2 cust-col" >
+                <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
                     <button class="cards cardDesign3  " id="Active" data-state="Active" onclick="loadTable('Active')">
                         <div class="row ">
                             <div class="col-12">
@@ -102,7 +102,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" data-state="Pending"  id="ActiveCount"></strong>
+                                <strong class="cardContaint font fs-3" data-state="Pending" id="ActiveCount"></strong>
 
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" id="ConcludeCount"></strong>
+                                <strong class="cardContaint font fs-3" id="ConcludeCount"></strong>
 
                             </div>
                         </div>
@@ -140,7 +140,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" id="ToCloseCount"></strong>
+                                <strong class="cardContaint font fs-3" id="ToCloseCount"></strong>
 
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong class="cardContaint font" id="UnpaidCount"></strong>
+                                <strong class="cardContaint font fs-3" id="UnpaidCount"></strong>
 
                             </div>
                         </div>
@@ -175,25 +175,25 @@
                     <div class="sectionHeading">
                         <strong class="tableHead ">
                             <div class="headerfontDash">Patients</div>
-                            <div style="color:#203e84;font-size:9px" id="status"></div>
+                            <div style="color:#203e84;" id="status"></div>
                         </strong>
                     </div>
-                    <div class="dashboardLinks d-flex  flex-wrap " style="float:right">
-                        <button class="btn btn-info ">
+                    <div class="dashboardLinks d-flex  flex-wrap justify-content-end" style="float:right">
+                        <button class="btn  btn-outline-primary text-primary mb-1  ">
                             <i class="bi bi-send iconLink"></i>
                             <span class="tabIcon">
                                 Send Link
 
                             </span>
                         </button>
-                        <button class="btn btn-info ">
+                        <button class="btn  btn-outline-primary text-primary mb-1  ">
                             <i class="bi bi-file-earmark "></i>
                             <span class="tabIcon"> Create Requests</span>
                         </button>
-                        <button class="btn btn-info ">
+                        <button class="btn  btn-outline-primary text-primary mb-1  ">
                             <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" /><span class="tabIcon">Export</span>
                         </button>
-                        <button class="btn btn-info ">
+                        <button class="btn  btn-outline-primary text-primary mb-1  ">
                             <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" />
 
                             <span class="tabIcon">
@@ -202,30 +202,34 @@
                             </span>
                         </button>
 
-                        <button class="btn  btn-info " >
-                            <img src="~/images/man-svgrepo-com.png"  style="width:22px;color:white" />
+                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                            <img src="~/images/man-svgrepo-com.png" style="width:22px;color:white" />
                             <span class="tabIcon">Request DTY Support</span>
                         </button>
-                       
-                      
-                        
+
+
+
                     </div>
                 </div>
 
             </div>
             <div class="container-fluid rounded formshadow px-2 py-1 ">
                 <div class="row mt-2">
-                    <div class="col-12 d-flex justify-content-between flex-wrap align-items-center">
-                        <div class="d-flex flex-wrap col-lg-5 col-md-3 col-sm-12 searchDiv">
-                            <div class="form-group has-search col-lg-5 col-md-6 col-sm-6" >
+                  
+
+                    <div class="col-lg-7 col-md-12 col-sm-12 inputSearchbox ">
+                        <div class="col-lg-5 col-md-6 col-sm-6">
+                            <div class="form-group has-search mb-1">
                                 <span class="fa fa-search form-control-feedback"></span>
                                 <input type="text" class="form-control w-100" placeholder="Search" id="search-input" oninput="searchFunction()">
 
                             </div>
-                            <div class="has-search col-lg-5 col-md-6 col-sm-6 ">
-                                <select class="form-select form-select-sm w-100 h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" >
+                        </div>
+                        <div class="col-lg-5 col-md-6 col-sm-6">
+                            <div class="has-search " >
+                                <select style="height:38px;"  class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                                     <option value="0" selected>All Regions</option>
-                                    
+
                                     @foreach (var region in Model.State)
                                     {
                                         <option value="@region.RegionId">@region.Name</option>
@@ -233,25 +237,29 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-sm-12 col-md-9 d-flex flex-wrap align-items-center formbasetab">
-                            @*  <div class=""> *@ <button class="btn request-type-btn" data-requesttype="0" data-state="All"> All   </button>@* /div> *@
-                            <button class="btn type request-type-btn" data-requesttype="1"><span class="dot1 "></span><span class="sidetabdashboard">Patient</span></button>
-                            <button class="btn type request-type-btn" data-requesttype="2"><span class="dot2 "></span><span class="sidetabdashboard">Family/Friend</span></button>
-                            <button class="btn type request-type-btn" data-requesttype="3"><span class="dot4 " ></span><span class="sidetabdashboard">Concierge</span></button>
-                            <button class="btn type request-type-btn "data-requesttype="4"><span class="dot3 " ></span><span class="sidetabdashboard">Business</span></button>
-
+                    </div>
+                    <div class="col-lg-5 col-md-12 col-sm-12 d-flex justify-content-end mb-3">
+                        <div class="check mt-1">
+                            <button class="btn request-type-btn  " data-requesttype="0" data-state="All"> <span style="margin-left:5px">All</span>   </button>
+                            <button class="btn  request-type-btn " data-requesttype="1"><span class="dot1 mx-auto"></span><span style="margin-left:5px">Patient</span></button>
+                            <button class="btn  request-type-btn " data-requesttype="2"><span class="dot2 mx-auto "></span><span style="margin-left:5px">Family/Friend</span></button>
+                            <button class="btn  request-type-btn " data-requesttype="3"><span class="dot4  mx-auto"></span><span style="margin-left:5px">Concierge</span></button>
+                            <button class="btn  request-type-btn  " data-requesttype="4"><span class="dot3  mx-auto"></span><span style="margin-left:5px">Business</span></button>
                         </div>
                     </div>
-            @* table *@
-                    <div id="admindata" class="mb-5"></div>
-                    
+
+
                 </div>
+                @* table *@
+                <div id="admindata" class="mb-5"></div>
+
             </div>
         </div>
     </div>
+    </div>
 </main>
 <script>
-
+   
     //partialview
     $(document).ready(function () {
         loadTable('New');
@@ -263,7 +271,7 @@
             state = cleanStatus;
         }
 
-        var test= document.getElementById('status').innerText = "( " + (state || 'All') + " )";
+        var test = document.getElementById('status').innerText = "( " + (state || 'All') + " )";
         $.ajax({
             url: '/Admin/GetTable',
             method: 'GET',
@@ -279,29 +287,29 @@
 
     var state = "New";
     var requesttype = "0";
-  
+
     $(document).ready(function () {
-       
+
         filterData(state, requesttype);
         $(".cards").click(function () {
             state = $(this).data("state");
-            
-            requesttype = 0; 
+
+            requesttype = 0;
             filterData(state, requesttype);
             loadTable(state, requesttype);
         });
 
-    
+
         $(".request-type-btn").click(function () {
             requesttype = $(this).data("requesttype");
-          
-            
+
+
             loadTable(state, requesttype);
         });
     });
     function filterData(state, requesttype) {
         var test = document.getElementById('status');
-      
+
         var table = $('table');
         table.find('tr').filter(function () {
             var rowState = $(this).data('state');
@@ -318,10 +326,10 @@
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
-           
+
             $(".cards").removeClass("active");
 
-          
+
             $(this).addClass("active");
         });
     });
@@ -358,8 +366,8 @@
             }
         }
     }
- 
-   //display count   
+
+    //display count
     document.getElementById("newCountDisplay").innerText = @Model.NewCount;
     document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;
     document.getElementById("ActiveCount").innerText = @Model.ActiveCount;

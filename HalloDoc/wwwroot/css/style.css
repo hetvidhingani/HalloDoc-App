@@ -5,7 +5,7 @@ input[type=password]::-ms-clear {
 
 /*#region admin css*/
 .mainSectionMargin {
-    margin: 150px 0px;
+    margin: 150px 5px;
 }
 .tabactive
 {
@@ -167,7 +167,10 @@ input[type=password]::-ms-clear {
 .card:hover , .card.active {
     display: block ;
 }
-
+#status{
+    font-size:11px;
+    width:18vw;
+}
 .card.active  {
     position: absolute;
     top: 100%;
@@ -191,11 +194,11 @@ input[type=password]::-ms-clear {
     margin: 0px 2px;
 }
 .dashboardLinks>*{
-    margin-right:3px;
+    margin-right:5px;
 }
 .dashboardLinks>button{
     padding:3px;
-    font-size:11px;
+    font-size:14px;
     color:white;
     font-weight:600;
 }
@@ -244,7 +247,7 @@ input[type=password]::-ms-clear {
 }
 .type>span{
    
-    margin:2px;
+   
    vertical-align:middle;
    
 }
@@ -286,7 +289,7 @@ background-color:lightgray;
 
     @media only screen and (max-width: 600px) {
         .mainSectionMargin {
-            margin: 100px 0px;
+            margin: 90px 0px;
         }
         .cust-col {
             flex: 0 0 33.33333%;
@@ -299,15 +302,18 @@ background-color:lightgray;
             display: none;
         }
         .sidetabdashboard{
-           font-size:8px;
+           font-size:10px;
         }
         .cards {
             text-align: center;
-            width: 23vw;
+            width: 27vw;
             border-radius: 0px;
         }
+        .inputSearchbox{
+            display:flex;
+            flex-direction:column;
+        }
 
-       
 
         .has-search {
             width: 100%;
@@ -318,10 +324,10 @@ background-color:lightgray;
         }
 
         .cardContaint.font {
-            font-size: 13px;
+            font-size: 20px;
         }
             .cardContaint{
-               font-size: 11px;
+               font-size: 15px;
             }
         .headerfontDash {
             font-size: 15px;
@@ -332,7 +338,7 @@ background-color:lightgray;
 
         .type {
             font-size: 6px;
-            width: 18vw;
+            
         }
 
         .formbasetab, .sidetabdashboard {
@@ -359,7 +365,9 @@ background-color:lightgray;
         .adminDashBtn3 {
             background-color: #ee9125;
         }
-
+        .adminDashBtn4{
+            background-color:rebeccapurple;
+        }
         .mobileDashBtn {
             border-radius: 12px;
             border: none;
@@ -373,7 +381,8 @@ background-color:lightgray;
 
         .z {
             display: flex;
-            justify-content: center;
+            /*justify-content: center;*/
+            
         }
 
         .viewCaseBtn {
@@ -382,31 +391,60 @@ background-color:lightgray;
             border: 1px solid #5069ae;
             border-radius: 10px;
             position: relative;
-            top: -30px;
-
+            top: -32px;
+            text-decoration: none;
+            padding: 3px;
         }
         #New.cards.active::after, #Pending.cards.active::after, #Active.cards.active::after, #Unpaid.cards.active::after, #Conclude.cards.active::after, #ToClose.cards.active::after {
             display: none;
         }
-         
+        .check {
+            display: block;
+            justify-content: start;
+            width: 100%;
+           
+        }
+
+            .check > button {
+                align-content:baseline;
+                padding: 1px;
+                font-size:11px;
+            }
+            .check>button>*{
+                display:flex;
+                align-items:center;
+            }
+         .mainSectionMargin>.container-fluid{
+             padding:11px;
+         }
+        .mobileviewdashboard>*
+        {
+            font-size:14px;
+        }
     }
 
     @media only screen and (min-width: 601px) {
         .cards {
-            padding: 8px 5px;
+            padding: 5px 14px;
             width: 15vw;
             text-align: left;
         }
         .sidetabdashboard {
-            font-size: 10px;
+            font-size: 13px;
         }
         .headerfontDash {
-            font-size: 20px;
+            font-size: 31px;
         }
         .adminDashMobile {
             display: none;
         }
-
+        .inputSearchbox {
+            display: flex;
+           justify-content:flex-start;
+        }
+        .inputSearchbox >*{
+           margin:2px;
+        }
         .type {
             font-size: 10px;
         }
@@ -422,6 +460,18 @@ background-color:lightgray;
 
             .tableHead > * {
                 margin-right: 12px;
+            }
+        .check {
+            display: flex;
+            justify-content: end;
+            width: 100%;
+            overflow-wrap: anywhere;
+            
+        }
+
+            .check > button {
+                padding: 6px;
+                font-size:12px;
             }
     }
     /*#endregion*/
@@ -755,7 +805,7 @@ header {
 }
 .header2 {
     position: fixed;
-    height: 80px;
+    height: 65px;
     
     top: 0;
     width: 100%;
@@ -763,7 +813,7 @@ header {
 }
 .subHeader {
     position: fixed;
-    top: 81px;
+    top: 66px;
    
 }
 .shadow {
@@ -1051,15 +1101,20 @@ form > div > div {
 }
 
 .mobileviewdashboard {
-    background-color: #ebfafd;
+    background-color: #EBFAFD;
     word-wrap: break-word;
+    border: 1px solid #D7DCDD;
 }
+    .mobileviewdashboard.active {
+        background-color: #dae8eb;
+    }
 .table-btn {
     border: none;
     background-color: #ebfafd;
     white-space: normal;
     word-wrap: break-word;
-
+    overflow: hidden;
+    text-align:start;
 }
 @media screen and (max-width: 768px) {
     .dashboardtbl
