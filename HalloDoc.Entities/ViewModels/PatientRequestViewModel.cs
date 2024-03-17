@@ -48,7 +48,7 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter Your Symptoms Here")]
         public string Symptoms { get; set; }
 
-       
+
         [Required(ErrorMessage = "Enter City Here")]
         public string? City { get; set; }
 
@@ -66,7 +66,10 @@ namespace HalloDoc.Entities.ViewModels
         public IFormFile? File { get; set; }
         public string? RelationName { get; set; }
         public int? RegionId { get; set; }
-
+        public PatientRequestViewModel()
+        {
+            State = new List<Region>();
+        }
     }
 
 

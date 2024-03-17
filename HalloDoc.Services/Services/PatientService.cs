@@ -806,6 +806,7 @@ namespace HalloDoc.Services.Services
                                  r.CreatedDate,
                                  r.Status,
                                  rwf.FileName,
+                                 rwf.RequestWiseFileId,
                                  UploaderName = subAdmin != null ? subAdmin.FirstName + " " + subAdmin.LastName : null,
                                 
                              }).ToList();
@@ -813,12 +814,16 @@ namespace HalloDoc.Services.Services
             List<DashboardViewModel> list = new List<DashboardViewModel>();
             foreach (var e in tableData)
             {
-                DashboardViewModel model = new DashboardViewModel();
-                model.Username = e.UploaderName ?? e.FirstName + " " + e.LastName;
-                model.RequstId = e.RequestId;
-                model.CreatedDate = DateTime.Now.ToShortDateString();
-                model.FileName = e.FileName;
-                model.Status = e.Status;
+                DashboardViewModel model = new DashboardViewModel
+                {
+                    Username = e.UploaderName ?? e.FirstName + " " + e.LastName,
+                    RequstId = e.RequestId,
+                    CreatedDate = DateTime.Now.ToShortDateString(),
+                    FileName = e.FileName,
+                    Status = e.Status,
+                    RequestWiseFileID = e.RequestWiseFileId,
+                    
+                };
                 _aspnetuserRepository.SetTempData("reqID", model.RequstId);
 
                 list.Add(model);
@@ -849,7 +854,7 @@ namespace HalloDoc.Services.Services
         }
 
 
-        public async Task<RequestWiseFile> DownloadFile(string fileId)
+        public async Task<RequestWiseFile> DownloadFile(int fileId)
         {
             RequestWiseFile reqw = await _requestwisefileRepository.GetByIdAsync(fileId);
            
@@ -858,20 +863,21 @@ namespace HalloDoc.Services.Services
 
 
 
-        public async Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles)
+        public async Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues)
         {
-            selectedFiles = selectedFiles.Distinct();
+            //selectedFiles = selectedFiles.Distinct();
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    foreach (var file in selectedFiles)
+                    foreach (var file in documentValues)
                     {
-                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", file);
+                        var temp = await _requestwisefileRepository.GetByIdAsync(file);
+                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", temp.FileName);
                         byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
 
-                        var zipEntry = zipArchive.CreateEntry(file);
+                        var zipEntry = zipArchive.CreateEntry(temp.FileName);
                         using (var zipEntryStream = zipEntry.Open())
                         {
                             zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
@@ -882,12 +888,10 @@ namespace HalloDoc.Services.Services
 
                 return memoryStream.ToArray();
             }
-
-
         }
-        public async Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles,int? requestid)
+        public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
-            var filesRow =await  _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
+            var filesRow = await _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>
@@ -904,7 +908,6 @@ namespace HalloDoc.Services.Services
 
             return ms.ToArray();
         }
-
 
         #endregion
 

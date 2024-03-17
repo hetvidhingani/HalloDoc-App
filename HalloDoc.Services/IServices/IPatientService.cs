@@ -32,9 +32,9 @@ namespace HalloDoc.Services.IServices
         Task<List<DashboardViewModel>> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id);
         Task<RequestWiseFile> FindFile(string email);
-        Task<RequestWiseFile> DownloadFile(string name);
-        Task<byte[]> DownloadAllByChecked(IEnumerable<string> selectedFiles);
-        Task<byte[]> DownloadAll(IEnumerable<string> selectedFiles, int? requestid);
+        Task<RequestWiseFile> DownloadFile(int file);
+        Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
+        Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
         Task<string> SendEmail(string email, string link, string subject, string body);
       
 

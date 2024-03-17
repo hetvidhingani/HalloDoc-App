@@ -91,7 +91,7 @@
                                     <td>@r.Username</td>
                                     <td>@r.CreatedDate</td>
                                     <td>
-                                        <a href="@Url.Action("DownloadFile", "Patient", new { name = r.RequestWiseFileID })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileID })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
                                     </td>
@@ -112,7 +112,7 @@
                         <div class="mobileviewdashboard my-2 p-3" style="background-color:white">
 
                             <button type="button" class="table-btn collapsible" style="background-color:white">
-                                <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                                <input type="checkbox" value="@r.RequestWiseFileID" class="checkboxForAll" name="selectedFiles">  @r.FileName
 
                             </button>
                             <div class="content mx-2">
@@ -125,7 +125,7 @@
 
                                 </div>
                                 <div class="provider d-flex pt-2 gap-2">
-                                    <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link">
+                                    <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileID })" class="btn btn-outline-info download-link">
                                         <i class="bi bi-cloud-arrow-down"></i>
                                     </a>
                                 </div>

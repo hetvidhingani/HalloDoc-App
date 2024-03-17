@@ -106,9 +106,9 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ViewDocument");
         }
 
-        public async Task<FileResult> DownloadFile(string fileId, string filename)
+        public async Task<FileResult> DownloadFile(int fileId)
         {
-            
+            string filename = "";
             RequestWiseFile reqw = await _patient.DownloadFile(fileId);
             if (reqw != null)
             {
@@ -121,24 +121,26 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public async Task<FileResult> DownloadAll(IEnumerable<string> selectedFiles)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues)
         {
-            if (selectedFiles.Count() > 0)
+            if (documentValues.Count() > 0)
             {
-                byte[] fileBytes = await _patient.DownloadAllByChecked(selectedFiles);
-                return File(fileBytes, "application/zip", "download.zip");
+                byte[] fileBytes = await _patient.DownloadAllByChecked(documentValues);
+                string zipFileData = Convert.ToBase64String(fileBytes);
+                return Json(new { success = true, zipFileData });
 
             }
             else
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
-                byte[] fileBytes = await _patient.DownloadAll(selectedFiles, requestid);
+
+                byte[] fileBytes = await _patient.DownloadAll(documentValues, requestid);
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
 
         #endregion
-        
+
         #region Patient My Profile
         public async Task<IActionResult> Profile(PatientRequestViewModel requestViewModel)
         {
