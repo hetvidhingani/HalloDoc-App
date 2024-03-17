@@ -84,14 +84,14 @@
                                 <tr>
                                     <td>
 
-                                        <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                                        <input type="checkbox" value="@r.RequestWiseFileID" class="checkboxForAll" name="selectedFiles">  @r.FileName
                                     </td>
 
 
                                     <td>@r.Username</td>
                                     <td>@r.CreatedDate</td>
                                     <td>
-                                        <a href="@Url.Action("DownloadFile", "Patient", new { name = r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DownloadFile", "Patient", new { name = r.RequestWiseFileID })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
                                     </td>

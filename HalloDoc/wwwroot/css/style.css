@@ -7,12 +7,6 @@ input[type=password]::-ms-clear {
 
 /*header*/
 
-
-
-
-
-
-
 /*#region admin css*/
 .mainSectionMargin {
     margin: 150px 5px;
@@ -938,7 +932,7 @@ form > div > div {
         background-color: #059cc2;
         color: white;
     }
-
+  
 .btn-primary-outline {
     border: 1px solid #00bbe8;
     padding: 0.5em 1em;
@@ -948,11 +942,15 @@ form > div > div {
 
 .iti {
     width: 100%;
+    border:none;
 }
 
 .iti--allow-dropdown {
     max-width: 100%;
     height: 50%;
+    border: none;
+    background-color: white;
+    z-index: 1000;
 }
 
 /* #endregion  */

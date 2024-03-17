@@ -94,7 +94,7 @@
 
                                     <td>@r.CreatedDate</td>
                                     <td>
-                                        <a href="@Url.Action("DownloadFile", "Admin", new { name = @r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DownloadFile", "Admin", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
                                         <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">

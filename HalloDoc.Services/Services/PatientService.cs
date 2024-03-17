@@ -57,11 +57,11 @@ namespace HalloDoc.Services.Services
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
         }
-        public async Task<AspNetUser> GetAspNetUser(string email)
-        {
-            AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
-            return user;
-        }
+        //public async Task<AspNetUser> GetAspNetUser(string email)
+        //{
+        //    AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
+        //    return user;
+        //}
         public async Task<RequestWiseFile> FindFile(string fileName)
         {
             RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
@@ -849,9 +849,9 @@ namespace HalloDoc.Services.Services
         }
 
 
-        public async Task<RequestWiseFile> DownloadFile(string name)
+        public async Task<RequestWiseFile> DownloadFile(string fileId)
         {
-            RequestWiseFile reqw = await _requestwisefileRepository.FindFile(name);
+            RequestWiseFile reqw = await _requestwisefileRepository.GetByIdAsync(fileId);
            
             return reqw;
         }

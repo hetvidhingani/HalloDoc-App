@@ -106,10 +106,10 @@ namespace HalloDoc.Controllers
             return RedirectToAction("ViewDocument");
         }
 
-        public async Task<FileResult> DownloadFile(string name, string filename)
+        public async Task<FileResult> DownloadFile(string fileId, string filename)
         {
             
-            RequestWiseFile reqw = await _patient.DownloadFile(name);
+            RequestWiseFile reqw = await _patient.DownloadFile(fileId);
             if (reqw != null)
             {
                 filename = reqw.FileName;

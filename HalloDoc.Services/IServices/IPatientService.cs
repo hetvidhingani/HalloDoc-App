@@ -21,7 +21,7 @@ namespace HalloDoc.Services.IServices
         string? CheckEmail(string email);
         Task<AspNetUser> checkEmailPassword(string email, string password);
         Task<User> GetUser(string email);
-        Task<AspNetUser> GetAspNetUser(string email);
+        //Task<AspNetUser> GetAspNetUser(string email);
         Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel);
         Task<T> GetTempData<T>(string key);
         Task<object> Dashboard(int? userId);

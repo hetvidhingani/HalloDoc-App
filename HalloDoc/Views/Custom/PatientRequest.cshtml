@@ -64,7 +64,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" ">
+                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" ">
                             <label for=" ">Date Of Birth</label>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 
@@ -133,7 +133,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example"  aria-height="5vh" asp-for="RegionId">
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -145,7 +145,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ZipCode" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="ZipCode" type="text" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code">
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="ZipCode" class="text-danger"></span>
 
@@ -190,7 +190,6 @@
 </div>
 
 <script>
-
     function AlertName() {
         var email = document.getElementById("patientEmail").value;
 
@@ -203,23 +202,26 @@
                 var label2 = document.getElementById('hide2');
 
                 if (data.exists) {
-                    patientPassword.style.display = 'none';
-                    patientConfirmPassword.style.display = 'none';
                     label1.style.display = 'none';
                     label2.style.display = 'none';
 
-
-                }
-                else {
-                    patientPassword.style.display = 'block';
-                    patientConfirmPassword.style.display = 'block';
+                    // Disable password and confirm password fields
+                    patientPassword.disabled = true;
+                    patientConfirmPassword.disabled = true;
+                } else {
                     label1.style.display = 'block';
                     label2.style.display = 'block';
 
+                    // Enable password and confirm password fields
+                    patientPassword.disabled = false;
+                    patientConfirmPassword.disabled = false;
                 }
             })
             .catch(error => console.error('Error:', error));
     }
+
+    const patientEmailField = document.getElementById("patientEmail");
+    patientEmailField.addEventListener("blur", AlertName);
 
 
     if (localStorage.getItem("Mytheme")) {
@@ -229,11 +231,17 @@
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
        
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup:false,
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
        
     });
-    // $('#phone').attr('value', "+");
+     $('#phone').attr('value', "+91");
     
    
 </script>
