@@ -19,14 +19,15 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                    
                     <div class="row justify-content-between">
-                    <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  p-4 shadow-lg d-flex flex-column">
+                    <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  p-4 shadow-lg d-flex flex-column" >
                         <strong> Transfer Notes</strong>
                         @if(Model.TransferNotes!=null)
                         {
                             @foreach (var z in Model.TransferNotes)
                             {
 
-                                <small>@z.FirstName</small>
+                                <small><b>Admin</b> Transferd to Dr. <b>@z.PhysicianName</b> on @z.CreatedDate : @z.Note </small>
+                                <hr />
                             }
                         }
                         
@@ -38,13 +39,13 @@
                         </div>
                     <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1   p-4 shadow-lg d-flex  flex-column">
                         <strong> Admin Notes</strong>
-                        <small><div>@Model.AdminNotes</div></small>
+                        <small><div id="adminNotes">@Model.AdminNotes</div></small>
 
                         </div>
                     </div>
                 <div class="bg-white p-3 shadow-lg  rounded-2" >
                 <div class="form-floating form-group  rounded-3">
-                        <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <textarea asp-for="AdditionalNotes" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
                         <label class="form-label" for="textAreaExample2">
                             Additional Notes
                         </label>
@@ -53,7 +54,7 @@
                     <div class="row ">
 
                         <div class="col-12 d-flex " style="justify-content:end;align-items:center">
-                            <input type="submit"  class="btn btn-info p-2 " style=" color: white;width: 120px; " value="Save Changes"  />
+                            <a type="button" class="btn btn-info p-2 saveChangesButton " style=" color: white;width: 120px; " id="@Model.requestID" value="Save Changes">Save changes</a>
                         </div>
                     </div>
                 </div>
@@ -67,14 +68,35 @@
 
 <script>
 
+    $('.saveChangesButton').click(function () {
+      
+        var additionalNotes = $('#additionalNotes').val();
+        var adminNotes = $('#adminNotes').text();
+        var id = this.id;
+        console.log(id);
 
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { additionalNotes: additionalNotes, adminNotes: adminNotes, id: id },
+            url: "@(Url.Action("ViewNotes", "Admin"))",
+            success: function (data) {
+                console.log("abc");
+                // Handle the response from the server
+                console.log(data);
+            },
+            error: function () {
+                console.log("error");
+            }
+        });
+    });
 
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
    
         document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("textAreaExample2").value = "";
+        document.getElementById("additionalNotes").value = "";
         });
 
 

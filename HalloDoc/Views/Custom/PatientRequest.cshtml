@@ -208,6 +208,10 @@
                     // Disable password and confirm password fields
                     patientPassword.disabled = true;
                     patientConfirmPassword.disabled = true;
+
+                    // Remove required attribute from password fields
+                    patientPassword.removeAttribute('required');
+                    patientConfirmPassword.removeAttribute('required');
                 } else {
                     label1.style.display = 'block';
                     label2.style.display = 'block';
@@ -215,10 +219,15 @@
                     // Enable password and confirm password fields
                     patientPassword.disabled = false;
                     patientConfirmPassword.disabled = false;
+
+                    // Add required attribute to password fields
+                    patientPassword.setAttribute('required', 'required');
+                    patientConfirmPassword.setAttribute('required', 'required');
                 }
             })
             .catch(error => console.error('Error:', error));
     }
+
 
     const patientEmailField = document.getElementById("patientEmail");
     patientEmailField.addEventListener("blur", AlertName);

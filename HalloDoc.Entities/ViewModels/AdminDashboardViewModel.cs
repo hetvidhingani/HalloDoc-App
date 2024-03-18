@@ -33,8 +33,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public string? AdminNotes { get; set; }
         public string? PhysicianNotes { get; set; }
-        public List<Physician> TransferNotes { get; set; }
-        public string? AdditionalNotes { get; set; }
+       
         public List<Region> State { get; set; }
 
         public string Email { get; set; }

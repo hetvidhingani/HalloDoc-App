@@ -33,6 +33,7 @@ builder.Services.AddScoped<IOrderDetailsRepository, OrderDetailsRepository>();
 builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
 builder.Services.AddScoped<IAspNetUserRolesRepository, AspNetUserRolesRepository>();
 builder.Services.AddScoped<IEncounterRepository, EncounterRepository>();
+builder.Services.AddScoped<IRequestClosedRepository, RequestClosedRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

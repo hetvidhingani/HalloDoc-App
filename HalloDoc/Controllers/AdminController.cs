@@ -124,16 +124,16 @@ namespace HalloDoc.Controllers
 
         #region View Notes
 
-        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel, int Id)
+        public async Task<IActionResult> ViewNotes( int Id)
         {
-            var result = await _admin.ViewNotes(viewModel, Id);
+            var result = await _admin.ViewNotes( Id);
             return View(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewNotes(AdminDashboardViewModel viewModel, int Id, int x)
+        public async Task<IActionResult> ViewNotes(string? additionalNotes, string? adminNotes,int id)
         {
-            var result = await _admin.AddNotes(viewModel, Id);
+            var result = await _admin.AddNotes(additionalNotes, adminNotes, id);
             return View(result);
         }
         #endregion
@@ -242,7 +242,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> ConfirmCloseCase(int id)
         {
             var result = await _admin.ConfirmCloseCase(id);
-            return RedirectToAction(result);
+            return RedirectToAction("Dashboard");
         }
         #endregion
 
