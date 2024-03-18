@@ -62,11 +62,11 @@ namespace HalloDoc.Services.Services
         //    AspNetUser user = await _aspnetuserRepository.CheckUserByEmail(email);
         //    return user;
         //}
-        public async Task<RequestWiseFile> FindFile(string fileName)
-        {
-            RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
-            return file;
-        }
+        //public async Task<RequestWiseFile> FindFile(string fileName)
+        //{
+        //    RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
+        //    return file;
+        //}
         public async Task<object> RegionList()
         {
             OtherRequestViewModel viewModel = new OtherRequestViewModel();
@@ -86,7 +86,6 @@ namespace HalloDoc.Services.Services
         {
             PatientRequestViewModel viewModel = new PatientRequestViewModel();
             viewModel.State = await _regionRepository.GetRegions();
-            viewModel.DateOfBirth = new DateTime(2000, 1, 1);
             if (userId != null)
             {
                 User user = await _userRepository.GetByIdAsync(userId);
@@ -106,6 +105,11 @@ namespace HalloDoc.Services.Services
                     viewModel.DateOfBirth =dob;
                     return viewModel;
                 }
+            }
+            else
+            {
+                viewModel.DateOfBirth = new DateTime(2024, 1, 1);
+
             }
 
             return viewModel;

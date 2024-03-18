@@ -31,7 +31,7 @@ namespace HalloDoc.Services.IServices
         Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId);
         Task<List<DashboardViewModel>> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id);
-        Task<RequestWiseFile> FindFile(string email);
+       // Task<RequestWiseFile> FindFile(string email);
         Task<RequestWiseFile> DownloadFile(int file);
         Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);

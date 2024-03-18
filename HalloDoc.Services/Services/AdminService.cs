@@ -91,16 +91,16 @@ namespace HalloDoc.Services.Services
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId);
         }
-        public async Task<RequestWiseFile> FindFile(string fileName)
-        {
-            RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
-            return file;
-        }
-        public async Task<RequestWiseFile> FindFile(string fileName, int? ID)
-        {
-            RequestWiseFile file = await _requestwisefileRepository.FindFileByID(fileName, ID);
-            return file;
-        }
+        //public async Task<RequestWiseFile> FindFile(string fileName)
+        //{
+        //    RequestWiseFile file = await _requestwisefileRepository.FindFile(fileName);
+        //    return file;
+        //}
+        //public async Task<RequestWiseFile> FindFile(string fileName, int? ID)
+        //{
+        //    RequestWiseFile file = await _requestwisefileRepository.FindFileByID(fileName, ID);
+        //    return file;
+        //}
         public async Task<T> GetTempData<T>(string key)
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
@@ -629,9 +629,9 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-        public async Task<RequestWiseFile> DownloadFile(string name)
+        public async Task<RequestWiseFile> DownloadFile(string fileId)
         {
-            RequestWiseFile reqw = await _requestwisefileRepository.FindFile(name);
+            RequestWiseFile reqw = await _requestwisefileRepository.GetByIdAsync(fileId);
 
             return reqw;
         }

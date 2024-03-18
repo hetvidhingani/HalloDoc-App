@@ -33,8 +33,6 @@ namespace HalloDoc.Services.IServices
         Task<List<Physician>> GetPhysiciansByRegion(int regionId);
         Task<DashboardViewModel> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id);
-        Task<RequestWiseFile> FindFile(string email);
-        Task<RequestWiseFile> FindFile(string fileName, int? ID);
         Task<RequestWiseFile> DownloadFile(string name);
         Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
@@ -59,7 +57,6 @@ namespace HalloDoc.Services.IServices
         Task<object> SaveAdminInfo(AdminMyProfileViewModel model);
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
-
         Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID);
     }
 }
