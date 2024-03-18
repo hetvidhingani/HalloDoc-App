@@ -81,7 +81,6 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-
         #region PatientRequest
         public async Task<object> PatientRequest(int? userId)
         {
@@ -547,7 +546,7 @@ namespace HalloDoc.Services.Services
             {
                 if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
                 {
-                    myUser.PasswordHash = createAccountViewModel.ConfirmPassword;
+                    myUser.PasswordHash =_aspnetuserRepository.EncodePasswordToBase64( createAccountViewModel.ConfirmPassword);
                     await _aspnetuserRepository.UpdateAsync(myUser);
                     _aspnetuserRepository.SetTempData("Message", "Password Updated");
                     return "RegisterdPatientLogin";
