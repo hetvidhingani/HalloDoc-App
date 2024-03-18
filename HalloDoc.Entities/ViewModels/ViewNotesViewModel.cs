@@ -20,5 +20,9 @@ namespace HalloDoc.Entities.ViewModels
             public string Note { get; set; }
         }
         public string? AdditionalNotes { get; set; }
+
+        public string? AdminNotes { get; set; }
+        public string? PhysicianNotes { get; set; }
+
     }
 }

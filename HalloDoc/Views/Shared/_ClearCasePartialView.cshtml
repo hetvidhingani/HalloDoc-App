@@ -24,7 +24,10 @@
             type: "POST",
             dataType: "html",
           
-            url: "@(Url.Action("ClearRequest", "Admin"))"
+            url: "@(Url.Action("ClearRequest", "Admin"))",
+            success: function (response) { 
+                location.reload();
+            }
            
         });
     });

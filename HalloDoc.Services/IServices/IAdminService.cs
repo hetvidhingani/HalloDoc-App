@@ -22,7 +22,7 @@ namespace HalloDoc.Services.IServices
         Task<int> GetUserByRequestClientID(int id);
         Task<Admin> GetAdmin(string email);
         Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
-        Task<AdminDashboardViewModel> ViewNotes( int id);
+        Task<ViewNotesViewModel> ViewNotes(int id);
         Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id);
         Task<object> CancelCase(CancelCaseViewModel viewModel, int id);
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);

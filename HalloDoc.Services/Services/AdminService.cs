@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Org.BouncyCastle.Ocsp;
 using static HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
+using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 
 namespace HalloDoc.Services.Services
 {
@@ -245,9 +246,9 @@ namespace HalloDoc.Services.Services
 
         #region View Notes
        
-        public async Task<AdminDashboardViewModel> ViewNotes( int id)
+        public async Task<ViewNotesViewModel> ViewNotes( int id)
         {
-            AdminDashboardViewModel viewmodel = new AdminDashboardViewModel();
+            ViewNotesViewModel viewmodel = new ViewNotesViewModel();
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             viewmodel.requestID = req.RequestId;
            

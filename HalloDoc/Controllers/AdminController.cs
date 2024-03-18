@@ -133,8 +133,8 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> ViewNotes(string? additionalNotes, string? adminNotes,int id)
         {
-            var result = await _admin.AddNotes(additionalNotes, adminNotes, id);
-            return View(result);
+          await _admin.AddNotes(additionalNotes, adminNotes, id);
+            return Json("success");
         }
         #endregion
 

@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel
+﻿@model HalloDoc.Entities.ViewModels.ViewNotesViewModel
 
 
 
@@ -83,6 +83,7 @@
             success: function (data) {
                 console.log("abc");
                 // Handle the response from the server
+                location.reload();
                 console.log(data);
             },
             error: function () {
