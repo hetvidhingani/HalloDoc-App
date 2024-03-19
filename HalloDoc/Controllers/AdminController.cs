@@ -62,8 +62,8 @@ namespace HalloDoc.Controllers
             return View(result);
         }
 
-
-        public IActionResult GetTable(string state, int? requestType)
+        [HttpPost]
+        public IActionResult GetTable(string state, int CurrentPage, string PatientName2, int ReqType, int RegionId)
         {
             List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
 
@@ -71,36 +71,50 @@ namespace HalloDoc.Controllers
             {
                 case "New":
                     ViewBag.state = "New";
-                    var result = _admin.Admintbl(list, 1, requestType);
-                    return PartialView("_TablePartialView", result);
+                    var result = _admin.Admintbl(state,list, 1);
+                    var paging = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result);
+                    return PartialView("_TablePartialView", paging);
+
                 case "Pending":
                     ViewBag.state = "Pending";
-                    var resultPending = _admin.Admintbl(list, 2, requestType);
-                    return PartialView("_TablePartialView", resultPending);
+                    var result2 = _admin.Admintbl(state, list, 2);
+                    var paging2 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result2);
+
+                    return PartialView("_TablePartialView", paging2);
 
                 case "Active":
                     ViewBag.state = "Active";
-                    var resultActive = _admin.Admintbl(list, 4, requestType);
-                    return PartialView("_TablePartialView", resultActive);
+                    var result3 = _admin.Admintbl(state, list, 4);
+                    var paging3 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result3);
+
+                    return PartialView("_TablePartialView", paging3);
 
                 case "Conclude":
                     ViewBag.state = "Conclude";
-                    var resultConclude = _admin.Admintbl(list, 6, requestType);
-                    return PartialView("_TablePartialView", resultConclude);
+                    var result4 = _admin.Admintbl(state, list, 6);
+                    var paging4 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result4);
+
+                    return PartialView("_TablePartialView", paging4);
 
                 case "Toclose":
                     ViewBag.state = "Toclose";
-                    var resultToClose = _admin.Admintbl(list, 3, requestType);
-                    return PartialView("_TablePartialView", resultToClose);
+                    var result5 = _admin.Admintbl(state, list, 3);
+                    var paging5 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result5);
+
+                    return PartialView("_TablePartialView", paging5);
 
                 case "Unpaid":
                     ViewBag.state = "Unpaid";
-                    var resultUnpaid = _admin.Admintbl(list, 9, requestType);
-                    return PartialView("_TablePartialView", resultUnpaid);
+                    var result6 = _admin.Admintbl(state, list, 9);
+                   var paging6 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result6);
+
+                    return PartialView("_TablePartialView", paging6);
 
                 default:
-                    var resultAll = _admin.Admintbl(list,1, requestType);
-                    return PartialView("_TablePartialView", resultAll);
+                    var result7 = _admin.Admintbl(state, list,1);
+                    var paging7 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result7);
+
+                    return PartialView("_TablePartialView", paging7);
             }
         }
         #endregion
@@ -109,15 +123,23 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewCase(int Id)
         {
-            var result = await _admin.ViewCase(Id);
-            return View(result);
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.ViewCase(Id);
+                return View(result);
+            }
+            return View();
         }
         [HttpPost]
 
         public async Task<IActionResult> ViewCase(ViewCaseViewModel viewmodel, int Id)
         {
-            var result = await _admin.EditNewRequest(viewmodel, Id);
-            return View(result);
+            if (ModelState.IsValid)
+            {
+                await _admin.EditNewRequest(viewmodel, Id);
+                return RedirectToAction("ViewCase", new { Id = Id });
+            }
+            return View();
         }
 
         #endregion

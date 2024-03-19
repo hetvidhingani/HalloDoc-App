@@ -1,5 +1,12 @@
 ﻿@model HalloDoc.Entities.ViewModels.ViewCaseViewModel
-
+<div class="modal fade" id="AssignCase" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <p>fcg</p>
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 <div class="mainSectionMargin ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -56,7 +63,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly/>
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" required readonly/>
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -65,8 +72,9 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" " readonly>
+                                   class="form-control edit" placeholder=" " required readonly>
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -111,11 +119,11 @@
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
                       
-                        <a id="@Model.requestclientID" class="btn Assign submitBtn">
-                            <button type="button" class="createNewReqBtn">
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id="@Model.requestclientID" class="btn Assign  btn-info" type="button">
+                            
                               Assign
-                            </button>
-                        </a>
+                           
+                        </button>
                         <a asp-controller="admin" asp-action="ViewNotes" asp-route-Id="@Model.requestclientID" class="btn ">
                             <button type="button" class="createNewReqBtn">
                                 View Notes
@@ -137,6 +145,7 @@
 <script>
     $('.Assign').click(function () {
         var id = this.id;
+        console.log(id);
 
         $.ajax({
             type: "POST",
@@ -144,8 +153,9 @@
             data: { id },
             url: "@(Url.Action("AssignCase", "Admin"))",
             success: function (data) {
-                console.log("abc");
+                console.log("abc",data);
                 $("#AssignCase").find('.modal-content').html(data);
+                console.log("hello")
             },
             error: function () {
                 console.log("error");
@@ -159,19 +169,19 @@
     }
 
     const phoneInputField = document.querySelector("#phone");
+
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
     });
-    var flag = document.getElementsByClassName('iti__selected-flag');
-    window.onload = function () {
-
-
-        var input = document.querySelector("#phone");
-        input.removeAttribute("title");
-
-
-    }
+    $('#phone').attr('value', "+91");
    //save-edit button
     var editButton = document.getElementById("edit-button");
     editButton.addEventListener("click", function () {

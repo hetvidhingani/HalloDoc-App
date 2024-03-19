@@ -22,7 +22,7 @@ namespace HalloDoc.Entities.ViewModels
         [RegularExpression(@"^\+\d{1,3}\d{10}$", ErrorMessage = "Invalid phone number format. Use country code followed by 10 digits.")]
         public string PhoneNumber { get; set; }
 
-
+        [Required(ErrorMessage ="Enter Zip Code Here.")]
         [RegularExpression(@"^\d{6}$", ErrorMessage = "Invalid PIN code.")]
         public string? ZipCode { get; set; }
 
@@ -42,6 +42,7 @@ namespace HalloDoc.Entities.ViewModels
 
 
         [Required(ErrorMessage = "Enter your Email Here")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
         public string Email { get; set; }
 
 
@@ -57,7 +58,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? Street { get; set; }
 
 
-        [Required(ErrorMessage = "Enter Street Here")]
+        [Required(ErrorMessage = "Enter State Here")]
         public List<Region>? State { get; set; }
 
         public int? IntDate { get; set; }

@@ -221,13 +221,12 @@
                         <div class="col-lg-5 col-md-6 col-sm-6">
                             <div class="form-group has-search mb-1">
                                 <span class="fa fa-search form-control-feedback"></span>
-                                <input type="text" class="form-control w-100" placeholder="Search" id="search-input" oninput="searchFunction()">
-
+                                <input type="text" class="form-control w-100" placeholder="Search" id="search-input">
                             </div>
                         </div>
                         <div class="col-lg-5 col-md-6 col-sm-6">
                             <div class="has-search " >
-                                <select style="height:38px;"  class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                                <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                                     <option value="0" selected>All Regions</option>
 
                                     @foreach (var region in Model.State)
@@ -240,11 +239,11 @@
                     </div>
                     <div class="col-lg-5 col-md-12 col-sm-12 d-flex justify-content-end mb-3">
                         <div class="check mt-1">
-                            <button class="btn request-type-btn  " data-requesttype="0" data-state="All"> <span style="margin-left:5px">All</span>   </button>
-                            <button class="btn  request-type-btn " data-requesttype="1"><span class="dot1 mx-auto"></span><span style="margin-left:5px">Patient</span></button>
-                            <button class="btn  request-type-btn " data-requesttype="2"><span class="dot2 mx-auto "></span><span style="margin-left:5px">Family/Friend</span></button>
-                            <button class="btn  request-type-btn " data-requesttype="3"><span class="dot4  mx-auto"></span><span style="margin-left:5px">Concierge</span></button>
-                            <button class="btn  request-type-btn  " data-requesttype="4"><span class="dot3  mx-auto"></span><span style="margin-left:5px">Business</span></button>
+                            <button class="btn request-type-btn filterData  " id="0" data-requesttype="0" data-state="All"> <span style="margin-left:5px">All</span>   </button>
+                            <button class="btn  request-type-btn filterData " id="1" data-requesttype="1"><span class="dot1 mx-auto"></span><span style="margin-left:5px">Patient</span></button>
+                            <button class="btn  request-type-btn  filterData" id="2" data-requesttype="2"><span class="dot2 mx-auto "></span><span style="margin-left:5px">Family/Friend</span></button>
+                            <button class="btn  request-type-btn filterData " id="3" data-requesttype="3"><span class="dot4  mx-auto"></span><span style="margin-left:5px">Concierge</span></button>
+                            <button class="btn  request-type-btn  filterData " id="4" data-requesttype="4"><span class="dot3  mx-auto"></span><span style="margin-left:5px">Business</span></button>
                         </div>
                     </div>
 
@@ -259,78 +258,109 @@
     </div>
 </main>
 <script>
+
+    var state= localStorage.getItem("state");
+    if (state == "New") {
+
+        $("#New").click();
+
+        loadTable(state);
+
+    }
+
+    else if (state == "Pending") {
+        console.log(state);
+
+        loadTable('Pending');
+
+    }
+
+//paging
+    var page;
+    var url;
+    var PatientName2 = "";
+    var requestType;
+    var regionId;
+    var state;
+
+    $("#search-input").on('input', function () {
+         PatientName2 = $(this).val();
+        
+        page = 1;
+        AjaxAll();
+    });
+   
+    function AjaxAll() {
+       
+        var activeCard = $('.cards.active');
+
+        var state = activeCard.attr('id');
+        console.log(PatientName2);
+        $.ajax({
+            url: '@Url.Action("GetTable","Admin")',
+            type: "POST",
+            data: { state: state, CurrentPage: page, PatientName2: PatientName2, ReqType: requestType, RegionId: regionId },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+            },
+            error: function (error) {
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    //requesttype
+    $(".filterData").click(function () {
+        var activeCard = $('.cards.active');
+
+        var activeCardId = activeCard.attr('id');
+        state = activeCardId;
+        requestType = $(this).attr('id');
+       
+        page = 1;
+       
+        AjaxAll();
+    })
+    //search region
+    $("#allregionsearch").on("input", function () {
+        var activeCard = $('.cards.active');
+
+        var activeCardId = activeCard.attr('id');
+        state = activeCardId;
+
+        regionId = $(this).val();
+        page = 1;
+        AjaxAll();
+    })
+    //change page
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+
+    
+        AjaxAll();
+    }
+    //patient search
    
     //partialview
     $(document).ready(function () {
         loadTable('New');
+        
     });
-    function loadTable(state, requestType) {
-        if (state === 'All') {
-            var test = document.getElementById('status').innerText;
-            var cleanStatus = test.slice(1, -1);
-            state = cleanStatus;
-        }
-
-        var test = document.getElementById('status').innerText = "( " + (state || 'All') + " )";
-        $.ajax({
-            url: '/Admin/GetTable',
-            method: 'GET',
-            data: { state: state, requestType: requestType },
-            success: function (data) {
-                $("#admindata").html(data);
-            },
-            error: function (xhr, status, error) {
-                console.log('AJAX error:', error);
-            }
-        });
+    function loadTable(STATE) {
+        state = STATE;
+        page =1;
+        AjaxAll();
+    
     }
 
-    var state = "New";
-    var requesttype = "0";
-
-    $(document).ready(function () {
-
-        filterData(state, requesttype);
-        $(".cards").click(function () {
-            state = $(this).data("state");
-
-            requesttype = 0;
-            filterData(state, requesttype);
-            loadTable(state, requesttype);
-        });
-
-
-        $(".request-type-btn").click(function () {
-            requesttype = $(this).data("requesttype");
-
-
-            loadTable(state, requesttype);
-        });
-    });
-    function filterData(state, requesttype) {
-        var test = document.getElementById('status');
-
-        var table = $('table');
-        table.find('tr').filter(function () {
-            var rowState = $(this).data('state');
-            var rowRequestType = $(this).data('requesttype');
-            return rowState !== state || (requesttype !== 0 && rowRequestType !== requesttype);
-        }).hide();
-
-        table.find('tr').filter(function () {
-            var rowState = $(this).data('state');
-            var rowRequestType = $(this).data('requesttype');
-            return rowState === state && (requesttype === 0 || rowRequestType === requesttype);
-        }).show();
-    }
+    
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
-
             $(".cards").removeClass("active");
-
-
             $(this).addClass("active");
+            localStorage.setItem("state", $(this).attr('id'));
+           // Add this line to load the table for the clicked state
         });
     });
 
@@ -351,22 +381,7 @@
         });
     }
 
-    //search box
-    function searchFunction() {
-        var inputVal = document.getElementById("search-input").value.toLowerCase();
-
-        var rows = document.getElementById("patientTable").rows;
-        for (var i = 1; i < rows.length; i++) {
-            var patientName = rows[i].cells[0].innerText.toLowerCase();
-
-            if (patientName.indexOf(inputVal) == -1) {
-                rows[i].style.display = "none";
-            } else {
-                rows[i].style.display = "";
-            }
-        }
-    }
-
+   
     //display count
     document.getElementById("newCountDisplay").innerText = @Model.NewCount;
     document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;

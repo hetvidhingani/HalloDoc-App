@@ -159,7 +159,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
-        public List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status, int? requestType = null)
+        public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
         {
             var tabledashboard = (
                 from r in _requestRepository.GetAll()
@@ -167,7 +167,7 @@ namespace HalloDoc.Services.Services
                 join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
                 from phy in physicianGroup.DefaultIfEmpty()
 
-                where r.Status == status && (requestType == null || requestType == 0 || r.RequestTypeId == requestType)
+                where r.Status == status 
 
                 select new AdminDashboardViewModel
                 {
@@ -184,18 +184,57 @@ namespace HalloDoc.Services.Services
                     RequstClientId = rec.RequestClientId,
                     requestID = rec.RequestId,
                     Email=rec.Email,
+                    RegionId=(int)rec.RegionId,
+                    stateTab= state,
 
                 }).ToList();
 
             return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
         }
+      
+
+        public AdminDashboardViewModel Pagination(string state, int CurrentPage, string PatientName, int ReqType, int RegionId, List<AdminDashboardViewModel> newState)
+        {
+            if (!string.IsNullOrWhiteSpace(PatientName))
+            {
+                newState = newState.Where(a => a.PatientName.ToLower().Contains(PatientName.ToLower())).ToList();
+            }
+            if (ReqType != 0)
+            {
+                newState = newState.Where(a => a.RequestTypeID == ReqType).ToList();
+            }
+            if (RegionId != 0)
+            {
+                newState = newState.Where(a => a.RegionId == RegionId).ToList();
+            }
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 3;
+            int totalCount = newState.Count;
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            
+            List<AdminDashboardViewModel> clients = newState
+                .OrderBy(u => u.CreatedDate)
+                .ThenBy(u => u.PatientName)
+                .Skip((CurrentPage - 1) * dataSize)
+                .Take(dataSize)
+                .ToList();
+
+            return new AdminDashboardViewModel
+            {
+                stateTab= state,
+                PagingData = clients,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3
+            };
+        }
+
         public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
         {
             viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
-
-
         #endregion
 
         #region View Case

@@ -79,7 +79,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                                   class="form-control" placeholder=" ">
+                                   class="form-control" placeholder=" " required>
                             <label for=" ">Email</label>
                             <span asp-validation-for="Email" class="text-danger"></span>
 
@@ -89,7 +89,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" />
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>

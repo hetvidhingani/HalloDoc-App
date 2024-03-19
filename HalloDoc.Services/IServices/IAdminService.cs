@@ -49,7 +49,7 @@ namespace HalloDoc.Services.IServices
         Task<object> DashboardRegions(AdminDashboardViewModel viewModel);
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);
-        List<AdminDashboardViewModel> Admintbl(List<AdminDashboardViewModel> list, int status, int? requestType = null);
+        List<AdminDashboardViewModel> Admintbl(string state,List<AdminDashboardViewModel> list, int status);
         Task<CloseCaseViewModel> CloseCase(int Id);
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id);
@@ -58,5 +58,6 @@ namespace HalloDoc.Services.IServices
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID);
+        AdminDashboardViewModel Pagination(string state,int CurrentPage, string PatientName, int ReqType, int RegionId, List<AdminDashboardViewModel> newState);
     }
 }
