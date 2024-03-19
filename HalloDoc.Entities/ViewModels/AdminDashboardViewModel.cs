@@ -23,7 +23,7 @@ namespace HalloDoc.Entities.ViewModels
         public string Notes { get; set; }
         public string? PhysicianName { get; set; }
         public DateTime? DateOfService { get; set; }
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
         public int NewCount { get; set; }
         public int PendingCount { get; set; }
         public int ActiveCount { get; set; }

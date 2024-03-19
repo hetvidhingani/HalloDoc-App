@@ -173,36 +173,36 @@
             <div class="row mt-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="sectionHeading">
-                        <strong class="tableHead ">
-                            <div class="headerfontDash">Patients</div>
-                            <div style="color:#203e84;" id="status"></div>
-                        </strong>
+                        <span class="tableHead ">
+                            <div class="headerfontDash fw-3">Patients</div>
+                            <div style="color:#203e84;" id="status">@ViewBag.state</div>
+                        </span>
                     </div>
                     <div class="dashboardLinks d-flex  flex-wrap justify-content-end" style="float:right">
-                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                        <button style="border-radius:4px;" class="btn  btn-outline-primary text-primary bg-white mb-1  ">
                             <i class="bi bi-send iconLink"></i>
                             <span class="tabIcon">
                                 Send Link
 
                             </span>
                         </button>
-                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                        <button class="btn  btn-outline-primary text-primary bg-white mb-1  ">
                             <i class="bi bi-file-earmark "></i>
                             <span class="tabIcon"> Create Requests</span>
                         </button>
-                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                        <button class="btn  btn-outline-primary text-primary bg-white mb-1  ">
                             <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" /><span class="tabIcon">Export</span>
                         </button>
-                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                        <button class="btn  btn-outline-primary text-primary bg-white mb-1  ">
                             <img src="~/images/export-svgrepo-com.png" class=" " style="width:22px;color:white" />
 
-                            <span class="tabIcon">
+                            <span class="tabIcon ">
                                 Export All
 
                             </span>
                         </button>
 
-                        <button class="btn  btn-outline-primary text-primary mb-1  ">
+                        <button class="btn  btn-outline-primary text-primary bg-white mb-1  ">
                             <img src="~/images/man-svgrepo-com.png" style="width:22px;color:white" />
                             <span class="tabIcon">Request DTY Support</span>
                         </button>
@@ -215,7 +215,7 @@
             </div>
             <div class="container-fluid rounded formshadow px-2 py-1 ">
                 <div class="row mt-2">
-                  
+
 
                     <div class="col-lg-7 col-md-12 col-sm-12 inputSearchbox ">
                         <div class="col-lg-5 col-md-6 col-sm-6">
@@ -225,7 +225,7 @@
                             </div>
                         </div>
                         <div class="col-lg-5 col-md-6 col-sm-6">
-                            <div class="has-search " >
+                            <div class="has-search ">
                                 <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                                     <option value="0" selected>All Regions</option>
 
@@ -259,7 +259,7 @@
 </main>
 <script>
 
-    var state= localStorage.getItem("state");
+    var state = localStorage.getItem("state");
     if (state == "New") {
 
         $("#New").click();
@@ -274,8 +274,21 @@
         loadTable('Pending');
 
     }
+    //partialview
+    $(document).ready(function () {
+        loadTable('New');
 
-//paging
+    });
+    function loadTable(STATE) {
+        state = STATE;
+        document.getElementById('status').innerText = "( " + (state) + " )";
+
+        page = 1;
+        AjaxAll();
+
+    }
+
+    //paging
     var page;
     var url;
     var PatientName2 = "";
@@ -283,21 +296,23 @@
     var regionId;
     var state;
 
+    //patient search
+
     $("#search-input").on('input', function () {
-         PatientName2 = $(this).val();
-        
+        PatientName2 = $(this).val();
+
         page = 1;
         AjaxAll();
     });
-   
+
     function AjaxAll() {
-       
+
         var activeCard = $('.cards.active');
 
         var state = activeCard.attr('id');
-        console.log(PatientName2);
+
         $.ajax({
-            url: '@Url.Action("GetTable","Admin")',
+            url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
             data: { state: state, CurrentPage: page, PatientName2: PatientName2, ReqType: requestType, RegionId: regionId },
             dataType: "html",
@@ -316,9 +331,9 @@
         var activeCardId = activeCard.attr('id');
         state = activeCardId;
         requestType = $(this).attr('id');
-       
+
         page = 1;
-       
+
         AjaxAll();
     })
     //search region
@@ -336,31 +351,19 @@
     function changepage(CurrentPage) {
         page = CurrentPage;
 
-    
+
         AjaxAll();
-    }
-    //patient search
-   
-    //partialview
-    $(document).ready(function () {
-        loadTable('New');
-        
-    });
-    function loadTable(STATE) {
-        state = STATE;
-        page =1;
-        AjaxAll();
-    
     }
 
-    
+
+
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
             $(".cards").removeClass("active");
             $(this).addClass("active");
             localStorage.setItem("state", $(this).attr('id'));
-           // Add this line to load the table for the clicked state
+            // Add this line to load the table for the clicked state
         });
     });
 
@@ -381,7 +384,7 @@
         });
     }
 
-   
+
     //display count
     document.getElementById("newCountDisplay").innerText = @Model.NewCount;
     document.getElementById("pendingCountDisplay").innerText = @Model.PendingCount;

@@ -9,7 +9,7 @@ input[type=password]::-ms-clear {
 
 /*#region admin css*/
 .mainSectionMargin {
-    margin: 150px 5px;
+    margin: 125px 5px;
 }
 .tabactive
 {
@@ -26,37 +26,37 @@ input[type=password]::-ms-clear {
     background-color: #e9eaef;
     color: #203e84;
     border: 1px solid #203e84;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 .cardDesign2 {
     background-color: #e5f2f8;
     color: #20a2ce;
     border: 1px solid #20a2ce;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 .cardDesign3 {
     background-color: #e9f0e8;
     color: #377b37;
     border: 1px solid #377b37;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 .cardDesign4 {
     background-color: #f7e6ee;
     color: #a52879;
     border: 1px solid #a52879;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 .cardDesign5 {
     background-color: #e5eef5;
     color: #236cb5;
     border: 1px solid #236cb5;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 .cardDesign6 {
     background-color: #efeef4;
     color: #937ab3;
     border: 1px solid #937ab3;
-    border-radius: 10px;
+    border-radius: 4px;
 }
 #New.active, #New:hover,.triangleNew.active {
     background-color: #203f9a;
@@ -202,9 +202,9 @@ input[type=password]::-ms-clear {
 }
 .dashboardLinks>button{
     padding:3px;
-    font-size:14px;
+    font-size:12px;
     color:white;
-    font-weight:600;
+    font-weight:400;
 }
 .has-search .form-control {
     padding-left: 2.375rem;
@@ -291,7 +291,7 @@ input[type=password]::-ms-clear {
 background-color:lightgray;
 }
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 576px) {
         .mainSectionMargin {
             margin: 90px 0px;
         }
@@ -437,7 +437,7 @@ background-color:lightgray;
             font-size: 13px;
         }
         .headerfontDash {
-            font-size: 31px;
+            font-size: 25px;
         }
         .adminDashMobile {
             display: none;
@@ -1057,17 +1057,15 @@ form > div > div {
     display: block;
     color: #0a0a0a;
     text-align: center;
-    padding: 0px 16px;
+    padding: 0px 10px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 14px;
 }
 
-    .topnav a:hover {
-        background-color: #F6F5F5;
-        color: #01bae7;
-        text-decoration: underline 2px solid #01bae7;
-    }
 
+    .topnav a.active {
+        border-bottom: 3px solid #00bbe8;
+    }
 
 .topicon {
     display: none;

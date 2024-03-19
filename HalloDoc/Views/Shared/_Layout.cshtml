@@ -112,19 +112,19 @@
         }
         else
         {
-            <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
+            <div class="col-12 bg-white subHeader shadow" style="z-index:2000">
                 <div class="topnav" id="myTopnav">
-                    <strong>
-                        <a asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Dashboard</a>
-                        <a asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Provider Location</a>
+                    <span>
+                        <a id="1" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2 active" style="color:dimgrey">Dashboard</a>
+                        <a id="2" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Provider Location</a>
 
-                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">My Profile</a>
-                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9"> Providers</a>
-                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Partners</a>
-                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Access</a>
-                        <a asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:#01BCE9">Records</a>
+                        <a  id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">My Profile</a>
+                        <a  id="4 " asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey"> Providers</a>
+                        <a id="5" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Partners</a>
+                        <a  id="7" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Access</a>
+                        <a id="6" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Records</a>
 
-                    </strong>
+                    </span>
                 </div>
 
             </div>
@@ -160,6 +160,34 @@
     </footer>
 
     <script>
+        $(document).ready(function () {
+            // Check if there's a saved state in local storage
+            var activeLink = localStorage.getItem("activeLink");
+            if (activeLink) {
+                // Remove active class from all links and then add it to the saved active link
+                $(".nav-link").removeClass("active");
+                $("#" + activeLink).addClass("active");
+            }
+
+            // Handle click events for dashboard links
+            $(".nav-link").click(function (event) {
+                // Prevent default behavior of the link
+                event.preventDefault();
+
+                // Remove active class from all links
+                $(".nav-link").removeClass("active");
+                // Add active class to the clicked link
+                $(this).addClass("active");
+
+                // Save the id of the clicked link to local storage
+                localStorage.setItem("activeLink", $(this).attr("id"));
+
+                // Now navigate to the desired place
+                window.location.href = $(this).attr("href");
+            });
+        });
+
+
 
         function myFunction1() {
             var x = document.getElementById("myTopnav");
