@@ -1,18 +1,19 @@
 ﻿namespace HalloDoc.Entities.ViewModels
 {
-    public class SendEmailModel
+    public class 
+        SendEmailModel
     {
-        public string Email { get; set; }
-        public string From { get; set; }
+        public string Email { get; set; } = string.Empty;       
+        public string From { get; set; } = string.Empty;
 
-        public string To { get; set; }
+        public string To { get; set; } = string.Empty;
 
-        public string SmtpServer { get; set; }
+        public string SmtpServer { get; set; } = string.Empty;
 
         public long Port { get; set; }
 
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;    
     }
 }

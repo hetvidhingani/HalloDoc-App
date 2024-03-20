@@ -242,15 +242,15 @@
     const phoneInput = window.intlTelInput(phoneInputField, {
         autoInsertDialCode: true,
         fixDropdownWidth: true,
-       
+        formatOnDisplay: false,
         defaultToFirstCountry: true,
         initialCountry: "in",
         nationalMode: false,
-        useFullscreenPopup:false,
+        useFullscreenPopup: false,
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-       
+
     });
-     $('#phone').attr('value', "+91");
+    $('#phone').attr('value', "+91");
     
    
 </script>

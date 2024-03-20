@@ -10,17 +10,17 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class ViewCaseViewModel
     {
-        public string FirstName { get; set; }
+        public string FirstName { get; set; }=string.Empty;
         public string? LastName { get; set; }
 
         [Required(ErrorMessage = "Enter Phone Number Here")]
         [RegularExpression(@"^\+\d{1,3}\d{10}$", ErrorMessage = "Invalid phone number format. Use country code followed by 10 digits.")]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }= string.Empty;
 
         [Required(ErrorMessage = "Enter your Email Here")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
 
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
         public string? Symptoms { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Address { get; set; }

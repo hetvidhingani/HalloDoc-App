@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace HalloDoc.Entities.ViewModels
             public string PhysicianName { get; set; }
             public string Note { get; set; }
         }
+        [Required(ErrorMessage ="Please Add Notes!")]
         public string? AdditionalNotes { get; set; }
 
         public string? AdminNotes { get; set; }

@@ -266,20 +266,16 @@
         $(".cards").click(function () {
             $(".cards").removeClass("active");
             $(this).addClass("active");
-            //localStorage.setItem("state", $(this).attr('id'));
-            // Add this line to load the table for the clicked state
+            
         });
     });
 
     //partialview
-    // $(document).ready(function () {
-    //     loadTable('New');
-
-    // });
+   
     function loadTable(STATE) {
         state = STATE;
         document.getElementById('status').innerText = "( " + (state) + " )";
-
+       
         page = 1;
         console.log("hello", state)
         AjaxAll();
@@ -308,8 +304,7 @@
         // var activeCard = $('.cards.active');
 
         // var state = activeCard.attr('id');
-        // console.log(state);
-
+      
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
@@ -358,46 +353,36 @@
 
     //back
     var state1 = localStorage.getItem("state");
-    console.log(state1);
+    localStorage.removeItem("state");
 
     if (state1 == "New") {
-
+        
         $("#New").click();
         $(".cards").removeClass("active");
 
         $("#New").addClass("active");
-
-        state = state1;
-       // AjaxAll();
+        state1 = "New";
 
     }
 
     else if (state1 == "Pending") {
-        
+      
         $("#Pending").click();
 
         $(".cards").removeClass("active");
 
         $("#Pending").addClass("active");
-      
-       
-        state = state1;
-       // AjaxAll();
-
-
+        state1 = "New";
 
     }
     else if (state1 == "Active") {
-        
+      
         $("#Active").click();
 
         $(".cards").removeClass("active");
 
         $("#Active").addClass("active");
-       
-        state = state1;
-        console.log("active",state)
-       // AjaxAll();
+        state1 = "New";
 
     }
 
