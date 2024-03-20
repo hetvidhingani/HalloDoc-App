@@ -204,7 +204,7 @@
                                     @if (ViewBag.state == "Pending")
                                     {
                                     <li>
-                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
                                             View Case
                                         </a>
                                     </li>
@@ -239,7 +239,7 @@
                                     @if (ViewBag.state == "Active")
                                     {
                                     <li>
-                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId ,status= @request.stateTab})" style="text-decoration:none;color:black;">
                                             View Case
                                         </a>
                                     </li>
@@ -273,7 +273,7 @@
                                     @if (ViewBag.state == "Conclude")
                                     {
                                     <li>
-                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
                                             View Case
                                         </a>
                                     </li>
@@ -307,7 +307,7 @@
                                     @if (ViewBag.state == "Toclose")
                                     {
                                     <li>
-                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId ,status= @request.stateTab})" style="text-decoration:none;color:black;">
                                             View Case
                                         </a>
                                     </li>

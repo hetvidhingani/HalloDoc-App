@@ -24,7 +24,7 @@ namespace HalloDoc.Repository.Repository
         {
             Region state = _context.Regions.Where(u => u.RegionId == regionID).FirstOrDefault();
 
-            return state?.Name;
+            return state.Name;
         }
     }
 }

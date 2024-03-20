@@ -25,7 +25,7 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
         }
 
-       
+
 
         #region Logout
         public IActionResult Logout()
@@ -63,59 +63,63 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetTable(string state, int CurrentPage, string PatientName2, int ReqType, int RegionId)
+        public IActionResult GetTable(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId)
         {
-            List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
-
-            switch (state)
+            if (ModelState.IsValid)
             {
-                case "New":
-                    ViewBag.state = "New";
-                    var result = _admin.Admintbl(state,list, 1);
-                    var paging = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result);
-                    return PartialView("_TablePartialView", paging);
+                List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
 
-                case "Pending":
-                    ViewBag.state = "Pending";
-                    var result2 = _admin.Admintbl(state, list, 2);
-                    var paging2 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result2);
+                switch (state)
+                {
+                    case "New":
+                        ViewBag.state = "New";
+                        var result = _admin.Admintbl(state, list, 1);
+                        var paging = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result);
+                        return PartialView("_TablePartialView", paging);
 
-                    return PartialView("_TablePartialView", paging2);
+                    case "Pending":
+                        ViewBag.state = "Pending";
+                        var result2 = _admin.Admintbl(state, list, 2);
+                        var paging2 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result2);
 
-                case "Active":
-                    ViewBag.state = "Active";
-                    var result3 = _admin.Admintbl(state, list, 4);
-                    var paging3 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result3);
+                        return PartialView("_TablePartialView", paging2);
 
-                    return PartialView("_TablePartialView", paging3);
+                    case "Active":
+                        ViewBag.state = "Active";
+                        var result3 = _admin.Admintbl(state, list, 4);
+                        var paging3 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result3);
 
-                case "Conclude":
-                    ViewBag.state = "Conclude";
-                    var result4 = _admin.Admintbl(state, list, 6);
-                    var paging4 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result4);
+                        return PartialView("_TablePartialView", paging3);
 
-                    return PartialView("_TablePartialView", paging4);
+                    case "Conclude":
+                        ViewBag.state = "Conclude";
+                        var result4 = _admin.Admintbl(state, list, 6);
+                        var paging4 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result4);
 
-                case "Toclose":
-                    ViewBag.state = "Toclose";
-                    var result5 = _admin.Admintbl(state, list, 3);
-                    var paging5 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result5);
+                        return PartialView("_TablePartialView", paging4);
 
-                    return PartialView("_TablePartialView", paging5);
+                    case "Toclose":
+                        ViewBag.state = "Toclose";
+                        var result5 = _admin.Admintbl(state, list, 3);
+                        var paging5 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result5);
 
-                case "Unpaid":
-                    ViewBag.state = "Unpaid";
-                    var result6 = _admin.Admintbl(state, list, 9);
-                   var paging6 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result6);
+                        return PartialView("_TablePartialView", paging5);
 
-                    return PartialView("_TablePartialView", paging6);
+                    case "Unpaid":
+                        ViewBag.state = "Unpaid";
+                        var result6 = _admin.Admintbl(state, list, 9);
+                        var paging6 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result6);
 
-                default:
-                    var result7 = _admin.Admintbl(state, list,1);
-                    var paging7 = _admin.Pagination(state, CurrentPage, PatientName2, ReqType, RegionId, result7);
+                        return PartialView("_TablePartialView", paging6);
 
-                    return PartialView("_TablePartialView", paging7);
+                    default:
+                        var result7 = _admin.Admintbl(state, list, 1);
+                        var paging7 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result7);
+
+                        return PartialView("_TablePartialView", paging7);
+                }
             }
+            return View();
         }
         #endregion
 
@@ -130,6 +134,7 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
+
         [HttpPost]
 
         public async Task<IActionResult> ViewCase(ViewCaseViewModel viewmodel, int Id)
@@ -146,17 +151,25 @@ namespace HalloDoc.Controllers
 
         #region View Notes
 
-        public async Task<IActionResult> ViewNotes( int Id)
+        public async Task<IActionResult> ViewNotes(int Id)
         {
-            var result = await _admin.ViewNotes( Id);
-            return View(result);
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.ViewNotes(Id);
+                return View(result);
+            }
+            return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewNotes(string? additionalNotes, string? adminNotes,int id)
+        public async Task<IActionResult> ViewNotes(string? additionalNotes, string? adminNotes, int id)
         {
-          await _admin.AddNotes(additionalNotes, adminNotes, id);
-            return Json("success");
+            if (ModelState.IsValid)
+            {
+                await _admin.AddNotes(additionalNotes, adminNotes, id);
+                return Json("success");
+            }
+            return View();
         }
         #endregion
 
@@ -164,14 +177,21 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> CancelCase(CancelCaseViewModel viewModel, int id)
         {
-            var result = await _admin.CancelCase(viewModel, id);
-            return PartialView("_CancelCasePartialView", result);
+            
+                var result = await _admin.CancelCase(viewModel, id);
+                return PartialView("_CancelCasePartialView", result);
+            
         }
 
         public async Task<IActionResult> ConfirmCancelCase(CancelCaseViewModel viewModel, int id)
         {
-            var result = await _admin.ConfirmCancelCase(viewModel, id);
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.ConfirmCancelCase(viewModel, id);
+                return RedirectToAction("Dashboard");
+            }
             return RedirectToAction("Dashboard");
+
         }
         #endregion
 
@@ -185,7 +205,11 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> AssignRequest(AssignCaseViewModel viewModel, int id)
         {
-            await _admin.AssignRequest(viewModel, id);
+            if (ModelState.IsValid)
+            {
+                await _admin.AssignRequest(viewModel, id);
+                return RedirectToAction("Dashboard");
+            }
             return RedirectToAction("Dashboard");
         }
 
@@ -210,8 +234,12 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
         {
-            var result = await _admin.BlockCaseRequest(viewModel, id);
-            return RedirectToAction("Dashboard");
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.BlockCaseRequest(viewModel, id);
+                return RedirectToAction("Dashboard");
+            }
+            return View();
         }
         #endregion
 
@@ -226,8 +254,12 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> TransferRequest(AssignCaseViewModel viewModel, int id)
         {
-            await _admin.TransferRequest(viewModel, id);
-            return RedirectToAction("Dashboard");
+            if (ModelState.IsValid)
+            {
+                await _admin.TransferRequest(viewModel, id);
+                return RedirectToAction("Dashboard");
+            }
+            return View();
         }
 
         #endregion
@@ -241,10 +273,14 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> ClearRequest()
         {
-            var id = HttpContext.Session.GetInt32("requestID");
+            if (ModelState.IsValid)
+            {
+                var id = HttpContext.Session.GetInt32("requestID");
 
-            await _admin.ClearRequest(id);
-            return RedirectToAction("Dashboard");
+                await _admin.ClearRequest(id);
+                return RedirectToAction("Dashboard");
+            }
+            return View();
 
         }
         #endregion
@@ -257,13 +293,21 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> EditCloseCase(CloseCaseViewModel viewModel, int id)
         {
-            var result = await _admin.EditClose(viewModel, id);
-            return RedirectToAction("CloseCase", new { Id = result });
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.EditClose(viewModel, id);
+                return RedirectToAction("CloseCase", new { Id = result });
+            }
+            return View();
         }
 
         public async Task<IActionResult> ConfirmCloseCase(int id)
         {
-            var result = await _admin.ConfirmCloseCase(id);
+            if (ModelState.IsValid)
+            {
+                var result = await _admin.ConfirmCloseCase(id);
+                return RedirectToAction("Dashboard");
+            }
             return RedirectToAction("Dashboard");
         }
         #endregion
@@ -344,15 +388,19 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendOrder(SendOrderViewModel viewModel, int Id)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var result = await _admin.SendOrder(viewModel, Id);
-                return View(result);
+                try
+                {
+                    var result = await _admin.SendOrder(viewModel, Id);
+                    return View(result);
+                }
+                catch (Exception ex)
+                {
+                    return View(ex);
+                }
             }
-            catch (Exception ex)
-            {
-                return View(ex);
-            }
+            return View(viewModel);
         }
         [HttpGet]
 
@@ -375,9 +423,13 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
         {
 
-            await _admin.SendOrderDetails(viewModel, Id);
-            return RedirectToAction("Dashboard");
+            if (ModelState.IsValid)
+            {
 
+                await _admin.SendOrderDetails(viewModel, Id);
+                return RedirectToAction("Dashboard");
+            }
+            return View(viewModel);
         }
         #endregion
 
@@ -392,19 +444,23 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendAgreementLink(ViewCaseViewModel viewModel)
         {
-            if (viewModel.Email == null)
+            if (ModelState.IsValid)
             {
-                TempData["emptyemail"] = "Please enter Email";
-                return RedirectToAction("SendAgreement", "Admin");
+                if (viewModel.Email == null)
+                {
+                    TempData["emptyemail"] = "Please enter Email";
+                    return RedirectToAction("SendAgreement", "Admin");
+                }
+
+                var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" + viewModel.requestclientID;
+                var subject = "Review Agreement";
+                var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
+                _admin.SendEmail(viewModel.Email, link, subject, body);
+
+                TempData["emailsend"] = "Email is sent successfully to your email account";
+                return RedirectToAction("Dashboard", "Admin");
             }
-
-            var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" + viewModel.requestclientID;
-            var subject = "Review Agreement";
-            var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
-            _admin.SendEmail(viewModel.Email, link, subject, body);
-
-            TempData["emailsend"] = "Email is sent successfully to your email account";
-            return RedirectToAction("Dashboard", "Admin");
+            return View(viewModel);
         }
 
 
@@ -419,18 +475,30 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
         {
-           await _admin.ResetPasswordAdmin(model);
-            return RedirectToAction("AdminMyProfile");
+            if (ModelState.IsValid)
+            {
+                await _admin.ResetPasswordAdmin(model);
+                return RedirectToAction("AdminMyProfile");
+            }
+            return View(model);
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
         {
-            await _admin.SaveAdminInfo(model);
-            return RedirectToAction("AdminMyProfile");
+            if (ModelState.IsValid)
+            {
+                await _admin.SaveAdminInfo(model);
+                return RedirectToAction("AdminMyProfile");
+            }
+            return View(model);
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
-            await _admin.SaveBillingInfo(model);
-            return RedirectToAction("AdminMyProfile");
+            if (ModelState.IsValid)
+            {
+                await _admin.SaveBillingInfo(model);
+                return RedirectToAction("AdminMyProfile");
+            }
+            return View(model);
         }
         #endregion
 
@@ -442,8 +510,12 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model, int id)
         {
-            await _admin.EncounterFormSaveChanges(model, id);
-            return RedirectToAction("EncounterForm");
+            if (ModelState.IsValid)
+            {
+                await _admin.EncounterFormSaveChanges(model, id);
+                return RedirectToAction("EncounterForm");
+            }
+            return View(model);
         }
         #endregion
     }

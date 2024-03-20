@@ -4,13 +4,13 @@
     <h5 class="modal-title">Assign Request</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form asp-controller="Admin" asp-action="AssignRequest" asp-route-id="@Model.RequestClientID">
+<form id="myForm" asp-controller="Admin" asp-action="AssignRequest" asp-route-id="@Model.RequestClientID">
     <div class="modal-body">
         <small>To Assign this Request, search and select another Physician.</small>
       
         <div class=" d-flex justify-content-center flex-column  ">
-            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID" id="regionSelect">
-                <option>Open this select menu</option>
+            @* <select class="form-select mb-3 h-50"   name="RegionID" asp-for="regionID" id="regionSelect" >
+                <option value="" selected>Select State</option>
                 @foreach (var r in Model.Region)
                 {
                     <option value="@r.RegionId">
@@ -18,13 +18,25 @@
                     </option>
                 }
             </select>
+            <span asp-validation-for="regionID" class="text-danger"></span>
+            *@
+            <select asp-for="regionID" id="regionSelect" class="form-select required">
+                <option value="" >Select Region</option>
+                @foreach (var i in Model.Region)
+                {
+                    <option value="@i.RegionId">@i.Name</option>
+                }
+            </select>
+             <span asp-validation-for="regionID" class="text-danger"></span>
 
-            <select class="form-select mb-3 h-50"  name="physicianID" asp-for="physicianID" id="physicianSelect">
-                <option>Select Physician</option>
+            <select class="form-select mt-1  h-50" name="physicianID" asp-for="physicianID" id="physicianSelect"  >
+                <option value=""  >Select Physician</option>
                 
             </select>
-            <div class="form-floating form-group  rounded-3">
-                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+            <span asp-validation-for="physicianID" class="text-danger"></span>
+
+            <div class="form-floating mt-1 form-group  rounded-3">
+                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " ></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Discription
                 </label>
@@ -47,6 +59,9 @@
 
     </div>
 </form>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $("#regionSelect").change(function () {
@@ -61,7 +76,7 @@
                 dataType: 'json',
                 success: function (data) {
                     $("#physicianSelect option").remove();
-                    $("#physicianSelect").append('<option value="0">Selected Physician</option>');
+                    $("#physicianSelect").append('<option value="0" Selected>Select Physician</option>');
 
                     data.map((x) => {
                       
@@ -74,4 +89,34 @@
             });
         });
     });
+
+    //validation
+    // document.getElementById('submitBtn').addEventListener('click', function () {
+    //     var isValid = true;
+    //     var errorMessage = '';
+
+    //     // Validate region
+    //     var regionSelect = document.getElementById('regionSelect');
+    //     if (regionSelect.value === 0) {
+    //         errorMessage += 'Please select a region. ';
+    //         isValid = false;
+    //     }
+
+    //     // Validate physician
+    //     var physicianSelect = document.getElementById('physicianSelect');
+    //     if (physicianSelect.value === 0) {
+    //         errorMessage += 'Please select a physician. ';
+    //         console.log(errorMessage);
+    //         isValid = false;
+    //     }
+
+    //     // Display error message if validation failed
+    //     if (!isValid) {
+    //         document.getElementsByClassName('errorMessage').innerText = errorMessage;
+    //     } else {
+    //         // Submit the form if validation passed
+    //         document.getElementById('myForm').submit();
+    //     }
+    // });
+
 </script>

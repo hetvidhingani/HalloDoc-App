@@ -18,11 +18,11 @@
           
                 <div class="row">
 
-                    <h6>Patient Name:</h6>
+                <h6>Patient Name: @Model.Username</h6>
 
                     <div class="col-12 fw-bold">
 
-       @*                  @Model.FirstName *@
+                       
                         (MD051023TETE0001)
                     </div>
                     <div class="col-12">
@@ -138,6 +138,7 @@
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -194,8 +195,12 @@
             type: "POST",
             dataType: "html",
             data: { id },
-            url: "@(Url.Action("ConfirmCloseCase", "Admin"))"
-            
+            url: "@(Url.Action("ConfirmCloseCase", "Admin"))",
+            success:function(response)
+            {
+                window.history.back();
+                
+            }
         });
     });
 </script>

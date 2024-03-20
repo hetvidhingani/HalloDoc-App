@@ -73,9 +73,9 @@ namespace HalloDoc.Services.Services
             viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
-        public async Task<object> RegionListUser()
+        public async Task<object> RegionListUser(PatientRequestViewModel viewModel)
         {
-            PatientRequestViewModel viewModel = new PatientRequestViewModel();
+            
             viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
@@ -604,13 +604,14 @@ namespace HalloDoc.Services.Services
             User userExist = await _userRepository.GetByIdAsync(userId);
             Request request = new Request
             {
-                RequestTypeId = 1,
+                RequestTypeId = 2,
                 FirstName = userExist.FirstName,
                 LastName = userExist.LastName,
                 PhoneNumber = userExist.Mobile,
                 Email = userExist.Email,
                 CreatedDate = DateTime.Now,
                 RelationName = viewModel.RelationName,
+                
                 Status = 1
             };
             await _requestRepository.AddAsync(request);
@@ -627,8 +628,12 @@ namespace HalloDoc.Services.Services
                 State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
-               // DateOfBirth = viewModel.DateOfBirth,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode,
                 Email = viewModel.Email,
+                
             };
             await _requestclientRepository.AddAsync(requestClient);
 

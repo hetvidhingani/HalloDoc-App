@@ -40,7 +40,9 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SubmitInformationSomeoneElse()
         {
-            var result = await _patient.RegionListUser();
+            PatientRequestViewModel viewModel = new PatientRequestViewModel();
+
+            var result = await _patient.RegionListUser(viewModel);
             return View(result);
 
         }

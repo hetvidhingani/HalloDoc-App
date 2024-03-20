@@ -12,20 +12,22 @@
         </p>
         <div class=" d-flex justify-content-center flex-column  ">
             <select class="form-select mb-3" aria-label="Default select example" name="CaseTagID" asp-for="CaseTagID">
-                <option>Open this select menu</option>
-                @foreach (var cases in Model.Case)
+                <option value=""> Reasons For Cancellation</option>
+                @foreach (var cases in @Model.Case)
                 {
                     <option value="@cases.CaseTagId">
                         @cases.Name
                     </option>
                 }
             </select>
-
+            <span asp-validation-for="CaseTagID" class="text-danger"></span>
+           
             <div class="form-floating form-group  rounded-3">
                 <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Additional Notes
                 </label>
+                @* <span asp-validation-for="AdditionalNotes" class="text-danger"></span> *@
 
             </div>
 
@@ -45,3 +47,5 @@
 
     </div>
 </form>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

@@ -10,7 +10,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class ViewCaseViewModel
     {
-        public string? FirstName { get; set; }
+        public string FirstName { get; set; }
         public string? LastName { get; set; }
 
         [Required(ErrorMessage = "Enter Phone Number Here")]
@@ -18,6 +18,8 @@ namespace HalloDoc.Entities.ViewModels
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Enter your Email Here")]
+        [EmailAddress(ErrorMessage = "Invalid email address")]
+
         public string Email { get; set; }
         public string? Symptoms { get; set; }
         public DateTime? DateOfBirth { get; set; }
@@ -26,6 +28,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? State { get; set; }
         
         public int requestclientID { get; set; }
+        public int status { get; set; }
 
 
     }

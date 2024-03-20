@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -80,6 +81,6 @@ namespace HalloDoc.Repository.Repository
             string result = new String(decoded_char);
             return result;
         }
-
+       
     }
 }

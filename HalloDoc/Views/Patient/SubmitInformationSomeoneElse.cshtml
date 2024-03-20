@@ -96,8 +96,14 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" asp-items="@(new SelectList(Model.State, "RegionId", "Name"))"></select>
+                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <option value="0" selected disabled>State</option>
 
+                            @foreach (var region in @Model.State)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">

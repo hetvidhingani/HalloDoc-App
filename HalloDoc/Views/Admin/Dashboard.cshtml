@@ -259,42 +259,29 @@
 </main>
 <script>
 
-    // var state = localStorage.getItem("state");
-    // if (state == "New") {
-
-    //     $("#New").click();
-
-    //     loadTable(state);
-
-    // }
-
-    // else if (state == "Pending") {
-    //     console.log(state);
-
-    //     loadTable('Pending');
-
-    // }
+    
 
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
             $(".cards").removeClass("active");
             $(this).addClass("active");
-            localStorage.setItem("state", $(this).attr('id'));
+            //localStorage.setItem("state", $(this).attr('id'));
             // Add this line to load the table for the clicked state
         });
     });
 
     //partialview
-    $(document).ready(function () {
-        loadTable('New');
+    // $(document).ready(function () {
+    //     loadTable('New');
 
-    });
+    // });
     function loadTable(STATE) {
         state = STATE;
         document.getElementById('status').innerText = "( " + (state) + " )";
 
         page = 1;
+        console.log("hello", state)
         AjaxAll();
 
     }
@@ -302,7 +289,7 @@
     //paging
     var page;
     var url;
-    var PatientName2 = "";
+    var PatientName = "";
     var requestType;
     var regionId;
     var state;
@@ -310,7 +297,7 @@
     //patient search
 
     $("#search-input").on('input', function () {
-        PatientName2 = $(this).val();
+        PatientName = $(this).val();
 
         page = 1;
         AjaxAll();
@@ -321,15 +308,17 @@
         // var activeCard = $('.cards.active');
 
         // var state = activeCard.attr('id');
-        console.log(state);
+        // console.log(state);
 
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
-            data: { state: state, CurrentPage: page, PatientName2: PatientName2, ReqType: requestType, RegionId: regionId },
+            data: { state: state, CurrentPage: page, PatientName: PatientName, ReqType: requestType, RegionId: regionId },
             dataType: "html",
             success: function (data) {
+                console.log("data",state)
                 $("#admindata").html(data);
+                localStorage.setItem("state", state);
             },
             error: function (error) {
                 $("#admindata").html('An error has occurred');
@@ -367,7 +356,50 @@
         AjaxAll();
     }
 
+    //back
+    var state1 = localStorage.getItem("state");
+    console.log(state1);
 
+    if (state1 == "New") {
+
+        $("#New").click();
+        $(".cards").removeClass("active");
+
+        $("#New").addClass("active");
+
+        state = state1;
+       // AjaxAll();
+
+    }
+
+    else if (state1 == "Pending") {
+        
+        $("#Pending").click();
+
+        $(".cards").removeClass("active");
+
+        $("#Pending").addClass("active");
+      
+       
+        state = state1;
+       // AjaxAll();
+
+
+
+    }
+    else if (state1 == "Active") {
+        
+        $("#Active").click();
+
+        $(".cards").removeClass("active");
+
+        $("#Active").addClass("active");
+       
+        state = state1;
+        console.log("active",state)
+       // AjaxAll();
+
+    }
 
   
 

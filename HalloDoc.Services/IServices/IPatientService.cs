@@ -12,7 +12,7 @@ namespace HalloDoc.Services.IServices
     public interface IPatientService
     {
         Task<object> RegionList();
-        Task<object> RegionListUser();
+        Task<object> RegionListUser(PatientRequestViewModel viewModel);
         Task<object> PatientRequest(int? userId);
         Task<string> PatientRequest(PatientRequestViewModel viewModel);
         Task<string> FamilyFriendRequest(OtherRequestViewModel viewModel);

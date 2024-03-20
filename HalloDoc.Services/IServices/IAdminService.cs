@@ -58,6 +58,6 @@ namespace HalloDoc.Services.IServices
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID);
-        AdminDashboardViewModel Pagination(string state,int CurrentPage, string PatientName, int ReqType, int RegionId, List<AdminDashboardViewModel> newState);
+        AdminDashboardViewModel Pagination(string state,int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
     }
 }

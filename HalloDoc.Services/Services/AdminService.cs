@@ -193,22 +193,22 @@ namespace HalloDoc.Services.Services
         }
       
 
-        public AdminDashboardViewModel Pagination(string state, int CurrentPage, string PatientName, int ReqType, int RegionId, List<AdminDashboardViewModel> newState)
+        public AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState)
         {
             if (!string.IsNullOrWhiteSpace(PatientName))
             {
                 newState = newState.Where(a => a.PatientName.ToLower().Contains(PatientName.ToLower())).ToList();
             }
-            if (ReqType != 0)
+            if (ReqType != 0 && ReqType!=null)
             {
                 newState = newState.Where(a => a.RequestTypeID == ReqType).ToList();
             }
-            if (RegionId != 0)
+            if (RegionId != 0 && RegionId != null)
             {
                 newState = newState.Where(a => a.RegionId == RegionId).ToList();
             }
             if (CurrentPage == 0) { CurrentPage = 1; }
-            int dataSize = 4;
+            int dataSize = 5;
             int totalCount = newState.Count;
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
 
@@ -246,8 +246,10 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> ViewCase(int userId)
         {
+
             ViewCaseViewModel viewmodel = new ViewCaseViewModel();
             RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
+            Request req = await _requestRepository.GetByIdAsync(user.RequestId);
             DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
 
             if (user != null)
@@ -261,6 +263,7 @@ namespace HalloDoc.Services.Services
                 viewmodel.Address = user.Street + "," + user.City + "," + user.ZipCode;
                 viewmodel.requestclientID = user.RequestClientId;
                 viewmodel.DateOfBirth = dob;
+                viewmodel.status = req.Status;
                 return viewmodel;
             }
             return "ViewCase";
@@ -391,7 +394,7 @@ namespace HalloDoc.Services.Services
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
 
             request.Status = 3;
-            request.CaseTag = viewModel.CaseTagID;
+            request.CaseTag = viewModel.CaseTagID.ToString();
             await _requestRepository.UpdateAsync(request);
 
             return "Dashboard";
@@ -481,7 +484,7 @@ namespace HalloDoc.Services.Services
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 11;
-            request.CaseTag = viewModel.CaseTagID;
+            //request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
             BlockRequest blockRequest = new BlockRequest();
@@ -491,11 +494,6 @@ namespace HalloDoc.Services.Services
             blockRequest.Reason = viewModel.AdditionalNotes;
             blockRequest.RequestId = Convert.ToString(req.RequestId);
             await _blockRequestRepository.AddAsync(blockRequest);
-
-
-
-
-
 
             return "Dashboard";
 
@@ -564,6 +562,7 @@ namespace HalloDoc.Services.Services
                 Email = requestClient.Email,
                 DateOfBirth = dob,
                 RequstId = Id,
+                Username=requestClient.FirstName+" " +requestClient.LastName,
                 RequestClientID = requestClient.RequestClientId,
                 RequestWiseFiles = (
                                          from rwf in _requestwisefileRepository.GetAll()

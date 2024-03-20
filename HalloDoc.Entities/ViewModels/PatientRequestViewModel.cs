@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 using HalloDoc.Entities.DataModels;
@@ -58,7 +59,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? Street { get; set; }
 
 
-        [Required(ErrorMessage = "Enter State Here")]
+  
         public List<Region>? State { get; set; }
 
         public int? IntDate { get; set; }
@@ -67,10 +68,10 @@ namespace HalloDoc.Entities.ViewModels
         public IFormFile? File { get; set; }
         public string? RelationName { get; set; }
         public int? RegionId { get; set; }
-        public PatientRequestViewModel()
-        {
-            State = new List<Region>();
-        }
+        //public PatientRequestViewModel()
+        //{
+        //    State = new List<Region>();
+        //}
     }
 
 
