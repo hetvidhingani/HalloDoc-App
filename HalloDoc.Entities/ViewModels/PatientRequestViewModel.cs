@@ -58,20 +58,15 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter Street Here")]
         public string? Street { get; set; }
 
-
-  
         public List<Region>? State { get; set; }
-
         public int? IntDate { get; set; }
         public int? IntYear { get; set; }
         public string? StrMonth { get; set; }
         public IFormFile? File { get; set; }
         public string? RelationName { get; set; }
-        public int? RegionId { get; set; }
-        //public PatientRequestViewModel()
-        //{
-        //    State = new List<Region>();
-        //}
+        [Required(ErrorMessage ="Select Your State.")]
+        public int RegionId { get; set; }
+       
     }
 
 

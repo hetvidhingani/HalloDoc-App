@@ -227,7 +227,7 @@
                         <div class="col-lg-5 col-md-6 col-sm-6">
                             <div class="has-search ">
                                 <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
-                                    <option value="0" selected>All Regions</option>
+                                    <option value="0" selected disabled>All Regions</option>
 
                                     @foreach (var region in Model.State)
                                     {

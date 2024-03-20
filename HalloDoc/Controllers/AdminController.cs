@@ -177,10 +177,10 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> CancelCase(CancelCaseViewModel viewModel, int id)
         {
-            
-                var result = await _admin.CancelCase(viewModel, id);
-                return PartialView("_CancelCasePartialView", result);
-            
+
+            var result = await _admin.CancelCase(viewModel, id);
+            return PartialView("_CancelCasePartialView", result);
+
         }
 
         public async Task<IActionResult> ConfirmCancelCase(CancelCaseViewModel viewModel, int id)
@@ -518,5 +518,27 @@ namespace HalloDoc.Controllers
             return View(model);
         }
         #endregion
+
+        #region send Mail Attachment
+        public async Task<IActionResult> SendEmailWithAttachments(List<int> selectedFilesIds, string userEmail)
+        {
+            var selectedFiles = await _admin.GetFilesSelectedByFileID(selectedFilesIds);
+
+            if (selectedFiles.Any())
+            {
+                var subject = "HalloDoc Files";
+
+                var message = "Please Find Attachments";
+
+                var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
+                 _admin.SendEmailAttachment(userEmail, subject, message, attachmentFilePaths);
+            }
+
+
+
+
+            return RedirectToAction("Dashboard");
+            #endregion
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace HalloDoc.Repository.IRepository
         IQueryable<RequestWiseFile> FindFileByRequestID(int? requestID);
         Task<List<RequestWiseFile>> GetAllByRequestId(int Id);
         Task DeleteByRequestIdAndFileName( string fileName);
+        Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
     }
 }

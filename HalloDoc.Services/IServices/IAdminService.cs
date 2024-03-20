@@ -12,6 +12,8 @@ namespace HalloDoc.Services.IServices
 
     public interface IAdminService
     {
+        string SendEmailAttachment(string email, string subject, string body, List<string> attachmentFilePath = null);
+        Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
         Task<AspNetUser> checkEmailPassword(AspNetUser user);
         Task<User> GetUser(string email);
         Task<RequestClient> GetRequestClientByID(int id);

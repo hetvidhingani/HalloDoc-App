@@ -15,6 +15,7 @@ namespace HalloDoc.Entities.ViewModels
         public int RequestWiseFileID { get; set; }
         public bool isdeleted { get; set; }
         public List<RequestWiseFile> RequestWiseFiles { get; set; }
+        public string Email { get; set; }
 
 
     }

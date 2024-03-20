@@ -36,5 +36,10 @@ namespace HalloDoc.Repository.Repository
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
+        {
+            var result =_context.RequestWiseFiles.Where(file => selectedFilesIds.Contains(file.RequestWiseFileId)).ToList();
+            return result;
+        }
     }
 }

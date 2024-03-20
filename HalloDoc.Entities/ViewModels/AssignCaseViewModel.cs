@@ -10,8 +10,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class AssignCaseViewModel
     {
-        public string CaseTagID { get; set; }
-        //public List<CaseTag> Case { get; set; }
+        
         public string? AdditionalNotes { get; set; }
         public int RequestID { get; set; }
         public int RequestClientID { get; set; }
@@ -22,9 +21,9 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage ="Please Select Physician!")]
         public int physicianID { get; set; }
 
-        public List<Region> Region { get; set; }
+        public List<Region>? Region { get; set; }
 
-        public List<Physician> Physician { get; set; }
+        public List<Physician>? Physician { get; set; }
 
 
     }

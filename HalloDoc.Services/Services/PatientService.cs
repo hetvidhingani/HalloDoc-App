@@ -100,7 +100,7 @@ namespace HalloDoc.Services.Services
                     viewModel.Street = user.Street;
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
-                    viewModel.RegionId = user.RegionId;
+                    viewModel.RegionId = (int)user.RegionId;
                     viewModel.ZipCode = user.ZipCode;
                     viewModel.DateOfBirth =dob;
                     return viewModel;
@@ -757,7 +757,7 @@ namespace HalloDoc.Services.Services
                 requestViewModel.FirstName = user.FirstName;
                 requestViewModel.LastName = user.LastName;
                 requestViewModel.City = user.City;
-                requestViewModel.RegionId = user.RegionId;
+                requestViewModel.RegionId = (int)user.RegionId;
                 requestViewModel.State = await _regionRepository.GetRegions();
                 requestViewModel.Street = user.Street;
                 requestViewModel.Email = user.Email;

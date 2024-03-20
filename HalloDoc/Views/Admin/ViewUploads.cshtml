@@ -62,6 +62,7 @@
                             <i class="bi bi-cloud-arrow-down"></i>
                         </button>
 
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" onclick="sendEmail()">Send Mail</button>
 
                     </div>
                 </div>
@@ -71,7 +72,7 @@
 
                         <thead style="background-color:#F0F0F0">
                             <tr>
-                                <th scope="col"> <input type="checkbox" onclick="toggle(this)"></th>
+                                <th scope="col"> <input type="checkbox" id="selectAllFiles" onclick="toggle(this)"></th>
                                 <th>File</th>
                                 <th scope="col">Upload Date</th>
                                 <th scope="col">Action</th>
@@ -153,6 +154,50 @@
 </div>
 
 <script>
+
+    //send email with attachment
+    function sendEmail() {
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+
+
+        var selectedFilesIds = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+        var userEmail = '@Model.Email';
+        if (selectedFilesIds.length) {
+            console.log("hi");
+
+            $.ajax({
+                url: '/Admin/SendEmailWithAttachments',
+                type: 'POST',
+                // Send data as an object with properties
+                data: {
+                    selectedFilesIds: selectedFilesIds, // Pass the array
+                    userEmail: userEmail
+                },
+                success: function (response) {
+                    // Clear checkboxes after successful email sending
+                    $('input.checkboxForAll').prop('checked', false);
+                    $('#selectAllFiles').prop('checked', false);
+                    console.log("hi");
+
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error if needed
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+
+    }
+
+
+
+
+
+
+
     //to collapse table
     var coll = document.getElementsByClassName("collapsible");
     var i;
@@ -177,23 +222,23 @@
             checkboxes[i].checked = source.checked;
         }
     }
-    
+
 
     function DeleteAll() {
         var checkbox = $('input[class="checkboxForAll"]:checked');
-        
+
 
         var documentValues = checkbox.map(function () {
             return $(this).val();
         }).get();
-       
+
         if (documentValues.length) {
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DeleteFileByChecked", "Admin")",
                 data: { documentValues: documentValues },
                 success: function (response) {
-                    
+
                     location.reload();
                 }
             });
@@ -227,7 +272,7 @@
                 },
                 error: function (response) {
 
-                    console.log("hi");
+                    console.log("error");
                 }
             });
         }

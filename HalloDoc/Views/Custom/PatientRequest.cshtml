@@ -123,29 +123,34 @@
                         <div class="form-floating form-group">
                             <input asp-for="Street" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Street</label>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="City" type="text" class="form-control" placeholder=" ">
                             <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
-
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example"  aria-height="5vh" asp-for="RegionId">
-                            <option value="0"  >State</option>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select form-select-sm " style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
                             {
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ZipCode" type="text" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code">
+                            <input asp-for="ZipCode" type="number" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code">
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="ZipCode" class="text-danger"></span>
 

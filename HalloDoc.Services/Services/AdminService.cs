@@ -52,7 +52,7 @@ namespace HalloDoc.Services.Services
                                ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository, IRegionRepository regionRepository,
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
-                               IEncounterRepository encounterRepository,IRequestClosedRepository requestClosedRepository)
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -80,7 +80,7 @@ namespace HalloDoc.Services.Services
         public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
         {
 
-            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash); 
+            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash);
         }
         public async Task<User> GetUser(string email)
         {
@@ -157,6 +157,60 @@ namespace HalloDoc.Services.Services
             }
         }
         #endregion
+        #region Send Mail
+        public string SendEmailAttachment(string email, string subject, string body, List<string> attachmentFilePath = null)
+        {
+            try
+            {
+                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
+                var senderPassword = "Hkd$9503";
+
+                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
+                {
+                    Port = 587,
+                    Credentials = new NetworkCredential(senderMail, senderPassword),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
+                    Subject = subject,
+                    IsBodyHtml = true,
+                    Body = body,
+                };
+
+                if (attachmentFilePath != null && attachmentFilePath.Count > 0)
+
+                {
+
+                    foreach (var attachmentFilePaths in attachmentFilePath)
+
+                    {
+
+                        Attachment attachment = new Attachment(attachmentFilePaths);
+
+                        mailMessage.Attachments.Add(attachment);
+
+                    }
+                }
+
+                    mailMessage.To.Add(email);
+
+                    smtpClient.Send(mailMessage);
+                    var abc = "Success";
+
+                    return abc;
+                }
+            catch (Exception ex)
+            {
+                var abc = "Success";
+                return ex.Message.ToString();
+            }
+        }
+        #endregion
 
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
@@ -167,7 +221,7 @@ namespace HalloDoc.Services.Services
                 join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
                 from phy in physicianGroup.DefaultIfEmpty()
 
-                where r.Status == status 
+                where r.Status == status
 
                 select new AdminDashboardViewModel
                 {
@@ -183,15 +237,15 @@ namespace HalloDoc.Services.Services
                     RequestTypeID = r.RequestTypeId,
                     RequstClientId = rec.RequestClientId,
                     requestID = rec.RequestId,
-                    Email=rec.Email,
-                    RegionId=(int)rec.RegionId,
-                    stateTab= state,
+                    Email = rec.Email,
+                    RegionId = (int)rec.RegionId,
+                    stateTab = state,
 
                 }).ToList();
 
             return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
         }
-      
+
 
         public AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState)
         {
@@ -199,7 +253,7 @@ namespace HalloDoc.Services.Services
             {
                 newState = newState.Where(a => a.PatientName.ToLower().Contains(PatientName.ToLower())).ToList();
             }
-            if (ReqType != 0 && ReqType!=null)
+            if (ReqType != 0 && ReqType != null)
             {
                 newState = newState.Where(a => a.RequestTypeID == ReqType).ToList();
             }
@@ -213,15 +267,15 @@ namespace HalloDoc.Services.Services
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
 
             List<AdminDashboardViewModel> clients = newState
-                .OrderBy(u => u.CreatedDate)
-                .ThenBy(u => u.PatientName)
+                .OrderByDescending(u => u.CreatedDate)
+                
                 .Skip((CurrentPage - 1) * dataSize)
                 .Take(dataSize)
                 .ToList();
 
             return new AdminDashboardViewModel
             {
-                stateTab= state,
+                stateTab = state,
                 PagingData = clients,
                 TotalCount = totalCount,
                 TotalPages = totalPage,
@@ -287,13 +341,13 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Notes
-       
-        public async Task<ViewNotesViewModel> ViewNotes( int id)
+
+        public async Task<ViewNotesViewModel> ViewNotes(int id)
         {
             ViewNotesViewModel viewmodel = new ViewNotesViewModel();
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             viewmodel.requestID = req.RequestId;
-           
+
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
             if (requestNote != null)
             {
@@ -301,27 +355,27 @@ namespace HalloDoc.Services.Services
             }
 
             viewmodel.TransferNotes = (from r in _requestRepository.GetAll()
-                         join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
-                         join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
-                         from p in g.DefaultIfEmpty()
-                         where r.RequestId == req.RequestId
-                         orderby rsl.CreatedDate descending
-                         select new TransferNotesViewModel
-                         {
-                             RequestId = r.RequestId,
-                             FirstName = r.FirstName,
-                             LastName = r.LastName,
-                             CreatedDate = rsl.CreatedDate,
-                             Note = rsl.Notes,
-                             PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
-                         }).ToList();
+                                       join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
+                                       join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
+                                       from p in g.DefaultIfEmpty()
+                                       where r.RequestId == req.RequestId
+                                       orderby rsl.CreatedDate descending
+                                       select new TransferNotesViewModel
+                                       {
+                                           RequestId = r.RequestId,
+                                           FirstName = r.FirstName,
+                                           LastName = r.LastName,
+                                           CreatedDate = rsl.CreatedDate,
+                                           Note = rsl.Notes,
+                                           PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
+                                       }).ToList();
 
             return viewmodel;
         }
 
-        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes,int id)
+        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id)
         {
-          
+
 
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(id);
 
@@ -344,7 +398,7 @@ namespace HalloDoc.Services.Services
 
 
             }
-            
+
             return "ViewNotes";
         }
         #endregion
@@ -422,21 +476,21 @@ namespace HalloDoc.Services.Services
                 requestNote1.Notes = viewModel.AdditionalNotes;
                 await _requestStatusLogRepository.UpdateAsync(requestNote1);
             }
-           
-                RequestStatusLog requesStatusLog = new RequestStatusLog();
-                requesStatusLog.Status = 2;
-                requesStatusLog.AdminId = 1;
-                requesStatusLog.RequestId = req.RequestId;
-                requesStatusLog.Notes = viewModel.AdditionalNotes;
-                requesStatusLog.CreatedDate = DateTime.Now;
-                requesStatusLog.TransToPhysicianId = viewModel.physicianID;
-                await _requestStatusLogRepository.AddAsync(requesStatusLog);
-           
+
+            RequestStatusLog requesStatusLog = new RequestStatusLog();
+            requesStatusLog.Status = 2;
+            requesStatusLog.AdminId = 1;
+            requesStatusLog.RequestId = req.RequestId;
+            requesStatusLog.Notes = viewModel.AdditionalNotes;
+            requesStatusLog.CreatedDate = DateTime.Now;
+            requesStatusLog.TransToPhysicianId = viewModel.physicianID;
+            await _requestStatusLogRepository.AddAsync(requesStatusLog);
+
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
 
             request.Status = 2;
             request.PhysicianId = viewModel.physicianID;
-            request.CaseTag = viewModel.CaseTagID;
+         //   request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
             return "Dashboard";
@@ -562,7 +616,7 @@ namespace HalloDoc.Services.Services
                 Email = requestClient.Email,
                 DateOfBirth = dob,
                 RequstId = Id,
-                Username=requestClient.FirstName+" " +requestClient.LastName,
+                Username = requestClient.FirstName + " " + requestClient.LastName,
                 RequestClientID = requestClient.RequestClientId,
                 RequestWiseFiles = (
                                          from rwf in _requestwisefileRepository.GetAll()
@@ -647,6 +701,7 @@ namespace HalloDoc.Services.Services
             RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
             viewModel.FirstName = requestClient.FirstName;
             viewModel.RequstId = Id;
+            viewModel.Email = requestClient.Email;
             viewModel.RequestWiseFiles = (
                                          from rwf in _requestwisefileRepository.GetAll()
                                          where rwf.RequestId == Id && rwf.IsDeleted == null
@@ -675,7 +730,7 @@ namespace HalloDoc.Services.Services
                     RequestId = Id,
                     FileName = fileName,
                     CreatedDate = DateTime.Now,
-                    AdminId=1,
+                    AdminId = 1,
                 };
                 await _requestwisefileRepository.AddAsync(newRequestWiseFile);
             }
@@ -877,7 +932,7 @@ namespace HalloDoc.Services.Services
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             user.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password);
-            user.ModifiedDate=DateTime.Now;
+            user.ModifiedDate = DateTime.Now;
             await _aspnetuserRepository.UpdateAsync(user);
             return user;
         }
@@ -887,16 +942,16 @@ namespace HalloDoc.Services.Services
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
 
-            admin.FirstName= model.FirstName;
-            admin.LastName= model.LastName;
-            admin.Email= model.Email;
-            admin.Mobile=model.PhoneNumber; 
-            admin.ModifiedDate=DateTime.Now;
+            admin.FirstName = model.FirstName;
+            admin.LastName = model.LastName;
+            admin.Email = model.Email;
+            admin.Mobile = model.PhoneNumber;
+            admin.ModifiedDate = DateTime.Now;
             await _adminRepository.UpdateAsync(admin);
 
-            user.Email= model.Email;
-            user.PhoneNumber= model.PhoneNumber;
-            user.ModifiedDate=DateTime.Now;
+            user.Email = model.Email;
+            user.PhoneNumber = model.PhoneNumber;
+            user.ModifiedDate = DateTime.Now;
             await _aspnetuserRepository.UpdateAsync(user);
 
             return user;
@@ -907,10 +962,10 @@ namespace HalloDoc.Services.Services
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             admin.Address1 = model.Address1;
             admin.Address2 = model.Address2;
-            admin.Zip=model.Zip;
+            admin.Zip = model.Zip;
             admin.AltPhone = model.BillingPhoneNumber;
             admin.City = model.City;
-            admin.RegionId=model.RegionId;
+            admin.RegionId = model.RegionId;
 
             await _adminRepository.UpdateAsync(admin);
             return user;
@@ -924,7 +979,7 @@ namespace HalloDoc.Services.Services
             RequestClient client = await _requestclientRepository.CheckUserByClientID(RequestId);
             Encounter encounter = await _encounterRepository.checkBYRequestID(req.RequestId);
             DateTime dob = new DateTime((int)client.IntYear, Convert.ToInt32(client.StrMonth), (int)client.IntDate);
-          
+
 
             EncounterViewModel model = new EncounterViewModel()
             {
@@ -948,7 +1003,7 @@ namespace HalloDoc.Services.Services
                 Hr = encounter.Hr,
                 Allergies = encounter.Allergies,
                 Cv = encounter.Cv,
-              
+
                 ABD = encounter.Abd,
                 Extr = encounter.Extr,
                 Skin = encounter.Skin,
@@ -963,8 +1018,8 @@ namespace HalloDoc.Services.Services
                 Pain = encounter.Pain,
                 IsChanged = encounter.Ischanged,
                 IsFinalized = encounter.Isfinalized
-           
-        };
+
+            };
             return model;
         }
 
@@ -977,17 +1032,17 @@ namespace HalloDoc.Services.Services
             //encounter.Dateofbirth = model.DateOfBirth;
             encounter.Phonenumber = model.PhoneNumber;
             encounter.Medicalreport = model.MedicalReport;
-            encounter.Date = model.Date.Value; 
+            encounter.Date = model.Date.Value;
             encounter.Email = model.Email;
             encounter.Historyofpresentillness = model.HistoryOfPresentIllness;
             encounter.Medicalhistory = model.MedicalHistory;
             encounter.Medications = model.Medications;
-            encounter.Temp = model.Temp.Value; 
-            encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value; 
-            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value; 
+            encounter.Temp = model.Temp.Value;
+            encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value;
+            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value;
             encounter.Heent = model.Heent;
             encounter.Chest = model.Chest;
-            encounter.Hr = model.Hr.Value; 
+            encounter.Hr = model.Hr.Value;
             encounter.Allergies = model.Allergies;
             encounter.Cv = model.Cv;
             encounter.Abd = model.ABD;
@@ -1000,14 +1055,18 @@ namespace HalloDoc.Services.Services
             encounter.Other = model.Other;
             encounter.Treatmentplan = model.TreatmentPlan;
             encounter.Procedures = model.Procedures;
-            encounter.Rr = model.Rr.Value; 
-            encounter.Pain = model.Pain.Value; 
-            encounter.Ischanged = model.IsChanged.Value; 
-            encounter.Isfinalized = model.IsFinalized.Value; 
+            encounter.Rr = model.Rr.Value;
+            encounter.Pain = model.Pain.Value;
+            encounter.Ischanged = model.IsChanged.Value;
+            encounter.Isfinalized = model.IsFinalized.Value;
             await _encounterRepository.UpdateAsync(encounter);
 
             return encounter;
         }
         #endregion
+        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
+        {
+            return await _requestwisefileRepository.GetFilesSelectedByFileID(selectedFilesIds);
+        }
     }
 }

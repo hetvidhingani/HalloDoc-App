@@ -67,6 +67,8 @@
                     <label class="form-label" for="textAreaExample2">
                        Symptoms
                     </label>
+                    <span asp-validation-for="Symptoms" class="text-danger"></span>
+
                 </div>
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -89,6 +91,8 @@
                         <div class="form-floating form-group">
                             <input asp-for="DateOfBirth" type="date" class="form-control" id="" placeholder=" ">
                             <label for="">Date Of Birth</label>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
                         </div>
                     </div>
 
@@ -122,12 +126,16 @@
                         <div class="form-floating form-group">
                             <input asp-for="Street" type="text" class="form-control" id="" placeholder=" ">
                             <label for="">Street</label>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="City" type="text" class="form-control" id="" placeholder=" ">
                             <label for="">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -139,11 +147,15 @@
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="ZipCode" type="text" class="form-control" id="" placeholder=" ">
                             <label for="">Zip code</label>
+                            <span asp-validation-for="ZipCode" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
