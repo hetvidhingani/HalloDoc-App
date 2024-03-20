@@ -208,10 +208,10 @@ namespace HalloDoc.Services.Services
                 newState = newState.Where(a => a.RegionId == RegionId).ToList();
             }
             if (CurrentPage == 0) { CurrentPage = 1; }
-            int dataSize = 3;
+            int dataSize = 4;
             int totalCount = newState.Count;
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
-            
+
             List<AdminDashboardViewModel> clients = newState
                 .OrderBy(u => u.CreatedDate)
                 .ThenBy(u => u.PatientName)

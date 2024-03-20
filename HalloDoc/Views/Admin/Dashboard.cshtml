@@ -259,21 +259,32 @@
 </main>
 <script>
 
-    var state = localStorage.getItem("state");
-    if (state == "New") {
+    // var state = localStorage.getItem("state");
+    // if (state == "New") {
 
-        $("#New").click();
+    //     $("#New").click();
 
-        loadTable(state);
+    //     loadTable(state);
 
-    }
+    // }
 
-    else if (state == "Pending") {
-        console.log(state);
+    // else if (state == "Pending") {
+    //     console.log(state);
 
-        loadTable('Pending');
+    //     loadTable('Pending');
 
-    }
+    // }
+
+    //cards design
+    $(document).ready(function () {
+        $(".cards").click(function () {
+            $(".cards").removeClass("active");
+            $(this).addClass("active");
+            localStorage.setItem("state", $(this).attr('id'));
+            // Add this line to load the table for the clicked state
+        });
+    });
+
     //partialview
     $(document).ready(function () {
         loadTable('New');
@@ -307,9 +318,10 @@
 
     function AjaxAll() {
 
-        var activeCard = $('.cards.active');
+        // var activeCard = $('.cards.active');
 
-        var state = activeCard.attr('id');
+        // var state = activeCard.attr('id');
+        console.log(state);
 
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
@@ -357,15 +369,7 @@
 
 
 
-    //cards design
-    $(document).ready(function () {
-        $(".cards").click(function () {
-            $(".cards").removeClass("active");
-            $(this).addClass("active");
-            localStorage.setItem("state", $(this).attr('id'));
-            // Add this line to load the table for the clicked state
-        });
-    });
+  
 
 
     //responsive mobile view
