@@ -81,15 +81,24 @@
     <script>
         var urlParams = new URLSearchParams(window.location.search);
         var requestClientID = urlParams.get("requestClinetID");
-       
+
         $('#sendAgreement').click(function () {
-           
+
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("AcceptAgreement", "Custom")',
                 data: { id: requestClientID }
-            
-            });
+            })
+                .done(function (response) {
+                    Swal.fire({
+                        title: "Success",
+                        text: "Agreement accepted successfully",
+                        icon: "success",
+                        confirmButtonText: "Cool",
+                        timer: 1500
+                    });
+                })
+                
         });
         $('#cancelAgreement').click(function () {
 

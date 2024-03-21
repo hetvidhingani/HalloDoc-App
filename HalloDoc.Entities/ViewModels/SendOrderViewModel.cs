@@ -10,28 +10,29 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class SendOrderViewModel
     {
-        public List<HealthProfessionalType>? Profession { get; set;}
-        public List<HealthProfessional>? Business { get; set;}
+        [Required(ErrorMessage = "Please Select Profession !")]
+        public int professionId { get; set; }
+
+        [Required(ErrorMessage = "Please Select Business!")]
+        public int BusinessID { get; set; }
+
         [Required(ErrorMessage = "Please Provide Phone Number !")]
+        public string Contact { get; set; }   
 
-        public string Contact { get; set; } = string.Empty;    
         [Required(ErrorMessage = "Please Provide Email !")]
-
-        public string Email { get; set; } = string.Empty;
+        public string Email { get; set; }
 
         public string? FaxNumber { get; set; }
-        public string? OrderDetails { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Please Provide Order Details !")]
+        public string OrderDetails { get; set; }
         public int? Refill { get; set; }
         public int RequestID { get; set; }
         public int RequestClientID { get; set; }
 
-        [Required(ErrorMessage = "Please Select Profession !")]
+        
+        public List<HealthProfessionalType>? Profession { get; set;}
 
-        public int professionId { get; set; }
-        [Required(ErrorMessage = "Please Select Business!")]
-
-        public int BusinessID { get; set; }
-
+        public List<HealthProfessional>? Business { get; set;}
 
 
 

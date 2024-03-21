@@ -85,6 +85,7 @@
                                    id="Email" onblur="AlertName()" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -94,6 +95,7 @@
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Confirm Email</label>
+                            <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -101,8 +103,8 @@
                         <div class="form-floating form-group  border">
                             <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
 
-                        </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
                     </div>
                     
                   
@@ -122,18 +124,24 @@
                         <div class="form-floating form-group">
                             <input asp-for="Address1" type="text" class="form-control edit2" placeholder=" " readonly>
                             <label for=" ">Address1</label>
+                            <span asp-validation-for="Address1" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Address2" type="text" class="form-control edit2" placeholder=" " readonly>
                             <label for=" ">Address2 </label>
+                            <span asp-validation-for="Address2" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="City" type="text" class="form-control edit2" placeholder=" " readonly>
                             <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
@@ -146,6 +154,8 @@
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12">

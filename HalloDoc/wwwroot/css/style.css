@@ -76,7 +76,7 @@ input[type=password]::-ms-clear {
     background-color: #da0f82;
     color: white;
 }
-#ToClose.active, #ToClose:hover {
+#Toclose.active, #Toclose:hover {
     background-color: #0370d7;
     color: white;
 }
@@ -137,7 +137,7 @@ input[type=password]::-ms-clear {
     border-right: 15px solid transparent;
     border-top: 15px solid #da0f82;
 }
-#ToClose.cards.active::after {
+#Toclose.cards.active::after {
     content: "";
     position: absolute;
     bottom: -15px;
@@ -278,6 +278,8 @@ input[type=password]::-ms-clear {
     border-radius:5px;
     padding:3px;
     color:white;
+    display:flex;
+    justify-content:space-around;
 }
 .viewNote>*{
     margin:1.3rem 0.2rem;
@@ -399,7 +401,7 @@ background-color:lightgray;
             text-decoration: none;
             padding: 3px;
         }
-        #New.cards.active::after, #Pending.cards.active::after, #Active.cards.active::after, #Unpaid.cards.active::after, #Conclude.cards.active::after, #ToClose.cards.active::after {
+        #New.cards.active::after, #Pending.cards.active::after, #Active.cards.active::after, #Unpaid.cards.active::after, #Conclude.cards.active::after, #Toclose.cards.active::after {
             display: none;
         }
         .check {

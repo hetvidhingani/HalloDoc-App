@@ -70,9 +70,9 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AdminLogin(AspNetUser user)
+        public async Task<IActionResult> AdminLogin(LoginViewModel user)
         {
-            AspNetUser myUser = await _admin.checkEmailPassword(user);
+            AspNetUser myUser = await _admin.checkEmailPassword(user.Email,user.PasswordHash);
 
             if (myUser != null)
             {

@@ -77,10 +77,10 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region common methods
-        public async Task<AspNetUser> checkEmailPassword(AspNetUser user)
+        public async Task<AspNetUser> checkEmailPassword(string email, string password)
         {
 
-            return await _aspnetuserRepository.Login(user.Email, user.PasswordHash);
+            return await _aspnetuserRepository.Login(email, password);
         }
         public async Task<User> GetUser(string email)
         {
@@ -95,6 +95,10 @@ namespace HalloDoc.Services.Services
         public async Task<int> GetCount(int statusId)
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId);
+        }
+        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
+        {
+            return await _requestwisefileRepository.GetFilesSelectedByFileID(selectedFilesIds);
         }
         //public async Task<RequestWiseFile> FindFile(string fileName)
         //{
@@ -118,8 +122,9 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
+
         #region Send Mail
-        public string SendEmail(string email, string link, string subject, string body)
+        public string SendEmail(string email,string link, string subject, string body, List<string> attachmentFilePath = null)
         {
             try
             {
@@ -137,73 +142,27 @@ namespace HalloDoc.Services.Services
 
                 MailMessage mailMessage = new MailMessage
                 {
-                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
-                    Subject = subject,
-                    IsBodyHtml = true,
-                    Body = body,
-                };
-
-                mailMessage.To.Add(email);
-
-                smtpClient.Send(mailMessage);
-                var abc = "Success";
-
-                return abc;
-            }
-            catch (Exception ex)
-            {
-                var abc = "Success";
-                return ex.Message.ToString();
-            }
-        }
-        #endregion
-        #region Send Mail
-        public string SendEmailAttachment(string email, string subject, string body, List<string> attachmentFilePath = null)
-        {
-            try
-            {
-                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
-                var senderPassword = "Hkd$9503";
-
-                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(senderMail, senderPassword),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false
-                };
-
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderMail, "HalloDoc Reset Password"),
+                    From = new MailAddress(senderMail),
                     Subject = subject,
                     IsBodyHtml = true,
                     Body = body,
                 };
 
                 if (attachmentFilePath != null && attachmentFilePath.Count > 0)
-
                 {
 
                     foreach (var attachmentFilePaths in attachmentFilePath)
-
                     {
-
                         Attachment attachment = new Attachment(attachmentFilePaths);
-
                         mailMessage.Attachments.Add(attachment);
-
                     }
                 }
 
-                    mailMessage.To.Add(email);
-
-                    smtpClient.Send(mailMessage);
-                    var abc = "Success";
-
-                    return abc;
-                }
+                mailMessage.To.Add(email);
+                smtpClient.Send(mailMessage);
+                var abc = "Success";
+                return abc;
+            }
             catch (Exception ex)
             {
                 var abc = "Success";
@@ -215,6 +174,7 @@ namespace HalloDoc.Services.Services
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
         {
+           
             var tabledashboard = (
                 from r in _requestRepository.GetAll()
                 join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
@@ -239,6 +199,7 @@ namespace HalloDoc.Services.Services
                     requestID = rec.RequestId,
                     Email = rec.Email,
                     RegionId = (int)rec.RegionId,
+                    StateofTable = rec.State,
                     stateTab = state,
 
                 }).ToList();
@@ -268,7 +229,7 @@ namespace HalloDoc.Services.Services
 
             List<AdminDashboardViewModel> clients = newState
                 .OrderByDescending(u => u.CreatedDate)
-                
+
                 .Skip((CurrentPage - 1) * dataSize)
                 .Take(dataSize)
                 .ToList();
@@ -490,7 +451,7 @@ namespace HalloDoc.Services.Services
 
             request.Status = 2;
             request.PhysicianId = viewModel.physicianID;
-         //   request.CaseTag = viewModel.CaseTagID;
+            //   request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
             return "Dashboard";
@@ -816,9 +777,9 @@ namespace HalloDoc.Services.Services
             HealthProfessional business = await _healthProfessionalsRepository.GetByIdAsync(BusinessId);
             return business;
         }
-        public async Task<object> SendOrder(SendOrderViewModel viewModel, int Id)
+        public async Task<object> SendOrder( int Id)
         {
-
+            SendOrderViewModel viewModel = new SendOrderViewModel();
             viewModel.RequestID = Id;
 
             viewModel.Profession = await _healthProfessionalTypeRepository.GetProfession();
@@ -836,14 +797,16 @@ namespace HalloDoc.Services.Services
             order.Prescription = viewModel.OrderDetails;
             order.NoOfRefill = viewModel.Refill;
             order.CreatedDate = DateTime.Now;
+            order.CreatedBy = "Admin";
             await _orderDetailsRepository.AddAsync(order);
             return "";
         }
         #endregion
 
         #region Send Agreement
-        public async Task<object> sendAgreement(ViewCaseViewModel viewModel, int id)
+        public async Task<object> sendAgreement( int id)
         {
+            ViewCaseViewModel viewModel = new ViewCaseViewModel();
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             viewModel.Email = req.Email;
             viewModel.PhoneNumber = req.PhoneNumber;
@@ -868,6 +831,17 @@ namespace HalloDoc.Services.Services
 
             };
             await _requestStatusLogRepository.AddAsync(log);
+
+            Encounter encounter = new Encounter()
+            {
+                Requestid= req.RequestId,
+                Firstname = req.FirstName,
+                Lastname = req.LastName,
+                Phonenumber= req.PhoneNumber,
+                Location=req.State,
+                Email=req.Email,
+            };
+            await _encounterRepository.AddAsync(encounter);
             return "";
         }
 
@@ -1064,9 +1038,6 @@ namespace HalloDoc.Services.Services
             return encounter;
         }
         #endregion
-        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
-        {
-            return await _requestwisefileRepository.GetFilesSelectedByFileID(selectedFilesIds);
-        }
+
     }
 }

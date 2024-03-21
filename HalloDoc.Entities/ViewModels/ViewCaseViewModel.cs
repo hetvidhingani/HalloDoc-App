@@ -19,8 +19,8 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Enter your Email Here")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
-
         public string Email { get; set; } = string.Empty;
+
         public string? Symptoms { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Address { get; set; }

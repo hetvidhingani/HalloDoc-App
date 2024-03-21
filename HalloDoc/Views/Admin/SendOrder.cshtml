@@ -18,8 +18,8 @@
          
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-6">
-                        <select class="form-select mb-3 " aria-label="Default select example" name="professionId" asp-for="professionId" id="professionSelect">
-                            <option>Profession</option>
+                        <select class="form-select mb-3 " style="height:60px;" aria-label="Default select example" name="professionId" asp-for="professionId" id="professionSelect">
+                            <option value="" selected disabled>Profession</option>
                             @foreach (var r in Model.Profession)
                             {
                                 <option value="@r.HealthProfessionalId">
@@ -27,25 +27,30 @@
                                 </option>
                             }
                         </select>
+                        <span asp-validation-for="professionId" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
-                        <select class="form-select mb-3  " name="BusinessID" asp-for="BusinessID" id="businessSelect">
-                            <option>Select Physician</option>
+                        <select class="form-select mb-3  " style="height:60px;" name="BusinessID" asp-for="BusinessID" id="businessSelect">
+                            <option value="" selected disabled>Select Physician</option>
 
                         </select>
+                        <span asp-validation-for="BusinessID" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
                             <input asp-for="Contact" id="phone" type="tel" class="" style="border: none;height: 54px;" />
 
                         </div>
+                            <span asp-validation-for="Contact" class="text-danger"></span>
 
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
                             <input asp-for="Email" type="email" class="form-control" id="Email" placeholder=" ">
                             <label for=""> Email</label>
-                            @* <span asp-validation-for="Email" class="text-danger"></span> *@
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -53,6 +58,8 @@
                         <div class="form-floating form-group">
                             <input asp-for="FaxNumber" type="text" class="form-control" id="FaxNumber" placeholder=" ">
                             <label for="">FaxNumber</label>
+                            <span asp-validation-for="FaxNumber" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -61,13 +68,24 @@
                             <label class="form-label" for="textAreaExample2">
                                 Order Details
                             </label>
+                            <span asp-validation-for="OrderDetails" class="text-danger"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="form-floating form-group">
-                            <input asp-for="Refill" type="text" class="form-control" id="" placeholder=" ">
+                           @*  <input asp-for="Refill" type="text" class="form-control" id="" placeholder=" ">
+                            *@
+                            <select class="form-select mb-3  "  asp-for="Refill" >
+                                <option value="0" selected disabled>No. of Refills</option>
+                                <option value="1" >1</option>
+                                <option value="2" >2</option>
+                                <option value="3" >3</option>
+
+
+                            </select>
                             <label for="">No. Of Refills</label>
+
                         </div>
                     </div>
                 </div>
@@ -97,20 +115,27 @@
 </div>
 <script>
     const phoneInputField = document.querySelector("#phone");
+
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
     });
+    $('#phone').attr('value', "+91");
    
     $(document).ready(function () {
 
 
         $("#professionSelect").change(function () {
             var professionId = $(this).val();
-            
             var url = "/Admin/GetBusinessByProfession?professionId=" + professionId;
            
-
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -119,7 +144,6 @@
                     $("#businessSelect option").remove();
                     $("#businessSelect").append('<option value="0">Selecte Business</option>');
                   
-
                     data.map((x) => {
                     
                         $("#businessSelect").append('<option value="' + x.vendorId + '">' + x.vendorName + '</option>');

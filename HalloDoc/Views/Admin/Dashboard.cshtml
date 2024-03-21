@@ -131,7 +131,7 @@
 
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col">
-                    <button class="cards cardDesign5  " id="ToClose" data-state="Toclose" onclick="loadTable('Toclose')">
+                    <button class="cards cardDesign5  " id="Toclose" data-state="Toclose" onclick="loadTable('Toclose')">
                         <div class="row ">
                             <div class="col-12">
                                 <i class="bi bi-plus-circle i"></i>
@@ -206,7 +206,7 @@
                             <img src="~/images/man-svgrepo-com.png" style="width:22px;color:white" />
                             <span class="tabIcon">Request DTY Support</span>
                         </button>
-
+                        <button>ok</button>
 
 
                     </div>
@@ -227,7 +227,7 @@
                         <div class="col-lg-5 col-md-6 col-sm-6">
                             <div class="has-search ">
                                 <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
-                                    <option value="0" selected disabled>All Regions</option>
+                                    <option value="0" selected >All Regions</option>
 
                                     @foreach (var region in Model.State)
                                     {
@@ -382,6 +382,36 @@
         $(".cards").removeClass("active");
 
         $("#Active").addClass("active");
+        state1 = "New";
+
+    }
+    else if (state1 == "Conclude") {
+
+        $("#Conclude").click();
+
+        $(".cards").removeClass("active");
+
+        $("#Conclude").addClass("active");
+        state1 = "New";
+
+    }
+    else if (state1 == "Toclose") {
+
+        $("#Toclose").click();
+
+        $(".cards").removeClass("active");
+
+        $("#Toclose").addClass("active");
+        state1 = "New";
+
+    }
+    else if (state1 == "Unpaid") {
+
+        $("#Unpaid").click();
+
+        $(".cards").removeClass("active");
+
+        $("#Unpaid").addClass("active");
         state1 = "New";
 
     }

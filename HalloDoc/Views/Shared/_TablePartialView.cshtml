@@ -96,7 +96,9 @@
                     }
                     @if (@ViewBag.state == "Toclose")
                     {
-                        <td>Gujarat</td>
+                        <td>
+                            @request.StateofTable
+                        </td>
 
                     }
                     <td>
@@ -130,17 +132,19 @@
                                 display = "none";
                             }
                         }
-                        <div class="dashboardBTN">
+                        <button class=" dashboardBTN">
+                            <i class="bi bi-telephone-fill"></i>
                             @request.PatientPhone
-                        </div>
+                        </button>
                         (Patient)
 
                         <div style="display:@display">
 
                             <br>
-                            <div class="dashboardBTN">
+                            <button class=" dashboardBTN">
+                                <i class="bi bi-telephone-fill"></i>
                                 @request.RequestorPhone
-                            </div>
+                            </button>
                             (@requestor)
                         </div>
                     </td>
@@ -150,16 +154,16 @@
                         <td>@request.Notes</td>
                     }
                     <td>
-                        <div class=" d-flex flex-column justify-content-center">
+                        <div class=" d-flex flex-column justify-content-center w-75">
                             @if (@ViewBag.state == "Toclose" || @ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                             {
 
-                                <button class="btn btn-transparent text-white border-white btn-sm d-flex align-items-center" type="button" style="border-radius: 9px;">
+                                <button class=" dashboardBTN" style="border-radius: 9px;">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                     Patient
                                 </button>
                             }
-                            <button class="btn btn-transparent text-white border-white mt-1 btn-sm  d-flex align-items-center" type="button" aria-expanded="false" style="border-radius: 9px;">
+                            <button class=" dashboardBTN" aria-expanded="false" style="border-radius: 9px;">
                                 <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                 Provider
                             </button>

@@ -133,7 +133,7 @@ namespace HalloDoc.Services.Services
                 RequestId = request.RequestId,
                 FirstName = viewModel.FirstName,
                 LastName = viewModel.LastName,
-                PhoneNumber ="+"+ viewModel.PhoneNumber,
+                PhoneNumber = viewModel.PhoneNumber,
                 RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,

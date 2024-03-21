@@ -31,8 +31,8 @@ namespace HalloDoc.Entities.ViewModels
         public int UnpaidCount { get; set; }
         public int ToCloseCount { get; set; }
         public DateTime CreatedDate { get; set; }
-        public List<Region> State { get; set; }
-
+        public List<Region>? State { get; set; }
+        public string? StateofTable { get; set; }
         public string Email { get; set; }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }

@@ -12,9 +12,9 @@ namespace HalloDoc.Services.IServices
 
     public interface IAdminService
     {
-        string SendEmailAttachment(string email, string subject, string body, List<string> attachmentFilePath = null);
+        string SendEmail(string email, string link,string subject, string body, List<string> attachmentFilePath = null);
         Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
-        Task<AspNetUser> checkEmailPassword(AspNetUser user);
+        Task<AspNetUser> checkEmailPassword(string email, string password);
         Task<User> GetUser(string email);
         Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
@@ -39,15 +39,15 @@ namespace HalloDoc.Services.IServices
         Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
         Task<object> DeleteFile(int name);
-        Task<object> SendOrder(SendOrderViewModel viewModel, int Id);
+        Task<object> SendOrder( int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
         Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id);
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
         Task<string> ClearRequest(int? id);
-        string SendEmail(string email, string link, string subject, string body);
-        Task<object> sendAgreement(ViewCaseViewModel viewModel, int id);
+       
+        Task<object> sendAgreement( int id);
         Task<object> DashboardRegions(AdminDashboardViewModel viewModel);
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);

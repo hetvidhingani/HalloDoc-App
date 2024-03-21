@@ -25,8 +25,6 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
         }
 
-
-
         #region Logout
         public IActionResult Logout()
         {
@@ -385,22 +383,13 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Send Order
-
-        public async Task<IActionResult> SendOrder(SendOrderViewModel viewModel, int Id)
+        [HttpGet]
+        public async Task<IActionResult> SendOrder( int Id)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var result = await _admin.SendOrder(viewModel, Id);
+           
+                    var result = await _admin.SendOrder( Id);
                     return View(result);
-                }
-                catch (Exception ex)
-                {
-                    return View(ex);
-                }
-            }
-            return View(viewModel);
+              
         }
         [HttpGet]
 
@@ -422,22 +411,16 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
         {
-
-            if (ModelState.IsValid)
-            {
-
                 await _admin.SendOrderDetails(viewModel, Id);
                 return RedirectToAction("Dashboard");
-            }
-            return View(viewModel);
         }
         #endregion
 
         #region send agreement
-        public async Task<IActionResult> SendAgreement(ViewCaseViewModel viewModel, int id)
+        public async Task<IActionResult> SendAgreement( int id)
         {
             ViewBag.AgreementIdToClient = id;
-            var result = await _admin.sendAgreement(viewModel, id);
+            var result = await _admin.sendAgreement( id);
             return PartialView("_SendAgreementPartialView", result);
         }
 
@@ -455,7 +438,9 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" + viewModel.requestclientID;
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
-                _admin.SendEmail(viewModel.Email, link, subject, body);
+                List<string>attachmentFilePaths = null;
+
+                _admin.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
                 return RedirectToAction("Dashboard", "Admin");
@@ -484,21 +469,17 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+           
                 await _admin.SaveAdminInfo(model);
                 return RedirectToAction("AdminMyProfile");
-            }
-            return View(model);
+           
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+            
                 await _admin.SaveBillingInfo(model);
                 return RedirectToAction("AdminMyProfile");
-            }
-            return View(model);
+            
         }
         #endregion
 
@@ -529,16 +510,14 @@ namespace HalloDoc.Controllers
                 var subject = "HalloDoc Files";
 
                 var message = "Please Find Attachments";
-
+                var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                 _admin.SendEmailAttachment(userEmail, subject, message, attachmentFilePaths);
+                 _admin.SendEmail(userEmail,link, subject, message, attachmentFilePaths);
             }
 
-
-
-
             return RedirectToAction("Dashboard");
-            #endregion
         }
+            #endregion
+
     }
 }

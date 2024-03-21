@@ -10,7 +10,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class AdminMyProfileViewModel
     {
-        public string UserName { get; set; }
+        public string UserName { get; set; }=string.Empty;
         public int Status { get; set; }
 
         [Required( ErrorMessage = "Password must be at least 6 characters long.")]
