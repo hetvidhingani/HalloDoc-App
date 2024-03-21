@@ -18,7 +18,7 @@
                     back
                 </button>
             </a>
-            
+
         </div>
         <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
             <form asp-controller="Admin" asp-action="ViewCase" method="post" enctype="multipart/form-data">
@@ -30,9 +30,9 @@
                     <h2 style="color:#00bbe8">MD123PA897</h2>
                 </div>
                 <div class="form-floating form-group ">
-                    <textarea asp-for="Symptoms" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "  readonly></textarea>
+                    <textarea asp-for="Symptoms" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " readonly></textarea>
                     <label class="form-label" for="textAreaExample2">
-                       Patient Notes
+                        Patient Notes
                     </label>
                     <span asp-validation-for="Symptoms" class="text-danger"></span>
 
@@ -64,7 +64,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" required readonly/>
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" required readonly />
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -79,7 +79,7 @@
 
                         </div>
                     </div>
-                     <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
                         <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
 
 
@@ -87,24 +87,28 @@
                     </div>
                 </div>
 
-               
+
 
                 <h3> Location Information</h3>
 
                 <div class="row ">
 
-                   
+
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="State" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">Region</label>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-between">
+                        
+                        <div class="form-floating form-group w-100">
                             <input asp-for="Address" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">Address</label>
                         </div>
+                        <a class="btn btn-outline-info  rounded d-flex align-items-center" style="height: 58px; width:70px;" type="button" href="https://www.google.com/maps/search/?api=1&query={Uri.EscapeDataString(@Model.street @Model.city @Model.State).ToString()}" ;" target="_blank">
+                            <small class=""><i class="bi bi-geo-alt-fill"></i>Map</small>
+                        </a>
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -119,15 +123,13 @@
                 <div class="row">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
-                        @if(@Model.status==1)
+                        @if (@Model.status == 1)
                         {
                             <button data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id="@Model.requestclientID" class="btn Assign  btn-info" type="button">
-
                                 Assign
-
                             </button>
                         }
-                      
+
                         <a asp-controller="admin" asp-action="ViewNotes" asp-route-Id="@Model.requestclientID" class="btn ">
                             <button type="button" class="createNewReqBtn">
                                 View Notes
@@ -149,7 +151,6 @@
 <script>
     $('.Assign').click(function () {
         var id = this.id;
-        console.log(id);
 
         $.ajax({
             type: "POST",
@@ -157,16 +158,14 @@
             data: { id },
             url: "@(Url.Action("AssignCase", "Admin"))",
             success: function (data) {
-                console.log("abc",data);
                 $("#AssignCase").find('.modal-content').html(data);
-                console.log("hello")
             },
             error: function () {
                 console.log("error");
             }
         });
     });
-    
+
 
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
@@ -186,7 +185,7 @@
 
     });
     $('#phone').attr('value', "+91");
-   //save-edit button
+    //save-edit button
     var editButton = document.getElementById("edit-button");
     editButton.addEventListener("click", function () {
         var form = editButton.closest("form");

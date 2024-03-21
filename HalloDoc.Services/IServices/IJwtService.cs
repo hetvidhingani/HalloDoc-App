@@ -12,7 +12,7 @@ namespace HalloDoc.Services.IServices
     {
         string GenerateJwtToken(AspNetUser user);
 
-
+        public dynamic GetTokenData(string token);
         bool ValidateToken(string token, out JwtSecurityToken jwtSecurityToken);
     }
 }

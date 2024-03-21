@@ -158,38 +158,46 @@
     //send email with attachment
     function sendEmail() {
         var checkbox = $('input[class="checkboxForAll"]:checked');
-
+        if (checkbox.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please select files to send email!',
+            });
+            return;
+        }
 
         var selectedFilesIds = checkbox.map(function () {
             return $(this).val();
         }).get();
         var userEmail = '@Model.Email';
-        if (selectedFilesIds.length) {
-            console.log("hi");
 
-            $.ajax({
-                url: '/Admin/SendEmailWithAttachments',
-                type: 'POST',
-                // Send data as an object with properties
-                data: {
-                    selectedFilesIds: selectedFilesIds, // Pass the array
-                    userEmail: userEmail
-                },
-                success: function (response) {
-                    // Clear checkboxes after successful email sending
-                    $('input.checkboxForAll').prop('checked', false);
-                    $('#selectAllFiles').prop('checked', false);
-                    console.log("hi");
-
-                },
-                error: function (xhr, status, error) {
-                    // Handle AJAX error if needed
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-
-
+        // Send the email with AJAX
+        $.ajax({
+            url: '/Admin/SendEmailWithAttachments',
+            type: 'POST',
+            data: {
+                selectedFilesIds: selectedFilesIds,
+                userEmail: userEmail
+            },
+            success: function (response) {
+                $('input.checkboxForAll').prop('checked', false);
+                $('#selectAllFiles').prop('checked', false);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Email sent!',
+                    text: 'Check your email for the attached files!',
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong sending the email!',
+                });
+            }
+        });
     }
 
 
@@ -225,25 +233,32 @@
 
 
     function DeleteAll() {
-        var checkbox = $('input[class="checkboxForAll"]:checked');
+        // Show SweetAlert dialog asking the user to confirm deletion
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to Delete All the Files!',
+            icon: 'warning',
+            confirmButtonText: 'Yes, delete all!',
+            showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+                var checkbox = $('input[class="checkboxForAll"]:checked');
+                var documentValues = checkbox.map(function () {
+                    return $(this).val();
+                }).get();
 
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteFileByChecked", "Admin")",
+                    data: { documentValues: documentValues },
+                    success: function (response) {
+                        location.reload();
+                    }
+                });
+            }
+        });
 
-        var documentValues = checkbox.map(function () {
-            return $(this).val();
-        }).get();
-
-        if (documentValues.length) {
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("DeleteFileByChecked", "Admin")",
-                data: { documentValues: documentValues },
-                success: function (response) {
-
-                    location.reload();
-                }
-            });
-        }
-        return false; // prevent default form submission behavior
+        return false;
     }
     function DownloadAll() {
         var checkbox = $('input[class="checkboxForAll"]:checked');
@@ -253,7 +268,7 @@
             return $(this).val();
         }).get();
 
-        if (documentValues.length) {
+     
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DownloadAll", "Admin")",
@@ -275,7 +290,8 @@
                     console.log("error");
                 }
             });
-        }
+    
+
         return false; // prevent default form submission behavior
     }
 </script>

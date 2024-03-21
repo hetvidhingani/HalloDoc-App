@@ -6,13 +6,12 @@
     <div class="d-flex flex-column align-items-center justify-content-center ">
         <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
             <h3>Notes</h3>
-           @*  <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+             <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
                 </button>
-            </a> *@
-            <a href="##" onClick="history.go(-1); return false;"> Return to client detail</a>
+            </a>
 
         </div>
 
@@ -25,6 +24,7 @@
                         <strong> Transfer Notes</strong>
                         @if(Model.TransferNotes!=null)
                         {
+                            <hr/>
                             @foreach (var z in Model.TransferNotes)
                             {
 
@@ -32,16 +32,39 @@
                                 <hr />
                             }
                         }
-                        
-                        </div>
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </div>
                     <div class="col-lg-5 col-md-5 col-sm-12  mx-1  p-4 shadow-lg d-flex flex-column">
                         <strong>Physician Notes</strong>
-                        <small>-</small>
+                        <small>
+                            <div id="adminNotes">
+                                @if (@Model.PhysicianNotes != null)
+                                {
+                                    @Model.PhysicianNotes
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div>
+                        </small>
 
                         </div>
                     <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1   p-4 shadow-lg d-flex  flex-column">
                         <strong> Admin Notes</strong>
-                        <small><div id="adminNotes">@Model.AdminNotes</div></small>
+                        <small><div id="adminNotes">
+                                @if (@Model.AdminNotes!=null)
+                                {
+                                    @Model.AdminNotes
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </div></small>
 
                         </div>
                     </div>

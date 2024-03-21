@@ -26,7 +26,11 @@ namespace HalloDoc.Entities.ViewModels
         public string? Address { get; set; }
         public string? RegionId { get; set; }
         public string? State { get; set; }
-        
+        public string? street { get; set; }
+
+        public string? city { get; set; }
+
+
         public int requestclientID { get; set; }
         public int status { get; set; }
 

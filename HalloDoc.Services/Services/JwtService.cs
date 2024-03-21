@@ -54,6 +54,26 @@ namespace HalloDoc.Services.Services
 
 
         }
+        public dynamic GetTokenData(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]);
+
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+                ValidAudience = configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(key)
+            }, out SecurityToken validatedToken);
+
+            var jwtToken = (JwtSecurityToken)validatedToken;
+            return jwtToken.Claims.First(claim => claim.Type == "AdminID").Value;
+         
+        }
 
         public bool ValidateToken(string token, out JwtSecurityToken jwtSecurityToken)
         {

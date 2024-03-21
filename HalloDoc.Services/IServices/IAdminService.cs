@@ -38,7 +38,7 @@ namespace HalloDoc.Services.IServices
         Task<RequestWiseFile> DownloadFile(string name);
         Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
-        Task<object> DeleteFile(int name);
+        Task<object> DeleteFile(int name,int? reqID);
         Task<object> SendOrder( int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);

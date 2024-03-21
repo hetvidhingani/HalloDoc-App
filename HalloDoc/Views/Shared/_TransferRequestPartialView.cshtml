@@ -4,7 +4,7 @@
     <h5 class="modal-title">Transfer Request</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form asp-controller="Admin" asp-action="TransferRequest" asp-route-id="@Model.RequestClientID">
+<form id="TransferRequest" asp-controller="Admin" asp-action="TransferRequest" asp-route-id="@Model.RequestClientID">
     <div class="modal-body">
         <small>To Transfer this Request, search and select another Physician.</small>
 
@@ -74,4 +74,38 @@
             });
         });
     });
+    $('#TransferRequest').on('submit', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Done",
+                        text: "Transfered Successfully",
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = '@Url.Action("Dashboard", "Admin")';
+                    });
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error cancelling case: " + textStatus + ": " + errorThrown,
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                });
+        });
+
 </script>

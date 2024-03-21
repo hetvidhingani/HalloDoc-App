@@ -18,6 +18,7 @@ using Org.BouncyCastle.Ocsp;
 using static HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 
+
 namespace HalloDoc.Services.Services
 {
     public class AdminService : IAdminService
@@ -94,7 +95,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<int> GetCount(int statusId)
         {
-            return await _requestRepository.GetCountAsync(r => r.Status == statusId);
+            return await _requestRepository.GetCountAsync(r => r.Status == statusId &&r.UserId!=null);
         }
         public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
         {
@@ -279,6 +280,8 @@ namespace HalloDoc.Services.Services
                 viewmodel.requestclientID = user.RequestClientId;
                 viewmodel.DateOfBirth = dob;
                 viewmodel.status = req.Status;
+                viewmodel.street = user.Street;
+                viewmodel.city = user.City;
                 return viewmodel;
             }
             return "ViewCase";
@@ -751,17 +754,36 @@ namespace HalloDoc.Services.Services
             return ms.ToArray();
         }
 
-        public async Task<object> DeleteFile(int fileID)
+        public async Task<object> DeleteFile(int fileID, int? reqID)
         {
-            RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
-            if (IsDeleted(file.IsDeleted))
+            if(fileID==0)
             {
-                return new { Success = false, Message = "File is already deleted" };
-            }
+                var filesRow = await _requestwisefileRepository.FindFileByRequestID(reqID).ToListAsync();
+                foreach(var u in filesRow)
+                {
+                    if (IsDeleted(u.IsDeleted))
+                    {
+                        return new { Success = false, Message = "File is already deleted" };
+                    }
 
-            file.IsDeleted = new BitArray(new bool[] { true });
-            await _requestwisefileRepository.UpdateAsync(file);
-            return file;
+                    u.IsDeleted = new BitArray(new bool[] { true });
+                await _requestwisefileRepository.UpdateAsync(u);
+                }
+               
+            }
+            else
+            {
+                RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
+                if (IsDeleted(file.IsDeleted))
+                {
+                    return new { Success = false, Message = "File is already deleted" };
+                }
+
+                file.IsDeleted = new BitArray(new bool[] { true });
+                await _requestwisefileRepository.UpdateAsync(file);
+            }
+          
+            return "";
         }
 
 

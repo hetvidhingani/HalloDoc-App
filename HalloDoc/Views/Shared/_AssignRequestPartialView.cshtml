@@ -9,17 +9,7 @@
         <small>To Assign this Request, search and select another Physician.</small>
       
         <div class=" d-flex justify-content-center flex-column  ">
-            @* <select class="form-select mb-3 h-50"   name="RegionID" asp-for="regionID" id="regionSelect" >
-                <option value="" selected>Select State</option>
-                @foreach (var r in Model.Region)
-                {
-                    <option value="@r.RegionId">
-                        @r.Name
-                    </option>
-                }
-            </select>
-            <span asp-validation-for="regionID" class="text-danger"></span>
-            *@
+         
             <select asp-for="regionID" id="regionSelect" class="form-select required">
                 <option value="" >Select Region</option>
                 @foreach (var i in Model.Region)
@@ -61,7 +51,11 @@
 </form>
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         $("#regionSelect").change(function () {
@@ -90,33 +84,41 @@
         });
     });
 
-    //validation
-    // document.getElementById('submitBtn').addEventListener('click', function () {
-    //     var isValid = true;
-    //     var errorMessage = '';
 
-    //     // Validate region
-    //     var regionSelect = document.getElementById('regionSelect');
-    //     if (regionSelect.value === 0) {
-    //         errorMessage += 'Please select a region. ';
-    //         isValid = false;
-    //     }
 
-    //     // Validate physician
-    //     var physicianSelect = document.getElementById('physicianSelect');
-    //     if (physicianSelect.value === 0) {
-    //         errorMessage += 'Please select a physician. ';
-    //         console.log(errorMessage);
-    //         isValid = false;
-    //     }
+    $('#myForm').on('submit', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
 
-    //     // Display error message if validation failed
-    //     if (!isValid) {
-    //         document.getElementsByClassName('errorMessage').innerText = errorMessage;
-    //     } else {
-    //         // Submit the form if validation passed
-    //         document.getElementById('myForm').submit();
-    //     }
-    // });
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Request Assigned Successfully",
+                        
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = '@Url.Action("Dashboard", "Admin")';
+                    });
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Error cancelling case: " + textStatus + ": " + errorThrown,
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                });
+    });
 
 </script>
+

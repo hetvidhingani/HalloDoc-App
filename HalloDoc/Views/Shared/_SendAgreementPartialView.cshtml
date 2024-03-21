@@ -4,7 +4,7 @@
     <h5 class="modal-title">Send Agreement</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
+<form id="sendagreement" asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
     <div class="modal-body">
         <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
 
@@ -62,4 +62,37 @@
 
     });
     $('#phone').attr('value', "+91");
+    $('#sendagreement').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                let timerInterval;
+                Swal.fire({
+                    title: "Done",
+                    text: "Agreement Sent Successfully on Email : @Model.Email.",
+                    icon: "success",
+                    timer: 3000,
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                }).then(function () {
+                    window.location.href = '@Url.Action("Dashboard", "Admin")';
+                });
+            })
+            .fail(function (jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    title: "Error",
+                    text: "Error cancelling case: " + textStatus + ": " + errorThrown,
+                    icon: "error",
+                    confirmButtonText: "OK"
+                });
+            });
+    });
 </script>

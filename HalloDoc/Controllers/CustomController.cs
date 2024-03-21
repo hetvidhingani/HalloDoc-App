@@ -322,7 +322,7 @@ namespace HalloDoc.Controllers
         {
           
             await _admin.AcceptAgreement(id);
-            return null;
+            return Json("success");
         }
 
         [HttpGet]

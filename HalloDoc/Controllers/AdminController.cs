@@ -45,6 +45,8 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> Dashboard()
         {
+            var cookie = Request.Cookies["jwt"];
+            var cookiedata = _jwtService.GetTokenData(cookie);
             var viewModel = new AdminDashboardViewModel
             {
                 NewCount = await _admin.GetCount(1),
@@ -206,6 +208,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 await _admin.AssignRequest(viewModel, id);
+               
                 return RedirectToAction("Dashboard");
             }
             return RedirectToAction("Dashboard");
@@ -235,6 +238,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _admin.BlockCaseRequest(viewModel, id);
+              
                 return RedirectToAction("Dashboard");
             }
             return View();
@@ -357,14 +361,15 @@ namespace HalloDoc.Controllers
                 int? requestid = HttpContext.Session.GetInt32("reqID");
 
                 byte[] fileBytes = await _admin.DownloadAll(documentValues, requestid);
-                return File(fileBytes, "application/zip", "download.zip");
+                string zipFileData = Convert.ToBase64String(fileBytes);
+                return Json(new { success = true, zipFileData });
             }
         }
 
         public async Task<IActionResult> DeleteFile(int fileID)
         {
             int? requstId = HttpContext.Session.GetInt32("reqID");
-            await _admin.DeleteFile(fileID);
+            await _admin.DeleteFile(fileID,requstId);
 
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
@@ -372,11 +377,21 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
         {
-            foreach (var items in documentValues)
+            int? requestid = HttpContext.Session.GetInt32("reqID");
+            if(documentValues.Count() > 0)
             {
+                foreach (var items in documentValues)
+                {
 
-                await _admin.DeleteFile(items);
+                    await _admin.DeleteFile(items, requestid);
+                }
             }
+            else
+            {
+                await _admin.DeleteFile(0, requestid);
+
+            }
+
 
             return Json(documentValues);
         }
