@@ -42,7 +42,7 @@ namespace HalloDoc.Services.IServices
         Task<object> SendOrder( int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
-        Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id);
+        Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id , string adminID);
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
         Task<string> ClearRequest(int? id);

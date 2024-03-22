@@ -14,15 +14,16 @@ namespace HalloDoc.Controllers
         public IPatientService _patient;
         private IAdminService _admin;
         private IJwtService _jwtService;
-       
+       private ICustomService _customService;
 
         #region constructor
-        public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService)
+        public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService,ICustomService customService)
         {
             _context = context;
             _patient = patient;
             _admin = admin;
             _jwtService = jwtService;
+            _customService=customService;
 
         }
         public IActionResult PatientSite()
@@ -80,8 +81,10 @@ namespace HalloDoc.Controllers
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
                 Response.Cookies.Append("jwt", jwtToken);
                 HttpContext.Session.SetString("UserName", myUser.UserName);
+                HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
 
                 HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
+              
                 return RedirectToAction("Dashboard", "Admin");
             }
             else
@@ -96,21 +99,19 @@ namespace HalloDoc.Controllers
      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetpasswordRequest(CreateAccountViewModel req)
+        public async IActionResult ResetPasswordRequest(string email)
         {
-            if (req.Email == null)
+            if (string.IsNullOrEmpty(email))
             {
-                ViewBag.emailEnter = "Please enter Email";
-                return RedirectToAction("PatientForgotPassword", "Custom");
+                return Json(new { success = false, message = "Please enter an email address" });
             }
-
-            var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + req.Email;
+            AspNetUserRole roles = await _customService.getIfExist(email);
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
             var subject = "Reset Account Password";
-            var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your passwrod";
-            await _patient.SendEmail(req.Email, link ,subject,body);
-           string mail= await _patient.GetTempData<string>("mail");
-            TempData["Mail"] = mail;
-            return RedirectToAction("ResetPassword", "Custom");
+            var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
+            _patient.SendEmail(email, link, subject, body);
+           
+            return Json(new { success = true, message = "A password reset link has been sent to your email." });
         }
 
         [HttpPost]
@@ -178,7 +179,7 @@ namespace HalloDoc.Controllers
                 User userID = await _patient.GetUser(myUser.Email);
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
-
+             
                 return RedirectToAction("DashBoard", "Patient");
             }
             else
@@ -193,6 +194,11 @@ namespace HalloDoc.Controllers
 
         #region Forgot Password
         public IActionResult PatientForgotPassword()
+        {
+            return View();
+
+        }
+        public IActionResult AdminForgotPassword()
         {
             return View();
 

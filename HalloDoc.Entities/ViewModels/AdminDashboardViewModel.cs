@@ -42,6 +42,8 @@ namespace HalloDoc.Entities.ViewModels
         public int TotalCount { get; set; }
         public List<AdminDashboardViewModel> PagingData { get; set; }
         public string stateTab { get; set; }
+        public int FirstItemIndex { get; set; }
+        public int LastItemIndex {  get; set; }
 
     }
 }

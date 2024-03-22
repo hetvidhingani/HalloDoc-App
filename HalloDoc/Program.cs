@@ -34,11 +34,12 @@ builder.Services.AddScoped<IBlockRequestRepository, BlockRequestRepository>();
 builder.Services.AddScoped<IAspNetUserRolesRepository, AspNetUserRolesRepository>();
 builder.Services.AddScoped<IEncounterRepository, EncounterRepository>();
 builder.Services.AddScoped<IRequestClosedRepository, RequestClosedRepository>();
+builder.Services.AddScoped<IAdminRegionRepository, AdminRegionRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
-
+builder.Services.AddScoped<ICustomService, CustomService>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(option =>
 {

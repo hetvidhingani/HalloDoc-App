@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using Org.BouncyCastle.Ocsp;
 using static HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
+using System.Drawing.Printing;
 
 
 namespace HalloDoc.Services.Services
@@ -43,7 +44,7 @@ namespace HalloDoc.Services.Services
         private readonly IBlockRequestRepository _blockRequestRepository;
         private readonly IEncounterRepository _encounterRepository;
         private readonly IRequestClosedRepository _requestClosedRepository;
-
+        private readonly IAdminRegionRepository _adminRegionRepository;
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -53,6 +54,7 @@ namespace HalloDoc.Services.Services
                                ICaseTagRepository caseTagRepository, IRequestStatusLogRepository requestStatusLogRepository, IRegionRepository regionRepository,
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
+                               IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository)
         {
             _userRepository = userRepository;
@@ -74,6 +76,7 @@ namespace HalloDoc.Services.Services
             _blockRequestRepository = blockRequestRepository;
             _encounterRepository = encounterRepository;
             _requestClosedRepository = requestClosedRepository;
+            _adminRegionRepository = adminRegionRepository;
         }
         #endregion
 
@@ -122,7 +125,6 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-
 
         #region Send Mail
         public string SendEmail(string email,string link, string subject, string body, List<string> attachmentFilePath = null)
@@ -208,7 +210,6 @@ namespace HalloDoc.Services.Services
             return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
         }
 
-
         public AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState)
         {
             if (!string.IsNullOrWhiteSpace(PatientName))
@@ -227,10 +228,10 @@ namespace HalloDoc.Services.Services
             int dataSize = 5;
             int totalCount = newState.Count;
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
-
+            int FirstItemIndex = Math.Min((CurrentPage-1) * dataSize +1,totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
             List<AdminDashboardViewModel> clients = newState
                 .OrderByDescending(u => u.CreatedDate)
-
                 .Skip((CurrentPage - 1) * dataSize)
                 .Take(dataSize)
                 .ToList();
@@ -242,7 +243,9 @@ namespace HalloDoc.Services.Services
                 TotalCount = totalCount,
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,
-                PageSize = 3
+                PageSize = 3,
+                FirstItemIndex=FirstItemIndex, 
+                LastItemIndex=LastItemIndex,
             };
         }
 
@@ -816,7 +819,7 @@ namespace HalloDoc.Services.Services
             viewModel.Business = await _healthProfessionalsRepository.GetVendor();
             return viewModel;
         }
-        public async Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id)
+        public async Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id, string adminID)
         {
             OrderDetail order = new OrderDetail();
             order.VendorId = viewModel.BusinessID;
@@ -827,7 +830,7 @@ namespace HalloDoc.Services.Services
             order.Prescription = viewModel.OrderDetails;
             order.NoOfRefill = viewModel.Refill;
             order.CreatedDate = DateTime.Now;
-            order.CreatedBy = "Admin";
+            order.CreatedBy = adminID;
             await _orderDetailsRepository.AddAsync(order);
             return "";
         }
@@ -906,6 +909,7 @@ namespace HalloDoc.Services.Services
         {
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
+            var adminRegion = await _adminRegionRepository.adminRegionByAdminID(admin.AdminId);
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
             {
                 AdminID = admin.AdminId,
@@ -924,8 +928,9 @@ namespace HalloDoc.Services.Services
                 RegionId = admin.RegionId,
                 State = await _regionRepository.GetRegions(),
                 Zip = admin.Zip,
-                BillingPhoneNumber = admin.AltPhone
-
+                BillingPhoneNumber = admin.AltPhone,
+                AdminRegions = adminRegion
+                
             };
             return model;
 

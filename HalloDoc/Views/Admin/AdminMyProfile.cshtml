@@ -18,7 +18,7 @@
                 <input type="hidden" asp-for="AdminID" />
 
                 <h3>Account Information</h3>
-             
+
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -30,20 +30,25 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Password" type="password" class="form-control" placeholder=" " >
+                            <input asp-for="Password" type="password" class="form-control" placeholder=" ">
                             <label for=" ">Password</label>
                             <span asp-validation-for="Password" class="text-danger"></span>
 
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
-                            <input asp-for="Status" type="text" class="form-control" placeholder=" " readonly>
-                            <label for=" ">Status</label>
-                            <span asp-validation-for="Status" class="text-danger"></span>
+                    @if (Model.Status == 3)
+                    {
+                        var data = "Active";
 
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-floating form-group">
+                                <input asp-for="Status" type="text" class="form-control" placeholder=" " value="@data" readonly>
+                                <label for=" ">Status</label>
+                                <span asp-validation-for="Status" class="text-danger"></span>
+
+                            </div>
                         </div>
-                    </div>
+                    }
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Role" type="text" class="form-control" placeholder=" " readonly>
@@ -52,7 +57,7 @@
 
                         </div>
                     </div>
-                    </div>
+                </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-outline-info ResetPassword" type="submit">Reset Password</button>
                 </div>
@@ -65,7 +70,7 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="FirstName" type="text" class="form-control edit" placeholder=" "  readonly>
+                            <input asp-for="FirstName" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">First Name</label>
                             <span asp-validation-for="FirstName" class="text-danger"></span>
 
@@ -103,15 +108,27 @@
                         <div class="form-floating form-group  border">
                             <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
 
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
-                    
-                  
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        @foreach (var cb in Model.AdminRegions)
+                        {
+                            
+                                <div class="form-check mx-2">
+                                    <input class="form-check-input" value="@cb.RegionId" type="checkbox" name="Region" checked disabled>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        @cb.RegionId
+                                    </label>
+                                </div>
+                            }
+                    </div>
+
+
                 </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info" id="edit-button" type="button">Edit</button>
-                    <button class="btn btn-info savebtn SaveAdminInfo"style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-info savebtn SaveAdminInfo" style="display:none;" type="submit" disabled>Save</button>
                 </div>
 
             </form>
@@ -159,7 +176,7 @@
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group"> 
+                        <div class="form-floating form-group">
                             <input asp-for="Zip" type="text" class="form-control edit2" placeholder=" " readonly>
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="Zip" class="text-danger"></span>
@@ -186,7 +203,7 @@
 </div>
 
 <script>
- 
+
     //dark theme
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
@@ -222,15 +239,15 @@
 
     });
     $('#phone').attr('value', "+91");
-  
-  
+
+
     //save-edit button
     var editButton = document.getElementById("edit-button");
     editButton.addEventListener("click", function () {
         var form = editButton.closest("form");
         var inputs = form.querySelectorAll(".edit");
         var saveButton = form.querySelector(".savebtn");
-      
+
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");
             input.removeAttribute("disabled");
@@ -244,11 +261,11 @@
     });
     var editButton2 = document.getElementById("edit-button2");
     editButton2.addEventListener("click", function () {
-      
+
         var form1 = editButton2.closest("form");
         var inputs = form1.querySelectorAll(".edit2");
         var saveButton1 = form1.querySelector(".savebtn2");
-       
+
 
         inputs.forEach(function (input) {
             input.removeAttribute("readonly");

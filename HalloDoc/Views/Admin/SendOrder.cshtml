@@ -131,17 +131,14 @@
     $('#phone').attr('value', "+91");
     //sweet alert
     $('#sendorder').on('submit', function (e) {
-        e.preventDefault();
-
-        var form = $(this);
-        var url = form.attr('action');
-        var data = form.serialize();
+        event.preventDefault();
+        var email = $("#email").val();
 
         $.ajax({
             type: "POST",
-            url: "/Admin/SendOrderDetails", // Call the validation method
-            data: data,
-            dataType: "json"
+            url: "/Admin/SendOrderDetails", 
+            data: { email: email },
+          
         })
             .done(function (response) {
                 if (response.success) {

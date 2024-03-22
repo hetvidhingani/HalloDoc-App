@@ -15,5 +15,9 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
+        public async Task<AspNetUserRole> getRoleID(object id)
+        {
+            return await _context.AspNetUserRoles.Where(u=>u.a)
+        }
     }
 }

@@ -437,7 +437,9 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                await _admin.SendOrderDetails(viewModel, Id);
+                string? adminID = HttpContext.Session.GetString("AdminAspNetID");
+                
+                await _admin.SendOrderDetails(viewModel, Id,adminID);
 
             }
             return Json(new { success = true });
