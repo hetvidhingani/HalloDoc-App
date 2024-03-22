@@ -14,7 +14,7 @@
         </div>
         <div class=" p-4  shadow mb-3  rounded h-100 PatientInfo">
 
-            <form asp-action="SendOrderDetails" asp-controller="Admin" asp-route-id="@Model.RequestID" method="post" enctype="multipart/form-data">
+            <form asp-action="SendOrderDetails" asp-controller="Admin" asp-route-id="@Model.RequestID" method="post" id="sendorder" enctype="multipart/form-data">
          
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-6">
@@ -114,6 +114,7 @@
     </div>
 </div>
 <script>
+    //phone number
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
@@ -128,7 +129,44 @@
 
     });
     $('#phone').attr('value', "+91");
-   
+    //sweet alert
+    $('#sendorder').on('submit', function (e) {
+        e.preventDefault();
+
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/SendOrderDetails", // Call the validation method
+            data: data,
+            dataType: "json"
+        })
+            .done(function (response) {
+                if (response.success) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: data
+                    })
+                        .done(function (response) {
+                            let timerInterval;
+                            Swal.fire({
+                                title: "Order Sent Successfully",
+                                icon: "success",
+                                timer: 1500,
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                            }).then(function () {
+                                window.location.href = '@Url.Action("Dashboard", "Admin")';
+                            });
+                        });
+                       
+                }
+            });
+    });
+   //cascading dropdown
     $(document).ready(function () {
 
 

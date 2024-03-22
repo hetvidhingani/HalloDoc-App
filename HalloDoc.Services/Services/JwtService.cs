@@ -25,15 +25,15 @@ namespace HalloDoc.Services.Services
         {
             var userRole = _context.AspNetUserRoles.FirstOrDefault(u=>u.UserId==user.Id);
             var roleId = userRole.RoleId;
-            var AdminID = _context.Admins.FirstOrDefault(u=>u.AspNetUserId==user.Id);
-            int adminID = AdminID.AdminId;
+            //var AdminID = _context.Admins.FirstOrDefault(u=>u.AspNetUserId==user.Id);
+            //int adminID = AdminID.AdminId;
 
             var claims = new List<Claim>()
             {
                  new Claim(ClaimTypes.Email, user.Email),
                  new Claim(ClaimTypes.Role, roleId),
                  new Claim("userId",user.Id),
-                 new Claim("AdminID",adminID.ToString())
+                 //new Claim("AdminID",adminID.ToString())
                 
              };
 

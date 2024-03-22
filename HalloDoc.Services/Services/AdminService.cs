@@ -356,7 +356,7 @@ namespace HalloDoc.Services.Services
                 requestNote1.RequestId = id;
                 requestNote1.AdminNotes = additionalNotes;
                 requestNote1.CreatedDate = DateTime.Now;
-                requestNote1.CreatedBy = "admin";
+                requestNote1.CreatedBy = "bda27f31-02b1-442f-9120-bed8f09a4966";
                 await _requestNotesRepository.AddAsync(requestNote1);
                 adminNotes = requestNote1.AdminNotes;
 
@@ -427,6 +427,14 @@ namespace HalloDoc.Services.Services
             viewModel.RequestClientID = id;
             viewModel.Region = await _regionRepository.GetRegions();
             viewModel.Physician = await _physicianRepository.GetPhysician();
+            try
+            {
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+
+            }
             return viewModel;
         }
         public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id)

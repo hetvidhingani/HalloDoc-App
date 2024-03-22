@@ -45,8 +45,8 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> Dashboard()
         {
-            var cookie = Request.Cookies["jwt"];
-            var cookiedata = _jwtService.GetTokenData(cookie);
+            //var cookie = Request.Cookies["jwt"];
+            //var cookiedata = _jwtService.GetTokenData(cookie);
             var viewModel = new AdminDashboardViewModel
             {
                 NewCount = await _admin.GetCount(1),
@@ -200,6 +200,10 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> AssignCase(AssignCaseViewModel viewModel, int id)
         {
             var result = await _admin.AssignCase(viewModel, id);
+            if (result != null)
+            {
+                return PartialView("_AssignRequestPartialView", result);
+            }
             return PartialView("_AssignRequestPartialView", result);
         }
 
@@ -426,8 +430,18 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, errors });
+            }
+            else
+            {
                 await _admin.SendOrderDetails(viewModel, Id);
-                return RedirectToAction("Dashboard");
+
+            }
+            return Json(new { success = true });
+           
         }
         #endregion
 
@@ -475,12 +489,11 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+           
                 await _admin.ResetPasswordAdmin(model);
                 return RedirectToAction("AdminMyProfile");
-            }
-            return View(model);
+            
+
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
         {

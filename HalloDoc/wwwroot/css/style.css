@@ -6,7 +6,25 @@ input[type=password]::-ms-clear {
 
 
 /*header*/
+.menuDashboard > *:hover {
+    background-color: lightgray;
+}
 
+.menuDashboard > li > a {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.menuDashboard > * {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    align-items: center;
+    border-bottom: 1px solid lightgrey;
+    padding: 0px;
+    margin: 0px;
+}
 /*#region admin css*/
 .mainSectionMargin {
     margin: 125px 5px;
