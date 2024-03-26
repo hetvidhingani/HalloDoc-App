@@ -317,9 +317,9 @@
                         </div>
                     </div>
 
-
+                    <input type="hidden" asp-for="RequestID" />
                     <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
-                        <input type="button" id="@Model.RequestID"  style=" color: white;" class="btn btn-info savechanges  m-2" value="Save Changes">
+                        <input type="button"   style=" color: white;" class="btn btn-info savechanges m-2" value="Save Changes">
                         @if(@HttpContextAccessor?.HttpContext?.Session.GetString("AdminSession") !=null)
                         {
 
@@ -359,14 +359,15 @@
 
     }
     $('.savechanges').click(function () {
-        var id = this.id;
-
+        var form = $(this).closest('form');
+      
         $.ajax({
             type: "POST",
             dataType: "html",
-            data: { id },
+            data: form.serialize(),
             url: "@(Url.Action("EncounterFormSaveChanges", "Admin"))",
-           
         });
     });
+
+  
 </script>

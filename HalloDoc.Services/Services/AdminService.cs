@@ -45,6 +45,7 @@ namespace HalloDoc.Services.Services
         private readonly IEncounterRepository _encounterRepository;
         private readonly IRequestClosedRepository _requestClosedRepository;
         private readonly IAdminRegionRepository _adminRegionRepository;
+        private readonly IRoleRepository _roleRepository;
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -55,7 +56,7 @@ namespace HalloDoc.Services.Services
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
-                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository)
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -77,6 +78,7 @@ namespace HalloDoc.Services.Services
             _encounterRepository = encounterRepository;
             _requestClosedRepository = requestClosedRepository;
             _adminRegionRepository = adminRegionRepository;
+            _roleRepository = roleRepository;
         }
         #endregion
 
@@ -98,7 +100,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<int> GetCount(int statusId)
         {
-            return await _requestRepository.GetCountAsync(r => r.Status == statusId &&r.UserId!=null);
+            return await _requestRepository.GetCountAsync(r => r.Status == statusId && r.UserId != null);
         }
         public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
         {
@@ -126,8 +128,10 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
+
+        #region Admin
         #region Send Mail
-        public string SendEmail(string email,string link, string subject, string body, List<string> attachmentFilePath = null)
+        public string SendEmail(string email, string link, string subject, string body, List<string> attachmentFilePath = null)
         {
             try
             {
@@ -177,7 +181,7 @@ namespace HalloDoc.Services.Services
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
         {
-           
+
             var tabledashboard = (
                 from r in _requestRepository.GetAll()
                 join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
@@ -228,7 +232,7 @@ namespace HalloDoc.Services.Services
             int dataSize = 5;
             int totalCount = newState.Count;
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
-            int FirstItemIndex = Math.Min((CurrentPage-1) * dataSize +1,totalCount);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
             List<AdminDashboardViewModel> clients = newState
                 .OrderByDescending(u => u.CreatedDate)
@@ -244,8 +248,8 @@ namespace HalloDoc.Services.Services
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,
                 PageSize = 3,
-                FirstItemIndex=FirstItemIndex, 
-                LastItemIndex=LastItemIndex,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
             };
         }
 
@@ -672,10 +676,10 @@ namespace HalloDoc.Services.Services
         }
         public async Task<object> DeleteFile(int fileID, int? reqID)
         {
-            if(fileID==0)
+            if (fileID == 0)
             {
                 var filesRow = await _requestwisefileRepository.FindFileByRequestID(reqID).ToListAsync();
-                foreach(var u in filesRow)
+                foreach (var u in filesRow)
                 {
                     if (IsDeleted(u.IsDeleted))
                     {
@@ -683,9 +687,9 @@ namespace HalloDoc.Services.Services
                     }
 
                     u.IsDeleted = new BitArray(new bool[] { true });
-                await _requestwisefileRepository.UpdateAsync(u);
+                    await _requestwisefileRepository.UpdateAsync(u);
                 }
-               
+
             }
             else
             {
@@ -698,7 +702,7 @@ namespace HalloDoc.Services.Services
                 file.IsDeleted = new BitArray(new bool[] { true });
                 await _requestwisefileRepository.UpdateAsync(file);
             }
-          
+
             return "";
         }
 
@@ -715,7 +719,7 @@ namespace HalloDoc.Services.Services
             HealthProfessional business = await _healthProfessionalsRepository.GetByIdAsync(BusinessId);
             return business;
         }
-        public async Task<object> SendOrder( int Id)
+        public async Task<object> SendOrder(int Id)
         {
             SendOrderViewModel viewModel = new SendOrderViewModel();
             viewModel.RequestID = Id;
@@ -742,7 +746,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Send Agreement
-        public async Task<object> sendAgreement( int id)
+        public async Task<object> sendAgreement(int id)
         {
             ViewCaseViewModel viewModel = new ViewCaseViewModel();
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
@@ -772,12 +776,12 @@ namespace HalloDoc.Services.Services
 
             Encounter encounter = new Encounter()
             {
-                Requestid= req.RequestId,
+                Requestid = req.RequestId,
                 Firstname = req.FirstName,
                 Lastname = req.LastName,
-                Phonenumber= req.PhoneNumber,
-                Location=req.State,
-                Email=req.Email,
+                Phonenumber = req.PhoneNumber,
+                Location = req.State,
+                Email = req.Email,
             };
             await _encounterRepository.AddAsync(encounter);
             return "";
@@ -835,7 +839,7 @@ namespace HalloDoc.Services.Services
                 Zip = admin.Zip,
                 BillingPhoneNumber = admin.AltPhone,
                 AdminRegions = adminRegion
-                
+
             };
             return model;
 
@@ -937,26 +941,26 @@ namespace HalloDoc.Services.Services
             return model;
         }
 
-        public async Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID)
+        public async Task<object> EncounterFormSaveChanges(EncounterViewModel model)
         {
-            Encounter encounter = await _encounterRepository.checkBYRequestID(reqID);
+            Encounter encounter = await _encounterRepository.checkBYRequestID(model.RequestID);
             encounter.Firstname = model.FirstName;
             encounter.Lastname = model.LastName;
             encounter.Location = model.Location;
             //encounter.Dateofbirth = model.DateOfBirth;
             encounter.Phonenumber = model.PhoneNumber;
             encounter.Medicalreport = model.MedicalReport;
-            encounter.Date = model.Date.Value;
+            //   encounter.Date = model.Date.Value;
             encounter.Email = model.Email;
             encounter.Historyofpresentillness = model.HistoryOfPresentIllness;
             encounter.Medicalhistory = model.MedicalHistory;
             encounter.Medications = model.Medications;
-            encounter.Temp = model.Temp.Value;
-            encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value;
-            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value;
+            //encounter.Temp = model.Temp.Value;
+            // encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value;
+            // encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value;
             encounter.Heent = model.Heent;
             encounter.Chest = model.Chest;
-            encounter.Hr = model.Hr.Value;
+            //encounter.Hr = model.Hr.Value;
             encounter.Allergies = model.Allergies;
             encounter.Cv = model.Cv;
             encounter.Abd = model.ABD;
@@ -969,15 +973,146 @@ namespace HalloDoc.Services.Services
             encounter.Other = model.Other;
             encounter.Treatmentplan = model.TreatmentPlan;
             encounter.Procedures = model.Procedures;
-            encounter.Rr = model.Rr.Value;
-            encounter.Pain = model.Pain.Value;
-            encounter.Ischanged = model.IsChanged.Value;
-            encounter.Isfinalized = model.IsFinalized.Value;
+            //encounter.Rr = model.Rr.Value;
+            //encounter.Pain = model.Pain.Value;
+            //encounter.Ischanged = model.IsChanged.Value;
+            //encounter.Isfinalized = model.IsFinalized.Value;
             await _encounterRepository.UpdateAsync(encounter);
 
             return encounter;
         }
         #endregion
+        #endregion
 
+        #region Provider
+
+        #region Create & Edit Provider
+      
+        public async Task<object> Createprovider()
+        {
+            ProviderViewModel model = new ProviderViewModel();
+            model.State = await _regionRepository.GetRegions();
+            model.Role = await _roleRepository.GetRoles();
+            return model;
+        }
+        public async Task<object> CreateProvider(ProviderViewModel model)
+        {
+            AspNetUser user = new AspNetUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = model.UserName,
+                PasswordHash = model.Password,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                CreatedDate = DateTime.Now,
+            };
+            await _aspnetuserRepository.AddAsync(user);
+
+            Physician physician = new Physician();
+
+            physician.Id = user.Id;
+            physician.FirstName = model.FirstName;
+            physician.LastName = model.LastName;
+            physician.Email = model.Email;
+            physician.MedicalLicense = model.MedicalLicense;
+            physician.Mobile = model.PhoneNumber;
+            physician.AdminNotes = model.AdminNotes;
+            physician.Address1 = model.Address1;
+            physician.Address2 = model.Address2;
+            physician.Zip = model.Zip;
+            physician.City = model.City;
+            physician.RegionId = model.RegionId;
+            physician.RoleId = model.RoleId;
+            physician.CreatedDate = DateTime.Now;
+            physician.Status = 3;
+            physician.CreatedBy = user.Id;
+            physician.BusinessName = model.BusinessName;
+            physician.BusinessWebsite = model.BusinessWebsite;
+            //physician.Photo=model.File.FileName;
+
+
+            await _physicianRepository.AddAsync(physician);
+            return "ViewUploads";
+        }
+        #endregion
+
+        #region provider info
+        public ProviderViewModel ProviderInformation(int RegionId)
+        {
+            List<Physician> regionwisephysician = _physicianRepository;
+
+            if (RegionId != 0)
+            {
+                regionwisephysician = regionwisephysician.Where(a => a.RegionId == RegionId).ToList();
+            }
+
+            ProviderViewModel data = new ProviderViewModel()
+            {
+                physicians = regionwisephysician,
+                Regions = _context.Regions.ToList(),
+                Roles = _context.Roles.Where(u => u.AccountType == 2).ToList(),
+                physicianNotifications = _context.PhysicianNotifications.ToList()
+
+            };
+
+            return data;
+        }
+        public async Task<List<ProviderViewModel>> Provider(List<ProviderViewModel> list, int Regionid)
+
+        {
+            var tabledashboard = (from p in _physicianRepository.GetAll()
+                                  join re in _regionRepository.GetAll() on p.RegionId equals re.RegionId into regionGroup
+                                  from region in regionGroup.DefaultIfEmpty()
+                                     
+                                  join role in _roleRepository.GetAll() on p.RoleId equals role.RoleId into roleGroup
+                                  from roles in roleGroup.DefaultIfEmpty()
+                                  select new
+                                  {
+                                      p.PhysicianId,
+                                      Physician = p != null ? p.FirstName + " " + p.LastName : null,
+                                      p.Status,
+                                      p.RegionId,
+                                      p.RoleId,
+                                      regid = region.RegionId,
+                                      Regionname = region.Name,
+                                   
+                                  }).ToList();
+            var filterdata = tabledashboard.Where(e => Regionid == 0 || e.RegionId == Regionid); ;
+
+            if (filterdata.Any())
+            {
+
+                foreach (var r in filterdata)
+                {
+                    //List<adminDashboardViewModel> list = new List<adminDashboardViewModel>();
+
+                    ProviderViewModel dash = new ProviderViewModel();
+                    dash.PhysicianId = r.PhysicianId;
+                    dash.Name = r.Physician;
+                    dash.RoleId = (int)r.RoleId;
+                    //dash.toclosenotes = r.toclosenote;
+                    //dash.Region = r.Regionname;
+                    dash.Status = (int)r.Status;
+                    //dash.isdeleted = r.notistopped;
+                   // dash.phynoti = _physicianNotificationRepository.GetAll();
+                    dash.Regions =await _regionRepository.GetRegions();
+
+                    list.Add(dash);
+
+                }
+            }
+            else
+            {
+
+                list = new List<ProviderViewModel>();
+                return list;
+
+            }
+            return list;
+        }
+
+
+        #endregion
+        #endregion
     }
 }

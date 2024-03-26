@@ -18,16 +18,20 @@
                     </option>
                 }
             </select>
+            <span asp-validation-for="regionID" class="text-danger"></span>
 
             <select class="form-select mb-3 h-50" name="physicianID" asp-for="physicianID" id="physicianSelect">
                 <option>Select Physician</option>
 
             </select>
+            <span asp-validation-for="physicianID" class="text-danger"></span>
+
             <div class="form-floating form-group  rounded-3">
                 <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Discription
                 </label>
+                <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
 
             </div>
 
@@ -47,6 +51,13 @@
 
     </div>
 </form>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         $("#regionSelect").change(function () {
@@ -80,12 +91,13 @@
             var url = form.attr('action');
             var data = form.serialize();
 
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data
-            })
-                .done(function (response) {
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                if (response.success) {
                     let timerInterval;
                     Swal.fire({
                         title: "Done",
@@ -97,15 +109,9 @@
                     }).then(function () {
                         window.location.href = '@Url.Action("Dashboard", "Admin")';
                     });
-                })
-                .fail(function (jqXHR, textStatus, errorThrown) {
-                    Swal.fire({
-                        title: "Error",
-                        text: "Error cancelling case: " + textStatus + ": " + errorThrown,
-                        icon: "error",
-                        confirmButtonText: "OK"
-                    });
-                });
+                }
+            });
+                
         });
 
 </script>

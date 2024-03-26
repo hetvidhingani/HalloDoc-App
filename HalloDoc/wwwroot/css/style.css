@@ -2,9 +2,11 @@ input[type=password]::-ms-reveal,
 input[type=password]::-ms-clear {
     display: none;
 }
-
-
-
+/*provider*/
+.formrow>div{
+    margin-bottom:3px;
+}
+/*legend - provider*/
 /*header*/
 .menuDashboard > *:hover {
     background-color: lightgray;

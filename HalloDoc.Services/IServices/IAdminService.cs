@@ -42,7 +42,6 @@ namespace HalloDoc.Services.IServices
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id);
         Task<string> ClearRequest(int? id);
-       
         Task<object> sendAgreement( int id);
         Task<object> DashboardRegions(AdminDashboardViewModel viewModel);
         Task<object> AcceptAgreement(int id);
@@ -55,7 +54,10 @@ namespace HalloDoc.Services.IServices
         Task<object> SaveAdminInfo(AdminMyProfileViewModel model);
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
-        Task<object> EncounterFormSaveChanges(EncounterViewModel model, int reqID);
+        Task<object> EncounterFormSaveChanges(EncounterViewModel model);
         AdminDashboardViewModel Pagination(string state,int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
+        Task<object> ProviderInformation();
+        Task<object> CreateProvider(ProviderViewModel model);
+        Task<object> Createprovider();
     }
 }

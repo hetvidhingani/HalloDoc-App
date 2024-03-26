@@ -120,7 +120,17 @@
                         <a id="2" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Provider Location</a>
 
                         <a  id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">My Profile</a>
-                        <a  id="4 " asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey"> Providers</a>
+                        <div class="dropdown " id="4 " >
+                            <a class="nav-link py-2" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
+                                Providers
+                            </a>
+
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a></li>
+                                <li><a class="dropdown-item" style="color:dimgrey" href="#">Scheduling</a></li>
+                                <li><a class="dropdown-item" style="color:dimgrey" href="#">Invocing</a></li>
+                            </ul>
+                        </div>
                         <a id="5" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Partners</a>
                         <a  id="7" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Access</a>
                         <a id="6" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Records</a>

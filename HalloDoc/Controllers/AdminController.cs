@@ -26,7 +26,7 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
             _customService = customService;
         }
-
+        #region admin
         #region Logout
         public IActionResult Logout()
         {
@@ -215,7 +215,7 @@ namespace HalloDoc.Controllers
             {
                 await _admin.AssignRequest(viewModel, id);
                
-                return RedirectToAction("Dashboard");
+                return Json(new { success = true });
             }
             return RedirectToAction("Dashboard");
         }
@@ -244,8 +244,9 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _admin.BlockCaseRequest(viewModel, id);
-              
-                return RedirectToAction("Dashboard");
+
+                return Json(new { success = true });
+
             }
             return View();
         }
@@ -265,7 +266,8 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 await _admin.TransferRequest(viewModel, id);
-                return RedirectToAction("Dashboard");
+                return Json(new { success = true });
+
             }
             return View();
         }
@@ -521,12 +523,13 @@ namespace HalloDoc.Controllers
             var result = await _admin.EncounterForm(RequestId);
             return View(result);
         }
-        public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model, int id)
+        [HttpPost]
+        public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                await _admin.EncounterFormSaveChanges(model, id);
-                return RedirectToAction("EncounterForm");
+                var result=await _admin.EncounterFormSaveChanges(model);
+                return RedirectToAction("EncounterForm",result);
             }
             return View(model);
         }
@@ -549,7 +552,31 @@ namespace HalloDoc.Controllers
 
             return RedirectToAction("Dashboard");
         }
-            #endregion
+        #endregion
+        #endregion
 
+        #region provider
+        public  IActionResult ProviderInformation()
+        {
+            var result =  _admin.ProviderInformation();
+            return View();
+        }
+        public async Task<IActionResult> CreateProvider()
+        {
+            var result =await _admin.Createprovider();
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult CreateProvider(ProviderViewModel model)
+        {
+            var result =  _admin.CreateProvider(model);
+            return RedirectToAction("Dashboard");
+        }
+        public IActionResult EditProvider()
+        {
+            //var result = _admin.ProviderInformation();
+            return View();
+        }
+        #endregion
     }
 }

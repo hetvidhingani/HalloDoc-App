@@ -10,7 +10,10 @@ namespace HalloDoc.Repository.IRepository
     {
         IQueryable<T> GetAll();
         Task AddAsync(T entity);
+
+       // void AddAsyncs(T entity);
         Task UpdateAsync(T entity);
+      //  void UpdateAsyncs(T entity);
         Task<T> GetByIdAsync(object id);
         void SetTempData(string key, object value);
         T GetTempData<T>(string key);

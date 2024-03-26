@@ -19,18 +19,53 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
+        //public async Task AddAsync(T entity)
+        //{
+        //    if (_context == null)
+        //    {
+        //        throw new InvalidOperationException("The context has been disposed.");
+        //    }
+        //    try
+        //    {
+        //        _context.Add(entity);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return;
+        //    }
+        //}
+
+        //public void AddAsyncs(T entity)
+        //{
+        //    if (_context == null)
+        //    {
+        //        throw new InvalidOperationException("The context has been disposed.");
+        //    }
+        //    try
+        //    {
+        //        _context.Add(entity);
+        //         _context.SaveChanges();
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //}
         public async Task AddAsync(T entity)
         {
+           
                 _context.Add(entity);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
+            
         }
-      
         public async Task UpdateAsync(T entity)
         {
             _context.Update(entity);
-            await _context.SaveChangesAsync();
+             await _context.SaveChangesAsync();
 
         }
+      
         public async Task<T> GetByIdAsync(object id)
         {
             return await _context.Set<T>().FindAsync(id);

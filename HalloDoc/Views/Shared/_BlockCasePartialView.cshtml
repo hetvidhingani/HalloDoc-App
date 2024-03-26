@@ -55,6 +55,7 @@
             data: data
         })
             .done(function (response) {
+                if (response.success) { 
                 let timerInterval;
                 Swal.fire({
                     title: "Successfull",
@@ -66,15 +67,8 @@
                 }).then(function () {
                     window.location.href = '@Url.Action("Dashboard", "Admin")';
                 });
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                Swal.fire({
-                    title: "Error",
-                    text: "Error cancelling case: " + textStatus + ": " + errorThrown,
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
-            });
+            }})
+           
     });
 
 </script>
