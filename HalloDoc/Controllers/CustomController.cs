@@ -30,7 +30,14 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-
+        public IActionResult AdminForgotPassword()
+        {
+            return View("~/Views/Admin/AdminForgotPassword.cshtml");
+        }
+        public IActionResult AdminResetPassword()
+        {
+            return View("~/Views/Admin/AdminResetPassword.cshtml");
+        }
         public IActionResult ResetPassword()
         {
             return View();
@@ -99,18 +106,35 @@ namespace HalloDoc.Controllers
      
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async IActionResult ResetPasswordRequest(string email)
+        public  IActionResult ResetPasswordRequest(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
                 return Json(new { success = false, message = "Please enter an email address" });
             }
-            AspNetUserRole roles = await _customService.getIfExist(email);
+            
             var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-            _patient.SendEmail(email, link, subject, body);
+            _customService.SendEmail(email, link, subject, body);
            
+            return Json(new { success = true, message = "A password reset link has been sent to your email." });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AdminResetPasswordRequest(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new { success = false, message = "Please enter an email address" });
+            }
+
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/AdminResetPassword/" + email;
+            var subject = "Reset Account Password";
+            var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
+            _customService.SendEmail(email, link, subject, body);
+
             return Json(new { success = true, message = "A password reset link has been sent to your email." });
         }
 
@@ -128,7 +152,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
             var subject = "Create Account";
             var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
-            _patient.SendEmail(req.Email, link, subject, body);
+            _customService.SendEmail(req.Email, link, subject, body);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
@@ -198,15 +222,11 @@ namespace HalloDoc.Controllers
             return View();
 
         }
-        public IActionResult AdminForgotPassword()
-        {
-            return View();
-
-        }
+       
         [HttpPost]
         public async Task<IActionResult> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
-            var result = await _patient.PatientForgotPassword(createAccountViewModel);
+            var result = await _customService.PatientForgotPassword(createAccountViewModel);
             string Message = await _patient.GetTempData<string>("Message");
             ViewBag.Message = Message;
             return View(result);

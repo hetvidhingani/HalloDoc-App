@@ -16,13 +16,15 @@ namespace HalloDoc.Controllers
         private readonly ApplicationDbContext _context;
         private IAdminService _admin;
         private IJwtService _jwtService;
+        private ICustomService _customService;
 
 
-        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService)
+        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService,ICustomService customService)
         {
             _context = context;
             _admin = admin;
             _jwtService = jwtService;
+            _customService = customService;
         }
 
         #region Logout
@@ -324,7 +326,7 @@ namespace HalloDoc.Controllers
         {
             HttpContext.Session.SetInt32("reqID", Id);
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            var result = await _admin.ViewDocument(Id);
+            var result = await _customService.ViewDocument(Id);
             return View(result);
         }
 
@@ -332,14 +334,14 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(IFormFile a, int Id)
         {
-            await _admin.ViewDocument(a, Id);
+            await _customService.ViewDocument(a, Id);
             return RedirectToAction("ViewUploads");
         }
 
-        public async Task<FileResult> DownloadFile(string name, string filename)
+        public async Task<FileResult> DownloadFile(int fileId)
         {
-
-            RequestWiseFile reqw = await _admin.DownloadFile(name);
+            string filename = "";
+            RequestWiseFile reqw = await _customService.DownloadFile(fileId);
             if (reqw != null)
             {
                 filename = reqw.FileName;
@@ -355,7 +357,7 @@ namespace HalloDoc.Controllers
         {
             if (documentValues.Count() > 0)
             {
-                byte[] fileBytes = await _admin.DownloadAllByChecked(documentValues);
+                byte[] fileBytes = await _customService.DownloadAllByChecked(documentValues);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
 
@@ -364,7 +366,7 @@ namespace HalloDoc.Controllers
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
 
-                byte[] fileBytes = await _admin.DownloadAll(documentValues, requestid);
+                byte[] fileBytes = await _customService.DownloadAll(documentValues, requestid);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
             }
@@ -471,7 +473,7 @@ namespace HalloDoc.Controllers
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string>attachmentFilePaths = null;
 
-                _admin.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
+                _customService.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
                 return RedirectToAction("Dashboard", "Admin");
@@ -542,7 +544,7 @@ namespace HalloDoc.Controllers
                 var message = "Please Find Attachments";
                 var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                 _admin.SendEmail(userEmail,link, subject, message, attachmentFilePaths);
+                 _customService.SendEmail(userEmail,link, subject, message, attachmentFilePaths);
             }
 
             return RedirectToAction("Dashboard");

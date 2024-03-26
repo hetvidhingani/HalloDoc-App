@@ -652,6 +652,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Uploads
+
         public bool IsDeleted(BitArray? isDeleted)
         {
             if (isDeleted == null)
@@ -669,102 +670,6 @@ namespace HalloDoc.Services.Services
 
             return false;
         }
-        public async Task<DashboardViewModel> ViewDocument(int Id)
-        {
-            DashboardViewModel viewModel = new DashboardViewModel();
-            Request req = await _requestRepository.GetByIdAsync(Id);
-            RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
-            viewModel.FirstName = requestClient.FirstName;
-            viewModel.RequstId = Id;
-            viewModel.Email = requestClient.Email;
-            viewModel.RequestWiseFiles = (
-                                         from rwf in _requestwisefileRepository.GetAll()
-                                         where rwf.RequestId == Id && rwf.IsDeleted == null
-                                         select new RequestWiseFile
-                                         {
-                                             CreatedDate = rwf.CreatedDate,
-                                             FileName = rwf.FileName,
-                                             RequestWiseFileId = rwf.RequestWiseFileId
-
-                                         }).ToList();
-            return viewModel;
-        }
-        public async Task<string> ViewDocument(IFormFile a, int Id)
-        {
-            if (a != null && a.Length > 0)
-            {
-                var fileName = Path.GetFileName(a.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    a.CopyTo(fileStream);
-                }
-                var newRequestWiseFile = new RequestWiseFile
-                {
-                    RequestId = Id,
-                    FileName = fileName,
-                    CreatedDate = DateTime.Now,
-                    AdminId = 1,
-                };
-                await _requestwisefileRepository.AddAsync(newRequestWiseFile);
-            }
-            return "";
-        }
-
-        public async Task<RequestWiseFile> DownloadFile(string fileId)
-        {
-            RequestWiseFile reqw = await _requestwisefileRepository.GetByIdAsync(fileId);
-
-            return reqw;
-        }
-
-        public async Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues)
-        {
-            //selectedFiles = selectedFiles.Distinct();
-
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-                {
-                    foreach (var file in documentValues)
-                    {
-                        var temp = await _requestwisefileRepository.GetByIdAsync(file);
-                        var fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot/uploads/", temp.FileName);
-                        byte[] fileBytes = System.IO.File.ReadAllBytes(fullPath);
-
-                        var zipEntry = zipArchive.CreateEntry(temp.FileName);
-                        using (var zipEntryStream = zipEntry.Open())
-                        {
-                            zipEntryStream.Write(fileBytes, 0, fileBytes.Length);
-                        }
-                    }
-                }
-                memoryStream.Seek(0, SeekOrigin.Begin);
-
-                return memoryStream.ToArray();
-            }
-        }
-        public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
-        {
-            var filesRow = await _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
-            MemoryStream ms = new MemoryStream();
-            using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
-                filesRow.ForEach(file =>
-                {
-                    var path = "wwwroot\\uploads\\" + Path.GetFileName(file.FileName);
-                    ZipArchiveEntry zipEntry = zip.CreateEntry(file.FileName);
-                    using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
-                    using (Stream zipEntryStream = zipEntry.Open())
-                    {
-                        fs.CopyTo(zipEntryStream);
-                    }
-                });
-            ms.Seek(0, SeekOrigin.Begin);
-
-            return ms.ToArray();
-        }
-
         public async Task<object> DeleteFile(int fileID, int? reqID)
         {
             if(fileID==0)

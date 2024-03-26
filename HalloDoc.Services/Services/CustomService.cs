@@ -47,6 +47,7 @@ namespace HalloDoc.Services.Services
         private readonly IEncounterRepository _encounterRepository;
         private readonly IRequestClosedRepository _requestClosedRepository;
         private readonly IAdminRegionRepository _adminRegionRepository;
+        private readonly IAspNetUserRolesRepository _aspNetUserRolesRepository;
 
         public CustomService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -57,7 +58,7 @@ namespace HalloDoc.Services.Services
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
-                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository)
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository,IAspNetUserRolesRepository aspNetUserRolesRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -79,18 +80,9 @@ namespace HalloDoc.Services.Services
             _encounterRepository = encounterRepository;
             _requestClosedRepository = requestClosedRepository;
             _adminRegionRepository = adminRegionRepository;
+            _aspNetUserRolesRepository = aspNetUserRolesRepository;
         }
         #endregion
-
-        #region common methods
-        public async Task<object> getIfExist(object data)
-        {
-            var result = await _adminRegionRepository.getRoleID(data);
-            return result;
-        }
-        #endregion
-
-
 
         #region Send Mail
         public string SendEmail(string email, string link, string subject, string body, List<string> attachmentFilePath = null)
@@ -141,23 +133,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Uploads / View Documents
-        public bool IsDeleted(BitArray? isDeleted)
-        {
-            if (isDeleted == null)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < isDeleted.Length; i++)
-            {
-                if (isDeleted[i])
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+       
         public async Task<DashboardViewModel> ViewDocument(int Id)
         {
             DashboardViewModel viewModel = new DashboardViewModel();
@@ -201,7 +177,7 @@ namespace HalloDoc.Services.Services
             return "";
         }
 
-        public async Task<RequestWiseFile> DownloadFile(string fileId)
+        public async Task<RequestWiseFile> DownloadFile(int fileId)
         {
             RequestWiseFile reqw = await _requestwisefileRepository.GetByIdAsync(fileId);
 
@@ -257,6 +233,35 @@ namespace HalloDoc.Services.Services
 
         #region PatientForgotPassword
         public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
+        {
+            AspNetUser myUser = await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
+
+            if (myUser != null)
+            {
+                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
+                {
+                    myUser.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(createAccountViewModel.ConfirmPassword);
+                    await _aspnetuserRepository.UpdateAsync(myUser);
+                    _aspnetuserRepository.SetTempData("Message", "Password Updated");
+                    return "RegisterdPatientLogin";
+                }
+                else
+                {
+                    _aspnetuserRepository.SetTempData("Message", "Password and Confirm Password must be same!!!");
+
+                }
+            }
+            else
+            {
+                _aspnetuserRepository.SetTempData("Message", "Invalid User Name");
+            }
+            return "AdminLogin";
+
+        }
+        #endregion
+
+        #region Admin Forgot Password
+        public async Task<string> AdminResetPassword(CreateAccountViewModel createAccountViewModel)
         {
             AspNetUser myUser = await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
 

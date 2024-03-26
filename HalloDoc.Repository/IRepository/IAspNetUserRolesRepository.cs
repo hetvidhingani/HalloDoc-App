@@ -9,5 +9,6 @@ namespace HalloDoc.Repository.IRepository
 {
   public interface IAspNetUserRolesRepository:IGenericRepository<AspNetUserRole>
     {
+        
     }
 }

@@ -33,11 +33,7 @@ namespace HalloDoc.Services.IServices
         Task<object> BlockCase(CancelCaseViewModel viewModel, int id);
         Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id);
         Task<List<Physician>> GetPhysiciansByRegion(int regionId);
-        Task<DashboardViewModel> ViewDocument(int Id);
-        Task<string> ViewDocument(IFormFile a, int Id);
-        Task<RequestWiseFile> DownloadFile(string name);
-        Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
-        Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
+      
         Task<object> DeleteFile(int name,int? reqID);
         Task<object> SendOrder( int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);

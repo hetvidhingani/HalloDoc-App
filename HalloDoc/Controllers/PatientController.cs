@@ -23,11 +23,12 @@ namespace HalloDoc.Controllers
     {
         private readonly ApplicationDbContext _context;
         public IPatientService _patient;
-
-        public PatientController(ApplicationDbContext context, IPatientService patient)
+        public ICustomService _customService;
+        public PatientController(ApplicationDbContext context, IPatientService patient,ICustomService customService)
         {
             _context = context;
             _patient = patient;
+            _customService=customService;
         }
        
         #region view
@@ -98,20 +99,20 @@ namespace HalloDoc.Controllers
         {
             HttpContext.Session.SetInt32("reqID", Id);
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            var result =await  _patient.ViewDocument(Id);
+            var result =await  _customService.ViewDocument(Id);
             return View(result);
         }
         [HttpPost]
         public async Task<IActionResult> ViewDocument(IFormFile a, int Id)
         {
-            await _patient.ViewDocument(a, Id);
+            await _customService.ViewDocument(a, Id);
             return RedirectToAction("ViewDocument");
         }
 
         public async Task<FileResult> DownloadFile(int fileId)
         {
             string filename = "";
-            RequestWiseFile reqw = await _patient.DownloadFile(fileId);
+            RequestWiseFile reqw = await _customService.DownloadFile(fileId);
             if (reqw != null)
             {
                 filename = reqw.FileName;
@@ -127,7 +128,7 @@ namespace HalloDoc.Controllers
         {
             if (documentValues.Count() > 0)
             {
-                byte[] fileBytes = await _patient.DownloadAllByChecked(documentValues);
+                byte[] fileBytes = await _customService.DownloadAllByChecked(documentValues);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
 
@@ -136,7 +137,7 @@ namespace HalloDoc.Controllers
             {
                 int? requestid = HttpContext.Session.GetInt32("reqID");
 
-                byte[] fileBytes = await _patient.DownloadAll(documentValues, requestid);
+                byte[] fileBytes = await _customService.DownloadAll(documentValues, requestid);
                 return File(fileBytes, "application/zip", "download.zip");
             }
         }
