@@ -31,7 +31,7 @@ public partial class Role
     public DateTime? ModifiedDate { get; set; }
 
     [Column(TypeName = "bit(1)")]
-    public BitArray IsDeleted { get; set; } = null!;
+    public BitArray? IsDeleted { get; set; }
 
     [Column("IP")]
     [StringLength(20)]

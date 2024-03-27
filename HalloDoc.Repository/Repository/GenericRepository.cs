@@ -70,6 +70,10 @@ namespace HalloDoc.Repository.Repository
         {
             return await _context.Set<T>().FindAsync(id);
         }
+        public  T GetById(object id)
+        {
+            return  _context.Set<T>().Find(id);
+        }
         public void SetTempData(string key, object value)
         {
             _tempData[key] = value;

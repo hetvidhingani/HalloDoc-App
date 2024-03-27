@@ -37,6 +37,9 @@ builder.Services.AddScoped<IRequestClosedRepository, RequestClosedRepository>();
 builder.Services.AddScoped<IAdminRegionRepository, AdminRegionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPhysicianNotificationRepository,PhysicianNotificationRepository>();
+builder.Services.AddScoped<IStatusRepository, StatusRepository>();
+
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IJwtService, JwtService>();

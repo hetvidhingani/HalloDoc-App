@@ -569,6 +569,20 @@ namespace HalloDoc.Controllers
             var result = _admin.ProviderInformation(RegionId);
             return PartialView("_ProviderTable",result);
         }
+
+        public  IActionResult ContectProvider(int id,string message)
+        {
+             var result =  _admin.ContectProvider(id);
+
+            var link = "";
+            var subject = "Review Agreement";
+            var body = message;
+            List<string> attachmentFilePaths = null;
+
+            _customService.SendEmail(result.Email, link, subject, body, attachmentFilePaths);
+
+            return RedirectToAction("ProviderInformation");
+        }
         #endregion
 
         #region Create Provider
@@ -585,12 +599,13 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-
+        #region edit provider
         public async Task<IActionResult> EditProvider(int id)
         {
             var result =await _admin.EditProvider(id);
             return View(result);
         }
+        #endregion
         #endregion
     }
 }

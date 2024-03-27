@@ -87,6 +87,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Smslog> Smslogs { get; set; }
 
+    public virtual DbSet<Status> Statuses { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -421,6 +423,13 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<Smslog>(entity =>
         {
             entity.HasKey(e => e.SmslogId).HasName("SMSLog_pkey");
+        });
+
+        modelBuilder.Entity<Status>(entity =>
+        {
+            entity.HasKey(e => e.Statusid).HasName("status_pkey");
+
+            entity.Property(e => e.Statusid).ValueGeneratedNever();
         });
 
         modelBuilder.Entity<User>(entity =>

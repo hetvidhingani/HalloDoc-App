@@ -13,294 +13,313 @@
             </a>
         </div>
         <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="PhysicianId" />
 
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PhysicianId" />
+                <h3>Account Information</h3>
 
-            <h3>Account Information</h3>
+                <div class="row formrow ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="UserName" type="text" class="form-control " placeholder=" " readonly>
+                            <label for=" ">UserName</label>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
 
-            <div class="row formrow ">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="UserName" type="text" class="form-control" placeholder=" " readonly>
-                        <label for=" ">UserName</label>
-                        <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Password" type="password" class="form-control " placeholder=" " readonly>
+                            <label for=" ">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
 
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Password" type="password" class="form-control" placeholder=" ">
-                        <label for=" ">Password</label>
-                        <span asp-validation-for="Password" class="text-danger"></span>
+            <form id="form1" method="post" data-form-id="1">
+                <div class="row formrow ">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select form-select-sm  edit4" style="height:55px;" aria-label="Default select example" aria-height="5vh" asp-for="statusId" disabled>
+                            <option value="0" selected disabled>Status</option>
+
+                            @foreach (var status in Model.status)
+                            {
+
+                                <option value="@status.Statusid">@status.Statusname</option>
+                            }
+                        </select>
+                        <span asp-validation-for="statusId" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select form-select-sm  edit4" style="height:55px;" aria-label="Default select example" aria-height="5vh" asp-for="RoleId" disabled>
+                            <option value="0" selected disabled>Role</option>
+
+                            @foreach (var role in Model.Role)
+                            {
+                                <option value="@role.RoleId">@role.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+                    </div>
+               </div>
+                <div class="d-flex justify-content-end">
+                  
+                    <button class="btn btn-info edit-button4" id="edit-button4" type="button">Edit</button>
+                    <button class="btn btn-info savebtn4 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-danger cancelbtn4 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
+
+
+                    <button class="btn btn-outline-info ResetPassword mx-1">Reset Password</button>
+                </div>
+
+            </form>
+
+            <form id="form2" method="post">
+                <h3> Physician Information</h3>
+                <input type="hidden" asp-for="PhysicianId" />
+                <div class="row formrow ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="FirstName" type="text" class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="LastName" type="text" class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email"
+                                   id="Email" type="email" autocomplete="off"
+                                   class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit3" readonly />
+
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group">
+                            <input asp-for="MedicalLicense"
+                                   type="text" autocomplete="off"
+                                   class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">MedicalLicense</label>
+                            <span asp-validation-for="MedicalLicense" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group">
+                            <input asp-for="NPINumber"
+                                   onblur="AlertName()" type="number" autocomplete="off"
+                                   class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">NPInumber</label>
+                            <span asp-validation-for="NPINumber" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group">
+                            <input asp-for="SyncEmail"
+                                   id="suncEmail" type="email" autocomplete="off"
+                                   class="form-control edit3" placeholder=" " readonly>
+                            <label for=" ">Syncronization Email Address</label>
+                            <span asp-validation-for="SyncEmail" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                
+
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info edit-button3" id="edit-button3" type="button">Edit</button>
+                    <button class="btn btn-info savebtn3 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-danger cancelbtn3 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
+
+                </div>
+
+            </form>
+
+            <form id="form3" method="post">
+                <h3> Mailing & Billing Information</h3>
+
+                <div class="row formrow">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Address1" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Address1</label>
+                            <span asp-validation-for="Address1" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Address2" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Address2 </label>
+                            <span asp-validation-for="Address2" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="City" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+
+                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.Regions)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
 
                     </div>
-                </div>
-                @foreach (var status in Model.physicians)
-                {
-                    var data="";
-                    @if (status.Status == 3)
-                    {
-                         data = "Active";
-                    }
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Status" type="text" class="form-control" placeholder=" " value="@data" readonly>
-                            <label for=" ">Status</label>
-                            <span asp-validation-for="Status" class="text-danger"></span>
+                            <input asp-for="Zip" type="text" class="form-control edit2" placeholder=" " readonly>
+                            <label for=" ">Zip code</label>
+                            <span asp-validation-for="Zip" class="text-danger"></span>
 
                         </div>
                     </div>
-                }
-                @* <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="form-floating form-group">
-                <input asp-for="Status" type="text" class="form-control" placeholder=" " readonly>
-                <label for=" ">status</label>
-                <span asp-validation-for="Status" class="text-danger"></span>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit2" readonly />
 
-                </div>
-                </div> *@
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleId" disabled>
-                        <option value="0" selected disabled>Role</option>
-
-                        @foreach (var role in Model.Role)
-                        {
-                            <option value="@role.RoleId">@role.Name</option>
-                        }
-                    </select>
-                    <span asp-validation-for="RoleId" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-info mx-1">Edit</button>
-                <button class="btn btn-info mx-1">Save</button>
-                <button class="btn btn-danger">Cancle</button>
-
-                <button class="btn btn-outline-info ResetPassword mx-1">Reset Password</button>
-            </div>
-
-
-
-            <h3> Physician Information</h3>
-            <input type="hidden" asp-for="PhysicianId" />
-            <div class="row formrow ">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="FirstName" type="text" class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">First Name</label>
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
-
+                        </div>
+                        <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="LastName" type="text" class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">Last Name</label>
-                        <span asp-validation-for="LastName" class="text-danger"></span>
 
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Email"
-                               id="Email" onblur="AlertName()" type="email" autocomplete="off"
-                               class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">Email</label>
-                        <span asp-validation-for="Email" class="text-danger"></span>
-
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group  border">
-                        <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
-
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group">
-                        <input asp-for="MedicalLicense"
-                               id="Email" onblur="AlertName()" type="email" autocomplete="off"
-                               class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">MedicalLicense</label>
-                        <span asp-validation-for="MedicalLicense" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group">
-                        <input asp-for="NPINumber"
-                               id="Email" onblur="AlertName()" type="email" autocomplete="off"
-                               class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">NPInumber</label>
-                        <span asp-validation-for="NPINumber" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group">
-                        <input asp-for="SyncEmail"
-                               id="Email" onblur="AlertName()" type="email" autocomplete="off"
-                               class="form-control edit" placeholder=" " readonly>
-                        <label for=" ">Syncronization Email Address</label>
-                        <span asp-validation-for="SyncEmail" class="text-danger"></span>
-
-                    </div>
-                </div>
-                @*   <div class="col-lg-6 col-md-6 col-sm-12 ">
-                <div class="form-floating form-group  border">
-                <input asp-for="SyncEmail" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
-
-                <span asp-validation-for="SyncEmail" class="text-danger"></span>
-                </div>
-                </div> *@
-
-            </div>
-
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-info" id="edit-button" type="button">Edit</button>
-                <button class="btn btn-info savebtn SaveAdminInfo" style="display:none;" type="submit" disabled>Save</button>
-            </div>
-
-
-
-            <h3> Mailing & Billing Information</h3>
-
-            <div class="row formrow">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Address1" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">Address1</label>
-                        <span asp-validation-for="Address1" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Address2" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">Address2 </label>
-                        <span asp-validation-for="Address2" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="City" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">City </label>
-                        <span asp-validation-for="City" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
-
-                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
-                        <option value="0" selected disabled>State</option>
-
-                        @foreach (var region in Model.Regions)
-                        {
-                            <option value="@region.RegionId">@region.Name</option>
-                        }
-                    </select>
-                    <span asp-validation-for="RegionId" class="text-danger"></span>
 
                 </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
+                    <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-danger cancelbtn2 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Zip" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">Zip code</label>
-                        <span asp-validation-for="Zip" class="text-danger"></span>
-
-                    </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group  border">
-                        <input asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit2" readonly />
+            </form>
 
-                    </div>
-                    <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
-                </div>
+            <form id="form4" method="post">
 
+                <h3> Provider Profile</h3>
 
-            </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
-                <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
-            </div>
+                <div class="row formrow">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="BusinessName" type="text" class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Business Name</label>
+                            <span asp-validation-for="BusinessName" class="text-danger"></span>
 
-            <h3> Provider Profile</h3>
-
-            <div class="row formrow">
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="BusinessName" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">Business Name</label>
-                        <span asp-validation-for="BusinessName" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="BusinessWebsite" type="text" class="form-control edit2" placeholder=" " readonly>
-                        <label for=" ">Business Website </label>
-                        <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
-
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <div class="input-group mb-3">
-                            <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton">
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
-                    <div class="form-floating form-group ">
-                        <textarea asp-for="AdminNotes" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
-                        <label class="form-label" for="textAreaExample2">
-                            Admin Notes
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="BusinessWebsite" type="text" class="form-control edit" placeholder=" " readonly>
+                            <label for=" ">Business Website </label>
+                            <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
 
-                        </label>
-                        <span asp-validation-for="AdminNotes" class="text-danger"></span>
+                        </div>
                     </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <div class="input-group mb-3">
+                                <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex">
+                        <div class="form-floating form-group col-9">
+                            <div class="input-group mb-3">
+                                <input asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control" id="UploadButton2" disabled>
+                            </div>
+
+                        </div>
+                        <div class="col-1 mx-1">
+                            <input type="button" id="upload" hidden />
+                            <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.7rem;font-family: sans-serif;border-radius: 0.4rem;cursor: pointer;">Create</label>
+
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
+                        <div class="form-floating form-group ">
+                            <textarea asp-for="AdminNotes" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                            <label class="form-label" for="textAreaExample2">
+                                Admin Notes
+
+                            </label>
+                            <span asp-validation-for="AdminNotes" class="text-danger"></span>
+                        </div>
+                    </div>
+
+
+
                 </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info edit-button" id="edit-button" type="button">Edit</button>
+                    <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-danger cancelbtn6 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
+                </div>
+            </form>
 
-
-            </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
-                <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
-            </div>
             <hr />
             <h3> Onboarding</h3>
 
             <div class="row formrow">
-                <div class="col-12 d-flex justify-content-between">
-                    <div>Independent Contractor Agreement</div>
-                    <div>
-                        <button class="btn btn-info" type="file" style="position:absolute;right:30%">Upload</button>
+                <div class="col-12 d-flex  align-items-center">
+                    <div class="col-6">Independent Contractor Agreement</div>
+                    <div class="col-6">
+                        <input type="file" id="upload" hidden />
+                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
                     </div>
                 </div>
                 <div class="col-12 d-flex justify-content-between">
                     <div>Background Check</div>
-                    <div>
-                        <button class="btn btn-info" type="file" style="position:absolute;right:30%">Upload</button>
+                    <div class="col-6">
+                        <input type="file" id="upload" hidden />
+                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
                     </div>
                 </div>
                 <div class="col-12 d-flex justify-content-between">
                     <div>HIPPA Compliance</div>
-                    <div>
-                        <button class="btn btn-info" type="file" style="position:absolute;right:30%">Upload</button>
+                    <div class="col-6">
+                        <input type="file" id="upload" hidden />
+                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
                     </div>
                 </div>
                 <div class="col-12 d-flex justify-content-between">
                     <div>Non - disclosure Agreement</div>
-                    <div>
-                        <button class="btn btn-info" type="file" style="position:absolute;right:30%">Upload</button>
+                    <div class="col-6">
+                        <input type="file" id="upload" hidden />
+                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
                     </div>
                 </div>
 
@@ -319,13 +338,104 @@
 
 <script>
 
+
+    // save-edit button
+   
+    var editButton = document.getElementById("edit-button");
+    editButton.addEventListener("click", function () {
+        var form = editButton.closest("form");
+        var inputs = form.querySelectorAll(".edit");
+        var saveButton = form.querySelector(".savebtn");
+        var cancleButton = form.querySelector(".cancelbtn6");
+
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+        });
+
+        editButton.style.display = "none";
+        saveButton.removeAttribute("disabled");
+        saveButton.style.display = "block";
+        cancleButton.removeAttribute("disabled");
+        cancleButton.style.display = "block";
+
+
+    });
+    var editButton2 = document.getElementById("edit-button2");
+    editButton2.addEventListener("click", function () {
+
+        var form1 = editButton2.closest("form");
+        var inputs = form1.querySelectorAll(".edit2");
+        var saveButton1 = form1.querySelector(".savebtn2");
+        var cancleButton = form1.querySelector(".cancelbtn2");
+
+
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+
+
+        });
+        editButton2.style.display = "none";
+        saveButton1.removeAttribute("disabled");
+        saveButton1.style.display = "block";
+        cancleButton.removeAttribute("disabled");
+        cancleButton.style.display = "block";
+
+    });
+    var editButton3 = document.getElementById("edit-button3");
+    editButton3.addEventListener("click", function () {
+
+        var form2 = editButton3.closest("form");
+        var inputs = form2.querySelectorAll(".edit3");
+        var saveButton2 = form2.querySelector(".savebtn3");
+        var cancleButton = form2.querySelector(".cancelbtn3");
+
+
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+
+
+        });
+        editButton3.style.display = "none";
+        saveButton2.removeAttribute("disabled");
+        saveButton2.style.display = "block";
+        cancleButton.removeAttribute("disabled");
+        cancleButton.style.display = "block";
+
+    });
+    //form1
+    var editButton4 = document.getElementById("edit-button4");
+    editButton4.addEventListener("click", function () {
+
+        var form4 = editButton4.closest("form");
+        var inputs = form4.querySelectorAll(".edit4");
+        var saveButton4 = form4.querySelector(".savebtn4");
+        var cancleButton= form4.querySelector(".cancelbtn4");
+
+
+        inputs.forEach(function (input) {
+            input.removeAttribute("readonly");
+            input.removeAttribute("disabled");
+
+
+        });
+        editButton4.style.display = "none";
+        saveButton4.removeAttribute("disabled");
+        saveButton4.style.display = "block";
+        cancleButton.removeAttribute("disabled");
+        cancleButton.style.display = "block";
+
+    });
+
     //dark theme
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
+
     //phone number flag
     const phoneInputField = document.querySelector("#phone");
-
     const phoneInput = window.intlTelInput(phoneInputField, {
         autoInsertDialCode: true,
         fixDropdownWidth: true,
@@ -340,7 +450,6 @@
     });
     $('#phone').attr('value', "+91");
     const phoneInputField1 = document.querySelector("#phone2");
-
     const phoneInput1 = window.intlTelInput(phoneInputField1, {
         autoInsertDialCode: true,
         fixDropdownWidth: true,
@@ -353,45 +462,6 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 
     });
-    $('#phone').attr('value', "+91");
+    $('#phone2').attr('value', "+91");
 
-
-    //save-edit button
-    var editButton = document.getElementById("edit-button");
-    editButton.addEventListener("click", function () {
-        var form = editButton.closest("form");
-        var inputs = form.querySelectorAll(".edit");
-        var saveButton = form.querySelector(".savebtn");
-
-        inputs.forEach(function (input) {
-            input.removeAttribute("readonly");
-            input.removeAttribute("disabled");
-
-        });
-        saveButton.removeAttribute("disabled");
-        saveButton.style.display = "block";
-
-        editButton.style.display = "none";
-
-    });
-    var editButton2 = document.getElementById("edit-button2");
-    editButton2.addEventListener("click", function () {
-
-        var form1 = editButton2.closest("form");
-        var inputs = form1.querySelectorAll(".edit2");
-        var saveButton1 = form1.querySelector(".savebtn2");
-
-
-        inputs.forEach(function (input) {
-            input.removeAttribute("readonly");
-            input.removeAttribute("disabled");
-
-
-        });
-        saveButton1.removeAttribute("disabled");
-        saveButton1.style.display = "block";
-
-        editButton2.style.display = "none";
-
-    });
 </script>

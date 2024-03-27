@@ -63,5 +63,6 @@ namespace HalloDoc.Services.IServices
         ProviderInfoViewModel ProviderInformation(int RegionId);
         object RegionList();
         Task<object> EditProvider(int physicianID);
+        Physician ContectProvider(int id);
     }
 }

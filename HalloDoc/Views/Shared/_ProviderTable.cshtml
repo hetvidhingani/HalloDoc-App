@@ -32,11 +32,19 @@
                             }
                         }
                     </td>
-                    <td>Otto</td>
-                    <td>Otto</td>
+                    <td>Un Available</td>
+                    <td>
+                        @foreach (var status in Model.status)
+                        {
+                            @if (status.Statusid == u.Status)
+                            {
+                                @status.Statusname
+                            }
+                        }
+                    </td>
                     <td>
                         <div class="d-flex">
-                            <button class="btn btn-outline-info mx-1 contactProvider" data-bs-toggle="modal" data-bs-target="#contact">Contact</button>
+                            <button class="btn btn-outline-info mx-1 contactProvider" data-bs-toggle="modal" data-bs-target="#contact" id="@u.PhysicianId">Contact</button>
                             <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
 
                         </div>
@@ -48,3 +56,90 @@
         </tbody>
     </table>
 </div>
+@* model *@
+<div class="modal fade" id="contact" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Your Provider</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="contactmodel" asp-controller="Admin" asp-action="ContectProvider">
+                <div class="modal-body">
+                    <small>Choose communication to send message.</small>
+                    <input type="hidden" asp-for="PhysicianId" />
+                    
+                    <div class=" d-flex justify-content-center flex-column  ">
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                SMS
+                            </label>
+
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Email
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Both
+                            </label>
+                        </div>
+                          <div class="form-floating mt-1 form-group  rounded-3">
+                        <textarea asp-for="message" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <label class="form-label" for="textAreaExample2">
+                        Message
+                        </label>
+                        <span asp-validation-for="message" class="text-danger"></span>
+
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-end">
+
+                    <button class="createNewReqBtn contactProvidersend submitBtn" type="submit">
+                        Send
+                    </button>
+
+                    <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                        Cancle
+                    </button>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $('.contactProvider').click(function () {
+        var id = this.id;
+        $('.contactProvidersend').click(function () {
+        
+
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("ContectProvider", "Admin"))",
+                success: function (data) {
+                    
+                },
+                error: function () {
+                   
+                }
+            });
+        });
+      
+    });
+</script>

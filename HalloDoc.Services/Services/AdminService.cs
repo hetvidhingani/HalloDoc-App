@@ -47,6 +47,7 @@ namespace HalloDoc.Services.Services
         private readonly IAdminRegionRepository _adminRegionRepository;
         private readonly IRoleRepository _roleRepository;
         private readonly IPhysicianNotificationRepository _physicianNotificationRepository;
+        private readonly IStatusRepository _statusRepository;
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -58,7 +59,7 @@ namespace HalloDoc.Services.Services
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
-                               IPhysicianNotificationRepository physicianNotificationRepository)
+                               IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -82,6 +83,7 @@ namespace HalloDoc.Services.Services
             _adminRegionRepository = adminRegionRepository;
             _roleRepository = roleRepository;
             _physicianNotificationRepository = physicianNotificationRepository;
+            _statusRepository = statusRepository;
         }
         #endregion
 
@@ -1066,6 +1068,8 @@ namespace HalloDoc.Services.Services
             model.Password = asp.PasswordHash;
             model.RoleId = (int)phy.RoleId;
             model.Role = await _roleRepository.GetRoles();
+            model.statusId = (int)phy.Status;
+            model.status =  _statusRepository.GetAll().ToList();
             return model;
         }
         public object EditProvider(ProviderViewModel model, int physicianID)
@@ -1097,12 +1101,16 @@ namespace HalloDoc.Services.Services
                 Regions = _regionRepository.GetAll().ToList(),
                 Role = _roleRepository.GetRolesProvider().ToList(),
                 PhysicianNotifications = _physicianNotificationRepository.GetAll().ToList(),    
-
+                status = _statusRepository.GetAll().ToList(),
             };
 
             return data;
         }
-     
+        public Physician ContectProvider(int id)
+        {
+            return  _physicianRepository.GetById(id);
+            
+        }
         #endregion
 
 

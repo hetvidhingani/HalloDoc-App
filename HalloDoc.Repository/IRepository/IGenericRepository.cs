@@ -20,6 +20,6 @@ namespace HalloDoc.Repository.IRepository
         string EncodePasswordToBase64(string password);
         string DecodeFrom64(string encodedData);
 
-
+        T GetById(object id);
     }
 }

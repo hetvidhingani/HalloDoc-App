@@ -21,8 +21,12 @@ namespace HalloDoc.Entities.ViewModels
         public List<Region>? Regions { get; set; }
         public int PhysicianId { get; set; }
         public List<Physician> physicians { get; set; }
-        public List<ProviderInfoViewModel> Providers { get; set; }
+        public int statusId { get; set; }
+        public List<Status>? status { get; set; }
+
+        public string message { get; set; }
         public List<PhysicianNotification> PhysicianNotifications { get; set; }
+        public List<ProviderInfoViewModel> Providers { get; set; }
 
     }
 }

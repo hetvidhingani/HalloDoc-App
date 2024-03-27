@@ -79,7 +79,8 @@ namespace HalloDoc.Entities.ViewModels
         public string? AdminNotes { get; set; }
         public string Name { get; set; }
         public string onCallStatus { get; set; }
-        public string status { get; set; }
+        public int statusId { get; set; }
+        public List<Status>? status { get; set; }
         public List<ProviderViewModel> Providers { get; set; }
         public string RegionName { get; set; }
         public string RoleName { get; set; }
