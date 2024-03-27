@@ -46,6 +46,7 @@ namespace HalloDoc.Services.Services
         private readonly IRequestClosedRepository _requestClosedRepository;
         private readonly IAdminRegionRepository _adminRegionRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IPhysicianNotificationRepository _physicianNotificationRepository;
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -56,7 +57,8 @@ namespace HalloDoc.Services.Services
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
-                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository)
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
+                               IPhysicianNotificationRepository physicianNotificationRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -79,6 +81,7 @@ namespace HalloDoc.Services.Services
             _requestClosedRepository = requestClosedRepository;
             _adminRegionRepository = adminRegionRepository;
             _roleRepository = roleRepository;
+            _physicianNotificationRepository = physicianNotificationRepository;
         }
         #endregion
 
@@ -986,7 +989,7 @@ namespace HalloDoc.Services.Services
 
         #region Provider
 
-        #region Create & Edit Provider
+        #region Create  Provider
       
         public async Task<object> Createprovider()
         {
@@ -1034,85 +1037,82 @@ namespace HalloDoc.Services.Services
             await _physicianRepository.AddAsync(physician);
             return "ViewUploads";
         }
+
+        #endregion
+
+        #region edit provider
+        public async Task<object> EditProvider( int physicianID)
+        {
+            Physician phy =await _physicianRepository.GetByIdAsync(physicianID);
+            AspNetUser asp =await _aspnetuserRepository.getById(phy.Id);
+            ProviderViewModel model = new ProviderViewModel();
+            model.FirstName= phy.FirstName;
+            model.LastName = phy.LastName;
+            model.PhoneNumber = phy.Mobile;
+            model.AdminNotes = phy.AdminNotes;
+            model.Email=phy.Email;
+            model.MedicalLicense= phy.MedicalLicense;
+            model.NPINumber = phy.Npinumber;
+            model.Address1 = phy.Address1;
+            model.Address2 = phy.Address2;
+            model.City = phy.City;
+            model.RegionId= phy.RegionId;
+            model.Regions =await  _regionRepository.GetRegions();
+            model.Zip = phy.Zip;
+            model.BillingPhoneNumber = phy.AltPhone;
+            model.BusinessName = phy.BusinessName;
+            model.BusinessWebsite = phy.BusinessWebsite;
+            model.UserName = asp.UserName;
+            model.Password = asp.PasswordHash;
+            model.RoleId = (int)phy.RoleId;
+            model.Role = await _roleRepository.GetRoles();
+            return model;
+        }
+        public object EditProvider(ProviderViewModel model, int physicianID)
+        {
+
+            return model;
+        }
         #endregion
 
         #region provider info
-        public ProviderViewModel ProviderInformation(int RegionId)
+        public object RegionList()
         {
-            List<Physician> regionwisephysician = _physicianRepository;
+            ProviderInfoViewModel viewModel = new ProviderInfoViewModel();
+            viewModel.Regions = _regionRepository.GetRegion();
+            return viewModel;
+        }
+        public  ProviderInfoViewModel ProviderInformation( int RegionId)
+        {
+            List<Physician> regionwisephysician = _physicianRepository.GetAll().ToList();
 
             if (RegionId != 0)
             {
                 regionwisephysician = regionwisephysician.Where(a => a.RegionId == RegionId).ToList();
             }
 
-            ProviderViewModel data = new ProviderViewModel()
+            ProviderInfoViewModel data = new ProviderInfoViewModel()
             {
                 physicians = regionwisephysician,
-                Regions = _context.Regions.ToList(),
-                Roles = _context.Roles.Where(u => u.AccountType == 2).ToList(),
-                physicianNotifications = _context.PhysicianNotifications.ToList()
+                Regions = _regionRepository.GetAll().ToList(),
+                Role = _roleRepository.GetRolesProvider().ToList(),
+                PhysicianNotifications = _physicianNotificationRepository.GetAll().ToList(),    
 
             };
 
             return data;
         }
-        public async Task<List<ProviderViewModel>> Provider(List<ProviderViewModel> list, int Regionid)
-
-        {
-            var tabledashboard = (from p in _physicianRepository.GetAll()
-                                  join re in _regionRepository.GetAll() on p.RegionId equals re.RegionId into regionGroup
-                                  from region in regionGroup.DefaultIfEmpty()
-                                     
-                                  join role in _roleRepository.GetAll() on p.RoleId equals role.RoleId into roleGroup
-                                  from roles in roleGroup.DefaultIfEmpty()
-                                  select new
-                                  {
-                                      p.PhysicianId,
-                                      Physician = p != null ? p.FirstName + " " + p.LastName : null,
-                                      p.Status,
-                                      p.RegionId,
-                                      p.RoleId,
-                                      regid = region.RegionId,
-                                      Regionname = region.Name,
-                                   
-                                  }).ToList();
-            var filterdata = tabledashboard.Where(e => Regionid == 0 || e.RegionId == Regionid); ;
-
-            if (filterdata.Any())
-            {
-
-                foreach (var r in filterdata)
-                {
-                    //List<adminDashboardViewModel> list = new List<adminDashboardViewModel>();
-
-                    ProviderViewModel dash = new ProviderViewModel();
-                    dash.PhysicianId = r.PhysicianId;
-                    dash.Name = r.Physician;
-                    dash.RoleId = (int)r.RoleId;
-                    //dash.toclosenotes = r.toclosenote;
-                    //dash.Region = r.Regionname;
-                    dash.Status = (int)r.Status;
-                    //dash.isdeleted = r.notistopped;
-                   // dash.phynoti = _physicianNotificationRepository.GetAll();
-                    dash.Regions =await _regionRepository.GetRegions();
-
-                    list.Add(dash);
-
-                }
-            }
-            else
-            {
-
-                list = new List<ProviderViewModel>();
-                return list;
-
-            }
-            return list;
-        }
-
-
+     
         #endregion
+
+
+
+
+
+
+
+
+
         #endregion
     }
 }

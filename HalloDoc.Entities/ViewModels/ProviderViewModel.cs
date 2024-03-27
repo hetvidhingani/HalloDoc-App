@@ -46,7 +46,7 @@ namespace HalloDoc.Entities.ViewModels
         public string City { get; set; }
 
         [Required(ErrorMessage = "Enter State Here")]
-        public List<Region> State { get; set; }
+        public List<Region>? State { get; set; }
 
         [Required(ErrorMessage = "Zip Code is Required.")]
         [RegularExpression(@"^\d{6}$", ErrorMessage = "Invalid PIN code.")]
@@ -76,12 +76,13 @@ namespace HalloDoc.Entities.ViewModels
         public string? BusinessName { get; set;}
         public string? BusinessWebsite { get; set; }
         public IFormFile? File { get; set; }
-        public string? AdminNotes { get;}
+        public string? AdminNotes { get; set; }
         public string Name { get; set; }
         public string onCallStatus { get; set; }
         public string status { get; set; }
         public List<ProviderViewModel> Providers { get; set; }
         public string RegionName { get; set; }
         public string RoleName { get; set; }
+        public List<Physician> physicians { get; set; }
     }
 }

@@ -556,11 +556,22 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region provider
-        public  IActionResult ProviderInformation()
+
+        #region provider info
+        public IActionResult ProviderInformation()
         {
-            var result =  _admin.ProviderInformation();
-            return View();
+            var result =   _admin.RegionList(); 
+            return View(result);
         }
+        [HttpPost]
+        public IActionResult ProviderInformation(int RegionId)
+        {
+            var result = _admin.ProviderInformation(RegionId);
+            return PartialView("_ProviderTable",result);
+        }
+        #endregion
+
+        #region Create Provider
         public async Task<IActionResult> CreateProvider()
         {
             var result =await _admin.Createprovider();
@@ -572,10 +583,13 @@ namespace HalloDoc.Controllers
             var result =  _admin.CreateProvider(model);
             return RedirectToAction("Dashboard");
         }
-        public IActionResult EditProvider()
+        #endregion
+
+
+        public async Task<IActionResult> EditProvider(int id)
         {
-            //var result = _admin.ProviderInformation();
-            return View();
+            var result =await _admin.EditProvider(id);
+            return View(result);
         }
         #endregion
     }

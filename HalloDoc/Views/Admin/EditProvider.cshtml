@@ -36,34 +36,41 @@
 
                     </div>
                 </div>
-                @*   @if (Model.Status == 3)
+                @foreach (var status in Model.physicians)
                 {
-                var data = "Active";
+                    var data="";
+                    @if (status.Status == 3)
+                    {
+                         data = "Active";
+                    }
 
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Status" type="text" class="form-control" placeholder=" " value="@data" readonly>
+                            <label for=" ">Status</label>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                }
+                @* <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="form-floating form-group">
-                <input asp-for="Status" type="text" class="form-control" placeholder=" " value="@data" readonly>
-                <label for=" ">Status</label>
+                <input asp-for="Status" type="text" class="form-control" placeholder=" " readonly>
+                <label for=" ">status</label>
                 <span asp-validation-for="Status" class="text-danger"></span>
 
                 </div>
-                </div>
-                } *@
+                </div> *@
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Status" type="text" class="form-control" placeholder=" " readonly>
-                        <label for=" ">status</label>
-                        <span asp-validation-for="Status" class="text-danger"></span>
+                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleId" disabled>
+                        <option value="0" selected disabled>Role</option>
 
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
-                    <div class="form-floating form-group">
-                        <input asp-for="Role" type="text" class="form-control" placeholder=" " readonly>
-                        <label for=" ">Role</label>
-                        <span asp-validation-for="Role" class="text-danger"></span>
-
-                    </div>
+                        @foreach (var role in Model.Role)
+                        {
+                            <option value="@role.RoleId">@role.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
                 </div>
             </div>
             <div class="d-flex justify-content-end">
@@ -189,14 +196,14 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                    @*  <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
-                    <option value="0" selected disabled>State</option>
+                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
+                        <option value="0" selected disabled>State</option>
 
-                    @foreach (var region in Model.State)
-                    {
-                    <option value="@region.RegionId">@region.Name</option>
-                    }
-                    </select> *@
+                        @foreach (var region in Model.Regions)
+                        {
+                            <option value="@region.RegionId">@region.Name</option>
+                        }
+                    </select>
                     <span asp-validation-for="RegionId" class="text-danger"></span>
 
                 </div>
@@ -252,12 +259,12 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
                     <div class="form-floating form-group ">
-                    <textarea asp-for="AdminNotes" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
-                    <label class="form-label" for="textAreaExample2">
-                        Admin Notes
+                        <textarea asp-for="AdminNotes" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <label class="form-label" for="textAreaExample2">
+                            Admin Notes
 
-                    </label>
-                    <span asp-validation-for="AdminNotes" class="text-danger"></span>
+                        </label>
+                        <span asp-validation-for="AdminNotes" class="text-danger"></span>
                     </div>
                 </div>
 
@@ -268,7 +275,7 @@
                 <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
                 <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
             </div>
-            <hr/>
+            <hr />
             <h3> Onboarding</h3>
 
             <div class="row formrow">
@@ -300,11 +307,11 @@
 
 
             </div>
-            <hr/>
+            <hr />
             <div class="d-flex justify-content-end">
                 <button class="btn btn-info">Save</button>
 
-                <button class="btn btn-danger" >Delete Account</button>
+                <button class="btn btn-danger">Delete Account</button>
             </div>
         </div>
     </div>

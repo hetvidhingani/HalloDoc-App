@@ -29,6 +29,9 @@ namespace HalloDoc.Repository.Repository
             AspNetUser user = _context.AspNetUsers.Where(x => x.Email == email && pwd==password).FirstOrDefault();
             return user;
         }
-       
+        public async Task<AspNetUser> getById(string ID)
+        {
+            return _context.AspNetUsers.Where(u => u.Id == ID).FirstOrDefault();
+        }
     }
 }

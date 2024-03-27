@@ -12,6 +12,7 @@ namespace HalloDoc.Repository.IRepository
     public interface IRegionRepository:IGenericRepository<Region>
     {
         Task<List<Region>> GetRegions();
+        List<Region> GetRegion();
         Task<string> FindState(int? regionID);
     }
 }

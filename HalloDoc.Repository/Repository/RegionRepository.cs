@@ -20,6 +20,10 @@ namespace HalloDoc.Repository.Repository
         {
             return _context.Regions.ToList();
         }
+        public List<Region> GetRegion()
+        {
+            return _context.Regions.ToList();
+        }
         public async Task<string> FindState(int? regionID)
         {
             Region state = _context.Regions.Where(u => u.RegionId == regionID).FirstOrDefault();

@@ -19,5 +19,9 @@ namespace HalloDoc.Repository.Repository
         {
             return _context.Roles.ToList();
         }
+        public  IQueryable<Role> GetRolesProvider()
+        {
+            return _context.Roles.Where(u=>u.AccountType == 2);
+        }
     }
 }

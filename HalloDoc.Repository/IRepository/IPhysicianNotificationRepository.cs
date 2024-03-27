@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IRoleRepository:IGenericRepository<Role>
+   public interface IPhysicianNotificationRepository: IGenericRepository<PhysicianNotification>
     {
-        Task<List<Role>> GetRoles();
-        IQueryable<Role> GetRolesProvider();
     }
 }
