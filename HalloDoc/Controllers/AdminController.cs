@@ -570,13 +570,18 @@ namespace HalloDoc.Controllers
             return PartialView("_ProviderTable",result);
         }
 
-        public  IActionResult ContectProvider(int id,string message)
+        public IActionResult ContectProvider(int id)
         {
-             var result =  _admin.ContectProvider(id);
+            return PartialView("_ContactProviderPartialView");
+        }
+        [HttpPost]
+        public  IActionResult ContectProvider2(ProviderInfoViewModel model)
+        {
+             var result =  _admin.ContectProvider(model.PhysicianId);
 
             var link = "";
-            var subject = "Review Agreement";
-            var body = message;
+            var subject = "Admin is trying to connect with you";
+            var body = model.message;
             List<string> attachmentFilePaths = null;
 
             _customService.SendEmail(result.Email, link, subject, body, attachmentFilePaths);

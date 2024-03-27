@@ -40,34 +40,41 @@
     </div>
 </div>
 
+<div class="modal fade" id="contactProviderMODEL" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
 
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
 <script>
-    $('#contactmodel').on('submit', function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var url = form.attr('action');
-        var data = form.serialize();
+    // $('#contactmodel').on('submit', function (e) {
+    //     e.preventDefault();
+    //     var form = $(this);
+    //     var url = form.attr('action');
+    //     var data = form.serialize();
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: data
-        })
-            .done(function (response) {
-                if (response.success) {
-                    let timerInterval;
-                    Swal.fire({
-                        title: "Message Sent Successfully",
-                        icon: "success",
-                        timer: 1000,
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                    }).then(function () {
-                        window.location.href = '@Url.Action("ContactProvider", "Admin")';
-                    });
-                }
-            });
-    });
+    //     $.ajax({
+    //         type: "POST",
+    //         url: url,
+    //         data: data
+    //     })
+    //         .done(function (response) {
+    //             if (response.success) {
+    //                 let timerInterval;
+    //                 Swal.fire({
+    //                     title: "Message Sent Successfully",
+    //                     icon: "success",
+    //                     timer: 1000,
+    //                     allowOutsideClick: false,
+    //                     showConfirmButton: false,
+    //                 }).then(function () {
+    //                     window.location.href = '@Url.Action("ContactProvider", "Admin")';
+    //                 });
+    //             }
+    //         });
+    // });
 
     
     var regionId;
