@@ -2,9 +2,12 @@ input[type=password]::-ms-reveal,
 input[type=password]::-ms-clear {
     display: none;
 }
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after {
+    background-color:transparent !important;
+}
 /*provider*/
-.formrow>div{
-    margin-bottom:8px;
+.formrow > div {
+    margin-bottom: 8px;
 }
 /*legend - provider*/
 /*header*/

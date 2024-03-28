@@ -1122,9 +1122,25 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region save provider
-        public Physician savePhysicianInformation(ProviderViewModel model)
+        public async Task<object> resetPasswordProvider(int id, string password)
         {
-            Physician physician = _physicianRepository.GetById(model.PhysicianId);
+            Physician phy = await _physicianRepository.GetByIdAsync(id);
+            AspNetUser user =await  _aspnetuserRepository.GetByIdAsync(phy.Id);
+            user.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(password);
+            await _aspnetuserRepository.UpdateAsync(user);
+            return user;
+        }
+        public async Task<object> resetRoleStatus(ProviderViewModel model, int id)
+        {
+            Physician phy = await _physicianRepository.GetByIdAsync(id);
+            phy.RoleId = model.RoleId;
+            phy.Status = (short?)model.statusId;
+            await _physicianRepository.UpdateAsync(phy);
+            return phy;
+        }
+        public Physician savePhysicianInformation(ProviderViewModel model,int id)
+        {
+            Physician physician = _physicianRepository.GetById(id);
             
             physician.FirstName=model.FirstName;
             physician.LastName=model.LastName;
@@ -1136,14 +1152,31 @@ namespace HalloDoc.Services.Services
             _physicianRepository.UpdateAsync(physician);
             return physician;
         }
-        public object saveBillingInformation(ProviderViewModel model)
+        public object saveBillingInformation(ProviderViewModel model, int id)
         {
-            Physician physician = _physicianRepository.GetById(model.PhysicianId);
+            Physician physician = _physicianRepository.GetById(id);
             physician.Address1 = model.Address1;
             physician.Address2 = model.Address2;
             physician.RegionId = model.RegionId;
             physician.Zip = model.Zip;
             physician.AltPhone = model.BillingPhoneNumber;
+            _physicianRepository.UpdateAsync(physician);
+
+            return physician;
+        }
+        public object providerProfile(ProviderViewModel model, int id)
+        {
+            Physician physician = _physicianRepository.GetById(id);
+            physician.BusinessName = model.BusinessName;
+            physician.BusinessWebsite = model.BusinessWebsite;
+            physician.AdminNotes = model.AdminNotes;
+            if(model.Signature != null || model.File !=null)
+            {
+
+            physician.Signature = model.Signature.FileName;
+            physician.Photo = model.File.FileName;
+            }
+          
             _physicianRepository.UpdateAsync(physician);
 
             return physician;

@@ -76,6 +76,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? BusinessName { get; set;}
         public string? BusinessWebsite { get; set; }
         public IFormFile? File { get; set; }
+        public IFormFile? Signature { get; set; }
         public string? AdminNotes { get; set; }
         public string Name { get; set; }
         public string onCallStatus { get; set; }

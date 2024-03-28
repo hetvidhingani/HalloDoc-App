@@ -616,15 +616,30 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region save provider
-        public IActionResult savePhysicianInformation(ProviderViewModel model)
+        public async Task<IActionResult> changeRoleStatus(ProviderViewModel model, int id)
         {
-            var result = _admin.savePhysicianInformation(model);
+            await _admin.resetRoleStatus(model, id);
+            return Json("success");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword) {
+          await _admin.resetPasswordProvider(physicianId, newPassword);
+            return Json("success");
+        }
+        public IActionResult savePhysicianInformation(ProviderViewModel model,int id)
+        {
+            var result = _admin.savePhysicianInformation(model,id);
             model.PhysicianId = result.PhysicianId;
             return Json("success");    
         }
-        public IActionResult saveBillingInformation(ProviderViewModel model)
+        public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
-            var result = _admin.saveBillingInformation(model);
+            var result = _admin.saveBillingInformation(model, id);
+            return Json("success");
+        }
+        public IActionResult providerProfile(ProviderViewModel model,int id)
+        {
+            var result = _admin.providerProfile(model, id);
             return Json("success");
         }
         #endregion
