@@ -1,12 +1,13 @@
-﻿@model ProviderInfoViewModel
+﻿@model ContactProviderViewModel
+
 <div class="modal-header">
     <h5 class="modal-title">Contact Your Provider</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form id="contactmodel" asp-controller="Admin" asp-action="ContectProvider2">
+<form id="contactmodel" asp-controller="Admin" asp-action="ContectProvider2" >
     <div class="modal-body">
         <small>Choose communication to send message.</small>
-        <input type="hidden" asp-for="PhysicianId" />
+        <input type="hidden" asp-for="physicianId" />
 
         <div class=" d-flex justify-content-center flex-column  ">
 
@@ -55,5 +56,32 @@
     </div>
 </form>
 <script>
-  
+    $('#contactmodel').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+        console.log("in function");
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                console.log(response);
+                if (response=="success") {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Message sent Successfully",
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = '@Url.Action("ProviderInformation", "Admin")';
+                    });
+                }
+            });
+    });
 </script>

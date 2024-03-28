@@ -60,21 +60,20 @@
 
 <script>
     $('.contactProviderc').click(function () {
-         var id = this.id;
-        
-         console.log(id);
-         $.ajax({
-             type: "POST",
-             dataType: "html",
-             data: { id: id }, // Include message in the data
-             url: "@(Url.Action("ContectProvider", "Admin"))",
-             success: function (data) {
-                 console.log("success");
+        var id = this.id;
+     
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("ContactProvider", "Admin"))", 
+            success: function (data) {
+               
                 $("#contactProviderMODEL").find('.modal-content').html(data);
-             },
-             error: function () {
-                 console.log("error");
-             }
-         });
-     });
+            },
+            error: function () {
+                console.log("error");
+            }
+        });
+    });
 </script>

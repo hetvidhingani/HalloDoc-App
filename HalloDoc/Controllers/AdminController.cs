@@ -570,14 +570,17 @@ namespace HalloDoc.Controllers
             return PartialView("_ProviderTable",result);
         }
 
-        public IActionResult ContectProvider(int id)
+        public IActionResult ContactProvider(int id)
         {
-            return PartialView("_ContactProviderPartialView");
+           var result = _admin.ContectProviderModel(id);
+            return PartialView("_ContactProviderPartialView",result);
         }
+      
+        
         [HttpPost]
-        public  IActionResult ContectProvider2(ProviderInfoViewModel model)
+        public  IActionResult ContectProvider2(ContactProviderViewModel model)
         {
-             var result =  _admin.ContectProvider(model.PhysicianId);
+             var result =  _admin.ContectProvider(model.physicianId);
 
             var link = "";
             var subject = "Admin is trying to connect with you";
@@ -586,7 +589,7 @@ namespace HalloDoc.Controllers
 
             _customService.SendEmail(result.Email, link, subject, body, attachmentFilePaths);
 
-            return RedirectToAction("ProviderInformation");
+            return Json("success");
         }
         #endregion
 

@@ -33,7 +33,6 @@ namespace HalloDoc.Services.IServices
         Task<object> BlockCase(CancelCaseViewModel viewModel, int id);
         Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id);
         Task<List<Physician>> GetPhysiciansByRegion(int regionId);
-      
         Task<object> DeleteFile(int name,int? reqID);
         Task<object> SendOrder( int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
@@ -56,13 +55,12 @@ namespace HalloDoc.Services.IServices
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
         AdminDashboardViewModel Pagination(string state,int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
-   
-
         Task<object> CreateProvider(ProviderViewModel model);
         Task<object> Createprovider();
         ProviderInfoViewModel ProviderInformation(int RegionId);
         object RegionList();
         Task<object> EditProvider(int physicianID);
         Physician ContectProvider(int id);
+        object ContectProviderModel(int id);
     }
 }

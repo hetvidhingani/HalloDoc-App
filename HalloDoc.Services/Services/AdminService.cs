@@ -1106,6 +1106,13 @@ namespace HalloDoc.Services.Services
 
             return data;
         }
+        public object ContectProviderModel(int id)
+        {
+            ContactProviderViewModel viewModel = new ContactProviderViewModel();
+            viewModel.physicianId = id;
+          
+            return viewModel;
+        }
         public Physician ContectProvider(int id)
         {
             return  _physicianRepository.GetById(id);
