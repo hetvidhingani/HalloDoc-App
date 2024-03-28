@@ -38,6 +38,7 @@
                 </div>
             <form id="form1" method="post" data-form-id="1">
                 <div class="row formrow ">
+                    <input type="hidden" asp-for="PhysicianId" />
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <select class="form-select form-select-sm  edit4" style="height:55px;" aria-label="Default select example" aria-height="5vh" asp-for="statusId" disabled>
@@ -68,7 +69,7 @@
                 <div class="d-flex justify-content-end">
                   
                     <button class="btn btn-info edit-button4" id="edit-button4" type="button">Edit</button>
-                    <button class="btn btn-info savebtn4 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-info savebtn4 SaveBillingInfo" id="save-button1" style="display:none;" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn4 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
 
@@ -77,9 +78,9 @@
 
             </form>
 
-            <form id="form2" method="post">
+            <form id="form2"  method="post">
                 <h3> Physician Information</h3>
-                <input type="hidden" asp-for="PhysicianId" />
+                <input type="hidden" asp-for="PhysicianId" id="PhysicianId" />
                 <div class="row formrow ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -151,14 +152,14 @@
 
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button3" id="edit-button3" type="button">Edit</button>
-                    <button class="btn btn-info savebtn3 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-info savebtn3 SaveBillingInfo" style="display:none;" id="save-button2" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn3 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
                 </div>
 
             </form>
 
-            <form id="form3" method="post">
+            <form asp-action="saveBillingInformation" asp-controller="Admin" id="form3" method="post">
                 <h3> Mailing & Billing Information</h3>
 
                 <div class="row formrow">
@@ -220,7 +221,7 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info" id="edit-button2" type="button">Edit</button>
-                    <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-info savebtn2 SaveBillingInfo" style="display:none;" id="save-button3" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn2 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
                 </div>
@@ -284,7 +285,7 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button" id="edit-button" type="button">Edit</button>
-                    <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" type="submit" disabled>Save</button>
+                    <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" id="save-button4" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn6 SaveBillingInfo" style="display:none;" type="reset" disabled>Cancel</button>
 
                 </div>
@@ -428,7 +429,79 @@
         cancleButton.style.display = "block";
 
     });
+    //form submit
+    // Save data function
+    function saveFormData(form) {
+        const formData = new FormData(form);
+        const url = "@Url.Action("savePhysicianInformation","Admin")";
 
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                console.log(response);
+                if (response == "success") {
+                    
+                    // You can perform any other actions you want here, like hiding the save button and edit button
+                    var inputs = form.querySelectorAll("input:not([readonly]),select:not([disabled])");
+                    inputs.forEach(function (input) {
+                        input.setAttribute("readonly", "readonly");
+                        input.setAttribute("disabled", "disabled");
+                    });
+
+                    // Hide save and cancel buttons and show edit button
+                    var saveButtons = document.querySelectorAll(".savebtn3");
+                    saveButtons.forEach(function (button) {
+                        button.style.display = "none";
+                    });
+                    var editButtons = document.querySelectorAll(".edit-button3");
+                    editButtons.forEach(function (button) {
+                        button.style.display = "block";
+                    });
+                    var canclebtn = document.querySelectorAll(".cancelbtn3");
+                    canclebtn.forEach(function (button) {
+                        button.style.display = "none";
+                    });
+                    
+
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('Error:', errorThrown);
+                alert('Failed to save form data');
+            }
+        });
+    }
+
+    // Event listeners for save buttons
+    document.getElementById("save-button1").addEventListener("click", function (event) {
+        event.preventDefault();
+        const currentForm = this.closest("form");
+        saveFormData(currentForm);
+    });
+
+    document.getElementById("save-button2").addEventListener("click", function (event) {
+        event.preventDefault();
+        const currentForm = this.closest("form");
+        saveFormData(currentForm);
+    });
+
+    document.getElementById("save-button3").addEventListener("click", function (event) {
+        event.preventDefault();
+        const currentForm = this.closest("form");
+        saveFormData(currentForm);
+    });
+
+    document.getElementById("save-button4").addEventListener("click", function (event) {
+        event.preventDefault();
+        const currentForm = this.closest("form");
+        saveFormData(currentForm);
+    });
+
+    //end
     //dark theme
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));

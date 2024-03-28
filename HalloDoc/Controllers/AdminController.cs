@@ -607,13 +607,28 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region edit provider
+        #region edit provider details
         public async Task<IActionResult> EditProvider(int id)
         {
             var result =await _admin.EditProvider(id);
             return View(result);
         }
         #endregion
+
+        #region save provider
+        public IActionResult savePhysicianInformation(ProviderViewModel model)
+        {
+            var result = _admin.savePhysicianInformation(model);
+            model.PhysicianId = result.PhysicianId;
+            return Json("success");    
+        }
+        public IActionResult saveBillingInformation(ProviderViewModel model)
+        {
+            var result = _admin.saveBillingInformation(model);
+            return Json("success");
+        }
+        #endregion
+
         #endregion
     }
 }

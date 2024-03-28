@@ -62,5 +62,7 @@ namespace HalloDoc.Services.IServices
         Task<object> EditProvider(int physicianID);
         Physician ContectProvider(int id);
         object ContectProviderModel(int id);
+        Physician savePhysicianInformation(ProviderViewModel model);
+        object saveBillingInformation(ProviderViewModel model);
     }
 }

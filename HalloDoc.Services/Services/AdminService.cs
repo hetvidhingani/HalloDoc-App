@@ -1048,6 +1048,7 @@ namespace HalloDoc.Services.Services
             Physician phy =await _physicianRepository.GetByIdAsync(physicianID);
             AspNetUser asp =await _aspnetuserRepository.getById(phy.Id);
             ProviderViewModel model = new ProviderViewModel();
+            model.PhysicianId = physicianID;
             model.FirstName= phy.FirstName;
             model.LastName = phy.LastName;
             model.PhoneNumber = phy.Mobile;
@@ -1120,14 +1121,34 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region save provider
+        public Physician savePhysicianInformation(ProviderViewModel model)
+        {
+            Physician physician = _physicianRepository.GetById(model.PhysicianId);
+            
+            physician.FirstName=model.FirstName;
+            physician.LastName=model.LastName;
+            physician.Email=model.Email;
+            physician.Mobile = model.PhoneNumber;
+            physician.MedicalLicense = model.MedicalLicense;
+            physician.Npinumber= model.NPINumber;
+            physician.SyncEmailAddress = model.SyncEmail;
+            _physicianRepository.UpdateAsync(physician);
+            return physician;
+        }
+        public object saveBillingInformation(ProviderViewModel model)
+        {
+            Physician physician = _physicianRepository.GetById(model.PhysicianId);
+            physician.Address1 = model.Address1;
+            physician.Address2 = model.Address2;
+            physician.RegionId = model.RegionId;
+            physician.Zip = model.Zip;
+            physician.AltPhone = model.BillingPhoneNumber;
+            _physicianRepository.UpdateAsync(physician);
 
-
-
-
-
-
-
-
+            return physician;
+        }
+        #endregion
         #endregion
     }
 }
