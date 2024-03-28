@@ -99,9 +99,9 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="LastName" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="LastName" id="lastname" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Last Name</label>
-                            <span asp-validation-for="LastName" class="text-danger"></span>
+                            <span asp-validation-for="LastName" class="text-danger lastname"></span>
 
                         </div>
                     </div>
@@ -111,7 +111,7 @@
                                    id="Email" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Email</label>
-                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <span asp-validation-for="Email"  class="text-danger email"></span>
 
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <div class="form-floating form-group  border">
                             <input data-valmsg-replace="true"  asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
 
-                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                            <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
@@ -173,25 +173,25 @@
                 <div class="row formrow">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Address1" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true"  asp-for="Address1" type="text" class="form-control edit" id="address1" placeholder=" " readonly>
                             <label for=" ">Address1</label>
-                            <span asp-validation-for="Address1" class="text-danger"></span>
+                            <span asp-validation-for="Address1" class="text-danger address1"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Address2" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true"  asp-for="Address2" type="text" id="address2" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Address2 </label>
-                            <span asp-validation-for="Address2" class="text-danger"></span>
+                            <span asp-validation-for="Address2" class="text-danger address2"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="City" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true"  asp-for="City" id="city" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">City </label>
-                            <span asp-validation-for="City" class="text-danger"></span>
+                            <span asp-validation-for="City" class="text-danger city"></span>
 
                         </div>
                     </div>
@@ -212,9 +212,9 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Zip" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true"  asp-for="Zip" type="text" id="zip" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Zip code</label>
-                            <span asp-validation-for="Zip" class="text-danger"></span>
+                            <span asp-validation-for="Zip" class="text-danger zip"></span>
 
                         </div>
                     </div>
@@ -448,14 +448,74 @@
 
         var physicianId = $("#PhysicianId").val();
         var firstname = $("#firstName").val();
+        var lastname = $("#lastname").val();
+        var email = $("#Email").val();
+        var phone = $("#phone").val();
+        var address1 = $("#address1").val();
+        var address2 = $("#address2").val();
+        var city = $("#city").val();
+        var state = $("#state").val();
+        var zip = $("#zip").val();
+        var altphone = $("#altphone").val();
+        var businessname = $("#businessname").val();
+        var businessweb = $("#businessweb").val();
         
-       
        
         if (firstname.length <=0){
             document.getElementsByClassName('checkhere')[0].innerText = "Plese Enter FirstName";
             return;
         }
+       
 
+        if (lastname.length <= 0) {
+            document.getElementsByClassName('lastname')[0].innerText = "Please Enter LastName";
+            return;
+        }
+
+        // if (email.length <= 0) {
+        //     document.getElementsByClassName('email')[0].innerText = "Please Enter Email";
+        //     return;
+        // }
+
+        // if (phone.length <= 0) {
+        //     document.getElementsByClassName('phone')[0].innerText = "Please Enter Phone";
+        //     return;
+        // }
+
+        // if (address1.length <= 0) {
+        //     document.getElementsByClassName('address1')[0].innerText = "Please Enter Address 1";
+        //     return;
+        // }
+
+        // if (city.length <= 0) {
+        //     document.getElementsByClassName('city')[0].innerText = "Please Enter City";
+        //     return;
+        // }
+
+        // if (state.length <= 0) {
+        //     document.getElementsByClassName('state')[0].innerText = "Please Enter State";
+        //     return;
+        // }
+
+        // if (zip.length <= 0) {
+        //     document.getElementsByClassName('zip')[0].innerText = "Please Enter Zip";
+        //     return;
+        // }
+
+        // if (altphone.length <= 0) {
+        //     document.getElementsByClassName('altphone')[0].innerText = "Please Enter Alternate Phone";
+        //     return;
+        // }
+
+        // if (businessname.length <= 0) {
+        //     document.getElementsByClassName('businessname')[0].innerText = "Please Enter Business Name";
+        //     return;
+        // }
+
+        // if (businessweb.length <= 0) {
+        //     document.getElementsByClassName('businessweb')[0].innerText = "Please Enter Business Website";
+        //     return;
+        // }
         $.ajax({
             type: 'POST',
             url: url,

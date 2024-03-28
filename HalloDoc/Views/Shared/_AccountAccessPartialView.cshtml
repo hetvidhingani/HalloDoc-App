@@ -1,0 +1,79 @@
+﻿@model HalloDoc.Entities.ViewModels.ProviderInfoViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Stop Notification</th>
+                <th scope="col">Provider Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">On call status</th>
+                <th scope="col">status</th>
+                <th scope="col">Actions</th>
+
+            </tr>
+        </thead>
+       @*  <tbody class="table-group-divider">
+
+
+            @foreach (var u in Model.physicians)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@u.PhysicianId">
+                    <td>
+                        <input type="checkbox" value="" class="checkboxForAll" name="selectedFiles">
+                    </td>
+                    <td>@u.FirstName  @u.LastName</td>
+                    <td>
+                        @foreach (var role in Model.Role)
+                        {
+                            @if (role.RoleId == u.RoleId)
+                            {
+                                @role.Name
+                            }
+                        }
+                    </td>
+                    <td>Un Available</td>
+                    <td>
+                        @foreach (var status in Model.status)
+                        {
+                            @if (status.Statusid == u.Status)
+                            {
+                                @status.Statusname
+                            }
+                        }
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianId">Contact</button>
+                            <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
+
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody> *@
+    </table>
+</div>
+@* model *@
+
+<script>
+    $('.contactProviderc').click(function () {
+        var id = this.id;
+
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id: id },
+            url: "@(Url.Action("ContactProvider", "Admin"))",
+            success: function (data) {
+
+                $("#contactProviderMODEL").find('.modal-content').html(data);
+            },
+            error: function () {
+                console.log("error");
+            }
+        });
+    });
+</script>

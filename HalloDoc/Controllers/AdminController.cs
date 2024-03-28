@@ -644,6 +644,25 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Account Access
+
+        public IActionResult AccountAccess()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult GetAccountAccessTable()
+        {
+            return PartialView("_AccountAccessPartialView");
+        }
+        #endregion
+
+        #region Create Role
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
+        #endregion
         #endregion
     }
 }
