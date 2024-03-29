@@ -664,7 +664,7 @@ namespace HalloDoc.Controllers
             return View(data);
         }
         [HttpPost]
-        public IActionResult MenuName(int accountTypeId, int typename, int id = 0)
+        public IActionResult MenuName(int accountTypeId, int typename, int id =0)
         {
             var data = _admin.MenuName(accountTypeId, typename, id);
             return PartialView("_MenuPartialView", data);

@@ -17,7 +17,7 @@
         <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
             <form id="menu-form" asp-action="submitEditAccess" asp-controller="Admin">
                 <input type="hidden" asp-for="roleinput" />
-                <input type="hidden" asp-for="RoleId" />
+                <input type="hidden" asp-for="RoleId" id="roleid" value="@Model.roleinput"/>
 
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -83,14 +83,16 @@
 
 
     var accountTypeId;
-
+    var id;
     function accountType() {
         accountTypeId = $("#accountType").val();
-
+        console.log($("#roleid"));
+        id = $("#roleid").val();
+        console.log(id);
         $.ajax({
             url: url,
             type: "POST",
-            data: { accountTypeId: accountTypeId, typename: 2 },
+            data: { accountTypeId: accountTypeId, typename: 2, id : id },
             dataType: "html",
             success: function (data) {
                 $("#menu").html(data);
@@ -103,12 +105,16 @@
 
     $(document).ready(function () {
         accountTypeId=$("#accountType").val();
+        id = $("#roleid").val();
+        console.log(id);
+
         load();
         function load() {
+            console.log($("#roleid"));
             $.ajax({
                 url: "/Admin/MenuName",
                 type: "POST",
-                data: { accountTypeId: accountTypeId, typename: 2 },
+                data: { accountTypeId: accountTypeId, typename: 2 ,id : id },
                 dataType: "html",
                 success: function (data) {
                     $("#menu").html(data);

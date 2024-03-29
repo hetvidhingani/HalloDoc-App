@@ -1210,7 +1210,7 @@ namespace HalloDoc.Services.Services
             };
             return viewModel;
         }
-        public AccountAccessViewModel MenuName(int AccountTypeId, int typename, int id = 0)
+        public AccountAccessViewModel MenuName(int AccountTypeId, int typename, int id=0 )
         {
             List<Menu> menu = null;
 
