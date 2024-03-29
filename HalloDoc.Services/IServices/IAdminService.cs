@@ -67,5 +67,11 @@ namespace HalloDoc.Services.IServices
         Task<object> resetPasswordProvider(int id, string password);
         Task<object> resetRoleStatus(ProviderViewModel model, int id);
         object providerProfile(ProviderViewModel model, int id);
+        Task<object> AccountAccessTable();
+        AccountAccessViewModel MenuName(int accountTypeId, int typename, int id = 0);
+        AccountAccessViewModel CreateRole(int AdminId);
+        Task<object> CreateAccess(AccountAccessViewModel viewModel);
+        AccountAccessViewModel EditAccountAccess(int id, int AdminId);
+        Task<object> submitEditAccess(AccountAccessViewModel viewModel);
     }
 }

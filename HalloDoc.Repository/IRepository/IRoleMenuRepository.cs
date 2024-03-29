@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IRoleRepository:IGenericRepository<Role>
+    public interface IRoleMenuRepository:IGenericRepository<RoleMenu>
     {
-        Task<List<Role>> GetRoles();
-        IQueryable<Role> GetRolesProvider();
-        Role findByName(string name);
     }
 }

@@ -11,9 +11,9 @@ namespace HalloDoc.Repository.IRepository
         IQueryable<T> GetAll();
         Task AddAsync(T entity);
 
-       // void AddAsyncs(T entity);
+        // void AddAsyncs(T entity);
         Task UpdateAsync(T entity);
-      //  void UpdateAsyncs(T entity);
+        //  void UpdateAsyncs(T entity);
         Task<T> GetByIdAsync(object id);
         void SetTempData(string key, object value);
         T GetTempData<T>(string key);
@@ -21,5 +21,6 @@ namespace HalloDoc.Repository.IRepository
         string DecodeFrom64(string encodedData);
 
         T GetById(object id);
+        Task Remove(T entity);
     }
 }

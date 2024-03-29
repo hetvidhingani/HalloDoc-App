@@ -38,7 +38,8 @@ builder.Services.AddScoped<IAdminRegionRepository, AdminRegionRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IPhysicianNotificationRepository,PhysicianNotificationRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
-
+builder.Services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

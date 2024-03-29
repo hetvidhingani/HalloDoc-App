@@ -45,7 +45,7 @@ namespace HalloDoc.Repository.Repository
         //    try
         //    {
         //        _context.Add(entity);
-        //         _context.SaveChanges();
+        //        _context.SaveChanges();
         //    }
         //    catch (Exception ex)
         //    {
@@ -54,10 +54,10 @@ namespace HalloDoc.Repository.Repository
         //}
         public async Task AddAsync(T entity)
         {
-           
-                _context.Add(entity);
-                _context.SaveChanges();
-            
+
+            _context.Add(entity);
+            _context.SaveChanges();
+
         }
         public async Task UpdateAsync(T entity)
         {
@@ -93,6 +93,13 @@ namespace HalloDoc.Repository.Repository
         public IQueryable<T> GetAll()
         {
             return _context.Set<T>();
+        }
+
+        public async Task Remove(T entity)
+        {
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
+
         }
         public  string EncodePasswordToBase64(string password)
         {

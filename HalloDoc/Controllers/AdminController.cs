@@ -7,6 +7,7 @@ using HalloDoc.Services.Services;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Ocsp;
 using System.Diagnostics.Contracts;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HalloDoc.Controllers
 {
@@ -19,7 +20,7 @@ namespace HalloDoc.Controllers
         private ICustomService _customService;
 
 
-        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService,ICustomService customService)
+        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService, ICustomService customService)
         {
             _context = context;
             _admin = admin;
@@ -214,7 +215,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 await _admin.AssignRequest(viewModel, id);
-               
+
                 return Json(new { success = true });
             }
             return RedirectToAction("Dashboard");
@@ -377,7 +378,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> DeleteFile(int fileID)
         {
             int? requstId = HttpContext.Session.GetInt32("reqID");
-            await _admin.DeleteFile(fileID,requstId);
+            await _admin.DeleteFile(fileID, requstId);
 
             return RedirectToAction("ViewUploads", new { Id = requstId });
         }
@@ -386,7 +387,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
         {
             int? requestid = HttpContext.Session.GetInt32("reqID");
-            if(documentValues.Count() > 0)
+            if (documentValues.Count() > 0)
             {
                 foreach (var items in documentValues)
                 {
@@ -407,12 +408,12 @@ namespace HalloDoc.Controllers
 
         #region Send Order
         [HttpGet]
-        public async Task<IActionResult> SendOrder( int Id)
+        public async Task<IActionResult> SendOrder(int Id)
         {
-           
-                    var result = await _admin.SendOrder( Id);
-                    return View(result);
-              
+
+            var result = await _admin.SendOrder(Id);
+            return View(result);
+
         }
         [HttpGet]
 
@@ -442,20 +443,20 @@ namespace HalloDoc.Controllers
             else
             {
                 string? adminID = HttpContext.Session.GetString("AdminAspNetID");
-                
-                await _admin.SendOrderDetails(viewModel, Id,adminID);
+
+                await _admin.SendOrderDetails(viewModel, Id, adminID);
 
             }
             return Json(new { success = true });
-           
+
         }
         #endregion
 
         #region send agreement
-        public async Task<IActionResult> SendAgreement( int id)
+        public async Task<IActionResult> SendAgreement(int id)
         {
             ViewBag.AgreementIdToClient = id;
-            var result = await _admin.sendAgreement( id);
+            var result = await _admin.sendAgreement(id);
             return PartialView("_SendAgreementPartialView", result);
         }
 
@@ -473,7 +474,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/ReviewAgreement?requestClinetID=" + viewModel.requestclientID;
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
-                List<string>attachmentFilePaths = null;
+                List<string> attachmentFilePaths = null;
 
                 _customService.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
 
@@ -495,25 +496,25 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
         {
-           
-                await _admin.ResetPasswordAdmin(model);
-                return RedirectToAction("AdminMyProfile");
-            
+
+            await _admin.ResetPasswordAdmin(model);
+            return RedirectToAction("AdminMyProfile");
+
 
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
         {
-           
-                await _admin.SaveAdminInfo(model);
-                return RedirectToAction("AdminMyProfile");
-           
+
+            await _admin.SaveAdminInfo(model);
+            return RedirectToAction("AdminMyProfile");
+
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
-            
-                await _admin.SaveBillingInfo(model);
-                return RedirectToAction("AdminMyProfile");
-            
+
+            await _admin.SaveBillingInfo(model);
+            return RedirectToAction("AdminMyProfile");
+
         }
         #endregion
 
@@ -528,8 +529,8 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result=await _admin.EncounterFormSaveChanges(model);
-                return RedirectToAction("EncounterForm",result);
+                var result = await _admin.EncounterFormSaveChanges(model);
+                return RedirectToAction("EncounterForm", result);
             }
             return View(model);
         }
@@ -547,7 +548,7 @@ namespace HalloDoc.Controllers
                 var message = "Please Find Attachments";
                 var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                 _customService.SendEmail(userEmail,link, subject, message, attachmentFilePaths);
+                _customService.SendEmail(userEmail, link, subject, message, attachmentFilePaths);
             }
 
             return RedirectToAction("Dashboard");
@@ -560,27 +561,27 @@ namespace HalloDoc.Controllers
         #region provider info
         public IActionResult ProviderInformation()
         {
-            var result =   _admin.RegionList(); 
+            var result = _admin.RegionList();
             return View(result);
         }
         [HttpPost]
         public IActionResult ProviderInformation(int RegionId)
         {
             var result = _admin.ProviderInformation(RegionId);
-            return PartialView("_ProviderTable",result);
+            return PartialView("_ProviderTable", result);
         }
 
         public IActionResult ContactProvider(int id)
         {
-           var result = _admin.ContectProviderModel(id);
-            return PartialView("_ContactProviderPartialView",result);
+            var result = _admin.ContectProviderModel(id);
+            return PartialView("_ContactProviderPartialView", result);
         }
-      
-        
+
+
         [HttpPost]
-        public  IActionResult ContectProvider2(ContactProviderViewModel model)
+        public IActionResult ContectProvider2(ContactProviderViewModel model)
         {
-             var result =  _admin.ContectProvider(model.physicianId);
+            var result = _admin.ContectProvider(model.physicianId);
 
             var link = "";
             var subject = "Admin is trying to connect with you";
@@ -596,13 +597,13 @@ namespace HalloDoc.Controllers
         #region Create Provider
         public async Task<IActionResult> CreateProvider()
         {
-            var result =await _admin.Createprovider();
+            var result = await _admin.Createprovider();
             return View(result);
         }
         [HttpPost]
         public IActionResult CreateProvider(ProviderViewModel model)
         {
-            var result =  _admin.CreateProvider(model);
+            var result = _admin.CreateProvider(model);
             return RedirectToAction("Dashboard");
         }
         #endregion
@@ -610,7 +611,7 @@ namespace HalloDoc.Controllers
         #region edit provider details
         public async Task<IActionResult> EditProvider(int id)
         {
-            var result =await _admin.EditProvider(id);
+            var result = await _admin.EditProvider(id);
             return View(result);
         }
         #endregion
@@ -622,22 +623,23 @@ namespace HalloDoc.Controllers
             return Json("success");
         }
         [HttpPost]
-        public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword) {
-          await _admin.resetPasswordProvider(physicianId, newPassword);
+        public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword)
+        {
+            await _admin.resetPasswordProvider(physicianId, newPassword);
             return Json("success");
         }
-        public IActionResult savePhysicianInformation(ProviderViewModel model,int id)
+        public IActionResult savePhysicianInformation(ProviderViewModel model, int id)
         {
-            var result = _admin.savePhysicianInformation(model,id);
+            var result = _admin.savePhysicianInformation(model, id);
             model.PhysicianId = result.PhysicianId;
-            return Json("success");    
+            return Json("success");
         }
         public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
             var result = _admin.saveBillingInformation(model, id);
             return Json("success");
         }
-        public IActionResult providerProfile(ProviderViewModel model,int id)
+        public IActionResult providerProfile(ProviderViewModel model, int id)
         {
             var result = _admin.providerProfile(model, id);
             return Json("success");
@@ -646,23 +648,50 @@ namespace HalloDoc.Controllers
 
         #region Account Access
 
-        public IActionResult AccountAccess()
+        public async Task<IActionResult> AccountAccess()
         {
-            return View();
+            var result = await _admin.AccountAccessTable();
+            return View(result);
         }
-        [HttpPost]
-        public IActionResult GetAccountAccessTable()
-        {
-            return PartialView("_AccountAccessPartialView");
-        }
+
         #endregion
 
         #region Create Role
         public IActionResult CreateRole()
         {
-            return View();
+            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var data = _admin.CreateRole((int)AdminId);
+            return View(data);
+        }
+        [HttpPost]
+        public IActionResult MenuName(int accountTypeId, int typename, int id = 0)
+        {
+            var data = _admin.MenuName(accountTypeId, typename, id);
+            return PartialView("_MenuPartialView", data);
+
+        }
+        public async Task<IActionResult> CreateAccess(AccountAccessViewModel model)
+        {
+            await _admin.CreateAccess(model);
+            return RedirectToAction("CreateRole");
+
         }
         #endregion
+
+        #region Edit Role
+        public IActionResult EditAccountAccess(int id)
+        {
+            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var data = _admin.EditAccountAccess(id,(int)AdminId);
+            return View(data);
+        }
+        public IActionResult submitEditAccess(AccountAccessViewModel viewModel)
+        {
+            var result = _admin.submitEditAccess(viewModel);
+            return RedirectToAction("EditAccountAccess", new {id = result.Result});
+        }
+        #endregion
+
         #endregion
     }
 }

@@ -48,6 +48,8 @@ namespace HalloDoc.Services.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IPhysicianNotificationRepository _physicianNotificationRepository;
         private readonly IStatusRepository _statusRepository;
+        private readonly IMenuRepository _menuRepository;
+        private readonly IRoleMenuRepository _roleMenuRepository;
 
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -59,7 +61,8 @@ namespace HalloDoc.Services.Services
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
-                               IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository)
+                               IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
+                               IMenuRepository menuRepository,IRoleMenuRepository roleMenuRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -84,6 +87,8 @@ namespace HalloDoc.Services.Services
             _roleRepository = roleRepository;
             _physicianNotificationRepository = physicianNotificationRepository;
             _statusRepository = statusRepository;
+            _menuRepository = menuRepository;
+            _roleMenuRepository = roleMenuRepository;
         }
         #endregion
 
@@ -992,7 +997,7 @@ namespace HalloDoc.Services.Services
         #region Provider
 
         #region Create  Provider
-      
+
         public async Task<object> Createprovider()
         {
             ProviderViewModel model = new ProviderViewModel();
@@ -1043,24 +1048,24 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region edit provider
-        public async Task<object> EditProvider( int physicianID)
+        public async Task<object> EditProvider(int physicianID)
         {
-            Physician phy =await _physicianRepository.GetByIdAsync(physicianID);
-            AspNetUser asp =await _aspnetuserRepository.getById(phy.Id);
+            Physician phy = await _physicianRepository.GetByIdAsync(physicianID);
+            AspNetUser asp = await _aspnetuserRepository.getById(phy.Id);
             ProviderViewModel model = new ProviderViewModel();
             model.PhysicianId = physicianID;
-            model.FirstName= phy.FirstName;
+            model.FirstName = phy.FirstName;
             model.LastName = phy.LastName;
             model.PhoneNumber = phy.Mobile;
             model.AdminNotes = phy.AdminNotes;
-            model.Email=phy.Email;
-            model.MedicalLicense= phy.MedicalLicense;
+            model.Email = phy.Email;
+            model.MedicalLicense = phy.MedicalLicense;
             model.NPINumber = phy.Npinumber;
             model.Address1 = phy.Address1;
             model.Address2 = phy.Address2;
             model.City = phy.City;
-            model.RegionId= phy.RegionId;
-            model.Regions =await  _regionRepository.GetRegions();
+            model.RegionId = phy.RegionId;
+            model.Regions = await _regionRepository.GetRegions();
             model.Zip = phy.Zip;
             model.BillingPhoneNumber = phy.AltPhone;
             model.BusinessName = phy.BusinessName;
@@ -1070,14 +1075,10 @@ namespace HalloDoc.Services.Services
             model.RoleId = (int)phy.RoleId;
             model.Role = await _roleRepository.GetRoles();
             model.statusId = (int)phy.Status;
-            model.status =  _statusRepository.GetAll().ToList();
+            model.status = _statusRepository.GetAll().ToList();
             return model;
         }
-        public object EditProvider(ProviderViewModel model, int physicianID)
-        {
-
-            return model;
-        }
+       
         #endregion
 
         #region provider info
@@ -1087,7 +1088,7 @@ namespace HalloDoc.Services.Services
             viewModel.Regions = _regionRepository.GetRegion();
             return viewModel;
         }
-        public  ProviderInfoViewModel ProviderInformation( int RegionId)
+        public ProviderInfoViewModel ProviderInformation(int RegionId)
         {
             List<Physician> regionwisephysician = _physicianRepository.GetAll().ToList();
 
@@ -1101,7 +1102,7 @@ namespace HalloDoc.Services.Services
                 physicians = regionwisephysician,
                 Regions = _regionRepository.GetAll().ToList(),
                 Role = _roleRepository.GetRolesProvider().ToList(),
-                PhysicianNotifications = _physicianNotificationRepository.GetAll().ToList(),    
+                PhysicianNotifications = _physicianNotificationRepository.GetAll().ToList(),
                 status = _statusRepository.GetAll().ToList(),
             };
 
@@ -1111,13 +1112,13 @@ namespace HalloDoc.Services.Services
         {
             ContactProviderViewModel viewModel = new ContactProviderViewModel();
             viewModel.physicianId = id;
-          
+
             return viewModel;
         }
         public Physician ContectProvider(int id)
         {
-            return  _physicianRepository.GetById(id);
-            
+            return _physicianRepository.GetById(id);
+
         }
         #endregion
 
@@ -1125,7 +1126,7 @@ namespace HalloDoc.Services.Services
         public async Task<object> resetPasswordProvider(int id, string password)
         {
             Physician phy = await _physicianRepository.GetByIdAsync(id);
-            AspNetUser user =await  _aspnetuserRepository.GetByIdAsync(phy.Id);
+            AspNetUser user = await _aspnetuserRepository.GetByIdAsync(phy.Id);
             user.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(password);
             await _aspnetuserRepository.UpdateAsync(user);
             return user;
@@ -1138,16 +1139,16 @@ namespace HalloDoc.Services.Services
             await _physicianRepository.UpdateAsync(phy);
             return phy;
         }
-        public Physician savePhysicianInformation(ProviderViewModel model,int id)
+        public Physician savePhysicianInformation(ProviderViewModel model, int id)
         {
             Physician physician = _physicianRepository.GetById(id);
-            
-            physician.FirstName=model.FirstName;
-            physician.LastName=model.LastName;
-            physician.Email=model.Email;
+
+            physician.FirstName = model.FirstName;
+            physician.LastName = model.LastName;
+            physician.Email = model.Email;
             physician.Mobile = model.PhoneNumber;
             physician.MedicalLicense = model.MedicalLicense;
-            physician.Npinumber= model.NPINumber;
+            physician.Npinumber = model.NPINumber;
             physician.SyncEmailAddress = model.SyncEmail;
             _physicianRepository.UpdateAsync(physician);
             return physician;
@@ -1170,18 +1171,143 @@ namespace HalloDoc.Services.Services
             physician.BusinessName = model.BusinessName;
             physician.BusinessWebsite = model.BusinessWebsite;
             physician.AdminNotes = model.AdminNotes;
-            if(model.Signature != null || model.File !=null)
+            if (model.Signature != null || model.File != null)
             {
 
-            physician.Signature = model.Signature.FileName;
-            physician.Photo = model.File.FileName;
+                physician.Signature = model.Signature.FileName;
+                physician.Photo = model.File.FileName;
             }
-          
+
             _physicianRepository.UpdateAsync(physician);
 
             return physician;
         }
         #endregion
+
+        #region Account Access
+
+        public async Task<object> AccountAccessTable()
+        {
+            List<Role> roles = _roleRepository.GetAll().ToList();
+            AccountAccessViewModel model = new AccountAccessViewModel()
+            {
+                roles = roles,
+            };
+            return model;
+        }
+
+       
+        #endregion
+
+        #region Create Role
+        public AccountAccessViewModel CreateRole(int AdminId)
+        {
+            var Admin = _adminRepository.GetById(AdminId);
+            AccountAccessViewModel viewModel = new AccountAccessViewModel()
+            {
+                AdminName = Admin.FirstName + " " + Admin.LastName,
+                roles = _roleRepository.GetAll().ToList(),
+            };
+            return viewModel;
+        }
+        public AccountAccessViewModel MenuName(int AccountTypeId, int typename, int id = 0)
+        {
+            List<Menu> menu = null;
+
+            List<RoleMenu> rolemenu = _roleMenuRepository.GetAll().ToList();
+            
+            if (AccountTypeId == 1)
+            {
+            List<Menu> menu1 = _menuRepository.GetAll().ToList();
+                menu = menu1.Where(u => u.AccountType == 1).ToList();
+            }
+            if (AccountTypeId == 2)
+            {
+                List<Menu> menu2 = _menuRepository.GetAll().ToList();
+
+                menu = menu2.Where(u => u.AccountType == 2).ToList();
+            }
+            
+            AccountAccessViewModel data = new()
+            {
+                MenuNames = menu,
+                rolemenus = rolemenu.Where(u => u.RoleId == id).ToList(),
+                type = typename
+            };
+            return data;
+
+        }
+        public async Task<object> CreateAccess(AccountAccessViewModel viewModel)
+        {
+            List<Role> roles = _roleRepository.GetAll().ToList();
+            var role = new Role()
+            {
+                Name = viewModel.RoleName,
+                AccountType = (short)viewModel.accountTypeId,
+                CreatedDate = DateTime.Now,
+                CreatedBy = "bda27f31-02b1-442f-9120-bed8f09a4966",
+            };
+              await _roleRepository.AddAsync(role);
+
+            var roleName = _roleRepository.findByName(viewModel.RoleName);
+            foreach(var roleMenuId in viewModel.RoleId)
+            {
+                var roleMenu = new RoleMenu()
+                {
+                    RoleId = roleName.RoleId,
+                    MenuId = roleMenuId
+                };
+              await  _roleMenuRepository.AddAsync(roleMenu);
+            }
+            return "";
+        }
+        #endregion
+
+        #region Edit Role
+        public AccountAccessViewModel EditAccountAccess(int id,int AdminId)
+        {
+            var Admin = _adminRepository.GetAll().Where(u=>u.AdminId == AdminId).FirstOrDefault();
+            var role = _roleRepository.GetAll().Where(u => u.RoleId == id).FirstOrDefault();
+
+            AccountAccessViewModel viewModel = new AccountAccessViewModel()
+            {
+                AdminName = Admin.FirstName + " " + Admin.LastName,
+                roles = _roleRepository.GetAll().ToList(),
+                RoleName = role.Name,
+                accountTypeId = role.AccountType,
+                roleinput=id
+            };
+            return viewModel;
+        }
+        public async Task<object> submitEditAccess(AccountAccessViewModel viewModel)
+        {
+           var roles = _roleRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).FirstOrDefault();
+
+            roles.Name =viewModel.RoleName;
+            _roleRepository.UpdateAsync(roles);
+
+            var roleMenu = _roleMenuRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).ToList();
+
+            foreach(var rolemenu in roleMenu)
+            {
+                _roleMenuRepository.Remove(rolemenu);
+            }
+           
+           
+            foreach (var roleMenuId in viewModel.RoleId)
+            {
+                var roleMenu1 = new RoleMenu()
+                {
+                    RoleId = viewModel.roleinput,
+                    MenuId = roleMenuId
+                };
+                await _roleMenuRepository.AddAsync(roleMenu1);
+            }
+            return roles.RoleId;
+        }
+
+        #endregion
+
         #endregion
     }
 }

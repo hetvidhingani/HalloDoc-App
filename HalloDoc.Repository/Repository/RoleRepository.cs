@@ -23,5 +23,10 @@ namespace HalloDoc.Repository.Repository
         {
             return _context.Roles.Where(u=>u.AccountType == 2);
         }
+        public Role findByName(string name)
+        {
+            Role data = _context.Roles.Where(u=> u.Name == name).FirstOrDefault();
+            return data;
+        }
     }
 }
