@@ -73,5 +73,6 @@ namespace HalloDoc.Services.IServices
         Task<object> CreateAccess(AccountAccessViewModel viewModel);
         AccountAccessViewModel EditAccountAccess(int id, int AdminId);
         Task<object> submitEditAccess(AccountAccessViewModel viewModel);
+        Task<object> deleteAccountAccess(int id);
     }
 }

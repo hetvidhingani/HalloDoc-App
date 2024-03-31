@@ -1078,7 +1078,12 @@ namespace HalloDoc.Services.Services
             model.status = _statusRepository.GetAll().ToList();
             return model;
         }
-       
+        public void DeleteProvider(int id)
+        {
+            Physician phy = _physicianRepository.GetById(id);
+            phy.IsDeleted = new BitArray(new bool[] { true });
+            _physicianRepository.UpdateAsync(phy);
+        }
         #endregion
 
         #region provider info
@@ -1090,7 +1095,7 @@ namespace HalloDoc.Services.Services
         }
         public ProviderInfoViewModel ProviderInformation(int RegionId)
         {
-            List<Physician> regionwisephysician = _physicianRepository.GetAll().ToList();
+            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u=>u.IsDeleted!=null).ToList();
 
             if (RegionId != 0)
             {
@@ -1188,7 +1193,7 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> AccountAccessTable()
         {
-            List<Role> roles = _roleRepository.GetAll().ToList();
+            List<Role> roles = _roleRepository.GetAll().Where(u=>u.IsDeleted != null).ToList();
             AccountAccessViewModel model = new AccountAccessViewModel()
             {
                 roles = roles,
@@ -1304,6 +1309,14 @@ namespace HalloDoc.Services.Services
                 await _roleMenuRepository.AddAsync(roleMenu1);
             }
             return roles.RoleId;
+        }
+
+        public async Task<object> deleteAccountAccess(int id)
+        {
+            Role role= _roleRepository.GetAll().Where(u => u.RoleId == id).FirstOrDefault();
+            role.IsDeleted = new BitArray(new bool[] { true });
+            await _roleRepository.UpdateAsync(role);
+            return role.RoleId;
         }
 
         #endregion
