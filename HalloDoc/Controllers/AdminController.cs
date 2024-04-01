@@ -614,9 +614,9 @@ namespace HalloDoc.Controllers
             var result = await _admin.EditProvider(id);
             return View(result);
         }
-        public async Task<IActionResult> DeleteProvider(int id)
+        public  IActionResult DeleteProvider(int id)
         {
-            var result = await _admin.DeleteProvider(id);
+            _admin.DeleteProvider(id);
             return RedirectToAction("ProviderInformation");
         }
         #endregion
@@ -693,15 +693,15 @@ namespace HalloDoc.Controllers
         public IActionResult submitEditAccess(AccountAccessViewModel viewModel)
         {
             var result = _admin.submitEditAccess(viewModel);
-            return RedirectToAction("EditAccountAccess", new {id = result.Result});
+            return RedirectToAction("AccountAccess");
         }
-        #endregion
         public IActionResult deleteAccess(int id)
         {
             var result = _admin.deleteAccountAccess(id);
-            return RedirectToAction("EditAccountAccess", new { id = result.Result });
+            return RedirectToAction("AccountAccess");
 
         }
+        #endregion
         #endregion
     }
 }

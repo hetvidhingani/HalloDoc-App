@@ -587,8 +587,6 @@
         const currentForm = this.closest("form");
         saveFormData(currentForm);
     });
-
-    // Event listeners for cancel buttons
     document.getElementById("cancel-button1").addEventListener("click", function (event) {
         event.preventDefault();
         const currentForm = this.closest("form");
@@ -612,6 +610,37 @@
         const currentForm = this.closest("form");
         cancelFormData(currentForm);
     });
+
+    function cancelFormData(form) {
+        const formElement = form.closest("form");
+        var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
+        inputs.forEach(function (input) {
+            input.setAttribute("readonly", "readonly");
+            input.setAttribute("disabled", "disabled");
+        });
+
+        // Hide save and cancel buttons and show edit button
+        var editButtons11 = formElement.querySelector(".edit-button");
+        editButtons11.style.display = "block";
+        var saveButtons23 = formElement.querySelector(".savebtn");
+        saveButtons23.style.display = "none";
+
+        var canclebtn45 = formElement.querySelector(".cancelbtn");
+        canclebtn45.style.display = "none";
+
+        formElement.reset(); // reset form
+    }
+    function resetValidationErrors(formElement) {
+        var validationSummaries = formElement.querySelectorAll("div[data-valmsg-for]");
+        validationSummaries.forEach(function (validationSummary) {
+            validationSummary.innerText = "";
+        });
+
+        var validationSpans = formElement.querySelectorAll("span[data-valmsg-replace]");
+        validationSpans.forEach(function (validationSpan) {
+            validationSpan.innerText = "";
+        });
+    }
     //end
     //dark theme
     if (localStorage.getItem("Mytheme")) {

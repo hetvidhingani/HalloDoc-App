@@ -1095,7 +1095,7 @@ namespace HalloDoc.Services.Services
         }
         public ProviderInfoViewModel ProviderInformation(int RegionId)
         {
-            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u=>u.IsDeleted!=null).ToList();
+            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u=>u.IsDeleted==null).ToList();
 
             if (RegionId != 0)
             {
@@ -1193,7 +1193,7 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> AccountAccessTable()
         {
-            List<Role> roles = _roleRepository.GetAll().Where(u=>u.IsDeleted != null).ToList();
+            List<Role> roles = _roleRepository.GetAll().Where(u=>u.IsDeleted == null).ToList();
             AccountAccessViewModel model = new AccountAccessViewModel()
             {
                 roles = roles,
@@ -1289,13 +1289,13 @@ namespace HalloDoc.Services.Services
            var roles = _roleRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).FirstOrDefault();
 
             roles.Name =viewModel.RoleName;
-            _roleRepository.UpdateAsync(roles);
+            await _roleRepository.UpdateAsync(roles);
 
-            var roleMenu = _roleMenuRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).ToList();
+            var roleMenu =  _roleMenuRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).ToList();
 
             foreach(var rolemenu in roleMenu)
             {
-                _roleMenuRepository.Remove(rolemenu);
+               await _roleMenuRepository.Remove(rolemenu);
             }
            
            
@@ -1308,7 +1308,7 @@ namespace HalloDoc.Services.Services
                 };
                 await _roleMenuRepository.AddAsync(roleMenu1);
             }
-            return roles.RoleId;
+            return roles;
         }
 
         public async Task<object> deleteAccountAccess(int id)
