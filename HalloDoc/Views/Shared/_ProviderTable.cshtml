@@ -20,7 +20,14 @@
                 <tr>
                     <input type="hidden" asp-for="@u.PhysicianId">
                     <td>
-                        <input type="checkbox" value="" class="checkboxForAll" name="selectedFiles">
+                        <input type="checkbox" value="" class="checkboxForAll notification" name="selectedFiles" onclick="selectCheck()"
+                            @foreach (var notification in Model.PhysicianNotifications)
+                        {
+                            if (notification.PhysicianId == u.PhysicianId)
+                            {
+                                <text>checked</text>
+                            }
+                        }>
                     </td>
                     <td>@u.FirstName  @u.LastName</td>
                     <td>
@@ -55,10 +62,61 @@
 
         </tbody>
     </table>
+   <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary " id="savebtn" style="display:none">Save Changes</button>
+        <button type="reset" class="btn btn-outline-danger " id="cancelbtn" onclick="cancelCheck()" style="display:none">Cancel</button>
+
+   </div>
 </div>
 @* model *@
 
 <script>
+
+    function selectCheck() {
+        var saveButton = document.getElementById("savebtn");
+        saveButton.style.display = "block";
+
+        // Hide the cancel button
+        var cancelButton = document.getElementById("cancelbtn");
+        cancelButton.style.display = "block";
+    }
+
+    function cancelCheck() {
+        var saveButton = document.getElementById("savebtn");
+        saveButton.style.display = "none";
+
+        var cancelButton = document.getElementById("cancelbtn");
+        cancelButton.style.display = "none";
+
+        // Reload the page
+        location.reload();
+    }
+    
+    $('#savebtn').click(function () {
+        var ids = [];
+        $('.notification:checked').each(function () {
+            var id = $(this).closest('tr').find('input[type="hidden"]').val();
+            ids.push(id);
+        });
+
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { ids: ids },
+            url: "@(Url.Action("StopNotificationPhysician", "Admin"))",
+            success: function (response) {
+                if (response == "success") {
+
+                }
+                else {
+                    location.reload();
+                }
+            },
+            error: function () {
+                console.log("error");
+            }
+        });
+    });
     $('.contactProviderc').click(function () {
         var id = this.id;
      

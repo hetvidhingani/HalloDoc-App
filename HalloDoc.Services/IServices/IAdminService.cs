@@ -50,7 +50,7 @@ namespace HalloDoc.Services.IServices
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id);
         Task<object> ResetPasswordAdmin(AdminMyProfileViewModel model);
-        Task<object> SaveAdminInfo(AdminMyProfileViewModel model);
+        Task<object> SaveAdminInfo(AdminMyProfileViewModel model,List<int> ids);
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
@@ -75,5 +75,6 @@ namespace HalloDoc.Services.IServices
         Task<object> submitEditAccess(AccountAccessViewModel viewModel);
         Task<object> deleteAccountAccess(int id);
         void DeleteProvider(int id);
+        void StopNotificationPhysician(List<int> ids);
     }
 }

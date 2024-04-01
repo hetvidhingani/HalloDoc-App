@@ -502,10 +502,10 @@ namespace HalloDoc.Controllers
 
 
         }
-        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model)
+        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model,List<int> ids)
         {
 
-            await _admin.SaveAdminInfo(model);
+            await _admin.SaveAdminInfo(model,ids);
             return RedirectToAction("AdminMyProfile");
 
         }
@@ -559,6 +559,7 @@ namespace HalloDoc.Controllers
         #region provider
 
         #region provider info
+        [HttpGet]
         public IActionResult ProviderInformation()
         {
             var result = _admin.RegionList();
@@ -592,10 +593,16 @@ namespace HalloDoc.Controllers
 
             return Json("success");
         }
-        #endregion
+        [HttpPost]
+        public  IActionResult StopNotificationPhysician(List<int> ids)
+        {
+               _admin.StopNotificationPhysician(ids);
+            return Json("success");
+        }
+            #endregion
 
-        #region Create Provider
-        public async Task<IActionResult> CreateProvider()
+            #region Create Provider
+            public async Task<IActionResult> CreateProvider()
         {
             var result = await _admin.Createprovider();
             return View(result);
@@ -702,6 +709,7 @@ namespace HalloDoc.Controllers
 
         }
         #endregion
+
         #endregion
     }
 }

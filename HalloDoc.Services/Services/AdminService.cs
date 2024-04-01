@@ -828,7 +828,10 @@ namespace HalloDoc.Services.Services
         {
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
-            var adminRegion = await _adminRegionRepository.adminRegionByAdminID(admin.AdminId);
+            List<AdminRegion> adminRegion = _adminRegionRepository.GetAll().Where(u => u.AdminId == adminId).ToList();
+            List<Region> regions = await _regionRepository.GetRegions();
+
+            // Create the view model
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
             {
                 AdminID = admin.AdminId,
@@ -845,11 +848,10 @@ namespace HalloDoc.Services.Services
                 Address2 = admin.Address2,
                 City = admin.City,
                 RegionId = admin.RegionId,
-                State = await _regionRepository.GetRegions(),
+                State = regions,
                 Zip = admin.Zip,
                 BillingPhoneNumber = admin.AltPhone,
-                AdminRegions = adminRegion
-
+                AdminRegions = adminRegion.Select(r => r.Region).ToList(),
             };
             return model;
 
@@ -865,9 +867,10 @@ namespace HalloDoc.Services.Services
             return user;
         }
 
-        public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model)
+        public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model, List<int> ids)
         {
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+           
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
 
             admin.FirstName = model.FirstName;
@@ -877,10 +880,27 @@ namespace HalloDoc.Services.Services
             admin.ModifiedDate = DateTime.Now;
             await _adminRepository.UpdateAsync(admin);
 
+
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.ModifiedDate = DateTime.Now;
             await _aspnetuserRepository.UpdateAsync(user);
+
+            List<AdminRegion> region = _adminRegionRepository.GetAll().Where(u => u.AdminId == model.AdminID).ToList();
+            foreach(var adminregion in region)
+            {
+                _adminRegionRepository.Remove(adminregion);
+            }
+            var adminregion1 = ids.Select(id => new AdminRegion
+            {
+                AdminId = model.AdminID,
+                AdminRegionId = id,
+            });
+           
+            foreach (var newPhysician in adminregion1)
+            {
+                _adminRegionRepository.AddAsync(newPhysician);
+            }
 
             return user;
         }
@@ -1124,6 +1144,30 @@ namespace HalloDoc.Services.Services
         {
             return _physicianRepository.GetById(id);
 
+        }
+
+        public void StopNotificationPhysician(List<int> ids)
+        {
+            var existingPhysicians = _physicianNotificationRepository.GetAll();
+
+            //var physiciansToRemove = existingPhysicians.Where(p => ids.Contains(p.PhysicianId)).ToList();
+            foreach (var physician in existingPhysicians)
+            {
+                _physicianNotificationRepository.Remove(physician);
+            }
+
+            var newPhysicians = ids.Select(id => new PhysicianNotification
+            {
+                PhysicianId = id,
+                IsNotificationStopped = new BitArray(new bool[] { true }),
+            });
+            foreach (var newPhysician in newPhysicians)
+            {
+                _physicianNotificationRepository.AddAsync(newPhysician);
+            }
+
+           
+          
         }
         #endregion
 
