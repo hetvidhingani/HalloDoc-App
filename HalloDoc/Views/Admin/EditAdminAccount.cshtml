@@ -52,7 +52,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleID" disabled>
-                               
+
 
                                 @foreach (var role in Model.roles)
                                 {
@@ -69,10 +69,10 @@
                 </div>
 
             </form>
-            <form  id="form1">
+            <form id="form1">
 
                 <h3> Administrator Information</h3>
-                <input  type="hidden" asp-for="AdminID" />
+                <input type="hidden" asp-for="AdminID" />
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -121,14 +121,14 @@
                         @foreach (var cb in Model.AdminRegions)
                         {
 
-                            <div class="form-check mx-2" >
+                            <div class="form-check mx-2">
                                 <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" checked disabled>
                                 <label class="form-check-label" for="notification-@cb.RegionId">
 
                                     @cb.Name
-                                    </label>
-                                </div>
-                            }
+                                </label>
+                            </div>
+                        }
                     </div>
 
 
@@ -368,17 +368,17 @@
         // Serialize the form data
         var formData = new FormData(form);
         const formElement = form.closest("form");
-            // Add selected roles to formData
-            // formData.append("selectedRoles", JSON.stringify(selectedRoles));
+        // Add selected roles to formData
+        // formData.append("selectedRoles", JSON.stringify(selectedRoles));
 
-            $.ajax({
-                type: "POST",
-                url: "/Admin/SaveAdminInfo",
-                data:  formData, // Include serialized form data
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    toastr.success('Data Saved Successfully.');
+        $.ajax({
+            type: "POST",
+            url: "/Admin/SaveAdminInfo",
+            data: formData, // Include serialized form data
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                toastr.success('Data Saved Successfully.');
                 var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
                 inputs.forEach(function (input) {
                     input.setAttribute("readonly", "readonly");
@@ -395,12 +395,12 @@
                 // var canclebtn45 = formElement.querySelector(".cancelbtn");
                 // canclebtn45.style.display = "none";
 
-                },
-                error: function (response) {
-                    // Handle error response
-                    alert("Error saving shipping information");
-                }
-            });
+            },
+            error: function (response) {
+                // Handle error response
+                alert("Error saving shipping information");
+            }
+        });
         // } else {
         //     form.reportValidity();
         // }

@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.IRepository
 {
-    public interface IHealthProfessionalTypeRepository:IGenericRepository<HealthProfessionalType>
+    public interface IEmailLogsRepository : IGenericRepository<EmailLog>
     {
-        Task<List<HealthProfessionalType>> GetProfession();
-
     }
 }

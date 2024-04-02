@@ -29,7 +29,7 @@ namespace HalloDoc.Entities.ViewModels
         public int RequestID { get; set; }
         public int RequestClientID { get; set; }
 
-        
+       
         public List<HealthProfessionalType>? Profession { get; set;}
 
         public List<HealthProfessional>? Business { get; set;}

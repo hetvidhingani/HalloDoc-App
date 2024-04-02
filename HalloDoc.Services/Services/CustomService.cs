@@ -48,6 +48,7 @@ namespace HalloDoc.Services.Services
         private readonly IRequestClosedRepository _requestClosedRepository;
         private readonly IAdminRegionRepository _adminRegionRepository;
         private readonly IAspNetUserRolesRepository _aspNetUserRolesRepository;
+        private readonly IEmailLogsRepository _emailLogsRepository;
 
         public CustomService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
@@ -58,7 +59,8 @@ namespace HalloDoc.Services.Services
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
-                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository,IAspNetUserRolesRepository aspNetUserRolesRepository)
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository,IAspNetUserRolesRepository aspNetUserRolesRepository,
+                               IEmailLogsRepository emailLogsRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -81,6 +83,7 @@ namespace HalloDoc.Services.Services
             _requestClosedRepository = requestClosedRepository;
             _adminRegionRepository = adminRegionRepository;
             _aspNetUserRolesRepository = aspNetUserRolesRepository;
+            _emailLogsRepository = emailLogsRepository;
         }
         #endregion
 
@@ -121,6 +124,18 @@ namespace HalloDoc.Services.Services
 
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
+
+                EmailLog log = new EmailLog();
+                log.EmailTemplate = body;
+                log.SubjectName = subject;
+                log.EmailId = email;
+                log.SentDate = DateTime.Now;
+                log.SentTries = 1;
+                log.CreateDate = DateTime.Now;
+                log.IsEmailSent = new BitArray(new bool[] { true });
+
+                _emailLogsRepository.AddAsync(log);
+
                 var abc = "Success";
                 return abc;
             }

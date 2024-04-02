@@ -18,6 +18,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="has-search ">
+                        <div class="form-floating form-group">
                         <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                             <option value="0" selected>All Regions</option>
 
@@ -26,6 +27,9 @@
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                            <label>State</label>
+                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end">

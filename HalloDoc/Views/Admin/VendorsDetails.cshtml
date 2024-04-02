@@ -1,0 +1,100 @@
+﻿@model VendorsViewModel;
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Vendor(s)</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <div class="row d-flex justify-content-between align-items-baseline">
+                <div class="col-lg-3 col-md-3 col-sm-6 ">
+                    <div class="form-group has-search mb-1">
+                        <span class="fa fa-search form-control-feedback"></span>
+                        <input type="text" class="form-control w-100" placeholder="Search" id="search-input">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6">
+                    <div class="has-search ">
+
+                        <select id="professionType" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="ProfessionTypeID">
+                            <option value="0" selected>All</option>
+
+                            @foreach (var type in Model.ProfessionType)
+                            {
+                                <option value="@type.HealthProfessionalId">@type.ProfessionName</option>
+                            }
+                        </select>
+                        <span asp-validation-for="ProfessionTypeID" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
+                    <a class="btn btn-outline-info" href="@Url.Action("AddVendor","Admin") ">+ Add Business</a>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="contactProviderMODEL" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script>
+
+    var professionType;
+    var VendorName;
+
+    $("#search-input").on('input', function () {
+        VendorName = $(this).val();
+
+        load();
+    });
+
+    $(document).ready(function () {
+        load();
+
+    });
+    function load() {
+
+
+        $.ajax({
+            url: "/Admin/VendorTable",
+            type: "POST",
+            data: { VendorProfessionTypeId: professionType, VendorName: VendorName },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/VendorTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    $("#professionType").on("input", function () {
+
+
+        professionType = $(this).val();
+        load();
+
+    })
+</script>

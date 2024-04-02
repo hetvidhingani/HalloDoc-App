@@ -18,6 +18,8 @@ using Org.BouncyCastle.Ocsp;
 using static HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 using System.Drawing.Printing;
+using Org.BouncyCastle.Utilities.Net;
+
 
 
 namespace HalloDoc.Services.Services
@@ -62,7 +64,7 @@ namespace HalloDoc.Services.Services
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
-                               IMenuRepository menuRepository,IRoleMenuRepository roleMenuRepository)
+                               IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -137,7 +139,6 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-
 
         #region Admin
         #region Send Mail
@@ -829,7 +830,7 @@ namespace HalloDoc.Services.Services
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             List<AdminRegion> adminRegion = _adminRegionRepository.GetAll().Where(u => u.AdminId == adminId).ToList();
-            List<Region> regions = await _regionRepository.GetRegions();
+            List<Region> regions =  _regionRepository.GetAll().ToList();
 
             // Create the view model
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
@@ -838,7 +839,9 @@ namespace HalloDoc.Services.Services
                 UserName = aspNetUser.UserName,
                 Password = _aspnetuserRepository.DecodeFrom64(aspNetUser.PasswordHash),
                 Status = (int)admin.Status,
-                Role = "Admin",
+                RoleID = admin.RoleId,
+                roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList(),
+
                 FirstName = admin.FirstName,
                 LastName = admin.LastName,
                 Email = admin.Email,
@@ -870,7 +873,7 @@ namespace HalloDoc.Services.Services
         public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model, List<int> ids)
         {
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
-           
+
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
 
             admin.FirstName = model.FirstName;
@@ -887,7 +890,7 @@ namespace HalloDoc.Services.Services
             await _aspnetuserRepository.UpdateAsync(user);
 
             List<AdminRegion> region = _adminRegionRepository.GetAll().Where(u => u.AdminId == model.AdminID).ToList();
-            foreach(var adminregion in region)
+            foreach (var adminregion in region)
             {
                 _adminRegionRepository.Remove(adminregion);
             }
@@ -896,7 +899,7 @@ namespace HalloDoc.Services.Services
                 AdminId = model.AdminID,
                 RegionId = id,
             });
-           
+
             foreach (var newPhysician in adminregion1)
             {
                 _adminRegionRepository.AddAsync(newPhysician);
@@ -1012,6 +1015,7 @@ namespace HalloDoc.Services.Services
             return encounter;
         }
         #endregion
+
         #endregion
 
         #region Provider
@@ -1022,7 +1026,7 @@ namespace HalloDoc.Services.Services
         {
             ProviderViewModel model = new ProviderViewModel();
             model.State = await _regionRepository.GetRegions();
-            model.Role = await _roleRepository.GetRoles();
+            model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             return model;
         }
         public async Task<object> CreateProvider(ProviderViewModel model)
@@ -1067,6 +1071,61 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
+        #region Create Admin
+        public async Task<object> CreateAdmin()
+        {
+            AdminMyProfileViewModel model = new AdminMyProfileViewModel();
+            model.State = await _regionRepository.GetRegions();
+            model.roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList();
+
+            return model;
+        }
+        public async Task<object> CreateAdmin(AdminMyProfileViewModel model)
+        {
+            AspNetUser user = new AspNetUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = model.UserName,
+                PasswordHash = model.Password,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                CreatedDate = DateTime.Now,
+            };
+            await _aspnetuserRepository.AddAsync(user);
+            Admin admin = new Admin()
+            {
+                AspNetUserId = user.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Mobile = model.PhoneNumber,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                City = model.City,
+                RegionId = model.RegionId,
+                Zip = model.Zip,
+                AltPhone = model.BillingPhoneNumber,
+                CreatedBy = user.Id,
+                CreatedDate = DateTime.Now,
+                Status = 1,
+                RoleId = model.RoleID
+            };
+            await _adminRepository.AddAsync(admin);
+
+            foreach (var u in model.AdminRegionID)
+            {
+                AdminRegion adminRegion = new AdminRegion()
+                {
+                    AdminId = admin.AdminId,
+                    RegionId = u,
+                };
+                await _adminRegionRepository.AddAsync(adminRegion);
+            }
+
+            return model;
+        }
+        #endregion
+
         #region edit provider
         public async Task<object> EditProvider(int physicianID)
         {
@@ -1093,7 +1152,7 @@ namespace HalloDoc.Services.Services
             model.UserName = asp.UserName;
             model.Password = asp.PasswordHash;
             model.RoleId = (int)phy.RoleId;
-            model.Role = await _roleRepository.GetRoles();
+            model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             model.statusId = (int)phy.Status;
             model.status = _statusRepository.GetAll().ToList();
             return model;
@@ -1115,7 +1174,7 @@ namespace HalloDoc.Services.Services
         }
         public ProviderInfoViewModel ProviderInformation(int RegionId)
         {
-            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u=>u.IsDeleted==null).ToList();
+            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
 
             if (RegionId != 0)
             {
@@ -1166,8 +1225,8 @@ namespace HalloDoc.Services.Services
                 _physicianNotificationRepository.AddAsync(newPhysician);
             }
 
-           
-          
+
+
         }
         #endregion
 
@@ -1237,7 +1296,7 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> AccountAccessTable()
         {
-            List<Role> roles = _roleRepository.GetAll().Where(u=>u.IsDeleted == null).ToList();
+            List<Role> roles = _roleRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
             AccountAccessViewModel model = new AccountAccessViewModel()
             {
                 roles = roles,
@@ -1245,7 +1304,7 @@ namespace HalloDoc.Services.Services
             return model;
         }
 
-       
+
         #endregion
 
         #region Create Role
@@ -1259,15 +1318,15 @@ namespace HalloDoc.Services.Services
             };
             return viewModel;
         }
-        public AccountAccessViewModel MenuName(int AccountTypeId, int typename, int id=0 )
+        public AccountAccessViewModel MenuName(int AccountTypeId, int typename, int id = 0)
         {
             List<Menu> menu = null;
 
             List<RoleMenu> rolemenu = _roleMenuRepository.GetAll().ToList();
-            
+
             if (AccountTypeId == 1)
             {
-            List<Menu> menu1 = _menuRepository.GetAll().ToList();
+                List<Menu> menu1 = _menuRepository.GetAll().ToList();
                 menu = menu1.Where(u => u.AccountType == 1).ToList();
             }
             if (AccountTypeId == 2)
@@ -1276,7 +1335,7 @@ namespace HalloDoc.Services.Services
 
                 menu = menu2.Where(u => u.AccountType == 2).ToList();
             }
-            
+
             AccountAccessViewModel data = new()
             {
                 MenuNames = menu,
@@ -1296,26 +1355,26 @@ namespace HalloDoc.Services.Services
                 CreatedDate = DateTime.Now,
                 CreatedBy = "bda27f31-02b1-442f-9120-bed8f09a4966",
             };
-              await _roleRepository.AddAsync(role);
+            await _roleRepository.AddAsync(role);
 
             var roleName = _roleRepository.findByName(viewModel.RoleName);
-            foreach(var roleMenuId in viewModel.RoleId)
+            foreach (var roleMenuId in viewModel.RoleId)
             {
                 var roleMenu = new RoleMenu()
                 {
                     RoleId = roleName.RoleId,
                     MenuId = roleMenuId
                 };
-              await  _roleMenuRepository.AddAsync(roleMenu);
+                await _roleMenuRepository.AddAsync(roleMenu);
             }
             return "";
         }
         #endregion
 
         #region Edit Role
-        public AccountAccessViewModel EditAccountAccess(int id,int AdminId)
+        public AccountAccessViewModel EditAccountAccess(int id, int AdminId)
         {
-            var Admin = _adminRepository.GetAll().Where(u=>u.AdminId == AdminId).FirstOrDefault();
+            var Admin = _adminRepository.GetAll().Where(u => u.AdminId == AdminId).FirstOrDefault();
             var role = _roleRepository.GetAll().Where(u => u.RoleId == id).FirstOrDefault();
 
             AccountAccessViewModel viewModel = new AccountAccessViewModel()
@@ -1324,25 +1383,25 @@ namespace HalloDoc.Services.Services
                 roles = _roleRepository.GetAll().ToList(),
                 RoleName = role.Name,
                 accountTypeId = role.AccountType,
-                roleinput=id
+                roleinput = id
             };
             return viewModel;
         }
         public async Task<object> submitEditAccess(AccountAccessViewModel viewModel)
         {
-           var roles = _roleRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).FirstOrDefault();
+            var roles = _roleRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).FirstOrDefault();
 
-            roles.Name =viewModel.RoleName;
+            roles.Name = viewModel.RoleName;
             await _roleRepository.UpdateAsync(roles);
 
-            var roleMenu =  _roleMenuRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).ToList();
+            var roleMenu = _roleMenuRepository.GetAll().Where(u => u.RoleId == viewModel.roleinput).ToList();
 
-            foreach(var rolemenu in roleMenu)
+            foreach (var rolemenu in roleMenu)
             {
-               await _roleMenuRepository.Remove(rolemenu);
+                await _roleMenuRepository.Remove(rolemenu);
             }
-           
-           
+
+
             foreach (var roleMenuId in viewModel.RoleId)
             {
                 var roleMenu1 = new RoleMenu()
@@ -1357,7 +1416,7 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> deleteAccountAccess(int id)
         {
-            Role role= _roleRepository.GetAll().Where(u => u.RoleId == id).FirstOrDefault();
+            Role role = _roleRepository.GetAll().Where(u => u.RoleId == id).FirstOrDefault();
             role.IsDeleted = new BitArray(new bool[] { true });
             await _roleRepository.UpdateAsync(role);
             return role.RoleId;
@@ -1366,21 +1425,137 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region User Access
-        public UserAccessViewModel UserAccess (int accountTypeId)
+        public UserAccessViewModel UserAccess(int accountTypeId)
         {
             List<Admin> admin = _adminRepository.GetAll().ToList();
             List<Physician> physicians = _physicianRepository.GetAll().ToList();
-           
+
             List<Status> status = _statusRepository.GetAll().ToList();
 
             UserAccessViewModel data = new()
             {
                 admins = admin,
                 physician = physicians,
-                AccountTypeId= accountTypeId,
+                AccountTypeId = accountTypeId,
                 status = status,
             };
             return data;
+        }
+        #endregion
+
+        #region Vendor Details
+        public VendorsViewModel VendorDetail()
+        {
+            VendorsViewModel vendors = new VendorsViewModel()
+            {
+                ProfessionType = _healthProfessionalTypeRepository.GetAll().ToList(),
+            };
+            return vendors;
+        }
+
+        public VendorsViewModel VendorTable(int VendorProfessionTypeId, string VendorName)
+        {
+            List<HealthProfessional> vendors = _healthProfessionalsRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
+            if (!string.IsNullOrWhiteSpace(VendorName))
+            {
+                vendors = vendors.Where(a => a.VendorName.ToLower().Contains(VendorName.ToLower())).ToList();
+            }
+            if (VendorProfessionTypeId != 0)
+            {
+                vendors = vendors.Where(u => u.Profession == VendorProfessionTypeId).ToList();
+            }
+            VendorsViewModel model = new()
+            {
+                vendor = vendors,
+                ProfessionType = _healthProfessionalTypeRepository.GetAll().ToList(),
+            };
+            return model;
+        }
+        public VendorsViewModel AddVendor()
+        {
+            VendorsViewModel model = new VendorsViewModel()
+            {
+                ProfessionType = _healthProfessionalTypeRepository.GetAll().ToList(),
+                regions = _regionRepository.GetAll().ToList(),
+            };
+            return model;
+        }
+        public async Task<VendorsViewModel> AddVendor(VendorsViewModel model)
+        {
+            HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(model.VendorID);
+            if(healthProfessional == null)
+            {
+                HealthProfessional vendor = new()
+                {
+                    VendorName = model.vendorName,
+                    Profession = model.ProfessionTypeID,
+                    FaxNumber = model.FaxNumber,
+                    Address = model.street,
+                    City = model.City,
+                    RegionId = model.RegionID,
+                    State = await _regionRepository.FindState(model.RegionID),
+                    Zip = model.zip,
+                    CreatedDate = DateTime.Now,
+                    PhoneNumber = model.PhoneNumber,
+                    Email = model.Email,
+                    BusinessContact = model.BusinessContact,
+                };
+
+                await _healthProfessionalsRepository.AddAsync(vendor);
+            }
+            else
+            {
+                healthProfessional.VendorName = model.vendorName;
+                    healthProfessional.Profession = model.ProfessionTypeID;
+                    healthProfessional.FaxNumber = model.FaxNumber;
+                    healthProfessional.Address = model.street;
+                    healthProfessional.City = model.City;
+                    healthProfessional.RegionId = model.RegionID;
+                    healthProfessional.State = await _regionRepository.FindState(model.RegionID);
+                    healthProfessional.Zip = model.zip;
+                    healthProfessional.CreatedDate = DateTime.Now;
+                    healthProfessional.PhoneNumber = model.PhoneNumber;
+                    healthProfessional.Email = model.Email;
+                    healthProfessional.BusinessContact = model.BusinessContact;
+                await _healthProfessionalsRepository.UpdateAsync(healthProfessional);
+
+            }
+
+
+            return model;
+        }
+        public VendorsViewModel EditVendor(int id)
+        {
+            HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(id);
+            VendorsViewModel model = new VendorsViewModel()
+            {
+                VendorID=healthProfessional.VendorId,
+                vendorName = healthProfessional.VendorName,
+                ProfessionTypeID = (int)healthProfessional.Profession,
+                FaxNumber = healthProfessional.FaxNumber,
+                street = healthProfessional.Address,
+                City = healthProfessional.City,
+                RegionID = (int)healthProfessional.RegionId,
+                zip = healthProfessional.Zip,
+                PhoneNumber = healthProfessional.PhoneNumber,
+                Email = healthProfessional.Email,
+                BusinessContact = healthProfessional.BusinessContact,
+                ProfessionType = _healthProfessionalTypeRepository.GetAll().ToList(),
+                regions = _regionRepository.GetAll().ToList(),
+            };
+            return model;
+        }
+        #endregion
+
+        #region Email Logs
+        public EmailLogViewModel EmailLogs()
+        {
+            EmailLogViewModel model = new EmailLogViewModel()
+            {
+                role = _roleRepository.GetAll().ToList(),
+
+            };
+            return model;
         }
         #endregion
 

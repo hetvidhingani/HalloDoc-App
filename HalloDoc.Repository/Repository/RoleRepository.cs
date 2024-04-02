@@ -15,10 +15,10 @@ namespace HalloDoc.Repository.Repository
         {
             _context = context;
         }
-        public async Task<List<Role>> GetRoles()
-        {
-            return _context.Roles.ToList();
-        }
+        //public async Task<List<Role>> GetRoles()
+        //{
+        //    return _context.Roles.ToList();
+        //}
         public  IQueryable<Role> GetRolesProvider()
         {
             return _context.Roles.Where(u=>u.AccountType == 2);

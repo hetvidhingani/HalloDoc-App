@@ -1,0 +1,85 @@
+﻿@model UserAccessViewModel
+
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Account type</th>
+                <th scope="col">Account POC</th>
+                <th scope="col">Phone</th>
+                <th scope="col">status</th>
+                <th scope="col">Open Requests</th>
+                <th scope="col">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 1)
+            {
+                @foreach (var u in Model.physician)
+                {
+                    <tr>
+                        <input type="hidden" asp-for="@u.PhysicianId">
+
+                        <td>
+                            Physician
+                        </td>
+                        <td>@u.FirstName  @u.LastName</td>
+                        <td>@u.Mobile</td>
+                        <td>
+                            @foreach (var status in Model.status)
+                            {
+                                @if (status.Statusid == u.Status)
+                                {
+                                    @status.Statusname
+                                }
+                            }
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <div class="d-flex">
+                                <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            }
+            @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 2)
+            {
+                @foreach (var u in Model.admins)
+                {
+                    <tr>
+                        <input type="hidden" asp-for="@u.AdminId">
+
+                        <td>
+                            Admin
+                        </td>
+                        <td>@u.FirstName  @u.LastName</td>
+                        <td>@u.Mobile</td>
+                        <td>
+                            @foreach (var status in Model.status)
+                            {
+                                @if (status.Statusid == u.Status)
+                                {
+                                    @status.Statusname
+                                }
+                            }
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <div class="d-flex">
+                                <a class="btn btn-outline-info mx-1" asp-action="EditAdmin" asp-controller="Admin" asp-route-id="@u.AdminId">Edit</a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>

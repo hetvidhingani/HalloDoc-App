@@ -1,0 +1,190 @@
+﻿@model HalloDoc.Entities.ViewModels.VendorsViewModel
+
+<div class="mainSectionMargin w-100">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
+            <h3>Update Business</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class=" p-4  shadow mb-3  rounded h-100 PatientInfo">
+
+            <form asp-action="AddVendor" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="VendorID" />
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="vendorName" type="text" class="form-control" id="vendorname" placeholder=" ">
+                            <label for=""> Business Name</label>
+                            <span asp-validation-for="vendorName" class="text-danger"></span>
+
+                        </div>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <select class="form-select mb-3 " style="height:60px;" aria-label="Default select example" name="ProfessionTypeID" asp-for="ProfessionTypeID" id="professionSelect">
+                            <option value="" selected disabled>Profession</option>
+                            @foreach (var r in Model.ProfessionType)
+                            {
+                                <option value="@r.HealthProfessionalId">
+                                    @r.ProfessionName
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="ProfessionTypeID" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="FaxNumber" type="text" class="form-control" id="FaxNumber" placeholder=" ">
+                            <label for="">FaxNumber</label>
+                            <span asp-validation-for="FaxNumber" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone" type="tel" class="" style="border: none;height: 54px;" />
+
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder=" ">
+                            <label for=""> Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="BusinessContact" type="text" class="form-control" id="Email" placeholder=" ">
+                            <label for=""> BusinessContact</label>
+
+                            <span asp-validation-for="BusinessContact" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="street" type="text" class="form-control edit2" placeholder=" ">
+                            <label for=" ">Street </label>
+                            <span asp-validation-for="street" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="City" type="text" class="form-control edit2" placeholder=" ">
+                            <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+
+                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionID">
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.regions)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RegionID" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="zip" type="number" class="form-control edit2" placeholder=" " >
+                            <label for=" ">Zip Code </label>
+                            <span asp-validation-for="zip" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+
+
+                        <button type="submit" class="createNewReqBtn submitBtn">Save</button>
+                        <a asp-action="Dashboard" asp-controller="Admin" class="btn ">
+                            <button type="button" class="createNewReqBtn">
+                                Cancle
+                            </button>
+
+                        </a>
+
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    //phone number
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+
+    //sweet alert
+    $('#sendorder').on('submit', function (e) {
+        event.preventDefault();
+        var email = $("#email").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Admin/SendOrderDetails",
+            data: { email: email },
+
+        })
+            .done(function (response) {
+                if (response.success) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: data
+                    })
+                        .done(function (response) {
+                            let timerInterval;
+                            Swal.fire({
+                                title: "Order Sent Successfully",
+                                icon: "success",
+                                timer: 1500,
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                            }).then(function () {
+                                window.location.href = '@Url.Action("Dashboard", "Admin")';
+                            });
+                        });
+
+                }
+            });
+    });
+
+</script>

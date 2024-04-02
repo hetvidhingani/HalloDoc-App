@@ -130,7 +130,7 @@
                                 <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Invocing</a></li>
                             </ul>
                         </div>
-                        <a id="5" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Partners</a>
+                        <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Partners</a>
                         <div class="dropdown " id="7">
                             <a class="nav-link py-2" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
                                 Access
@@ -142,8 +142,19 @@
 
                             </ul>
                         </div>
-                        <a id="6" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Records</a>
+                        <div class="dropdown " id="6">
+                            <a class="nav-link py-2" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
+                                Records
+                            </a>
 
+                            <ul class="dropdown-menu layoutTab">
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="AccountAccess" asp-controller="Admin">Search Records</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="EmailLogs" asp-controller="Admin">Email Logs</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="UserAccess" asp-controller="Admin">SMS Logs</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="UserAccess" asp-controller="Admin">Patient Records</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="UserAccess" asp-controller="Admin">Blocked History</a></li>
+                            </ul>
+                        </div>
                     </span>
                 </div>
 

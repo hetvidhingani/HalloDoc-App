@@ -64,5 +64,11 @@ namespace HalloDoc.Entities.ViewModels
 
         public List<int>? notification { get; set; }
         public List<Region>? AdminRegions { get; set; }
+
+        public List<Role> roles { get; set; }
+        public int? RoleID { get; set; }
+        public List<int> AdminRegionID { get; set; }
+
+
     }
 }

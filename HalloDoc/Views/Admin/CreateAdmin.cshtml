@@ -1,0 +1,233 @@
+﻿@model HalloDoc.Entities.ViewModels.AdminMyProfileViewModel
+
+<div class="mainSectionMargin ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
+            <h3>Create Admin Account</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
+            <form asp-action="CreateAdmin" asp-controller="Admin" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="AdminID" />
+
+                <h3>Account Information</h3>
+
+                <div class="row ">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="UserName" type="text" class="form-control" placeholder=" "  >
+                            <label for=" ">UserName</label>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="Password" type="password" class="form-control" placeholder=" ">
+                            <label for=" ">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="form-floating form-group">
+                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleID">
+                            <option value="0" selected>Role</option>
+
+                            @foreach (var role in Model.roles)
+                            {
+                                    <option value="@role.RoleId">@role.Name</option>
+                            }
+                        </select>
+                            <label for=" ">Role</label>
+                        <span asp-validation-for="RoleID" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+              
+
+                <h3> Administrator Information</h3>
+               
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="FirstName" type="text" class="form-control edit" placeholder=" "  >
+                            <label for=" ">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="LastName" type="text" class="form-control edit" placeholder=" "  >
+                            <label for=" ">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="Email"
+                                   id="Email"  type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" "  >
+                            <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="ConfirmEmail"
+                                   id="patientEmail" type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" "  >
+                            <label for=" ">Confirm Email</label>
+                            <span asp-validation-for="ConfirmEmail" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input required asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit"   />
+
+                        </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center">
+                        @foreach (var cb in Model.State)
+                        {
+
+                            <div class="form-check mx-2">
+                                <input class="form-check-input edit" type="checkbox" id="AdminRegionID-@cb.RegionId" name="AdminRegionID" value="@cb.RegionId">
+                                <label class="form-check-label" for="AdminRegionID-@cb.RegionId">
+
+                                    @cb.Name
+                                </label>
+                                <span asp-validation-for="RegionId" class="text-danger"></span>
+                            </div>
+                        }
+                    </div>
+
+
+                </div>
+               
+
+        
+                <h3> Mailing & Billing Information</h3>
+               
+
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="Address1" type="text" class="form-control edit2" placeholder=" "  >
+                            <label for=" ">Address1</label>
+                            <span asp-validation-for="Address1" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="Address2" type="text" class="form-control edit2" placeholder=" "  >
+                            <label for=" ">Address2 </label>
+                            <span asp-validation-for="Address2" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="City" type="text" class="form-control edit2" placeholder=" "  >
+                            <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+
+                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.State)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input required asp-for="Zip" type="text" class="form-control edit2" placeholder=" "  >
+                            <label for=" ">Zip code</label>
+                            <span asp-validation-for="Zip" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input required asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit2"   />
+
+                        </div>
+                        <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
+                    </div>
+
+
+                </div>
+               <div class="d-flex justify-content-end">
+                   <button class="btn btn-success" >Create Account</button>
+               </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    //dark theme
+    if (localStorage.getItem("Mytheme")) {
+        body.classList.toggle(localStorage.getItem("Mytheme"));
+    }
+    //phone number flag
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    $('#phone').attr('value', "+91");
+    const phoneInputField1 = document.querySelector("#phone2");
+
+    const phoneInput1 = window.intlTelInput(phoneInputField1, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    $('#phone2').attr('value', "+91");
+
+
+   
+</script>

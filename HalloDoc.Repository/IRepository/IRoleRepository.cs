@@ -9,7 +9,7 @@ namespace HalloDoc.Repository.IRepository
 {
     public interface IRoleRepository:IGenericRepository<Role>
     {
-        Task<List<Role>> GetRoles();
+        //Task<List<Role>> GetRoles();
         IQueryable<Role> GetRolesProvider();
         Role findByName(string name);
     }

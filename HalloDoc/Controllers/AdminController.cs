@@ -5,6 +5,7 @@ using HalloDoc.Repository.Repository;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Org.BouncyCastle.Ocsp;
 using System.Diagnostics.Contracts;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -615,6 +616,20 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Create Admin
+        public async Task<IActionResult> CreateAdmin()
+        {
+            var result  = await _admin.CreateAdmin();
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult CreateAdmin(AdminMyProfileViewModel model)
+        {
+            var result = _admin.CreateAdmin(model);
+            return RedirectToAction("UserAccess",result);
+        }
+        #endregion
+
         #region edit provider details
         public async Task<IActionResult> EditProvider(int id)
         {
@@ -711,13 +726,53 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region User Access
-        public IActionResult UserAccess(int accountTypeId)
+        public IActionResult UserAccess()
         {
-            var result = _admin.UserAccess(accountTypeId);
+            return View();
+        }
+        public IActionResult UserAccessTable(int AaccountTypeId)
+        {
+            var result = _admin.UserAccess(AaccountTypeId);
+            return PartialView("_UserAccessTable", result);
+        }
+        #endregion
+
+        #region Vendors
+        public IActionResult VendorsDetails()
+        {
+            var result = _admin.VendorDetail();
+            return View(result);
+        }
+        public IActionResult VendorTable(int VendorProfessionTypeId,string VendorName)
+        {
+            var result = _admin.VendorTable(VendorProfessionTypeId,VendorName);
+            return PartialView("_VendorsTable", result);
+        }
+        public IActionResult AddVendor()
+        {
+            var result = _admin.AddVendor();
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddVendor(VendorsViewModel model)
+        {
+            await _admin.AddVendor(model);
+            return RedirectToAction("VendorsDetails");
+        }
+        public IActionResult EditVendor(int id)
+        {
+            var result = _admin.EditVendor(id);
             return View(result);
         }
         #endregion
 
+        #region Email Logs
+        public IActionResult EmailLogs()
+        {
+            var result = _admin.EmailLogs();
+            return View();
+        }
+        #endregion
         #endregion
 
     }

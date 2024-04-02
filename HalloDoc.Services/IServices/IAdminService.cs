@@ -57,6 +57,8 @@ namespace HalloDoc.Services.IServices
         AdminDashboardViewModel Pagination(string state,int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
         Task<object> CreateProvider(ProviderViewModel model);
         Task<object> Createprovider();
+        Task<object> CreateAdmin();
+        Task<object> CreateAdmin(AdminMyProfileViewModel model);
         ProviderInfoViewModel ProviderInformation(int RegionId);
         object RegionList();
         Task<object> EditProvider(int physicianID);
@@ -77,5 +79,11 @@ namespace HalloDoc.Services.IServices
         void DeleteProvider(int id);
         void StopNotificationPhysician(List<int> ids);
         UserAccessViewModel UserAccess(int accountTypeId);
+        VendorsViewModel VendorDetail();
+        VendorsViewModel VendorTable(int VendorProfessionTypeId,string VendorName);
+        VendorsViewModel AddVendor();
+        Task<VendorsViewModel> AddVendor(VendorsViewModel model);
+        VendorsViewModel EditVendor(int id);
+        EmailLogViewModel EmailLogs();
     }
 }

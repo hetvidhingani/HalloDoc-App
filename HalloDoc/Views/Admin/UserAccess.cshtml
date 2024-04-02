@@ -18,6 +18,7 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="has-search ">
+                        <div class="form-floating form-group">
                         <select asp-for="@Model.AccountTypeId" style="height:55px;" id="accountType" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh">
                             <option value="" selected>All</option>
                             <option value="2">Admin</option>
@@ -26,98 +27,22 @@
                         </select>
                         <label>Account Type</label>
                         <span asp-validation-for="AccountTypeId" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end">
-                    <a class="btn btn-info" href="@Url.Action("CreateProvider","Admin") ">Create Provider Account</a>
-                </div>
+               
+               <div class="d-flex justify-content-end col-lg-6 col-md-6 col-sm-6">
+                    
+                        <a class="btn btn-info providerBtn" href="@Url.Action("CreateProvider","Admin") " style="display:none">Create Provider Account</a>
+                   
+                        <a class="btn btn-info adminBtn" style="display:none" href="@Url.Action("CreateAdmin","Admin") ">Create Admin Account</a>
+                  
+               </div>
+                
             </div>
             <div class="row mt-2">
-                <div class="table-responsive">
-                    <table class="table ">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th scope="col">Account type</th>
-                                <th scope="col">Account POC</th>
-                                <th scope="col">Phone</th>
-                                <th scope="col">status</th>
-                                <th scope="col">Open Requests</th>
-                                <th scope="col">Actions</th>
+                <div id="admindata" class="mb-5"></div>
 
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-
-                            @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 1)
-                            {
-                                @foreach (var u in Model.physician)
-                                {
-                                    <tr>
-                                        <input type="hidden" asp-for="@u.PhysicianId">
-
-                                        <td>
-                                            Physician
-                                        </td>
-                                        <td>@u.FirstName  @u.LastName</td>
-                                        <td>@u.Mobile</td>
-                                        <td>
-                                            @foreach (var status in Model.status)
-                                            {
-                                                @if (status.Statusid == u.Status)
-                                                {
-                                                    @status.Statusname
-                                                }
-                                            }
-                                        </td>
-                                        <td>-</td>
-                                        <td>
-                                            <div class="d-flex">
-                                                <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianId">Contact</button>
-                                                <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
-
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                }
-                            }
-                             @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 2)
-                            {
-                                @foreach (var u in Model.admins)
-                                {
-                                    <tr>
-                                        <input type="hidden" asp-for="@u.AdminId">
-
-                                        <td>
-                                            Admin
-                                        </td>
-                                        <td>@u.FirstName  @u.LastName</td>
-                                        <td>@u.Mobile</td>
-                                        <td>
-                                            @foreach (var status in Model.status)
-                                            {
-                                                @if (status.Statusid == u.Status)
-                                                {
-                                                    @status.Statusname
-                                                }
-                                            }
-                                        </td>
-                                        <td>-</td>
-                                        <td>
-                                            <div class="d-flex">
-                                                <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.AdminId">Contact</button>
-                                                <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.AdminId">Edit</a>
-
-                                            </div>
-                                        </td>
-
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                    
-                </div>
 
             </div>
         </div>
@@ -127,28 +52,53 @@
 <script>
 
 
+    var accountType=null;
+    $(document).ready(function () {
+        load();
+        
+    });
+    
+    function load() {
+        if (accountType == 2) {
+            document.getElementsByClassName("adminBtn")[0].style.display = "block";
+            document.getElementsByClassName("providerBtn")[0].style.display = "none";
 
-    var accountTypeId;
+            console.log(accountType, "in");
+        } else if (accountType == 1) {
+            document.getElementsByClassName("providerBtn")[0].style.display = "block";
+            document.getElementsByClassName("adminBtn")[0].style.display = "none";
 
-    $("#accountType").on("input", function () {
+            console.log(accountType, "in");
 
 
-        accountTypeId = $(this).val();
+        }
+        else {
+            document.getElementsByClassName("adminBtn")[0].style.display = "none";
+            document.getElementsByClassName("providerBtn")[0].style.display = "none";
 
+        }
 
         $.ajax({
-            url: "/Admin/UserAccess",
+            url: "/Admin/UserAccessTable",
             type: "POST",
-            data: { accountTypeId: accountTypeId },
+            data: {AaccountTypeId: accountType },
             dataType: "html",
             success: function (data) {
-
-                console.log("done");
+                $("#admindata").html(data);
+               
             },
             error: function () {
                 alert("No Projects Found");
                 $("#admindata").html('An error has occurred');
             }
         });
-    })
+    }
+    $("#accountType").on("input", function () {
+
+
+        accountType = $(this).val();
+       
+        load();
+
+    });
 </script>
