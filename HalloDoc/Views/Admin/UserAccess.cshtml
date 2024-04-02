@@ -1,0 +1,154 @@
+﻿@model HalloDoc.Entities.ViewModels.UserAccessViewModel;
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Provider Information</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="has-search ">
+                        <select asp-for="@Model.AccountTypeId" style="height:55px;" id="accountType" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh">
+                            <option value="" selected>All</option>
+                            <option value="2">Admin</option>
+                            <option value="1">Physician</option>
+
+                        </select>
+                        <label>Account Type</label>
+                        <span asp-validation-for="AccountTypeId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end">
+                    <a class="btn btn-info" href="@Url.Action("CreateProvider","Admin") ">Create Provider Account</a>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="table-responsive">
+                    <table class="table ">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">Account type</th>
+                                <th scope="col">Account POC</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">status</th>
+                                <th scope="col">Open Requests</th>
+                                <th scope="col">Actions</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+
+                            @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 1)
+                            {
+                                @foreach (var u in Model.physician)
+                                {
+                                    <tr>
+                                        <input type="hidden" asp-for="@u.PhysicianId">
+
+                                        <td>
+                                            Physician
+                                        </td>
+                                        <td>@u.FirstName  @u.LastName</td>
+                                        <td>@u.Mobile</td>
+                                        <td>
+                                            @foreach (var status in Model.status)
+                                            {
+                                                @if (status.Statusid == u.Status)
+                                                {
+                                                    @status.Statusname
+                                                }
+                                            }
+                                        </td>
+                                        <td>-</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianId">Contact</button>
+                                                <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                             @if (Model.AccountTypeId == 0 || Model.AccountTypeId == 2)
+                            {
+                                @foreach (var u in Model.admins)
+                                {
+                                    <tr>
+                                        <input type="hidden" asp-for="@u.AdminId">
+
+                                        <td>
+                                            Admin
+                                        </td>
+                                        <td>@u.FirstName  @u.LastName</td>
+                                        <td>@u.Mobile</td>
+                                        <td>
+                                            @foreach (var status in Model.status)
+                                            {
+                                                @if (status.Statusid == u.Status)
+                                                {
+                                                    @status.Statusname
+                                                }
+                                            }
+                                        </td>
+                                        <td>-</td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.AdminId">Contact</button>
+                                                <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.AdminId">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+
+    var accountTypeId;
+
+    $("#accountType").on("input", function () {
+
+
+        accountTypeId = $(this).val();
+
+
+        $.ajax({
+            url: "/Admin/UserAccess",
+            type: "POST",
+            data: { accountTypeId: accountTypeId },
+            dataType: "html",
+            success: function (data) {
+
+                console.log("done");
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    })
+</script>

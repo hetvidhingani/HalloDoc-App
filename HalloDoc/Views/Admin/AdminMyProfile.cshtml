@@ -202,6 +202,10 @@
         </div>
     </div>
 </div>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
 
 <script>
 
@@ -347,19 +351,17 @@
     document.getElementById("SaveAdminInfo").addEventListener("click", function (event) {
         event.preventDefault();
 
-        var form = document.getElementById("form2");
+        var form = document.getElementById("form1");
+        // var form = $('#form1')[0];
         var AdminRegionID = [];
 
         $("input[name='notification']:checked").each(function () {
             AdminRegionID.push($(this).val());
         });
-        console.log(AdminRegionID);
-        // if (form.checkValidity()) {
-            
-           // Serialize the form data
-        var formData = new FormData(form);
-            console.log(formData);
 
+        // Serialize the form data
+        var formData = new FormData(form);
+        const formElement = form.closest("form");
             // Add selected roles to formData
             // formData.append("selectedRoles", JSON.stringify(selectedRoles));
 
@@ -370,8 +372,23 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // Handle successful response
-                    alert("Shipping information saved successfully");
+                    toastr.success('Data Saved Successfully.');
+                var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
+                inputs.forEach(function (input) {
+                    input.setAttribute("readonly", "readonly");
+                    input.setAttribute("disabled", "disabled");
+                });
+
+                // Hide save and cancel buttons and show edit button
+                var editButtons11 = formElement.querySelector(".edit-button");
+                editButtons11.style.display = "block";
+                var saveButtons23 = formElement.querySelector(".savebtn");
+                saveButtons23.style.display = "none";
+
+
+                // var canclebtn45 = formElement.querySelector(".cancelbtn");
+                // canclebtn45.style.display = "none";
+
                 },
                 error: function (response) {
                     // Handle error response

@@ -502,7 +502,7 @@ namespace HalloDoc.Controllers
 
 
         }
-        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model,List<int> notification)
+        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model, List<int> notification)
         {
 
             await _admin.SaveAdminInfo(model, notification);
@@ -594,15 +594,15 @@ namespace HalloDoc.Controllers
             return Json("success");
         }
         [HttpPost]
-        public  IActionResult StopNotificationPhysician(List<int> ids)
+        public IActionResult StopNotificationPhysician(List<int> ids)
         {
-               _admin.StopNotificationPhysician(ids);
+            _admin.StopNotificationPhysician(ids);
             return Json("success");
         }
-            #endregion
+        #endregion
 
-            #region Create Provider
-            public async Task<IActionResult> CreateProvider()
+        #region Create Provider
+        public async Task<IActionResult> CreateProvider()
         {
             var result = await _admin.Createprovider();
             return View(result);
@@ -621,7 +621,7 @@ namespace HalloDoc.Controllers
             var result = await _admin.EditProvider(id);
             return View(result);
         }
-        public  IActionResult DeleteProvider(int id)
+        public IActionResult DeleteProvider(int id)
         {
             _admin.DeleteProvider(id);
             return RedirectToAction("ProviderInformation");
@@ -676,7 +676,7 @@ namespace HalloDoc.Controllers
             return View(data);
         }
         [HttpPost]
-        public IActionResult MenuName(int accountTypeId, int typename, int id =0)
+        public IActionResult MenuName(int accountTypeId, int typename, int id = 0)
         {
             var data = _admin.MenuName(accountTypeId, typename, id);
             return PartialView("_MenuPartialView", data);
@@ -694,7 +694,7 @@ namespace HalloDoc.Controllers
         public IActionResult EditAccountAccess(int id)
         {
             var AdminId = HttpContext.Session.GetInt32("AdminSession");
-            var data = _admin.EditAccountAccess(id,(int)AdminId);
+            var data = _admin.EditAccountAccess(id, (int)AdminId);
             return View(data);
         }
         public IActionResult submitEditAccess(AccountAccessViewModel viewModel)
@@ -707,6 +707,14 @@ namespace HalloDoc.Controllers
             var result = _admin.deleteAccountAccess(id);
             return RedirectToAction("AccountAccess");
 
+        }
+        #endregion
+
+        #region User Access
+        public IActionResult UserAccess(int accountTypeId)
+        {
+            var result = _admin.UserAccess(accountTypeId);
+            return View(result);
         }
         #endregion
 

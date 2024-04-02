@@ -76,5 +76,6 @@ namespace HalloDoc.Services.IServices
         Task<object> deleteAccountAccess(int id);
         void DeleteProvider(int id);
         void StopNotificationPhysician(List<int> ids);
+        UserAccessViewModel UserAccess(int accountTypeId);
     }
 }

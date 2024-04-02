@@ -894,7 +894,7 @@ namespace HalloDoc.Services.Services
             var adminregion1 = ids.Select(id => new AdminRegion
             {
                 AdminId = model.AdminID,
-                AdminRegionId = id,
+                RegionId = id,
             });
            
             foreach (var newPhysician in adminregion1)
@@ -1363,6 +1363,25 @@ namespace HalloDoc.Services.Services
             return role.RoleId;
         }
 
+        #endregion
+
+        #region User Access
+        public UserAccessViewModel UserAccess (int accountTypeId)
+        {
+            List<Admin> admin = _adminRepository.GetAll().ToList();
+            List<Physician> physicians = _physicianRepository.GetAll().ToList();
+           
+            List<Status> status = _statusRepository.GetAll().ToList();
+
+            UserAccessViewModel data = new()
+            {
+                admins = admin,
+                physician = physicians,
+                AccountTypeId= accountTypeId,
+                status = status,
+            };
+            return data;
+        }
         #endregion
 
         #endregion

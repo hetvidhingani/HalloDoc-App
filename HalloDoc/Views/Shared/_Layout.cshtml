@@ -11,10 +11,9 @@
 
 
 
-
+    <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/toastr.min.js"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -125,14 +124,24 @@
                                 Providers
                             </a>
 
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a></li>
-                                <li><a class="dropdown-item" style="color:dimgrey" href="#">Scheduling</a></li>
-                                <li><a class="dropdown-item" style="color:dimgrey" href="#">Invocing</a></li>
+                            <ul class="dropdown-menu layoutTab">
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Scheduling</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Invocing</a></li>
                             </ul>
                         </div>
                         <a id="5" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Partners</a>
-                        <a  id="7" asp-action="AccountAccess" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Access</a>
+                        <div class="dropdown " id="7">
+                            <a class="nav-link py-2" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
+                                Access
+                            </a>
+
+                            <ul class="dropdown-menu layoutTab">
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="AccountAccess" asp-controller="Admin">Account Access</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="UserAccess" asp-controller="Admin">User Access</a></li>
+
+                            </ul>
+                        </div>
                         <a id="6" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Records</a>
 
                     </span>
