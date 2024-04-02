@@ -63,7 +63,7 @@
                 </div>
 
             </form>
-            <form asp-action="SaveAdminInfo" asp-controller="Admin" id="form1">
+            <form  id="form1">
 
                 <h3> Administrator Information</h3>
                 <input  type="hidden" asp-for="AdminID" />
@@ -116,9 +116,10 @@
                         {
 
                             <div class="form-check mx-2" >
-                                <input class="form-check-input edit notification" id="selectedRoles" value="@cb.RegionId" name="" type="checkbox" checked disabled>
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        @cb.Name
+                                <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" checked disabled>
+                                <label class="form-check-label" for="notification-@cb.RegionId">
+
+                                    @cb.Name
                                     </label>
                                 </div>
                             }
@@ -308,21 +309,64 @@
         }
     });
 
+    // document.getElementById("SaveAdminInfo").addEventListener("click", function (event) {
+    //     event.preventDefault();
+
+    //     var form = document.getElementById("form1");
+    //     var selectedRoles = [];
+
+    //     // Loop through each checked checkbox and get its value
+    //     $("input[name='notification']:checked").each(function () {
+    //         selectedRoles.push($(this).val());
+    //     });
+    //     if (form.checkValidity()) {
+    //         var formData = new FormData(form);
+    //         console.log(formData);
+
+    //         $.ajax({
+    //             type: "POST",
+    //             url: "/Admin/SaveAdminInfo",
+    //             data: { formData: formData, selectedRoles: selectedRoles },
+
+    //             contentType: false,
+    //             processData: false,
+    //             success: function (response) {
+    //                 // Handle successful response
+    //                 alert("Shipping information saved successfully");
+    //             },
+    //             error: function (response) {
+    //                 // Handle error response
+    //                 alert("Error saving shipping information");
+    //             }
+    //         });
+    //     } else {
+    //         form.reportValidity();
+    //     }
+    // });
+
     document.getElementById("SaveAdminInfo").addEventListener("click", function (event) {
         event.preventDefault();
 
         var form = document.getElementById("form2");
-        var selectedRoles = [];
-        $("#selectedRoles input:checked").each(function () {
-            selectedRoles.push($(this).val());
+        var AdminRegionID = [];
+
+        $("input[name='notification']:checked").each(function () {
+            AdminRegionID.push($(this).val());
         });
-        if (form.checkValidity()) {
-            var formData = new FormData(form);
+        console.log(AdminRegionID);
+        // if (form.checkValidity()) {
+            
+           // Serialize the form data
+        var formData = new FormData(form);
+            console.log(formData);
+
+            // Add selected roles to formData
+            // formData.append("selectedRoles", JSON.stringify(selectedRoles));
 
             $.ajax({
                 type: "POST",
                 url: "/Admin/SaveAdminInfo",
-                data: { formData, selectedRoles },
+                data:  formData, // Include serialized form data
                 contentType: false,
                 processData: false,
                 success: function (response) {
@@ -334,8 +378,8 @@
                     alert("Error saving shipping information");
                 }
             });
-        } else {
-            form.reportValidity();
-        }
+        // } else {
+        //     form.reportValidity();
+        // }
     });
 </script>

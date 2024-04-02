@@ -502,10 +502,10 @@ namespace HalloDoc.Controllers
 
 
         }
-        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model,List<int> ids)
+        public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model,List<int> notification)
         {
 
-            await _admin.SaveAdminInfo(model,ids);
+            await _admin.SaveAdminInfo(model, notification);
             return RedirectToAction("AdminMyProfile");
 
         }
@@ -711,5 +711,6 @@ namespace HalloDoc.Controllers
         #endregion
 
         #endregion
+
     }
 }

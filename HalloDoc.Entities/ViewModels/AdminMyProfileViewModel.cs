@@ -62,7 +62,7 @@ namespace HalloDoc.Entities.ViewModels
         [EmailAddress(ErrorMessage = "Invalid email address")]
         public string ConfirmEmail { get; set; }
 
-        public List<int>? AdminRegionID { get; set; }
+        public List<int>? notification { get; set; }
         public List<Region>? AdminRegions { get; set; }
     }
 }
