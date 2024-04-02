@@ -770,7 +770,7 @@ namespace HalloDoc.Controllers
         public IActionResult EmailLogs()
         {
             var result = _admin.EmailLogs();
-            return View();
+            return View(result);
         }
         #endregion
         #endregion
