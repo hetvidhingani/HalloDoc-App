@@ -73,7 +73,8 @@
 </div>
 
 <script>
-
+    var page;
+   
     var firstName;
     var lastName;
     var email;
@@ -89,15 +90,22 @@
 
     $(document).ready(function () {
         load();
-
+        page = 1;
     });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+
+
+        load();
+    }
+
     function load() {
 
 
         $.ajax({
             url: "/Admin/PatientHistoryTable",
             type: "POST",
-            data: { FirstName: firstName, LastName: lastName, Email: email, PhoneNumber: mobile },
+            data: { FirstName: firstName, LastName: lastName, Email: email, PhoneNumber: mobile, CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);

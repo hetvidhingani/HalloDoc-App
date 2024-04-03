@@ -6,44 +6,43 @@
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name </th>
                 <th scope="col">Email</th>
-                
+
                 <th scope="col">Phone Number</th>
                 <th scope="col">Address</th>
                 <th scope="col">Actions </th>
-               
+
             </tr>
         </thead>
         <tbody class="table-group-divider">
-          
-                @foreach (var data in Model.requestClients)
 
-                {
+            @foreach (var data in Model.PagingData)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@data.RequestClientId">
+                    <td>
 
-                    <tr>
-                        <input type="hidden" asp-for="@data.RequestClientId">
-                        <td>
+                        @data.FirstName
+                    </td>
+                    <td>
+                        @data.LastName
+                    </td>
+                    <td>
+                        @data.Email
+                    </td>
+                    <td>@data.PhoneNumber</td>
+                    <td>
+                        @data.Address
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-info" asp-action="PatientRecord" asp-controller="Admin" asp-route-id="@data.RequestId"> Explore </a>
+                    </td>
+                </tr>
+            }
 
-                           @data.FirstName
-                        </td>
-                        <td>
-                            @data.LastName
-                        </td>
-                        <td>
-                           @data.Email
-                        </td>
-                        <td>@data.PhoneNumber</td>
-                        <td>
-                            @data.Address
-                        </td>
-                       <td>
-                           <button class="btn btn-outline-info"> Explore </button>
-                       </td>
-                    </tr>
-                }
-         
-       
+
         </tbody>
     </table>
+    <partial name="_Paging.cshtml" />
 
 </div>
 

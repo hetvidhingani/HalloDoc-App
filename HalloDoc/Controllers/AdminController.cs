@@ -795,9 +795,9 @@ namespace HalloDoc.Controllers
             
             return View();
         }
-        public IActionResult PatientHistoryTable(string FirstName, string LastName, string Email, string PhoneNumber)
+        public IActionResult PatientHistoryTable(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage)
         {
-            var result = _admin.PatientHistory(FirstName, LastName, Email, PhoneNumber);
+            var result = _admin.PatientHistory(FirstName, LastName, Email, PhoneNumber, CurrentPage);
             return PartialView("_PatientHistory", result);
         }
         #endregion

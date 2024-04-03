@@ -1642,14 +1642,12 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-       
-
         #region Patient History
-        public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber)
+        public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber ,int CurrentPage)
         {
             List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
-            PatientHistoryViewModel model = new PatientHistoryViewModel();
 
+            PatientHistoryViewModel model = new PatientHistoryViewModel();
           
             if (!string.IsNullOrWhiteSpace(FirstName))
             {
@@ -1668,12 +1666,33 @@ namespace HalloDoc.Services.Services
                 requestClients = requestClients.Where(e => e.PhoneNumber.Contains(PhoneNumber)).ToList();
             }
 
-
             model.requestClients = requestClients;
 
-            return model;
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = requestClients.Count;
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+            List<RequestClient> clients = requestClients.Skip((CurrentPage - 1) * dataSize)
+                .Take(dataSize)
+                .ToList();
+
+            return new PatientHistoryViewModel
+            {
+               
+                PagingData = clients,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
+
         }
         #endregion
+
         #endregion
     }
 }
