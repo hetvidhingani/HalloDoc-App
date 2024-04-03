@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,7 +20,8 @@ namespace HalloDoc.Repository.IRepository
         T GetTempData<T>(string key);
         string EncodePasswordToBase64(string password);
         string DecodeFrom64(string encodedData);
-
+        public dynamic GetAllWithPagination(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int PageIndex, int PageSize, Expression<Func<T, object>> orderBy, bool IsAcc);
+        public int GetTotalCount(Expression<Func<T, bool>> where);
         T GetById(object id);
         Task Remove(T entity);
     }

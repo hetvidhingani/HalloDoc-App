@@ -266,6 +266,10 @@ public partial class ApplicationDbContext : DbContext
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Requests).HasConstraintName("Request_PhysicianId_fkey");
 
+            entity.HasOne(d => d.RequestType).WithMany(p => p.Requests)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Request_RequestTypeId_fkey");
+
             entity.HasOne(d => d.User).WithMany(p => p.Requests).HasConstraintName("Request_UserId_fkey");
         });
 

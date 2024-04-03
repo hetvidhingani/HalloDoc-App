@@ -14,10 +14,12 @@ namespace HalloDoc.Repository.Repository
     public class GenericRepository<T>:IGenericRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
+        private DbSet<T> _genericContext;
         private static readonly Dictionary<string, object> _tempData = new Dictionary<string, object>();
         public GenericRepository(ApplicationDbContext context)
         {
             _context = context;
+            _genericContext = _context.Set<T>();
         }
         //public async Task AddAsync(T entity)
         //{
@@ -146,6 +148,21 @@ namespace HalloDoc.Repository.Repository
             string result = new String(decoded_char);
             return result;
         }
-       
+
+        public dynamic GetAllWithPagination(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int PageIndex, int PageSize, Expression<Func<T, object>> orderBy, bool IsAcc)
+        {
+            if (IsAcc)
+                return _genericContext.Where(where).OrderBy(orderBy).Skip((PageIndex - 1) * PageSize).Take(PageSize).Select(select).ToList();
+
+            return _genericContext.Where(where).OrderByDescending(orderBy).Skip((PageIndex - 1) * PageSize).Take(PageSize).Select(select).ToList();
+        }
+
+        public int GetTotalCount ( Expression<Func<T, bool>> where)
+        {
+          return _genericContext.Count(where);
+        }
+
     }
+
+
 }

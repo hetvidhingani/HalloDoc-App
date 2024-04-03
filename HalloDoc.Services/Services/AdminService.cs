@@ -20,6 +20,10 @@ using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 using System.Drawing.Printing;
 using Org.BouncyCastle.Utilities.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq.Expressions;
+using LinqKit;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HalloDoc.Services.Services
 {
@@ -1643,45 +1647,58 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Patient History
-        public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber ,int CurrentPage)
+        public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage = 1)
         {
-            List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+            
+            whereClauseSyntax = x => true;
 
-            PatientHistoryViewModel model = new PatientHistoryViewModel();
-          
-            if (!string.IsNullOrWhiteSpace(FirstName))
+            if (!FirstName.IsNullOrEmpty())
             {
-                requestClients = requestClients.Where(e => e.FirstName.ToLower().Contains(FirstName.ToLower())).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(FirstName.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(LastName))
             {
-                requestClients = requestClients.Where(e => e.LastName.ToLower().Contains(LastName.ToLower())).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.LastName.ToLower().Contains(LastName.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(Email))
             {
-                requestClients = requestClients.Where(e => e.Email.ToLower().Contains(Email.ToLower())).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                requestClients = requestClients.Where(e => e.PhoneNumber.Contains(PhoneNumber)).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
             }
 
-            model.requestClients = requestClients;
+            List<TableModel> requestClients = new List<TableModel>();
+            var temp = _requestclientRepository.GetAllWithPagination(x => new TableModel
+            {
+                FirstName =x.FirstName,
+                LastName = x.LastName,
+                Address = x.Address,
+                email =x.Email,
+                phone = x.PhoneNumber,
+                RequestClientId = x.RequestClientId,
+                RequestId = x.Request.RequestId
+            },whereClauseSyntax,CurrentPage,5,x => x.FirstName,false);
+
+            foreach (TableModel requestClient in temp) {
+                requestClients.Add(requestClient);
+            }
+
+            PatientHistoryViewModel model = new PatientHistoryViewModel();
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = requestClients.Count;
+            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
-            List<RequestClient> clients = requestClients.Skip((CurrentPage - 1) * dataSize)
-                .Take(dataSize)
-                .ToList();
+            
 
             return new PatientHistoryViewModel
             {
-               
-                PagingData = clients,
+                PagingData = requestClients,
                 TotalCount = totalCount,
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,

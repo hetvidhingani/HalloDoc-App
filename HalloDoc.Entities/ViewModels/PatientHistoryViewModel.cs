@@ -9,12 +9,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class PatientHistoryViewModel
     {
-        public int RequestClientId { get; set; }
-        public int RequestId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string email { get; set; }
-        public string phone { get; set; }
+ 
 
         public List<RequestClient> requestClients { get; set; }
 
@@ -24,8 +19,18 @@ namespace HalloDoc.Entities.ViewModels
         public int currData { get; set; }
 
         public int TotalCount { get; set; }
-        public List<RequestClient> PagingData { get; set; }
+        public List<TableModel> PagingData { get; set; }
         public int FirstItemIndex { get; set; }
         public int LastItemIndex { get; set; }
+    }
+    public class TableModel
+    {
+        public int RequestClientId { get; set; }
+        public int RequestId { get; set; }
+        public string Address { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string email { get; set; }
+        public string phone { get; set; }
     }
 }
