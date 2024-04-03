@@ -1,0 +1,148 @@
+﻿@model EmailLogViewModel;
+
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>SMS Logs</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 w-100 ">
+            <form>
+
+                <div class="row d-flex justify-content-between align-items-center">
+
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <div class="has-search form-floating">
+
+                            <select id="professionType" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="RoleId">
+                                <option value="0" selected>All</option>
+
+                                @foreach (var type in Model.role)
+                                {
+                                    <option value="@type.RoleId">@type.Name</option>
+                                }
+                            </select>
+                            <label for=" ">Role</label>
+                        </div>
+                        <span asp-validation-for="RoleId" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputReciver">
+                            <label for=" ">Reciver Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputEmail">
+                            <label for=" ">Mobile Number</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="search-inputCreatedDate">
+                            <label for=" ">Created Date</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group form-floating  has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="search-inputSentDate">
+                            <label for=" ">Sent Date</label>
+
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="col-lg-2 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
+                        <a class="btn btn-info" id="search-input">Search</a>
+                        <button class="btn btn-outline-info" type="reset" onclick="loadreset()">Clear</button>
+
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var roleID;
+    var reciver;
+    var Email;
+    var createdDate;
+    var sentDate;
+    $("#search-input").on('click', function () {
+        roleID = $("#professionType").val();
+        reciver = $("#search-inputReciver").val();
+        Email = $("#search-inputEmail").val();
+        createdDate = $("#search-inputCreatedDate").val();
+        sentDate = $("#search-inputSentDate").val();
+        load();
+    });
+
+    $(document).ready(function () {
+        load();
+
+    });
+    function load() {
+
+
+        $.ajax({
+            url: "/Admin/EmailLogTable",
+            type: "POST",
+            data: { RoleID: roleID, ReciverName: reciver, email: Email, CreatedDate: createdDate, SentDate: sentDate,type:2 },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/EmailLogTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    // $("#professionType").on("input", function () {
+    function loadreset() {
+
+
+        $.ajax({
+            url: "/Admin/EmailLogTable",
+            type: "POST",
+            data: { RoleID: 0, ReciverName: null, email: null, CreatedDate: null, SentDate: null,type:2 },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/EmailLogTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+
+        //     professionType = $(this).val();
+        //     load();
+
+        // })
+</script>

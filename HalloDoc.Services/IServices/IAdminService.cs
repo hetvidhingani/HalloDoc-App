@@ -85,5 +85,6 @@ namespace HalloDoc.Services.IServices
         Task<VendorsViewModel> AddVendor(VendorsViewModel model);
         VendorsViewModel EditVendor(int id);
         EmailLogViewModel EmailLogs();
+        EmailLogViewModel EmailLogTable(int RoleID, string ReciverName, string email, DateTime? createdDate, DateTime? sentDate,int type);
     }
 }

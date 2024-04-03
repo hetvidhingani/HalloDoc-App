@@ -41,6 +41,7 @@ builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 builder.Services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
 builder.Services.AddScoped<IEmailLogsRepository, EmailLogsRepository>();
+builder.Services.AddScoped<ISMSLogRepository,SMSLogRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

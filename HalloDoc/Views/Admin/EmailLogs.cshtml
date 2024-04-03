@@ -69,8 +69,8 @@
 
 
                 <div class="col-lg-2 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
-                    <a class="btn btn-info" href="@Url.Action("AddVendor","Admin") ">Search</a>
-                    <button class="btn btn-outline-info" type="reset">Clear</button>
+                        <a class="btn btn-info" id="search-input">Search</a>
+                    <button class="btn btn-outline-info" type="reset"  onclick="loadreset()">Clear</button>
 
                 </div>
             </div>
@@ -83,14 +83,19 @@
     </div>
 </div>
 
-@* <script>
+<script>
 
-    var professionType;
-    var VendorName;
-
-    $("#search-input").on('input', function () {
-        VendorName = $(this).val();
-
+    var roleID;
+    var reciver;
+    var Email;
+    var createdDate;
+    var sentDate;
+    $("#search-input").on('click', function () {
+        roleID = $("#professionType").val();
+        reciver = $("#search-inputReciver").val();
+        Email = $("#search-inputEmail").val();
+         createdDate = $("#search-inputCreatedDate").val();
+         sentDate = $("#search-inputSentDate").val();
         load();
     });
 
@@ -102,13 +107,13 @@
 
 
         $.ajax({
-            url: "/Admin/VendorTable",
+            url: "/Admin/EmailLogTable",
             type: "POST",
-            data: { VendorProfessionTypeId: professionType, VendorName: VendorName },
+            data: { RoleID: roleID, ReciverName: reciver, email: Email, CreatedDate: createdDate, SentDate: sentDate,type:1 },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/VendorTable";
+                url = "/Admin/EmailLogTable";
             },
             error: function () {
                 alert("No Projects Found");
@@ -116,11 +121,28 @@
             }
         });
     }
-    $("#professionType").on("input", function () {
+    // $("#professionType").on("input", function () {
+    function loadreset() {
 
 
-        professionType = $(this).val();
-        load();
+        $.ajax({
+            url: "/Admin/EmailLogTable",
+            type: "POST",
+            data: { RoleID: 0, ReciverName: null, email: null, CreatedDate: null, SentDate: null ,type:1},
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/EmailLogTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
 
-    })
-</script> *@
+    //     professionType = $(this).val();
+    //     load();
+
+    // })
+</script>

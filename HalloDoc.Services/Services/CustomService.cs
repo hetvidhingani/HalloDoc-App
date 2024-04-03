@@ -125,17 +125,7 @@ namespace HalloDoc.Services.Services
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
 
-                EmailLog log = new EmailLog();
-                log.EmailTemplate = body;
-                log.SubjectName = subject;
-                log.EmailId = email;
-                log.SentDate = DateTime.Now;
-                log.SentTries = 1;
-                log.CreateDate = DateTime.Now;
-                log.IsEmailSent = new BitArray(new bool[] { true });
-
-                _emailLogsRepository.AddAsync(log);
-
+               
                 var abc = "Success";
                 return abc;
             }
@@ -303,5 +293,27 @@ namespace HalloDoc.Services.Services
 
         }
         #endregion
+
+
+        public void EmailLog(int requestclientID, string Email, string link, string subject, string body , int AdminId)
+        {
+            RequestClient req = _requestclientRepository.GetById(requestclientID);
+            Request request =_requestRepository.GetById(req.RequestId);
+            Admin admin = _adminRepository.GetById(AdminId);
+
+            EmailLog log = new EmailLog();
+            log.EmailTemplate = body;
+            log.SubjectName = subject;
+            log.EmailId = Email;
+            log.RoleId = admin.RoleId;
+            log.RequestId = req.RequestId;
+            log.AdminId = admin.AdminId;
+            log.SentDate = DateTime.Now;
+            log.SentTries = 1;
+            log.CreateDate = request.CreatedDate;
+            log.IsEmailSent = new BitArray(new bool[] { true });
+
+            _emailLogsRepository.AddAsync(log);
+        }
     }
 }

@@ -52,7 +52,8 @@ namespace HalloDoc.Services.Services
         private readonly IStatusRepository _statusRepository;
         private readonly IMenuRepository _menuRepository;
         private readonly IRoleMenuRepository _roleMenuRepository;
-
+        private readonly IEmailLogsRepository _emailLogsRepository;
+        private readonly ISMSLogRepository _smmsLogRepository;
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -64,7 +65,7 @@ namespace HalloDoc.Services.Services
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
-                               IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository)
+                               IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository, ISMSLogRepository smmsLogRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -91,6 +92,8 @@ namespace HalloDoc.Services.Services
             _statusRepository = statusRepository;
             _menuRepository = menuRepository;
             _roleMenuRepository = roleMenuRepository;
+            _emailLogsRepository = emailLogsRepository;
+            _smmsLogRepository = smmsLogRepository;
         }
         #endregion
 
@@ -830,7 +833,7 @@ namespace HalloDoc.Services.Services
             Admin admin = await _adminRepository.GetByIdAsync(adminId);
             AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             List<AdminRegion> adminRegion = _adminRegionRepository.GetAll().Where(u => u.AdminId == adminId).ToList();
-            List<Region> regions =  _regionRepository.GetAll().ToList();
+            List<Region> regions = _regionRepository.GetAll().ToList();
 
             // Create the view model
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
@@ -1483,7 +1486,7 @@ namespace HalloDoc.Services.Services
         public async Task<VendorsViewModel> AddVendor(VendorsViewModel model)
         {
             HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(model.VendorID);
-            if(healthProfessional == null)
+            if (healthProfessional == null)
             {
                 HealthProfessional vendor = new()
                 {
@@ -1506,17 +1509,17 @@ namespace HalloDoc.Services.Services
             else
             {
                 healthProfessional.VendorName = model.vendorName;
-                    healthProfessional.Profession = model.ProfessionTypeID;
-                    healthProfessional.FaxNumber = model.FaxNumber;
-                    healthProfessional.Address = model.street;
-                    healthProfessional.City = model.City;
-                    healthProfessional.RegionId = model.RegionID;
-                    healthProfessional.State = await _regionRepository.FindState(model.RegionID);
-                    healthProfessional.Zip = model.zip;
-                    healthProfessional.CreatedDate = DateTime.Now;
-                    healthProfessional.PhoneNumber = model.PhoneNumber;
-                    healthProfessional.Email = model.Email;
-                    healthProfessional.BusinessContact = model.BusinessContact;
+                healthProfessional.Profession = model.ProfessionTypeID;
+                healthProfessional.FaxNumber = model.FaxNumber;
+                healthProfessional.Address = model.street;
+                healthProfessional.City = model.City;
+                healthProfessional.RegionId = model.RegionID;
+                healthProfessional.State = await _regionRepository.FindState(model.RegionID);
+                healthProfessional.Zip = model.zip;
+                healthProfessional.CreatedDate = DateTime.Now;
+                healthProfessional.PhoneNumber = model.PhoneNumber;
+                healthProfessional.Email = model.Email;
+                healthProfessional.BusinessContact = model.BusinessContact;
                 await _healthProfessionalsRepository.UpdateAsync(healthProfessional);
 
             }
@@ -1529,7 +1532,7 @@ namespace HalloDoc.Services.Services
             HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(id);
             VendorsViewModel model = new VendorsViewModel()
             {
-                VendorID=healthProfessional.VendorId,
+                VendorID = healthProfessional.VendorId,
                 vendorName = healthProfessional.VendorName,
                 ProfessionTypeID = (int)healthProfessional.Profession,
                 FaxNumber = healthProfessional.FaxNumber,
@@ -1557,6 +1560,92 @@ namespace HalloDoc.Services.Services
             };
             return model;
         }
+        public EmailLogViewModel EmailLogTable(int RoleID, string ReciverName, string email, DateTime? createdDate, DateTime? sentDate, int type)
+        {
+            if (type == 1)
+            {
+                List<EmailLog> log = _emailLogsRepository.GetAll().ToList();
+                List<Role> role = _roleRepository.GetAll().ToList();
+                List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+
+                if (!string.IsNullOrWhiteSpace(ReciverName))
+                {
+                    var receiverNameLowerCase = ReciverName.ToLower();
+                    requestClients = requestClients.Where(a => a.FirstName.ToLower().Contains(receiverNameLowerCase) || a.LastName.ToLower().Contains(receiverNameLowerCase)).ToList();
+                    log = log.Where(e => requestClients.Any(rc => rc.RequestId == e.RequestId)).ToList();
+                }
+                if (RoleID != 0 && RoleID != null)
+                {
+                    log = log.Where(a => a.RoleId == RoleID).ToList();
+                }
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    log = log.Where(e => e.EmailId.ToLower().StartsWith(email.ToLower())).ToList();
+                }
+                if (createdDate.HasValue)
+                {
+                    log = log.Where(e => e.CreateDate.Date == createdDate.Value.Date).ToList();
+                }
+
+                if (sentDate.HasValue)
+                {
+                    log = log.Where(e => e.SentDate.Value.Date == sentDate.Value.Date).ToList();
+                }
+
+                EmailLogViewModel model = new()
+                {
+                    EmailLogs = log,
+                    requestClients = requestClients,
+                    role = role,
+
+                };
+                 return model;
+            }
+            else
+            {
+                List<Smslog> log = _smmsLogRepository.GetAll().ToList();
+                List<Role> role = _roleRepository.GetAll().ToList();
+                List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+
+                if (!string.IsNullOrWhiteSpace(ReciverName))
+                {
+                    var receiverNameLowerCase = ReciverName.ToLower();
+                    requestClients = requestClients.Where(a => a.FirstName.ToLower().Contains(receiverNameLowerCase) || a.LastName.ToLower().Contains(receiverNameLowerCase)).ToList();
+                    log = log.Where(e => requestClients.Any(rc => rc.RequestId == e.RequestId)).ToList();
+                }
+                if (RoleID != 0 && RoleID != null)
+                {
+                    log = log.Where(a => a.RoleId == RoleID).ToList();
+                }
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    log = log.Where(e => e.MobileNumber.ToLower().StartsWith(email.ToLower())).ToList();
+                }
+                if (createdDate.HasValue)
+                {
+                    log = log.Where(e => e.CreateDate.Date == createdDate.Value.Date).ToList();
+                }
+
+                if (sentDate.HasValue)
+                {
+                    log = log.Where(e => e.SentDate.Value.Date == sentDate.Value.Date).ToList();
+                }
+
+                EmailLogViewModel model = new()
+                {
+                    SmsLogs = log,
+                    requestClients = requestClients,
+                    role = role,
+
+                };
+                return model;
+            }
+        }
+        #endregion
+
+        #region SMS Logs
+
+      
         #endregion
 
         #endregion

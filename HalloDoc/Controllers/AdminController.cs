@@ -464,6 +464,8 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendAgreementLink(ViewCaseViewModel viewModel)
         {
+            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+
             if (ModelState.IsValid)
             {
                 if (viewModel.Email == null)
@@ -476,8 +478,8 @@ namespace HalloDoc.Controllers
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string> attachmentFilePaths = null;
-
                 _customService.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
+                _customService.EmailLog(viewModel.requestclientID, viewModel.Email,link, subject, body, (int)AdminId);
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
                 return RedirectToAction("Dashboard", "Admin");
@@ -768,6 +770,19 @@ namespace HalloDoc.Controllers
 
         #region Email Logs
         public IActionResult EmailLogs()
+        {
+            var result = _admin.EmailLogs();
+            return View(result);
+        }
+        public IActionResult EmailLogTable(int RoleID, string ReciverName, string email, DateTime? CreatedDate, DateTime? SentDate,int type)
+        {
+            var result = _admin.EmailLogTable(RoleID,ReciverName,email,CreatedDate,SentDate,type);
+            return PartialView("_EmailLogTable",result);
+        }
+        #endregion
+
+        #region SMS Logs
+        public IActionResult SMSLogs()
         {
             var result = _admin.EmailLogs();
             return View(result);

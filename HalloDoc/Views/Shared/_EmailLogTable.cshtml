@@ -1,0 +1,132 @@
+﻿@model HalloDoc.Entities.ViewModels.EmailLogViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Recipient</th>
+                <th scope="col">Action </th>
+                <th scope="col">Role Name</th>
+                @if (Model.EmailLogs != null)
+            {
+                    <th scope="col">Email ID</th>
+                }else
+                {
+                    <th scope="col">Mobile No.</th>
+
+                }
+                <th scope="col">Created Date</th>
+                <th scope="col">Sent Date</th>
+                <th scope="col">Sent </th>
+                <th scope="col">Sent Tries</th>
+                <th scope="col">Confirmation Number</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @if (Model.EmailLogs != null)
+            {
+                @foreach (var data in Model.EmailLogs)
+
+                {
+
+                    <tr>
+                        <input type="hidden" asp-for="@data.EmailLogId">
+                        <td>
+
+                            @foreach (var req in Model.requestClients)
+                            {
+                                if (req.RequestId == data.RequestId)
+                                {
+                                    <p>@req.FirstName @req.LastName</p>
+                                }
+                            }
+                        </td>
+                        <td>
+                            @data.SubjectName
+                        </td>
+                        <td>
+                            @foreach (var role in Model.role)
+                            {
+                                @if (role.RoleId == data.RoleId)
+                                {
+                                    @role.Name
+                                }
+                            }
+                        </td>
+                        <td>@data.EmailId</td>
+                        <td>
+                            @data.CreateDate
+                        </td>
+                        <td>@data.SentDate</td>
+                        <td>
+                            @if (@data.IsEmailSent != null)
+                            {
+                                <p>Yes</p>
+                            }
+                            else
+                            {
+                                <p>No</p>
+                            }
+                        </td>
+                        <td>@data.SentTries</td>
+                        <td>-</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                @foreach (var data in Model.SmsLogs)
+
+                {
+
+                    <tr>
+                        <input type="hidden" asp-for="@data.SmslogId">
+                        <td>
+
+                            @foreach (var req in Model.requestClients)
+                            {
+                                if (req.RequestId == data.RequestId)
+                                {
+                                    <p>@req.FirstName @req.LastName</p>
+                                }
+                            }
+                        </td>
+                        <td>
+                           -
+                        </td>
+                        <td>
+                            @foreach (var role in Model.role)
+                            {
+                                @if (role.RoleId == data.RoleId)
+                                {
+                                    @role.Name
+                                }
+                            }
+                        </td>
+                        <td>@data.MobileNumber</td>
+                        <td>
+                            @data.CreateDate
+                        </td>
+                        <td>@data.SentDate</td>
+                        <td>
+                            @if (@data.IsSmssent != null)
+                            {
+                                <p>Yes</p>
+                            }
+                            else
+                            {
+                                <p>No</p>
+                            }
+                        </td>
+                        <td>@data.SentTries</td>
+                        <td>-</td>
+                    </tr>
+                }
+            }
+             
+            
+
+        </tbody>
+    </table>
+
+</div>
+
