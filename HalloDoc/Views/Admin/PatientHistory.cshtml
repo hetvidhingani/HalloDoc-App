@@ -1,0 +1,137 @@
+﻿@model PatientHistoryViewModel;
+
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>Patient History</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 w-100 ">
+            <form>
+
+                <div class="row d-flex justify-content-between align-items-center">
+
+                  
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputFirstName">
+                            <label for=" ">First Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputLastName">
+                            <label for=" ">Last Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputEmail">
+                            <label for=" ">Email </label>
+
+                        </div>
+                    </div>
+                   
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group form-floating  has-search mb-1">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputMobile">
+                            <label for=" ">Phone Number</label>
+
+                        </div>
+                    </div>
+
+                     
+
+
+                    
+                </div>
+                <div class="row ">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <button class="btn btn-outline-info mx-1" type="reset" onclick="loadreset()">Clear</button>
+                        <a class="btn btn-info" id="search-input">Search</a>
+                   </div>
+
+                </div>
+            </form>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var firstName;
+    var lastName;
+    var email;
+    var mobile;
+    $("#search-input").on('click', function () {
+        firstName = $("#search-inputFirstName").val();
+        lastName = $("#search-inputLastName").val();
+        email = $("#search-inputEmail").val();
+        mobile = $("#search-inputMobile").val();
+        console.log(mobile);
+        load();
+    });
+
+    $(document).ready(function () {
+        load();
+
+    });
+    function load() {
+
+
+        $.ajax({
+            url: "/Admin/PatientHistoryTable",
+            type: "POST",
+            data: { FirstName: firstName, LastName: lastName, Email: email, PhoneNumber: mobile },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/PatientHistoryTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    // $("#professionType").on("input", function () {
+    function loadreset() {
+
+
+        $.ajax({
+            url: "/Admin/PatientHistoryTable",
+            type: "POST",
+            data: { FirstName: null, LastName: null, Email: null, PhoneNumber: null },
+
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/PatientHistoryTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+
+        //     professionType = $(this).val();
+        //     load();
+
+        // })
+</script>

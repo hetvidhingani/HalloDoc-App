@@ -788,6 +788,20 @@ namespace HalloDoc.Controllers
             return View(result);
         }
         #endregion
+
+        #region Patient History
+        public IActionResult PatientHistory()
+        {
+            
+            return View();
+        }
+        public IActionResult PatientHistoryTable(string FirstName, string LastName, string Email, string PhoneNumber)
+        {
+            var result = _admin.PatientHistory(FirstName, LastName, Email, PhoneNumber);
+            return PartialView("_PatientHistory", result);
+        }
+        #endregion
+
         #endregion
 
     }

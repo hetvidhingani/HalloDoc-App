@@ -19,8 +19,7 @@ using static HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 using System.Drawing.Printing;
 using Org.BouncyCastle.Utilities.Net;
-
-
+using Microsoft.AspNetCore.Mvc;
 
 namespace HalloDoc.Services.Services
 {
@@ -1550,7 +1549,7 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        #region Email Logs
+        #region Email Logs & SMS Logs
         public EmailLogViewModel EmailLogs()
         {
             EmailLogViewModel model = new EmailLogViewModel()
@@ -1599,7 +1598,7 @@ namespace HalloDoc.Services.Services
                     role = role,
 
                 };
-                 return model;
+                return model;
             }
             else
             {
@@ -1643,11 +1642,38 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        #region SMS Logs
+       
 
-      
+        #region Patient History
+        public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber)
+        {
+            List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+            PatientHistoryViewModel model = new PatientHistoryViewModel();
+
+          
+            if (!string.IsNullOrWhiteSpace(FirstName))
+            {
+                requestClients = requestClients.Where(e => e.FirstName.ToLower().Contains(FirstName.ToLower())).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(LastName))
+            {
+                requestClients = requestClients.Where(e => e.LastName.ToLower().Contains(LastName.ToLower())).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(Email))
+            {
+                requestClients = requestClients.Where(e => e.Email.ToLower().Contains(Email.ToLower())).ToList();
+            }
+            if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                requestClients = requestClients.Where(e => e.PhoneNumber.Contains(PhoneNumber)).ToList();
+            }
+
+
+            model.requestClients = requestClients;
+
+            return model;
+        }
         #endregion
-
         #endregion
     }
 }
