@@ -278,6 +278,10 @@ public partial class ApplicationDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Request_RequestTypeId_fkey");
 
+            entity.HasOne(d => d.StatusNavigation).WithMany(p => p.Requests)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Request_Status_Fk");
+
             entity.HasOne(d => d.User).WithMany(p => p.Requests).HasConstraintName("Request_UserId_fkey");
         });
 

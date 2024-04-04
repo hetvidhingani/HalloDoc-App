@@ -17,7 +17,8 @@ namespace HalloDoc.Entities.ViewModels
         public List<RecordTableModel> PagingData { get; set; }
         public int FirstItemIndex { get; set; }
         public int LastItemIndex { get; set; }
-    
+        public int userID { get; set; }
+
     }
     public class RecordTableModel
     {
@@ -30,6 +31,7 @@ namespace HalloDoc.Entities.ViewModels
         public DateTime? ConcludedDate { get; set; }
         public string clientName { get; set; }
 
+        public int userID { get; set; }
 
     }
 }

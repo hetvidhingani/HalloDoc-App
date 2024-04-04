@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.UserAccessViewModel;
+﻿@model HalloDoc.Entities.ViewModels.PatientRecordViewModel;
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -6,7 +6,7 @@
 
         <div class="PatientInfo d-flex justify-content-between align-items-center">
             <h3>Patient Record</h3>
-            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+            <a asp-action="PatientHistory" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
@@ -30,7 +30,7 @@
 
    
     var page;
-
+    var userID;
     $(document).ready(function () {
         load();
 
@@ -40,11 +40,11 @@
         load();
     }
     function load() {
-       
+    userID = @Model.userID;
         $.ajax({
             url: "/Admin/PatientRecordTable",
             type: "POST",
-            data: {  CurrentPage: page },
+            data: { id: userID, CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);

@@ -1182,8 +1182,7 @@ namespace HalloDoc.Services.Services
         {
             
             Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
-            var physicians = _physicianRepository.GetAll().Where(whereClauseSyntax.And(x => x.IsDeleted == null));
-            var physicianNotifications = _physicianNotificationRepository.GetAll().Where(x => physicians.Select(p => p.PhysicianId).Contains(x.PhysicianId));
+            
             whereClauseSyntax = x => true;
             List<TableProviderInfo> AccountAccessTable = new List<TableProviderInfo>();
             if (RegionId != 0)
@@ -1195,7 +1194,7 @@ namespace HalloDoc.Services.Services
                 onCallStatus = "Un Available",
                 PhysicianID = x.PhysicianId,
                 ProviderName = x.FirstName + " " + x.LastName,
-                stopNotification="1",
+                stopNotification=x.PhysicianNotifications.First(u=>u.PhysicianId==x.PhysicianId)==null?null:"1",
                 roleName =x.Role.Name,
                 status=x.StatusNavigation.Statusname,
                 
@@ -1883,14 +1882,12 @@ namespace HalloDoc.Services.Services
                 //userID = x.Request.RequestCloseds.First(y=>y.RequestId == x.RequestId).RequestId
                 userID=x.Request.UserId,
 
-            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false); ;
+            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, true); ;
 
             foreach (TableModel requestClient in temp)
             {
                 data.Add(requestClient);
             }
-
-
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
@@ -1915,7 +1912,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region patient Records
-        public PatientRecordViewModel PatientRecordTable(int CurrentPage,int userID)
+        public PatientRecordViewModel PatientRecordTable(int userID,int CurrentPage)
         {
             Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
 
@@ -1925,6 +1922,14 @@ namespace HalloDoc.Services.Services
             {
               
                 clientName=x.FirstName+" "+x.LastName,
+                ConcludedDate=x.Request.CreatedDate,
+                CreatedDate=x.Request.CreatedDate,
+                confirmationNumber=x.Request.ConfirmationNumber,
+                ProviderName=x.Request.Physician.FirstName+" "+x.Request.Physician.LastName,
+                requestclientID=x.RequestClientId,
+                RequestId=x.RequestId,
+                status=x.Request.StatusNavigation.Statusname,
+                userID= (int)x.Request.UserId,
             }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
 
             foreach (RecordTableModel requestClient in temp)
@@ -1932,15 +1937,12 @@ namespace HalloDoc.Services.Services
                 data.Add(requestClient);
             }
 
-
-
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
             int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
-
 
             return new PatientRecordViewModel
             {
@@ -1951,6 +1953,7 @@ namespace HalloDoc.Services.Services
                 PageSize = 3,
                 FirstItemIndex = FirstItemIndex,
                 LastItemIndex = LastItemIndex,
+                
             };
         }
         #endregion

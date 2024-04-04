@@ -29,7 +29,7 @@ public partial class Request
     [StringLength(50)]
     public string? Email { get; set; }
 
-    public short Status { get; set; }
+    public int Status { get; set; }
 
     public int? PhysicianId { get; set; }
 
@@ -123,6 +123,10 @@ public partial class Request
 
     [InverseProperty("Request")]
     public virtual ICollection<Smslog> Smslogs { get; set; } = new List<Smslog>();
+
+    [ForeignKey("Status")]
+    [InverseProperty("Requests")]
+    public virtual Status StatusNavigation { get; set; } = null!;
 
     [ForeignKey("UserId")]
     [InverseProperty("Requests")]

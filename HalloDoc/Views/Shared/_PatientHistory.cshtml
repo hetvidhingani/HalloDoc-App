@@ -6,7 +6,6 @@
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name </th>
                 <th scope="col">Email</th>
-
                 <th scope="col">Phone Number</th>
                 <th scope="col">Address</th>
                 <th scope="col">Actions </th>
@@ -18,7 +17,7 @@
             @foreach (var data in Model.PagingData)
             {
                 <tr>
-                    <input type="hidden" asp-for="@data.RequestClientId">
+                    <input type="hidden" asp-for="@data.userID">
                     <td>
 
                         @data.FirstName
@@ -34,7 +33,7 @@
                         @data.Address
                     </td>
                     <td>
-                        <a class="btn btn-outline-info" asp-action="PatientRecord" asp-controller="Admin" asp-route-id="@data.RequestId"> Explore </a>
+                        <a class="btn btn-outline-info" asp-action="PatientRecord" asp-controller="Admin" asp-route-id="@data.userID"> Explore </a>
                     </td>
                 </tr>
             }
@@ -45,4 +44,3 @@
     <partial name="_Paging.cshtml" />
 
 </div>
-

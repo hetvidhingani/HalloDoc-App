@@ -6,7 +6,6 @@
                 <th scope="col">Client / Member</th>
                 <th scope="col">Created Date </th>
                 <th scope="col">Confirmation</th>
-
                 <th scope="col">Provider Name</th>
                 <th scope="col">Concluded Date</th>
                 <th scope="col">Status </th>
@@ -40,7 +39,17 @@
                     <td>-</td>
 
                     <td>
-                        <a class="btn btn-outline-info" asp-action="PatientRecord" asp-controller="Admin" asp-route-id="@data.RequestId"> Actions </a>
+                        <div class="dropdown " id="4 ">
+                            <button class="btn btn-outline-info py-2" href="#" role="button" data-bs-toggle="dropdown"  aria-expanded="false">
+                                Providers
+                            </button>
+
+                            <ul class="dropdown-menu layoutTab">
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin" asp-route-id="requestclientID">View Case</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Chat</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">0 Document</a></li>
+                            </ul>
+                        </div>
                     </td>
                 </tr>
             }

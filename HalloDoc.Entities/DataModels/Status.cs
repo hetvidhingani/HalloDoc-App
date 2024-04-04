@@ -22,4 +22,7 @@ public partial class Status
 
     [InverseProperty("StatusNavigation")]
     public virtual ICollection<Physician> Physicians { get; set; } = new List<Physician>();
+
+    [InverseProperty("StatusNavigation")]
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 }

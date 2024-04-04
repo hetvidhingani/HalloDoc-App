@@ -810,18 +810,20 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-
         #region Patient Records
-        public IActionResult PatientRecord()
+        public IActionResult PatientRecord(int id)
         {
-            return View();  
+            PatientRecordViewModel viewModel = new PatientRecordViewModel();
+            viewModel.userID = id;
+            return View(viewModel);  
         }
-        public IActionResult PatientRecordTable(int CurrentPage=1)
+        public IActionResult PatientRecordTable(int id,int CurrentPage=1)
         {
-            var result = _admin.PatientRecordTable(CurrentPage);
+            var result = _admin.PatientRecordTable(id,CurrentPage);
             return PartialView("_PatientRecord", result);
         }
         #endregion
+
         #endregion
 
     }

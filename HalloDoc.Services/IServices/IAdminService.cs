@@ -86,7 +86,7 @@ namespace HalloDoc.Services.IServices
         VendorsViewModel EditVendor(int id);
         LogsViewModel Logs();
         LogsViewModel LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? createdDate, DateTime? sentDate,int type,int CurrPage);
-        PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber,  int CurrentPage);
-       PatientRecordViewModel PatientRecordTable(int CurrentPage);
+        PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber,int CurrentPage);
+        PatientRecordViewModel PatientRecordTable(int userID,int CurrentPage);
     }
 }
