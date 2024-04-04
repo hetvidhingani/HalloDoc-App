@@ -1195,7 +1195,7 @@ namespace HalloDoc.Services.Services
                 onCallStatus = "Un Available",
                 PhysicianID = x.PhysicianId,
                 ProviderName = x.FirstName + " " + x.LastName,
-              stopNotification="1",
+                stopNotification="1",
                 roleName =x.Role.Name,
                 status=x.StatusNavigation.Statusname,
                 
@@ -1879,8 +1879,11 @@ namespace HalloDoc.Services.Services
                 email = x.Email,
                 phone = x.PhoneNumber,
                 RequestClientId = x.RequestClientId,
-                RequestId = x.Request.RequestId
-            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
+                RequestId = x.Request.RequestId,
+                //userID = x.Request.RequestCloseds.First(y=>y.RequestId == x.RequestId).RequestId
+                userID=x.Request.UserId,
+
+            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false); ;
 
             foreach (TableModel requestClient in temp)
             {
@@ -1912,16 +1915,16 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region patient Records
-        public PatientRecordViewModel PatientRecordTable(int CurrentPage)
+        public PatientRecordViewModel PatientRecordTable(int CurrentPage,int userID)
         {
-            Expression<Func<Request, bool>> whereClauseSyntax = PredicateBuilder.New<Request>();
+            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
 
-            whereClauseSyntax = x => true;
+            whereClauseSyntax = x => x.Request.UserId == userID;
             List<RecordTableModel> data = new List<RecordTableModel>();
-            var temp = _requestRepository.GetAllWithPagination(x => new RecordTableModel
+            var temp = _requestclientRepository.GetAllWithPagination(x => new RecordTableModel
             {
               
-
+                clientName=x.FirstName+" "+x.LastName,
             }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
 
             foreach (RecordTableModel requestClient in temp)
@@ -1933,7 +1936,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _requestRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);

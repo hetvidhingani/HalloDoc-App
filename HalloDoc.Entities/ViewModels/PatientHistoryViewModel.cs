@@ -28,5 +28,6 @@ namespace HalloDoc.Entities.ViewModels
         public string LastName { get; set; }
         public string email { get; set; }
         public string phone { get; set; }
+        public int? userID { get; set; }
     }
 }
