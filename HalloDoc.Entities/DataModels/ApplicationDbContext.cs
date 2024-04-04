@@ -110,6 +110,8 @@ public partial class ApplicationDbContext : DbContext
                 .HasConstraintName("Admin_CreatedBy_fkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.AdminModifiedByNavigations).HasConstraintName("Admin_ModifiedBy_fkey");
+
+            entity.HasOne(d => d.StatusNavigation).WithMany(p => p.Admins).HasConstraintName("Admin_Status_fkey");
         });
 
         modelBuilder.Entity<AdminRegion>(entity =>
@@ -185,7 +187,9 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.EmailLogId).HasName("EmailLog_pkey");
 
-            entity.Property(e => e.EmailLogId).UseIdentityAlwaysColumn();
+            entity.HasOne(d => d.Request).WithMany(p => p.EmailLogs).HasConstraintName("FK_RequestID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.EmailLogs).HasConstraintName("FK_RoleID");
         });
 
         modelBuilder.Entity<Encounter>(entity =>
@@ -224,6 +228,10 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.IdNavigation).WithMany(p => p.PhysicianIdNavigations).HasConstraintName("Physician_Id_fkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.PhysicianModifiedByNavigations).HasConstraintName("Physician_ModifiedBy_fkey");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Physicians).HasConstraintName("roleID_fk");
+
+            entity.HasOne(d => d.StatusNavigation).WithMany(p => p.Physicians).HasConstraintName("Physician_Status_Fk");
         });
 
         modelBuilder.Entity<PhysicianLocation>(entity =>
@@ -429,6 +437,10 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<Smslog>(entity =>
         {
             entity.HasKey(e => e.SmslogId).HasName("SMSLog_pkey");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Smslogs).HasConstraintName("FK_RequestID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.Smslogs).HasConstraintName("FK_RoleID");
         });
 
         modelBuilder.Entity<Status>(entity =>

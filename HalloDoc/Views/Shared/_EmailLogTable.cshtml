@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.EmailLogViewModel
+﻿@model HalloDoc.Entities.ViewModels.LogsViewModel
 <div class="table-responsive">
     <table class="table ">
         <thead class="table-secondary">
@@ -6,10 +6,11 @@
                 <th scope="col">Recipient</th>
                 <th scope="col">Action </th>
                 <th scope="col">Role Name</th>
-                @if (Model.EmailLogs != null)
-            {
+                @if (Model.type == 1)
+                {
                     <th scope="col">Email ID</th>
-                }else
+                }
+                else
                 {
                     <th scope="col">Mobile No.</th>
 
@@ -22,111 +23,99 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            @if (Model.EmailLogs != null)
+            @if (Model.type == 1)
             {
-                @foreach (var data in Model.EmailLogs)
+                @foreach (var data in Model.paging)
 
                 {
 
                     <tr>
                         <input type="hidden" asp-for="@data.EmailLogId">
                         <td>
-
-                            @foreach (var req in Model.requestClients)
+                            <p>@data.reciverName </p>
+                        </td>
+                        <td>
+                            @data.action
+                        </td>
+                        <td>
+                            @data.roleName
+                        </td>
+                        <td>
+                            @data.email
+                        </td>
+                        <td>
+                            @data.CreatedDate
+                        </td>
+                        <td>
+                            @data.SentDate
+                        </td>
+                        <td>
+                            @if(@data.sent!=null)
                             {
-                                if (req.RequestId == data.RequestId)
-                                {
-                                    <p>@req.FirstName @req.LastName</p>
-                                }
-                            }
-                        </td>
-                        <td>
-                            @data.SubjectName
-                        </td>
-                        <td>
-                            @foreach (var role in Model.role)
-                            {
-                                @if (role.RoleId == data.RoleId)
-                                {
-                                    @role.Name
-                                }
-                            }
-                        </td>
-                        <td>@data.EmailId</td>
-                        <td>
-                            @data.CreateDate
-                        </td>
-                        <td>@data.SentDate</td>
-                        <td>
-                            @if (@data.IsEmailSent != null)
-                            {
-                                <p>Yes</p>
+                                <span>Yes</span>
                             }
                             else
                             {
-                                <p>No</p>
+                                <span>No</span>
                             }
                         </td>
-                        <td>@data.SentTries</td>
+                        <td>
+                            @data.sentTries
+                        </td>
                         <td>-</td>
                     </tr>
                 }
             }
             else
             {
-                @foreach (var data in Model.SmsLogs)
+                @foreach (var data in Model.paging)
 
                 {
 
                     <tr>
-                        <input type="hidden" asp-for="@data.SmslogId">
+                        <input type="hidden" asp-for="@data.SMSLogId">
                         <td>
-
-                            @foreach (var req in Model.requestClients)
-                            {
-                                if (req.RequestId == data.RequestId)
-                                {
-                                    <p>@req.FirstName @req.LastName</p>
-                                }
-                            }
+                            <p>@data.reciverName </p>
                         </td>
                         <td>
                            -
                         </td>
                         <td>
-                            @foreach (var role in Model.role)
-                            {
-                                @if (role.RoleId == data.RoleId)
-                                {
-                                    @role.Name
-                                }
-                            }
+                            @data.roleName
                         </td>
-                        <td>@data.MobileNumber</td>
                         <td>
-                            @data.CreateDate
+                            @data.PhoneNumber
                         </td>
-                        <td>@data.SentDate</td>
                         <td>
-                            @if (@data.IsSmssent != null)
+                            @data.CreatedDate
+                        </td>
+                        <td>
+                            @data.SentDate
+                        </td>
+                        <td>
+                            @if (@data.sent != null)
                             {
-                                <p>Yes</p>
+                                <span>Yes</span>
                             }
                             else
                             {
-                                <p>No</p>
+                                <span>No</span>
                             }
                         </td>
-                        <td>@data.SentTries</td>
+                        <td>
+                            @data.sentTries
+                        </td>
                         <td>-</td>
+                        
                     </tr>
                 }
             }
-             
-            
+
+
 
         </tbody>
     </table>
+    <partial name="_Paging.cshtml" />
 
 </div>
 

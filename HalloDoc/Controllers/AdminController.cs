@@ -569,9 +569,9 @@ namespace HalloDoc.Controllers
             return View(result);
         }
         [HttpPost]
-        public IActionResult ProviderInformation(int RegionId)
+        public IActionResult ProviderInformation(int RegionId,int CurrentPage = 1)
         {
-            var result = _admin.ProviderInformation(RegionId);
+            var result = _admin.ProviderInformation(RegionId, CurrentPage);
             return PartialView("_ProviderTable", result);
         }
 
@@ -679,10 +679,15 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> AccountAccess()
         {
-            var result = await _admin.AccountAccessTable();
-            return View(result);
+            
+            return View();
         }
-
+        [HttpPost]
+        public async Task<IActionResult> AccountAccess( int CurrentPage = 1)
+        {
+            var result = await _admin.AccountAccessTable( CurrentPage);
+            return PartialView("_AccountAccessPartialView", result);
+        }
         #endregion
 
         #region Create Role
@@ -714,11 +719,13 @@ namespace HalloDoc.Controllers
             var data = _admin.EditAccountAccess(id, (int)AdminId);
             return View(data);
         }
+
         public IActionResult submitEditAccess(AccountAccessViewModel viewModel)
         {
             var result = _admin.submitEditAccess(viewModel);
             return RedirectToAction("AccountAccess");
         }
+
         public IActionResult deleteAccess(int id)
         {
             var result = _admin.deleteAccountAccess(id);
@@ -732,9 +739,10 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
-        public IActionResult UserAccessTable(int AaccountTypeId)
+
+        public IActionResult UserAccessTable(int AaccountTypeId,int CurrentPage=1)
         {
-            var result = _admin.UserAccess(AaccountTypeId);
+            var result = _admin.UserAccess(AaccountTypeId, CurrentPage);
             return PartialView("_UserAccessTable", result);
         }
         #endregion
@@ -745,9 +753,9 @@ namespace HalloDoc.Controllers
             var result = _admin.VendorDetail();
             return View(result);
         }
-        public IActionResult VendorTable(int VendorProfessionTypeId,string VendorName)
+        public IActionResult VendorTable(int VendorProfessionTypeId,string VendorName, int CurrentPage = 1)
         {
-            var result = _admin.VendorTable(VendorProfessionTypeId,VendorName);
+            var result = _admin.VendorTable(VendorProfessionTypeId,VendorName,CurrentPage);
             return PartialView("_VendorsTable", result);
         }
         public IActionResult AddVendor()
@@ -771,12 +779,12 @@ namespace HalloDoc.Controllers
         #region Email Logs
         public IActionResult EmailLogs()
         {
-            var result = _admin.EmailLogs();
+            var result = _admin.Logs();
             return View(result);
         }
-        public IActionResult EmailLogTable(int RoleID, string ReciverName, string email, DateTime? CreatedDate, DateTime? SentDate,int type)
+        public IActionResult LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? CreatedDate, DateTime? SentDate,int type,int CurrPage=1)
         {
-            var result = _admin.EmailLogTable(RoleID,ReciverName,email,CreatedDate,SentDate,type);
+            var result = _admin.LogTable(RoleID,ReciverName,email, phoneNo, CreatedDate,SentDate,type,CurrPage);
             return PartialView("_EmailLogTable",result);
         }
         #endregion
@@ -784,7 +792,7 @@ namespace HalloDoc.Controllers
         #region SMS Logs
         public IActionResult SMSLogs()
         {
-            var result = _admin.EmailLogs();
+            var result = _admin.Logs();
             return View(result);
         }
         #endregion
@@ -802,6 +810,18 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+
+        #region Patient Records
+        public IActionResult PatientRecord()
+        {
+            return View();  
+        }
+        public IActionResult PatientRecordTable(int CurrentPage=1)
+        {
+            var result = _admin.PatientRecordTable(CurrentPage);
+            return PartialView("_PatientRecord", result);
+        }
+        #endregion
         #endregion
 
     }

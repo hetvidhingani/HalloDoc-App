@@ -1,4 +1,4 @@
-﻿@model EmailLogViewModel;
+﻿@model LogsViewModel;
 
 <div class=" mx-5 " style="margin-top:120px;">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -17,63 +17,59 @@
         <div class="p-5 shadow mb-3  rounded h-100 w-100 ">
             <form>
 
-            <div class="row d-flex justify-content-between align-items-center">
-                
-                <div class="col-lg-2 col-md-3 col-sm-6">
-                    <div class="has-search form-floating">
+                <div class="row d-flex justify-content-between align-items-center">
 
-                        <select id="professionType" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="RoleId">
-                            <option value="0" selected>All</option>
+                    <div class="col-lg-2 col-md-3 col-sm-6">
+                        <div class="has-search form-floating">
 
-                            @foreach (var type in Model.role)
-                            {
-                                <option value="@type.RoleId">@type.Name</option>
-                            }
-                        </select>
-                        <label for=" ">Role</label>
-                    </div>
+                            <select id="professionType" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="RoleId">
+                                <option value="0" selected>All</option>
+
+                                @foreach (var type in Model.role)
+                                {
+                                    <option value="@type.RoleId">@type.Name</option>
+                                }
+                            </select>
+                            <label for=" ">Role</label>
+                        </div>
                         <span asp-validation-for="RoleId" class="text-danger"></span>
-
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6 ">
-                    <div class="form-group  form-floating has-search mb-1">
-                      
-                        <input type="text" class="form-control w-100" placeholder="Search" id="search-inputReciver">
-                        <label for=" ">Reciver Name</label>
-
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6 ">
-                    <div class="form-group  form-floating has-search mb-1">
-                        <input type="text" class="form-control w-100" placeholder="Search" id="search-inputEmail">
-                        <label for=" ">Email ID</label>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
 
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputReciver">
+                            <label for=" ">Reciver Name</label>
+
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6 ">
-                    <div class="form-group  form-floating has-search mb-1">
-                        <input type="date" class="form-control w-100" placeholder="Search" id="search-inputCreatedDate">
-                        <label for=" ">Created Date</label>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputEmail">
+                            <label for=" ">Email ID</label>
 
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-2 col-md-3 col-sm-6 ">
-                    <div class="form-group form-floating  has-search mb-1">
-                        <input type="date" class="form-control w-100" placeholder="Search" id="search-inputSentDate">
-                        <label for=" ">Sent Date</label>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="search-inputCreatedDate">
+                            <label for=" ">Created Date</label>
 
+                        </div>
                     </div>
-                </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 ">
+                        <div class="form-group form-floating  has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="search-inputSentDate">
+                            <label for=" ">Sent Date</label>
 
+                        </div>
+                    </div>
 
-
-
-                <div class="col-lg-2 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
+                    <div class="col-lg-2 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
                         <a class="btn btn-info" id="search-input">Search</a>
-                    <button class="btn btn-outline-info" type="reset"  onclick="loadreset()">Clear</button>
+                        <button class="btn btn-outline-info" type="reset" onclick="loadreset()">Clear</button>
 
+                    </div>
                 </div>
-            </div>
             </form>
             <div class="row mt-2">
                 <div id="admindata" class="mb-5"></div>
@@ -90,12 +86,13 @@
     var Email;
     var createdDate;
     var sentDate;
+    var page;
     $("#search-input").on('click', function () {
         roleID = $("#professionType").val();
         reciver = $("#search-inputReciver").val();
         Email = $("#search-inputEmail").val();
-         createdDate = $("#search-inputCreatedDate").val();
-         sentDate = $("#search-inputSentDate").val();
+        createdDate = $("#search-inputCreatedDate").val();
+        sentDate = $("#search-inputSentDate").val();
         load();
     });
 
@@ -103,17 +100,21 @@
         load();
 
     });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
     function load() {
 
 
         $.ajax({
-            url: "/Admin/EmailLogTable",
+            url: "/Admin/LogTable",
             type: "POST",
-            data: { RoleID: roleID, ReciverName: reciver, email: Email, CreatedDate: createdDate, SentDate: sentDate,type:1 },
+            data: { RoleID: roleID, ReciverName: reciver, email: Email, phoneNo: null, CreatedDate: createdDate, SentDate: sentDate, type: 1, CurrPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/EmailLogTable";
+                url = "/Admin/LogTable";
             },
             error: function () {
                 alert("No Projects Found");
@@ -126,13 +127,13 @@
 
 
         $.ajax({
-            url: "/Admin/EmailLogTable",
+            url: "/Admin/LogTable",
             type: "POST",
-            data: { RoleID: 0, ReciverName: null, email: null, CreatedDate: null, SentDate: null ,type:1},
+            data: { RoleID: 0, ReciverName: null, email: null, phoneNo: null, CreatedDate: null, SentDate: null, type: 1, CurrPage: 1 },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/EmailLogTable";
+                url = "/Admin/LogTable";
             },
             error: function () {
                 alert("No Projects Found");
@@ -141,8 +142,8 @@
         });
     }
 
-    //     professionType = $(this).val();
-    //     load();
+        //     professionType = $(this).val();
+        //     load();
 
-    // })
+        // })
 </script>

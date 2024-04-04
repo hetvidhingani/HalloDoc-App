@@ -5,7 +5,7 @@
 
 
         <div class="PatientInfo d-flex justify-content-between align-items-center">
-            <h3>Provider Information</h3>
+            <h3>User Access</h3>
             <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
@@ -53,11 +53,16 @@
 
 
     var accountType=null;
+    var page;
+
     $(document).ready(function () {
         load();
         
     });
-    
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
     function load() {
         if (accountType == 2) {
             document.getElementsByClassName("adminBtn")[0].style.display = "block";
@@ -81,7 +86,7 @@
         $.ajax({
             url: "/Admin/UserAccessTable",
             type: "POST",
-            data: {AaccountTypeId: accountType },
+            data: {AaccountTypeId: accountType,CurrentPage:page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);

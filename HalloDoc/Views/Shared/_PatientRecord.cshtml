@@ -1,0 +1,54 @@
+﻿@model HalloDoc.Entities.ViewModels.PatientRecordViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Client / Member</th>
+                <th scope="col">Created Date </th>
+                <th scope="col">Confirmation</th>
+
+                <th scope="col">Provider Name</th>
+                <th scope="col">Concluded Date</th>
+                <th scope="col">Status </th>
+                <th scope="col">Final Report</th>
+                <th scope="col">Actions</th>
+
+
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @foreach (var data in Model.PagingData)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@data.RequestId">
+                    <td>
+
+                        @data.clientName
+                    </td>
+                    <td>
+                        @data.CreatedDate
+                    </td>
+                    <td>
+                        @data.confirmationNumber
+                    </td>
+                    <td>@data.ProviderName</td>
+                    <td>
+                        @data.ConcludedDate
+                    </td>
+                    <td>@data.status</td>
+                    <td>-</td>
+
+                    <td>
+                        <a class="btn btn-outline-info" asp-action="PatientRecord" asp-controller="Admin" asp-route-id="@data.RequestId"> Actions </a>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <partial name="_Paging.cshtml" />
+
+</div>
+

@@ -49,19 +49,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="contactProviderMODEL" tabindex="-1" role="dialog"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-
-        <div class="modal-content">
-        </div>
-    </div>
-</div>
 <script>
 
     var professionType;
     var VendorName;
-
+    var page;
     $("#search-input").on('input', function () {
         VendorName = $(this).val();
 
@@ -72,13 +64,18 @@
         load();
 
     });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
+
     function load() {
 
 
         $.ajax({
             url: "/Admin/VendorTable",
             type: "POST",
-            data: { VendorProfessionTypeId: professionType, VendorName: VendorName },
+            data: { VendorProfessionTypeId: professionType, VendorName: VendorName, CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);

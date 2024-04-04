@@ -15,44 +15,31 @@
         <tbody class="table-group-divider">
 
 
-            @foreach (var u in Model.physicians)
+            @foreach (var u in Model.PagingData)
             {
                 <tr>
-                    <input type="hidden" asp-for="@u.PhysicianId">
+                    <input type="hidden" asp-for="@u.PhysicianID">
                     <td>
                         <input type="checkbox" value="" class="checkboxForAll notification" name="selectedFiles" onclick="selectCheck()"
-                            @foreach (var notification in Model.PhysicianNotifications)
-                        {
-                            if (notification.PhysicianId == u.PhysicianId)
+                            
+                            @if (u.stopNotification == "1")
                             {
                                 <text>checked</text>
                             }
-                        }>
+                        >
                     </td>
-                    <td>@u.FirstName  @u.LastName</td>
+                    <td>@u.ProviderName</td>
                     <td>
-                        @foreach(var role in Model.Role)
-                        {
-                            @if(role.RoleId == u.RoleId)
-                            {
-                                @role.Name
-                            }
-                        }
+                       @u.roleName
                     </td>
-                    <td>Un Available</td>
+                    <td>@u.onCallStatus</td>
                     <td>
-                        @foreach (var status in Model.status)
-                        {
-                            @if (status.Statusid == u.Status)
-                            {
-                                @status.Statusname
-                            }
-                        }
+                       @u.status
                     </td>
                     <td>
                         <div class="d-flex">
-                            <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianId">Contact</button>
-                            <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianId">Edit</a>
+                            <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianID">Contact</button>
+                            <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
 
                         </div>
                     </td>
@@ -67,6 +54,8 @@
         <button type="reset" class="btn btn-outline-danger " id="cancelbtn" onclick="cancelCheck()" style="display:none">Cancel</button>
 
    </div>
+    <partial name="_Paging.cshtml" />
+
 </div>
 @* model *@
 

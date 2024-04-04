@@ -10,23 +10,40 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class ProviderInfoViewModel
     {
-        [Required(ErrorMessage = "Enter First Name Here")]
-        public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Enter Last Name Here")]
-        public string LastName { get; set; }
-        public int RoleId { get; set; }
-        public List<Role> Role { get; set; }
         public int? RegionId { get; set; }
-        public List<Region>? Regions { get; set; }
-        public int PhysicianId { get; set; }
-        public List<Physician> physicians { get; set; }
-        public int statusId { get; set; }
-        public List<Status>? status { get; set; }
 
-        public string message { get; set; }
-        public List<PhysicianNotification> PhysicianNotifications { get; set; }
-        public List<ProviderInfoViewModel> Providers { get; set; }
+        public List<Region>? Regions { get; set; }
+
+        public List<TableProviderInfo>? PagingData { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public int PageSize { get; set; }
+
+        public int TotalPages { get; set; }
+
+        public int AccountTypeId { get; set; }
+
+        public int TotalCount { get; set; }
+
+        public int FirstItemIndex { get; set; }
+
+        public int LastItemIndex { get; set; }
+    }
+    public class TableProviderInfo
+    {
+        public string stopNotification { get; set; }=string.Empty;
+
+        public string ProviderName { get; set; }= string.Empty;
+
+        public string roleName { get; set; } = string.Empty;
+
+        public string onCallStatus { get; set; } = string.Empty;
+
+        public string status { get; set; } = string.Empty;
+
+        public int PhysicianID { get; set; }
 
     }
 }

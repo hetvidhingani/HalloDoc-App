@@ -44,4 +44,12 @@ public partial class Smslog
     public int SentTries { get; set; }
 
     public int? Action { get; set; }
+
+    [ForeignKey("RequestId")]
+    [InverseProperty("Smslogs")]
+    public virtual Request? Request { get; set; }
+
+    [ForeignKey("RoleId")]
+    [InverseProperty("Smslogs")]
+    public virtual Role? Role { get; set; }
 }

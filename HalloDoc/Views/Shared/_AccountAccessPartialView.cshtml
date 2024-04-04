@@ -1,1 +1,40 @@
-﻿
+﻿@model AccountAccessViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Account Type</th>
+                <th scope="col">Actions</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+
+            @foreach (var u in Model.PagingData)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@u.roleID">
+
+                    <td>@u.Name</td>
+                    <td>
+
+                        @u.AccountType
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a class="btn btn-outline-info mx-1 contactProviderc" asp-action="EditAccountAccess" asp-controller="Admin" asp-route-id="@u.roleID">Edit</a>
+                            <a class="btn btn-outline-info mx-1" asp-action="deleteAccess" asp-controller="Admin" asp-route-id="@u.roleID">Delete</a>
+
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <partial name="_Paging.cshtml" />
+
+</div>

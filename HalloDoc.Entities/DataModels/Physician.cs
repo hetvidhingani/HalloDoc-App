@@ -78,7 +78,7 @@ public partial class Physician
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifiedDate { get; set; }
 
-    public short? Status { get; set; }
+    public int? Status { get; set; }
 
     [StringLength(100)]
     public string BusinessName { get; set; } = null!;
@@ -140,6 +140,14 @@ public partial class Physician
     [InverseProperty("Physician")]
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 
+    [ForeignKey("RoleId")]
+    [InverseProperty("Physicians")]
+    public virtual Role? Role { get; set; }
+
     [InverseProperty("Physician")]
     public virtual ICollection<Shift> Shifts { get; set; } = new List<Shift>();
+
+    [ForeignKey("Status")]
+    [InverseProperty("Physicians")]
+    public virtual Status? StatusNavigation { get; set; }
 }

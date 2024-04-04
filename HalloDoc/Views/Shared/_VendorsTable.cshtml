@@ -14,28 +14,22 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-
-
-            @foreach (var u in Model.vendor)
+            @foreach (var u in Model.PagingData)
             {
                 <tr>
                     <input type="hidden" asp-for="@u.VendorId">
                     <td>
-                       
-                        @foreach (var type in Model.ProfessionType)
-                        {
-                            if (type.HealthProfessionalId == u.Profession)
-                            {
-                                <p>@type.ProfessionName</p>
-                            }
-                            
-                        }
+                        <p>@u.Profession</p>
                     </td>
-                    <td>@u.VendorName  </td>
                     <td>
-                       @u.Email
+                        @u.BusinessName
                     </td>
-                    <td>@u.FaxNumber</td>
+                    <td>
+                        @u.Email
+                    </td>
+                    <td>
+                        @u.FaxNumber
+                    </td>
                     <td>
                         @u.PhoneNumber
                     </td>
@@ -44,10 +38,8 @@
                     </td>
                     <td>
                         <div class="d-flex">
-                           
                             <a class="btn btn-outline-info mx-1" asp-action="EditVendor" asp-controller="Admin" asp-route-id="@u.VendorId">Edit</a>
                             <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.VendorId">Delete</a>
-
 
                         </div>
                     </td>
@@ -57,10 +49,7 @@
 
         </tbody>
     </table>
-   
+    <partial name="_Paging.cshtml" />
+
 </div>
-@* model *@
 
-<script>
-
-</script>

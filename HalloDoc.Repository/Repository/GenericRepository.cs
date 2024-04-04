@@ -1,4 +1,4 @@
-﻿ using HalloDoc.Entities.DataModels;
+﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class GenericRepository<T>:IGenericRepository<T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly ApplicationDbContext _context;
         private DbSet<T> _genericContext;
@@ -59,10 +59,10 @@ namespace HalloDoc.Repository.Repository
             try
             {
 
-            _context.Add(entity);
-            _context.SaveChanges();
+                _context.Add(entity);
+                _context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -76,7 +76,7 @@ namespace HalloDoc.Repository.Repository
         public async Task UpdateAsync(T entity)
         {
             _context.Update(entity);
-             _context.SaveChanges();
+            _context.SaveChanges();
 
         }
 
@@ -84,9 +84,9 @@ namespace HalloDoc.Repository.Repository
         {
             return await _context.Set<T>().FindAsync(id);
         }
-        public  T GetById(object id)
+        public T GetById(object id)
         {
-            return  _context.Set<T>().Find(id);
+            return _context.Set<T>().Find(id);
         }
         public void SetTempData(string key, object value)
         {
@@ -113,8 +113,8 @@ namespace HalloDoc.Repository.Repository
         {
             try
             {
-            _context.Remove(entity);
-             _context.SaveChanges();
+                _context.Remove(entity);
+                _context.SaveChanges();
 
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
-            public  string EncodePasswordToBase64(string password)
+        public string EncodePasswordToBase64(string password)
         {
             try
             {
@@ -157,11 +157,15 @@ namespace HalloDoc.Repository.Repository
             return _genericContext.Where(where).OrderByDescending(orderBy).Skip((PageIndex - 1) * PageSize).Take(PageSize).Select(select).ToList();
         }
 
-        public int GetTotalCount ( Expression<Func<T, bool>> where)
+        public int GetTotalCount(Expression<Func<T, bool>> where)
         {
-          return _genericContext.Count(where);
+            return _genericContext.Count(where);
         }
 
+        public dynamic GetAllData(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
+        {
+            return _genericContext.Where(where).Select(select).ToList();
+        }
     }
 
 

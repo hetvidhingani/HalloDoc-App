@@ -59,7 +59,7 @@ namespace HalloDoc.Services.IServices
         Task<object> Createprovider();
         Task<object> CreateAdmin();
         Task<object> CreateAdmin(AdminMyProfileViewModel model);
-        ProviderInfoViewModel ProviderInformation(int RegionId);
+        ProviderInfoViewModel ProviderInformation(int RegionId,int CurrentPage);
         object RegionList();
         Task<object> EditProvider(int physicianID);
         Physician ContectProvider(int id);
@@ -69,7 +69,7 @@ namespace HalloDoc.Services.IServices
         Task<object> resetPasswordProvider(int id, string password);
         Task<object> resetRoleStatus(ProviderViewModel model, int id);
         object providerProfile(ProviderViewModel model, int id);
-        Task<object> AccountAccessTable();
+        Task<object> AccountAccessTable(int CurrentPage);
         AccountAccessViewModel MenuName(int accountTypeId, int typename, int id = 0);
         AccountAccessViewModel CreateRole(int AdminId);
         Task<object> CreateAccess(AccountAccessViewModel viewModel);
@@ -78,14 +78,15 @@ namespace HalloDoc.Services.IServices
         Task<object> deleteAccountAccess(int id);
         void DeleteProvider(int id);
         void StopNotificationPhysician(List<int> ids);
-        UserAccessViewModel UserAccess(int accountTypeId);
+        UserAccessViewModel UserAccess(int accountTypeId, int CurrentPage);
         VendorsViewModel VendorDetail();
-        VendorsViewModel VendorTable(int VendorProfessionTypeId,string VendorName);
+        VendorsViewModel VendorTable(int VendorProfessionTypeId,string VendorName,int CurrPage);
         VendorsViewModel AddVendor();
         Task<VendorsViewModel> AddVendor(VendorsViewModel model);
         VendorsViewModel EditVendor(int id);
-        EmailLogViewModel EmailLogs();
-        EmailLogViewModel EmailLogTable(int RoleID, string ReciverName, string email, DateTime? createdDate, DateTime? sentDate,int type);
+        LogsViewModel Logs();
+        LogsViewModel LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? createdDate, DateTime? sentDate,int type,int CurrPage);
         PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber,  int CurrentPage);
+       PatientRecordViewModel PatientRecordTable(int CurrentPage);
     }
 }

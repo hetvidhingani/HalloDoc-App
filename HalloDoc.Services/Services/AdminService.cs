@@ -1178,25 +1178,51 @@ namespace HalloDoc.Services.Services
             viewModel.Regions = _regionRepository.GetRegion();
             return viewModel;
         }
-        public ProviderInfoViewModel ProviderInformation(int RegionId)
+        public ProviderInfoViewModel ProviderInformation(int RegionId , int CurrentPage)
         {
-            List<Physician> regionwisephysician = _physicianRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
-
+            
+            Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
+            var physicians = _physicianRepository.GetAll().Where(whereClauseSyntax.And(x => x.IsDeleted == null));
+            var physicianNotifications = _physicianNotificationRepository.GetAll().Where(x => physicians.Select(p => p.PhysicianId).Contains(x.PhysicianId));
+            whereClauseSyntax = x => true;
+            List<TableProviderInfo> AccountAccessTable = new List<TableProviderInfo>();
             if (RegionId != 0)
             {
-                regionwisephysician = regionwisephysician.Where(a => a.RegionId == RegionId).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.RegionId == RegionId);
+            }
+            var data = _physicianRepository.GetAllWithPagination(x => new TableProviderInfo
+            {
+                onCallStatus = "Un Available",
+                PhysicianID = x.PhysicianId,
+                ProviderName = x.FirstName + " " + x.LastName,
+              stopNotification="1",
+                roleName =x.Role.Name,
+                status=x.StatusNavigation.Statusname,
+                
+            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true); 
+         
+            foreach (TableProviderInfo requiredData in data)
+            {
+                AccountAccessTable.Add(requiredData);
             }
 
-            ProviderInfoViewModel data = new ProviderInfoViewModel()
-            {
-                physicians = regionwisephysician,
-                Regions = _regionRepository.GetAll().ToList(),
-                Role = _roleRepository.GetRolesProvider().ToList(),
-                PhysicianNotifications = _physicianNotificationRepository.GetAll().ToList(),
-                status = _statusRepository.GetAll().ToList(),
-            };
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _physicianRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
 
-            return data;
+            return new ProviderInfoViewModel
+            {
+                PagingData = AccountAccessTable,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
         }
         public object ContectProviderModel(int id)
         {
@@ -1299,15 +1325,45 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Account Access
-
-        public async Task<object> AccountAccessTable()
+        
+        public async Task<object> AccountAccessTable(int CurrentPage)
         {
-            List<Role> roles = _roleRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
-            AccountAccessViewModel model = new AccountAccessViewModel()
+
+            Expression<Func<Role, bool>> whereClauseSyntax = PredicateBuilder.New<Role>();
+
+            whereClauseSyntax = x => true;
+            List<TableAccountAccess> AccountAccessTable = new List<TableAccountAccess>();
+
+            var data = _roleRepository.GetAllWithPagination(x => new TableAccountAccess
             {
-                roles = roles,
+                roleID = x.RoleId,
+                AccountType = x.AccountType == 1 ? "Admin" : "Physician",
+                Name = x.Name,
+
+            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.Name, true);
+
+            foreach (TableAccountAccess requiredData in data)
+            {
+                AccountAccessTable.Add(requiredData);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _roleRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+            return  new AccountAccessViewModel
+            {
+                PagingData = AccountAccessTable,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
             };
-            return model;
         }
 
 
@@ -1431,21 +1487,76 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region User Access
-        public UserAccessViewModel UserAccess(int accountTypeId)
+
+        public UserAccessViewModel UserAccess(int accountTypeId, int CurrentPage)
         {
-            List<Admin> admin = _adminRepository.GetAll().ToList();
-            List<Physician> physicians = _physicianRepository.GetAll().ToList();
 
-            List<Status> status = _statusRepository.GetAll().ToList();
+            List<TableUserAccess> userAccessTable = new List<TableUserAccess>();
+            Expression<Func<Admin, bool>> whereClauseSyntax = PredicateBuilder.New<Admin>();
 
-            UserAccessViewModel data = new()
+            whereClauseSyntax = x => true;
+            Expression<Func<Physician, bool>> whereClauseSyntax2 = PredicateBuilder.New<Physician>();
+
+            whereClauseSyntax2 = x => true;
+
+            if (accountTypeId == 0 || accountTypeId == 2)
             {
-                admins = admin,
-                physician = physicians,
-                AccountTypeId = accountTypeId,
-                status = status,
+                var temp = _adminRepository.GetAllData(x => new TableUserAccess
+                {
+                    AdminID = x.AdminId,
+                    AccountPOC = x.FirstName + ", " + x.LastName,
+                    AccountType = "Admin",
+                    OpenRequest = 0,
+                    Phone = x.Mobile,
+                    PhysicianID = 0,
+                    Status = x.StatusNavigation.Statusname
+                }, x => x.IsDeleted == null);
+                foreach (TableUserAccess item in temp)
+                {
+                    userAccessTable.Add(item);
+                }
+            }
+            if (accountTypeId == 0 || accountTypeId == 1)
+            {
+                var temp = _physicianRepository.GetAllData(x => new TableUserAccess
+                {
+                    AdminID = 0,
+                    AccountPOC = x.FirstName + ", " + x.LastName,
+                    AccountType = "Physician",
+                    OpenRequest = 0,
+                    Phone = x.Mobile,
+                    PhysicianID = x.PhysicianId,
+                    Status = x.StatusNavigation.Statusname
+
+                }, x => x.IsDeleted == null);
+                foreach (TableUserAccess item in temp)
+                {
+                    userAccessTable.Add(item);
+                }
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = userAccessTable.Count;
+
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+            List<TableUserAccess> clients = userAccessTable
+
+              .Skip((CurrentPage - 1) * dataSize)
+              .Take(dataSize)
+              .ToList();
+            return new UserAccessViewModel
+            {
+                PagingData = clients,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
             };
-            return data;
         }
         #endregion
 
@@ -1459,24 +1570,56 @@ namespace HalloDoc.Services.Services
             return vendors;
         }
 
-        public VendorsViewModel VendorTable(int VendorProfessionTypeId, string VendorName)
+        public VendorsViewModel VendorTable(int VendorProfessionTypeId, string VendorName, int CurrentPage)
         {
-            List<HealthProfessional> vendors = _healthProfessionalsRepository.GetAll().Where(u => u.IsDeleted == null).ToList();
+            Expression<Func<HealthProfessional, bool>> whereClauseSyntax = PredicateBuilder.New<HealthProfessional>();
+
+            whereClauseSyntax = x => true;
             if (!string.IsNullOrWhiteSpace(VendorName))
             {
-                vendors = vendors.Where(a => a.VendorName.ToLower().Contains(VendorName.ToLower())).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.VendorName.ToLower().Contains(VendorName.ToLower()));
             }
             if (VendorProfessionTypeId != 0)
             {
-                vendors = vendors.Where(u => u.Profession == VendorProfessionTypeId).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Profession == VendorProfessionTypeId);
             }
-            VendorsViewModel model = new()
+            List<TableModelVendor> vendorTable = new List<TableModelVendor>();
+
+            var data = _healthProfessionalsRepository.GetAllWithPagination(x => new TableModelVendor
             {
-                vendor = vendors,
-                ProfessionType = _healthProfessionalTypeRepository.GetAll().ToList(),
+                VendorId = x.VendorId,
+                Profession = x.ProfessionNavigation.ProfessionName,
+                BusinessContact = x.BusinessContact,
+                BusinessName = x.VendorName,
+                Email = x.Email,
+                FaxNumber = x.FaxNumber,
+                PhoneNumber = x.PhoneNumber,
+            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.VendorName, true);
+
+            foreach (TableModelVendor requiredData in data)
+            {
+                vendorTable.Add(requiredData);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _healthProfessionalsRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+            return new VendorsViewModel
+            {
+                PagingData = vendorTable,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
             };
-            return model;
         }
+
         public VendorsViewModel AddVendor()
         {
             VendorsViewModel model = new VendorsViewModel()
@@ -1486,6 +1629,7 @@ namespace HalloDoc.Services.Services
             };
             return model;
         }
+
         public async Task<VendorsViewModel> AddVendor(VendorsViewModel model)
         {
             HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(model.VendorID);
@@ -1506,7 +1650,6 @@ namespace HalloDoc.Services.Services
                     Email = model.Email,
                     BusinessContact = model.BusinessContact,
                 };
-
                 await _healthProfessionalsRepository.AddAsync(vendor);
             }
             else
@@ -1524,12 +1667,10 @@ namespace HalloDoc.Services.Services
                 healthProfessional.Email = model.Email;
                 healthProfessional.BusinessContact = model.BusinessContact;
                 await _healthProfessionalsRepository.UpdateAsync(healthProfessional);
-
             }
-
-
             return model;
         }
+
         public VendorsViewModel EditVendor(int id)
         {
             HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(id);
@@ -1554,94 +1695,153 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Email Logs & SMS Logs
-        public EmailLogViewModel EmailLogs()
+        public LogsViewModel Logs()
         {
-            EmailLogViewModel model = new EmailLogViewModel()
+            LogsViewModel model = new LogsViewModel()
             {
                 role = _roleRepository.GetAll().ToList(),
 
             };
             return model;
         }
-        public EmailLogViewModel EmailLogTable(int RoleID, string ReciverName, string email, DateTime? createdDate, DateTime? sentDate, int type)
+        public LogsViewModel LogTable(int RoleID, string ReciverName, string email, string phoneNo, DateTime? createdDate, DateTime? sentDate, int type, int CurrPage)
         {
             if (type == 1)
             {
-                List<EmailLog> log = _emailLogsRepository.GetAll().ToList();
-                List<Role> role = _roleRepository.GetAll().ToList();
-                List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+                Expression<Func<EmailLog, bool>> whereClauseSyntax = PredicateBuilder.New<EmailLog>();
+
+                whereClauseSyntax = x => true;
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    var receiverNameLowerCase = ReciverName.ToLower();
-                    requestClients = requestClients.Where(a => a.FirstName.ToLower().Contains(receiverNameLowerCase) || a.LastName.ToLower().Contains(receiverNameLowerCase)).ToList();
-                    log = log.Where(e => requestClients.Any(rc => rc.RequestId == e.RequestId)).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
-                    log = log.Where(a => a.RoleId == RoleID).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.RoleId == RoleID);
                 }
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    log = log.Where(e => e.EmailId.ToLower().StartsWith(email.ToLower())).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.EmailId.ToLower().Contains(email.ToLower()));
                 }
                 if (createdDate.HasValue)
                 {
-                    log = log.Where(e => e.CreateDate.Date == createdDate.Value.Date).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.CreateDate.Date == createdDate.Value.Date);
                 }
 
                 if (sentDate.HasValue)
                 {
-                    log = log.Where(e => e.SentDate.Value.Date == sentDate.Value.Date).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.SentDate == sentDate.Value.Date);
                 }
+                List<TableModelLogs> logTable = new List<TableModelLogs>();
 
-                EmailLogViewModel model = new()
+                var data = _emailLogsRepository.GetAllWithPagination(x => new TableModelLogs
                 {
-                    EmailLogs = log,
-                    requestClients = requestClients,
-                    role = role,
+                    EmailLogId = x.EmailLogId,
+                    reciverName = x.Request.FirstName + " " + x.Request.LastName,
+                    action = x.SubjectName,
+                    roleName = x.Role.Name,
+                    email = x.EmailId,
+                    CreatedDate = x.CreateDate,
+                    SentDate = x.SentDate,
+                    sent = x.IsEmailSent,
+                    sentTries = x.SentTries,
+                    confirmationNumber = x.ConfirmationNumber
 
+                }, whereClauseSyntax, CurrPage, 5, x => x.SentDate, false);
+
+                foreach (TableModelLogs requiredData in data)
+                {
+                    logTable.Add(requiredData);
+                }
+                if (CurrPage == 0) { CurrPage = 1; }
+                int dataSize = 5;
+                int totalCount = _emailLogsRepository.GetTotalCount(whereClauseSyntax);
+                int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+                int FirstItemIndex = Math.Min((CurrPage - 1) * dataSize + 1, totalCount);
+                int LastItemIndex = Math.Min(CurrPage * dataSize, totalCount);
+
+
+                return new LogsViewModel
+                {
+                    paging = logTable,
+                    TotalCount = totalCount,
+                    TotalPages = totalPage,
+                    CurrentPage = CurrPage,
+                    PageSize = 3,
+                    FirstItemIndex = FirstItemIndex,
+                    LastItemIndex = LastItemIndex,
+                    type = 1,
                 };
-                return model;
             }
             else
             {
-                List<Smslog> log = _smmsLogRepository.GetAll().ToList();
-                List<Role> role = _roleRepository.GetAll().ToList();
-                List<RequestClient> requestClients = _requestclientRepository.GetAll().ToList();
+                Expression<Func<Smslog, bool>> whereClauseSyntax = PredicateBuilder.New<Smslog>();
+
+                whereClauseSyntax = x => true;
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    var receiverNameLowerCase = ReciverName.ToLower();
-                    requestClients = requestClients.Where(a => a.FirstName.ToLower().Contains(receiverNameLowerCase) || a.LastName.ToLower().Contains(receiverNameLowerCase)).ToList();
-                    log = log.Where(e => requestClients.Any(rc => rc.RequestId == e.RequestId)).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
-                    log = log.Where(a => a.RoleId == RoleID).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.RoleId == RoleID);
                 }
-                if (!string.IsNullOrWhiteSpace(email))
+                if (!string.IsNullOrWhiteSpace(phoneNo))
                 {
-                    log = log.Where(e => e.MobileNumber.ToLower().StartsWith(email.ToLower())).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.MobileNumber.ToLower().Contains(phoneNo.ToLower()));
                 }
                 if (createdDate.HasValue)
                 {
-                    log = log.Where(e => e.CreateDate.Date == createdDate.Value.Date).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.CreateDate.Date == createdDate.Value.Date);
                 }
 
                 if (sentDate.HasValue)
                 {
-                    log = log.Where(e => e.SentDate.Value.Date == sentDate.Value.Date).ToList();
+                    whereClauseSyntax = whereClauseSyntax.And(e => e.SentDate == sentDate.Value.Date);
                 }
+                List<TableModelLogs> logTable = new List<TableModelLogs>();
 
-                EmailLogViewModel model = new()
+                var data = _smmsLogRepository.GetAllWithPagination(x => new TableModelLogs
                 {
-                    SmsLogs = log,
-                    requestClients = requestClients,
-                    role = role,
+                    SMSLogId = (int)x.SmslogId,
+                    reciverName = x.Request.FirstName + " " + x.Request.LastName,
+                    action = x.Smstemplate,
+                    roleName = x.Role.Name,
+                    PhoneNumber = x.MobileNumber,
+                    CreatedDate = x.CreateDate,
+                    SentDate = x.SentDate,
+                    sent = x.IsSmssent,
+                    sentTries = x.SentTries,
+                    confirmationNumber = x.ConfirmationNumber
 
+                }, whereClauseSyntax, CurrPage, 5, x => x.SentDate, false);
+
+                foreach (TableModelLogs requiredData in data)
+                {
+                    logTable.Add(requiredData);
+                }
+                if (CurrPage == 0) { CurrPage = 1; }
+                int dataSize = 5;
+                int totalCount = _smmsLogRepository.GetTotalCount(whereClauseSyntax);
+                int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+                int FirstItemIndex = Math.Min((CurrPage - 1) * dataSize + 1, totalCount);
+                int LastItemIndex = Math.Min(CurrPage * dataSize, totalCount);
+
+
+                return new LogsViewModel
+                {
+                    paging = logTable,
+                    TotalCount = totalCount,
+                    TotalPages = totalPage,
+                    CurrentPage = CurrPage,
+                    PageSize = 3,
+                    FirstItemIndex = FirstItemIndex,
+                    LastItemIndex = LastItemIndex,
+                    type = 2,
                 };
-                return model;
+
             }
         }
         #endregion
@@ -1650,7 +1850,7 @@ namespace HalloDoc.Services.Services
         public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage = 1)
         {
             Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
-            
+
             whereClauseSyntax = x => true;
 
             if (!FirstName.IsNullOrEmpty())
@@ -1670,23 +1870,24 @@ namespace HalloDoc.Services.Services
                 whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
             }
 
-            List<TableModel> requestClients = new List<TableModel>();
+            List<TableModel> data = new List<TableModel>();
             var temp = _requestclientRepository.GetAllWithPagination(x => new TableModel
             {
-                FirstName =x.FirstName,
+                FirstName = x.FirstName,
                 LastName = x.LastName,
                 Address = x.Address,
-                email =x.Email,
+                email = x.Email,
                 phone = x.PhoneNumber,
                 RequestClientId = x.RequestClientId,
                 RequestId = x.Request.RequestId
-            },whereClauseSyntax,CurrentPage,5,x => x.FirstName,false);
+            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
 
-            foreach (TableModel requestClient in temp) {
-                requestClients.Add(requestClient);
+            foreach (TableModel requestClient in temp)
+            {
+                data.Add(requestClient);
             }
 
-            PatientHistoryViewModel model = new PatientHistoryViewModel();
+
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
@@ -1694,11 +1895,11 @@ namespace HalloDoc.Services.Services
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
-            
+
 
             return new PatientHistoryViewModel
             {
-                PagingData = requestClients,
+                PagingData = data,
                 TotalCount = totalCount,
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,
@@ -1707,6 +1908,47 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
 
+        }
+        #endregion
+
+        #region patient Records
+        public PatientRecordViewModel PatientRecordTable(int CurrentPage)
+        {
+            Expression<Func<Request, bool>> whereClauseSyntax = PredicateBuilder.New<Request>();
+
+            whereClauseSyntax = x => true;
+            List<RecordTableModel> data = new List<RecordTableModel>();
+            var temp = _requestRepository.GetAllWithPagination(x => new RecordTableModel
+            {
+              
+
+            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
+
+            foreach (RecordTableModel requestClient in temp)
+            {
+                data.Add(requestClient);
+            }
+
+
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _requestRepository.GetTotalCount(whereClauseSyntax);
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+
+            return new PatientRecordViewModel
+            {
+                PagingData = data,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
         }
         #endregion
 

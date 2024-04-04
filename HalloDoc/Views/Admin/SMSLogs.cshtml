@@ -1,4 +1,4 @@
-﻿@model EmailLogViewModel;
+﻿@model LogsViewModel;
 
 <div class=" mx-5 " style="margin-top:120px;">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-lg-2 col-md-3 col-sm-6 ">
                         <div class="form-group  form-floating has-search mb-1">
-                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputEmail">
+                            <input type="text" class="form-control w-100" placeholder="Search" id="search-inputNumber">
                             <label for=" ">Mobile Number</label>
 
                         </div>
@@ -87,13 +87,14 @@
 
     var roleID;
     var reciver;
-    var Email;
+    var phnNumber;
     var createdDate;
     var sentDate;
+    var page;
     $("#search-input").on('click', function () {
         roleID = $("#professionType").val();
         reciver = $("#search-inputReciver").val();
-        Email = $("#search-inputEmail").val();
+        phnNumber = $("#search-inputNumber").val();
         createdDate = $("#search-inputCreatedDate").val();
         sentDate = $("#search-inputSentDate").val();
         load();
@@ -103,17 +104,21 @@
         load();
 
     });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
     function load() {
 
 
         $.ajax({
-            url: "/Admin/EmailLogTable",
+            url: "/Admin/LogTable",
             type: "POST",
-            data: { RoleID: roleID, ReciverName: reciver, email: Email, CreatedDate: createdDate, SentDate: sentDate,type:2 },
+            data: { RoleID: roleID, ReciverName: reciver, email: null, phoneNo: phnNumber, CreatedDate: createdDate, SentDate: sentDate, type: 2, CurrPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/EmailLogTable";
+                url = "/Admin/LogTable";
             },
             error: function () {
                 alert("No Projects Found");
@@ -126,13 +131,13 @@
 
 
         $.ajax({
-            url: "/Admin/EmailLogTable",
+            url: "/Admin/LogTable",
             type: "POST",
-            data: { RoleID: 0, ReciverName: null, email: null, CreatedDate: null, SentDate: null,type:2 },
+            data: { RoleID: 0, ReciverName: null, email: null, phoneNo: null, CreatedDate: null, SentDate: null, type: 2, CurrPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/EmailLogTable";
+                url = "/Admin/LogTable";
             },
             error: function () {
                 alert("No Projects Found");

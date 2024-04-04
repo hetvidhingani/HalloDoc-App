@@ -16,4 +16,10 @@ public partial class Status
     [Column("statusname")]
     [StringLength(50)]
     public string Statusname { get; set; } = null!;
+
+    [InverseProperty("StatusNavigation")]
+    public virtual ICollection<Admin> Admins { get; set; } = new List<Admin>();
+
+    [InverseProperty("StatusNavigation")]
+    public virtual ICollection<Physician> Physicians { get; set; } = new List<Physician>();
 }

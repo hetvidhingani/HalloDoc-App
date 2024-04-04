@@ -89,6 +89,9 @@ public partial class Request
 
     public int? CreatedUserId { get; set; }
 
+    [InverseProperty("Request")]
+    public virtual ICollection<EmailLog> EmailLogs { get; set; } = new List<EmailLog>();
+
     [ForeignKey("PhysicianId")]
     [InverseProperty("Requests")]
     public virtual Physician? Physician { get; set; }
@@ -117,6 +120,9 @@ public partial class Request
 
     [InverseProperty("Request")]
     public virtual ICollection<RequestWiseFile> RequestWiseFiles { get; set; } = new List<RequestWiseFile>();
+
+    [InverseProperty("Request")]
+    public virtual ICollection<Smslog> Smslogs { get; set; } = new List<Smslog>();
 
     [ForeignKey("UserId")]
     [InverseProperty("Requests")]

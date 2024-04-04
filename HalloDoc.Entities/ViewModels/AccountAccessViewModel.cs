@@ -37,5 +37,29 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Please select a account type.")]
         public short? accountTypeId { get; set; }
+
+        public int CurrentPage { get; set; }
+
+        public int PageSize { get; set; }
+
+        public int TotalPages { get; set; }
+
+        public int AccountTypeId { get; set; }
+
+        public int TotalCount { get; set; }
+
+        public int FirstItemIndex { get; set; }
+
+        public int LastItemIndex { get; set; }
+
+        public List<TableAccountAccess>? PagingData { get; set; }
     }
+    public class TableAccountAccess
+    {
+        public string AccountType { get; set; } =string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public int roleID { get; set; }
+
+    }
+
 }

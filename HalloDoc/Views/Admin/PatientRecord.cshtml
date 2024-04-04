@@ -1,11 +1,11 @@
-﻿@model HalloDoc.Entities.ViewModels.AccountAccessViewModel;
+﻿@model HalloDoc.Entities.ViewModels.UserAccessViewModel;
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
         <div class="PatientInfo d-flex justify-content-between align-items-center">
-            <h3>Account Access</h3>
+            <h3>Patient Record</h3>
             <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
@@ -15,44 +15,40 @@
         </div>
 
         <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
-            <div class="row">
-
-                <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-end">
-                    <a class="btn btn-info" href="@Url.Action("CreateRole","Admin")">Create Access </a>
-                </div>
-            </div>
+            
             <div class="row mt-2">
                 <div id="admindata" class="mb-5"></div>
 
-              
 
             </div>
         </div>
     </div>
 </div>
+
 <script>
+
+
+   
     var page;
+
     $(document).ready(function () {
         load();
 
     });
     function changepage(CurrentPage) {
         page = CurrentPage;
-        console.log(page);
         load();
     }
-
     function load() {
-
-
+       
         $.ajax({
-            url: "/Admin/AccountAccess",
+            url: "/Admin/PatientRecordTable",
             type: "POST",
-            data: { CurrentPage: page },
+            data: {  CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
-                url = "/Admin/AccountAccess";
+
             },
             error: function () {
                 alert("No Projects Found");
@@ -60,4 +56,5 @@
             }
         });
     }
+ 
 </script>

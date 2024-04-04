@@ -56,7 +56,7 @@ public partial class Admin
     [Column(TypeName = "timestamp without time zone")]
     public DateTime? ModifiedDate { get; set; }
 
-    public short? Status { get; set; }
+    public int? Status { get; set; }
 
     public bool? IsDeleted { get; set; }
 
@@ -82,4 +82,8 @@ public partial class Admin
 
     [InverseProperty("Admin")]
     public virtual ICollection<RequestWiseFile> RequestWiseFiles { get; set; } = new List<RequestWiseFile>();
+
+    [ForeignKey("Status")]
+    [InverseProperty("Admins")]
+    public virtual Status? StatusNavigation { get; set; }
 }

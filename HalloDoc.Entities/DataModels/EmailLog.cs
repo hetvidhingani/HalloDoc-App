@@ -50,4 +50,12 @@ public partial class EmailLog
     public int? SentTries { get; set; }
 
     public int? Action { get; set; }
+
+    [ForeignKey("RequestId")]
+    [InverseProperty("EmailLogs")]
+    public virtual Request? Request { get; set; }
+
+    [ForeignKey("RoleId")]
+    [InverseProperty("EmailLogs")]
+    public virtual Role? Role { get; set; }
 }

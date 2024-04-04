@@ -7,26 +7,29 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Entities.ViewModels
 {
-    public class PatientHistoryViewModel
+    public class PatientRecordViewModel
     {
- 
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public int TotalPages { get; set; }
         public int currData { get; set; }
         public int TotalCount { get; set; }
-        public List<TableModel> PagingData { get; set; }
+        public List<RecordTableModel> PagingData { get; set; }
         public int FirstItemIndex { get; set; }
         public int LastItemIndex { get; set; }
+    
     }
-    public class TableModel
+    public class RecordTableModel
     {
-        public int RequestClientId { get; set; }
         public int RequestId { get; set; }
-        public string Address { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string email { get; set; }
-        public string phone { get; set; }
+        public int requestclientID { get; set; }
+        public string confirmationNumber { get; set; }
+        public string ProviderName { get; set; }
+        public string status { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ConcludedDate { get; set; }
+        public string clientName { get; set; }
+
+
     }
 }

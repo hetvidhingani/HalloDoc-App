@@ -10,7 +10,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class VendorsViewModel
     {
-        public List<HealthProfessional> vendor {  get; set; }
+     
         public List<HealthProfessionalType> ProfessionType { get; set; }
         public int VendorID { get; set; }
 
@@ -21,7 +21,7 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Please Select State !")]
 
         public int RegionID { get; set; }
-        public int Profession {  get; set; }
+
         public string vendorName { get; set; }
         [Required(ErrorMessage = "Please Provide Phone Number !")]
         public string BusinessContact { get; set; }
@@ -48,6 +48,25 @@ namespace HalloDoc.Entities.ViewModels
         [RegularExpression(@"^\+\d{1,3}\d{10}$", ErrorMessage = "Invalid phone number format. Use country code followed by 10 digits.")]
         public string PhoneNumber { get; set; }
 
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; set; }
+  
+        public int TotalCount { get; set; }
+        public List<TableModelVendor> PagingData { get; set; }
+        public int FirstItemIndex { get; set; }
+        public int LastItemIndex { get; set; }
+
+    }
+    public class TableModelVendor
+    {
+        public int VendorId { get; set; }
+        public string Profession { get; set; }
+        public string BusinessName { get; set; }
+        public string Email { get; set; }
+        public string FaxNumber { get; set;}
+        public string PhoneNumber { get; set;}
+        public string BusinessContact { get; set;}
 
     }
 }

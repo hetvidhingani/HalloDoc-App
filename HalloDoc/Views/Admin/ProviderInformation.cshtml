@@ -58,17 +58,22 @@
 
     
     var regionId;
+    var page; 
+
     $(document).ready(function () {
         load();
        
     });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
     function load() {
-
 
         $.ajax({
             url: "/Admin/ProviderInformation",
             type: "POST",
-            data: { RegionId: regionId },
+            data: { RegionId: regionId, CurrentPage :page},
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
