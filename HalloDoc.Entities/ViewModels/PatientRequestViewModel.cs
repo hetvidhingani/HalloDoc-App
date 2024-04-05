@@ -66,6 +66,8 @@ namespace HalloDoc.Entities.ViewModels
         public string? RelationName { get; set; }
         [Required(ErrorMessage ="Select Your State.")]
         public int RegionId { get; set; }
+
+        public string? Note { get; set; }
        
     }
 

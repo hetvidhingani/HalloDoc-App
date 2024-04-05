@@ -479,7 +479,7 @@ namespace HalloDoc.Controllers
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string> attachmentFilePaths = null;
                 _customService.SendEmail(viewModel.Email, link, subject, body, attachmentFilePaths);
-                _customService.EmailLog(viewModel.requestclientID, viewModel.Email,link, subject, body, (int)AdminId);
+                _customService.EmailLog(viewModel.requestclientID, viewModel.Email, link, subject, body, (int)AdminId);
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
                 return RedirectToAction("Dashboard", "Admin");
@@ -569,7 +569,7 @@ namespace HalloDoc.Controllers
             return View(result);
         }
         [HttpPost]
-        public IActionResult ProviderInformation(int RegionId,int CurrentPage = 1)
+        public IActionResult ProviderInformation(int RegionId, int CurrentPage = 1)
         {
             var result = _admin.ProviderInformation(RegionId, CurrentPage);
             return PartialView("_ProviderTable", result);
@@ -621,14 +621,14 @@ namespace HalloDoc.Controllers
         #region Create Admin
         public async Task<IActionResult> CreateAdmin()
         {
-            var result  = await _admin.CreateAdmin();
+            var result = await _admin.CreateAdmin();
             return View(result);
         }
         [HttpPost]
         public IActionResult CreateAdmin(AdminMyProfileViewModel model)
         {
             var result = _admin.CreateAdmin(model);
-            return RedirectToAction("UserAccess",result);
+            return RedirectToAction("UserAccess", result);
         }
         #endregion
 
@@ -679,13 +679,13 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> AccountAccess()
         {
-            
+
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AccountAccess( int CurrentPage = 1)
+        public async Task<IActionResult> AccountAccess(int CurrentPage = 1)
         {
-            var result = await _admin.AccountAccessTable( CurrentPage);
+            var result = await _admin.AccountAccessTable(CurrentPage);
             return PartialView("_AccountAccessPartialView", result);
         }
         #endregion
@@ -740,7 +740,7 @@ namespace HalloDoc.Controllers
             return View();
         }
 
-        public IActionResult UserAccessTable(int AaccountTypeId,int CurrentPage=1)
+        public IActionResult UserAccessTable(int AaccountTypeId, int CurrentPage = 1)
         {
             var result = _admin.UserAccess(AaccountTypeId, CurrentPage);
             return PartialView("_UserAccessTable", result);
@@ -753,9 +753,9 @@ namespace HalloDoc.Controllers
             var result = _admin.VendorDetail();
             return View(result);
         }
-        public IActionResult VendorTable(int VendorProfessionTypeId,string VendorName, int CurrentPage = 1)
+        public IActionResult VendorTable(int VendorProfessionTypeId, string VendorName, int CurrentPage = 1)
         {
-            var result = _admin.VendorTable(VendorProfessionTypeId,VendorName,CurrentPage);
+            var result = _admin.VendorTable(VendorProfessionTypeId, VendorName, CurrentPage);
             return PartialView("_VendorsTable", result);
         }
         public IActionResult AddVendor()
@@ -782,10 +782,10 @@ namespace HalloDoc.Controllers
             var result = _admin.Logs();
             return View(result);
         }
-        public IActionResult LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? CreatedDate, DateTime? SentDate,int type,int CurrPage=1)
+        public IActionResult LogTable(int RoleID, string ReciverName, string email, string phoneNo, DateTime? CreatedDate, DateTime? SentDate, int type, int CurrPage = 1)
         {
-            var result = _admin.LogTable(RoleID,ReciverName,email, phoneNo, CreatedDate,SentDate,type,CurrPage);
-            return PartialView("_EmailLogTable",result);
+            var result = _admin.LogTable(RoleID, ReciverName, email, phoneNo, CreatedDate, SentDate, type, CurrPage);
+            return PartialView("_EmailLogTable", result);
         }
         #endregion
 
@@ -800,10 +800,10 @@ namespace HalloDoc.Controllers
         #region Patient History
         public IActionResult PatientHistory()
         {
-            
+
             return View();
         }
-        public IActionResult PatientHistoryTable(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage=1)
+        public IActionResult PatientHistoryTable(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage = 1)
         {
             var result = _admin.PatientHistory(FirstName, LastName, Email, PhoneNumber, CurrentPage);
             return PartialView("_PatientHistory", result);
@@ -815,11 +815,11 @@ namespace HalloDoc.Controllers
         {
             PatientRecordViewModel viewModel = new PatientRecordViewModel();
             viewModel.userID = id;
-            return View(viewModel);  
+            return View(viewModel);
         }
-        public IActionResult PatientRecordTable(int id,int CurrentPage=1)
+        public IActionResult PatientRecordTable(int id, int CurrentPage = 1)
         {
-            var result = _admin.PatientRecordTable(id,CurrentPage);
+            var result = _admin.PatientRecordTable(id, CurrentPage);
             return PartialView("_PatientRecord", result);
         }
         #endregion
@@ -830,14 +830,14 @@ namespace HalloDoc.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult BlockHistoryTable(string FirstName,DateTime? Date,string Email,string PhoneNumber,int CurrPage =1)
+        public IActionResult BlockHistoryTable(string FirstName, DateTime? Date, string Email, string PhoneNumber, int CurrPage = 1)
         {
-            var result = _admin.BlockHistoryTable(FirstName, Date, Email, PhoneNumber,CurrPage);
+            var result = _admin.BlockHistoryTable(FirstName, Date, Email, PhoneNumber, CurrPage);
             return PartialView("_BlockHistoryTable", result);
         }
         public IActionResult UnblockRequest(int id)
         {
-           _admin.UnblockRequest(id);
+            _admin.UnblockRequest(id);
             return RedirectToAction("BlockHistory");
         }
         #endregion
@@ -845,11 +845,11 @@ namespace HalloDoc.Controllers
         #region Search Record
         public IActionResult SearchRecord()
         {
-            
+
             return View();
         }
         [HttpPost]
-        public IActionResult SearchRecordTable(int statusOfRequest,string Name,int requestType, DateTime? DateOfService, DateTime? ToDateOfService,string physician, string Email, string PhoneNumber, int CurrPage = 1)
+        public IActionResult SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrPage = 1)
         {
             var result = _admin.SearchRecordTable(statusOfRequest, Name, requestType, DateOfService, ToDateOfService, physician, Email, PhoneNumber, CurrPage);
             return PartialView("_SearchRecordTable", result);
@@ -862,7 +862,23 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Create Request Admin
-
+        public IActionResult CreateRequestByAdmin()
+        {
+            PatientRequestViewModel model = new PatientRequestViewModel();
+            model.State = _admin.getstateDropdown();
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateRequest(PatientRequestViewModel model)
+        {
+            var adminID = HttpContext.Session.GetInt32("AdminSession");
+            await _admin.CreateRequestByAdmin(model, (int)adminID);
+            //await LinkToCreateAccount(new CreateAccountViewModel
+            //{
+            //    Email = viewModel.Email
+            //});
+            return RedirectToAction("Dashboard");
+        }
         #endregion
 
         #endregion

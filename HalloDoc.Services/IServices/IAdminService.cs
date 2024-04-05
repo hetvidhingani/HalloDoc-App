@@ -93,7 +93,8 @@ namespace HalloDoc.Services.IServices
         void UnblockRequest(int id);
         SearchRecordViewModel SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrPage = 1);
         void DeleteRequest(int id);
-
+        List<Region> getstateDropdown();
+        Task CreateRequestByAdmin(PatientRequestViewModel viewModel, int adminId);
 
     }
 }

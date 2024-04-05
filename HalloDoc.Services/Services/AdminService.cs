@@ -57,6 +57,7 @@ namespace HalloDoc.Services.Services
         private readonly IRoleMenuRepository _roleMenuRepository;
         private readonly IEmailLogsRepository _emailLogsRepository;
         private readonly ISMSLogRepository _smmsLogRepository;
+        private readonly IAspNetUserRolesRepository _userRolesRepository;
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -68,7 +69,8 @@ namespace HalloDoc.Services.Services
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
-                               IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository, ISMSLogRepository smmsLogRepository)
+                               IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
+                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -97,6 +99,7 @@ namespace HalloDoc.Services.Services
             _roleMenuRepository = roleMenuRepository;
             _emailLogsRepository = emailLogsRepository;
             _smmsLogRepository = smmsLogRepository;
+            _userRolesRepository = userRolesRepository;
         }
         #endregion
 
@@ -142,6 +145,11 @@ namespace HalloDoc.Services.Services
         {
             RequestClient result = await _requestclientRepository.GetByIdAsync(id);
             return result;
+        }
+
+        public List<Region> getstateDropdown()
+        {
+            return _regionRepository.GetAll().ToList();
         }
 
         #endregion
@@ -2126,6 +2134,78 @@ namespace HalloDoc.Services.Services
 
         }
 
+        #endregion
+
+        #region Create Request By Admin
+        public async Task CreateRequestByAdmin(PatientRequestViewModel viewModel,int adminId)
+        {
+            var data = _adminRepository.GetById(adminId);
+            Request request = new Request
+            {
+                RequestTypeId = 1,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                PhoneNumber = data.Mobile,
+                Email = data.Email,
+                CreatedDate = DateTime.Now,
+                Status = 1,
+                
+            };
+             await _requestRepository.AddAsync(request);
+
+            RequestClient requestClient = new RequestClient
+            {
+                RequestId = request.RequestId,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                PhoneNumber = viewModel.PhoneNumber,
+                RegionId = viewModel.RegionId,
+                Street = viewModel.Street,
+                City = viewModel.City,
+                State =await _regionRepository.FindState(viewModel.RegionId),
+                ZipCode = viewModel.ZipCode,
+                Notes = viewModel.Symptoms,
+                Email = viewModel.Email,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode,
+                
+
+            };
+            await _requestclientRepository.AddAsync(requestClient);
+
+            User user = await _userRepository.CheckUserByEmail(viewModel.Email);
+            if (user != null)
+            {
+                request.UserId = user.UserId;
+                await _requestRepository.UpdateAsync(request);
+
+            }
+
+            AspNetUser userExist = await _aspnetuserRepository.CheckUserByEmail(viewModel.Email);
+            if (userExist == null)
+            {
+                AspNetUser newaspNetUSer = new AspNetUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = viewModel.FirstName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    Email = viewModel.Email,
+                    CreatedDate = DateTime.Now
+                };
+
+                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId = "2"
+
+                };
+                await _userRolesRepository.AddAsync(userRole);
+                
+            }
+        }
         #endregion
 
         #endregion
