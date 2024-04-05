@@ -31,23 +31,40 @@
                     <td>
                         @data.confirmationNumber
                     </td>
-                    <td>@data.ProviderName</td>
                     <td>
-                        @data.ConcludedDate
+                        @if (@data.ProviderName != null)
+                        {
+                            @data.ProviderName
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @if (@data.ConcludedDate != null)
+                        {
+                            @data.ConcludedDate
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                       
                     </td>
                     <td>@data.status</td>
                     <td>-</td>
 
                     <td>
                         <div class="dropdown " id="4 ">
-                            <button class="btn btn-outline-info py-2" href="#" role="button" data-bs-toggle="dropdown"  aria-expanded="false">
-                                Providers
+                            <button class="btn btn-outline-info py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
                             </button>
 
                             <ul class="dropdown-menu layoutTab">
-                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin" asp-route-id="requestclientID">View Case</a></li>
-                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Chat</a></li>
-                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">0 Document</a></li>
+                                <li><a class="px-3 py-4 fw-bold ViewCasePatient" style="color:dimgrey;text-decoration:none;" id="@data.requestclientID">View Case</a></li>
+                                <li><a class="px-3 py-4 fw-bold" style="color:dimgrey;text-decoration:none;" href="#">Chat</a></li>
+                                <li><a class="px-3 py-4 fw-bold" style="color:dimgrey;text-decoration:none;" href="#">0 Document</a></li>
                             </ul>
                         </div>
                     </td>
@@ -61,3 +78,14 @@
 
 </div>
 
+<script>
+    $('.ViewCasePatient').click(function () {
+        var id = this.id;
+
+  
+                window.location.href = "@Url.Action("ViewCase", "Admin", new { Id = "_ID_" })".replace("_ID_", id);
+
+             
+           
+    });
+</script>

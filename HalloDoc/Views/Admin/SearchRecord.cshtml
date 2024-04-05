@@ -1,0 +1,181 @@
+﻿@model SearchRecordViewModel;
+
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>Search Record</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 w-100 ">
+            <form>
+
+                <div class="row d-flex justify-content-between align-items-center">
+
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <div class="has-search form-floating">
+
+                            <select id="field1" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="statusID">
+                                <option value="0" selected>All</option>
+                                <option value="1">New</option>
+                                <option value="2">Pending</option>
+                                <option value="3">To Close</option>
+                                <option value="4">Active</option>
+                                <option value="6">Conclude</option>
+                                <option value="9">UnPaid</option>
+                                <option value="11">Blocked</option>
+                            </select>
+                            <label for=" ">Select Request Status</label>
+                        </div>
+                        <span asp-validation-for="statusID" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="field2">
+                            <label for=" ">Patient Name</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <select id="field3" class="form-select form-select-sm " style="height:40px" aria-label="Default select example" asp-for="requestType">
+                                <option value="0" selected>All</option>
+                                <option value="1">Patient</option>
+                                <option value="2">Family / Friend</option>
+                                <option value="3">Concierge</option>
+                                <option value="4">Business</option>
+
+                            </select>
+                            <label for=" ">Select Request Type</label>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="field4">
+                            <label for=" ">From Date of Service</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group form-floating  has-search mb-1">
+                            <input type="date" class="form-control w-100" placeholder="Search" id="field5">
+                            <label for=" ">To Date of Service</label>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="field6">
+                            <label for=" ">Provider Name</label>
+
+                        </div>
+                    </div> <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="field7">
+                            <label for=" ">Email</label>
+
+                        </div>
+                    </div> <div class="col-lg-3 col-md-3 col-sm-6 ">
+                        <div class="form-group  form-floating has-search mb-1">
+
+                            <input type="text" class="form-control w-100" placeholder="Search" id="field8">
+                            <label for=" ">Phone Number</label>
+
+                        </div>
+                    </div>
+
+
+
+                  
+                </div>
+                <div class="row ">
+                    <div class="d-flex justify-content-end align-items-center">
+
+                    <button class="btn btn-outline-info" type="reset" onclick="loadreset()">Clear</button>
+                    <a class="btn btn-info" id="search-input">Search</a>
+
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var statusofrequest;
+    var patientName;
+    var reqtype;
+    var dos;
+    var toDos;
+    var phy;
+    var email;
+    var phn;
+    var page;
+
+    $("#search-input").on('click', function () {
+        statusofrequest = $("#field1").val();
+        patientName = $("#field2").val();
+        reqtype = $("#field3").val();
+        dos = $("#field4").val();
+        toDos = $("#field5").val();
+        phy = $("#field6").val();
+        email = $("#field7").val();
+        phn = $("#field8").val();
+
+        load();
+    });
+
+    $(document).ready(function () {
+        load();
+
+    });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
+    function load() {
+
+
+        $.ajax({
+            url: "/Admin/SearchRecordTable",
+            type: "POST",
+            data: { statusOfRequest:statusofrequest, Name:patientName, requestType:reqtype, DateOfService:dos, ToDateOfService:toDos, physician:phy, Email:email, PhoneNumber:phn, CurrPage :page},
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+               
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    // $("#professionType").on("input", function () {
+    function loadreset() {
+
+        statusOfRequest = null; Name = null; requestType = null; DateOfService = null; ToDateOfService = null; physician = null; Email = null; PhoneNumber = null; CurrPage = 1;
+        location.reload();
+    }
+
+            //     professionType = $(this).val();
+            //     load();
+
+            // })
+</script>

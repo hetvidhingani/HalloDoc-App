@@ -88,5 +88,12 @@ namespace HalloDoc.Services.IServices
         LogsViewModel LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? createdDate, DateTime? sentDate,int type,int CurrPage);
         PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber,int CurrentPage);
         PatientRecordViewModel PatientRecordTable(int userID,int CurrentPage);
+
+        BlockHistoryViewModel BlockHistoryTable(string FirstName, DateTime? Date, string Email, string PhoneNumber, int CurrPage);
+        void UnblockRequest(int id);
+        SearchRecordViewModel SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrPage = 1);
+        void DeleteRequest(int id);
+
+
     }
 }

@@ -128,7 +128,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region View Case
-
+        [HttpGet]
         public async Task<IActionResult> ViewCase(int Id)
         {
             if (ModelState.IsValid)
@@ -822,6 +822,47 @@ namespace HalloDoc.Controllers
             var result = _admin.PatientRecordTable(id,CurrentPage);
             return PartialView("_PatientRecord", result);
         }
+        #endregion
+
+        #region Block History
+        public IActionResult BlockHistory()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult BlockHistoryTable(string FirstName,DateTime? Date,string Email,string PhoneNumber,int CurrPage =1)
+        {
+            var result = _admin.BlockHistoryTable(FirstName, Date, Email, PhoneNumber,CurrPage);
+            return PartialView("_BlockHistoryTable", result);
+        }
+        public IActionResult UnblockRequest(int id)
+        {
+           _admin.UnblockRequest(id);
+            return RedirectToAction("BlockHistory");
+        }
+        #endregion
+
+        #region Search Record
+        public IActionResult SearchRecord()
+        {
+            
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SearchRecordTable(int statusOfRequest,string Name,int requestType, DateTime? DateOfService, DateTime? ToDateOfService,string physician, string Email, string PhoneNumber, int CurrPage = 1)
+        {
+            var result = _admin.SearchRecordTable(statusOfRequest, Name, requestType, DateOfService, ToDateOfService, physician, Email, PhoneNumber, CurrPage);
+            return PartialView("_SearchRecordTable", result);
+        }
+        public IActionResult DeleteRequest(int id)
+        {
+            _admin.DeleteRequest(id);
+            return RedirectToAction("SearchRecord");
+        }
+        #endregion
+
+        #region Create Request Admin
+
         #endregion
 
         #endregion

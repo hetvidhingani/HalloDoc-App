@@ -1,0 +1,121 @@
+﻿@model HalloDoc.Entities.ViewModels.SearchRecordViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Requestor </th>
+                <th scope="col">Date Of Service</th>
+                <th scope="col">Close Case Date</th>
+                <th scope="col">Email</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Address</th>
+
+                <th scope="col">Zip</th>
+                <th scope="col">Request Status</th>
+                <th scope="col">Physician</th>
+                <th scope="col">Physician Note</th>
+                <th scope="col">Cancelled By Provider Note</th>
+                <th scope="col">Admin Note</th>
+                <th scope="col">Patient Note</th>
+
+                <th>Delete Permanently</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @foreach (var data in Model.PagingData)
+
+            {
+
+                <tr>
+                    <input type="hidden" asp-for="@data.RequestClientId">
+                    <td>
+                        <p>@data.PatientName </p>
+                    </td>
+                    <td>
+                        @data.Requestor
+                    </td>
+                    <td>
+                        @if (@data.DateOfService != null)
+                        {
+                            @data.DateOfService
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @data.CloseCaseDate
+                    </td>
+                    <td>
+                        @data.email
+                    </td>
+                    <td>
+                        @data.phone
+                    </td>
+                    <td>
+                        @data.address
+                    </td>
+                    <td>
+                        @data.zip
+                    </td>
+                    <td>@data.requestStatus</td>
+                    <td>
+                        @if (@data.physician != " ")
+                        {
+                            @data.physician
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @if (@data.PhysicianNote != null)
+                        {
+                            
+                            @data.PhysicianNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>@data.CancelByProviderNote</td>
+                    <td>
+                        @if (@data.AdminNote != null)
+                        {
+
+                            @data.AdminNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        @if (@data.PatientNote != null)
+                        {
+
+                            @data.PatientNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-info btn-sm" asp-action="DeleteRequest" asp-controller="Admin" asp-route-id="@data.RequestClientId">Delete</a>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <partial name="_Paging.cshtml" />
+
+</div>
+

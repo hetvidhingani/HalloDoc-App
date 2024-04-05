@@ -542,7 +542,7 @@ namespace HalloDoc.Services.Services
             blockRequest.CreatedDate = DateTime.Now;
             blockRequest.Email = requestor.Email;
             blockRequest.Reason = viewModel.AdditionalNotes;
-            blockRequest.RequestId = Convert.ToString(req.RequestId);
+            blockRequest.RequestId = req.RequestId;
             await _blockRequestRepository.AddAsync(blockRequest);
 
             return "Dashboard";
@@ -1178,11 +1178,11 @@ namespace HalloDoc.Services.Services
             viewModel.Regions = _regionRepository.GetRegion();
             return viewModel;
         }
-        public ProviderInfoViewModel ProviderInformation(int RegionId , int CurrentPage)
+        public ProviderInfoViewModel ProviderInformation(int RegionId, int CurrentPage)
         {
-            
+
             Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
-            
+
             whereClauseSyntax = x => true;
             List<TableProviderInfo> AccountAccessTable = new List<TableProviderInfo>();
             if (RegionId != 0)
@@ -1194,12 +1194,12 @@ namespace HalloDoc.Services.Services
                 onCallStatus = "Un Available",
                 PhysicianID = x.PhysicianId,
                 ProviderName = x.FirstName + " " + x.LastName,
-                stopNotification=x.PhysicianNotifications.First(u=>u.PhysicianId==x.PhysicianId)==null?null:"1",
-                roleName =x.Role.Name,
-                status=x.StatusNavigation.Statusname,
-                
-            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true); 
-         
+                stopNotification = x.PhysicianNotifications.First(u => u.PhysicianId == x.PhysicianId) == null ? null : "1",
+                roleName = x.Role.Name,
+                status = x.StatusNavigation.Statusname,
+
+            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true);
+
             foreach (TableProviderInfo requiredData in data)
             {
                 AccountAccessTable.Add(requiredData);
@@ -1324,7 +1324,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Account Access
-        
+
         public async Task<object> AccountAccessTable(int CurrentPage)
         {
 
@@ -1353,7 +1353,7 @@ namespace HalloDoc.Services.Services
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
 
-            return  new AccountAccessViewModel
+            return new AccountAccessViewModel
             {
                 PagingData = AccountAccessTable,
                 TotalCount = totalCount,
@@ -1848,7 +1848,7 @@ namespace HalloDoc.Services.Services
         #region Patient History
         public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage = 1)
         {
-            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+            Expression<Func<User, bool>> whereClauseSyntax = PredicateBuilder.New<User>();
 
             whereClauseSyntax = x => true;
 
@@ -1866,21 +1866,20 @@ namespace HalloDoc.Services.Services
             }
             if (!string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Mobile.Contains(PhoneNumber));
             }
 
             List<TableModel> data = new List<TableModel>();
-            var temp = _requestclientRepository.GetAllWithPagination(x => new TableModel
+            var temp = _userRepository.GetAllWithPagination(x => new TableModel
             {
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                Address = x.Address,
+                Address = x.Street + "," + x.City + "," + x.State,
                 email = x.Email,
-                phone = x.PhoneNumber,
-                RequestClientId = x.RequestClientId,
-                RequestId = x.Request.RequestId,
+                phone = x.Mobile,
+                //RequestId = x.Requests.RequestId,
                 //userID = x.Request.RequestCloseds.First(y=>y.RequestId == x.RequestId).RequestId
-                userID=x.Request.UserId,
+                userID = x.UserId,
 
             }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, true); ;
 
@@ -1891,7 +1890,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _userRepository.GetTotalCount(whereClauseSyntax);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -1912,7 +1911,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region patient Records
-        public PatientRecordViewModel PatientRecordTable(int userID,int CurrentPage)
+        public PatientRecordViewModel PatientRecordTable(int userID, int CurrentPage)
         {
             Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
 
@@ -1920,16 +1919,16 @@ namespace HalloDoc.Services.Services
             List<RecordTableModel> data = new List<RecordTableModel>();
             var temp = _requestclientRepository.GetAllWithPagination(x => new RecordTableModel
             {
-              
-                clientName=x.FirstName+" "+x.LastName,
-                ConcludedDate=x.Request.CreatedDate,
-                CreatedDate=x.Request.CreatedDate,
-                confirmationNumber=x.Request.ConfirmationNumber,
-                ProviderName=x.Request.Physician.FirstName+" "+x.Request.Physician.LastName,
-                requestclientID=x.RequestClientId,
-                RequestId=x.RequestId,
-                status=x.Request.StatusNavigation.Statusname,
-                userID= (int)x.Request.UserId,
+
+                clientName = x.FirstName + " " + x.LastName,
+                ConcludedDate = x.Request.CreatedDate,
+                CreatedDate = x.Request.CreatedDate,
+                confirmationNumber = x.Request.ConfirmationNumber,
+                ProviderName = x.Request.Physician.FirstName + " " + x.Request.Physician.LastName,
+                requestclientID = x.RequestClientId,
+                RequestId = x.RequestId,
+                status = x.Request.StatusNavigation.Statusname,
+                userID = (int)x.Request.UserId,
             }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
 
             foreach (RecordTableModel requestClient in temp)
@@ -1953,9 +1952,180 @@ namespace HalloDoc.Services.Services
                 PageSize = 3,
                 FirstItemIndex = FirstItemIndex,
                 LastItemIndex = LastItemIndex,
-                
+
             };
         }
+        #endregion
+
+        #region Block History
+        public BlockHistoryViewModel BlockHistoryTable(string Name, DateTime? Date, string Email, string PhoneNumber, int CurrentPage)
+
+        {
+            Expression<Func<BlockRequest, bool>> whereClauseSyntax = PredicateBuilder.New<BlockRequest>();
+
+            whereClauseSyntax = x => true;
+
+            if (!Name.IsNullOrEmpty())
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(Name.ToLower()) || e.Request.LastName.ToLower().Contains(Name.ToLower()));
+            }
+            if (Date != null)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.CreatedDate.Value.Date == Date.Value.Date);
+            }
+            if (!string.IsNullOrWhiteSpace(Email))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
+            }
+            if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
+            }
+
+            List<BlockTable> data = new List<BlockTable>();
+            var requiredData = _blockRequestRepository.GetAllWithPagination(x => new BlockTable
+            {
+                BlockId = x.BlockRequestId,
+                CreatedDate = x.CreatedDate,
+                Email = x.Email,
+                IsActive = x.IsActive == null ? "Yes" : "No",
+                PhoneNumber = x.PhoneNumber,
+                Note = x.Reason,
+                PatientName = x.Request.FirstName + " " + x.Request.LastName,
+
+            }, whereClauseSyntax, CurrentPage, 5, x => x.RequestId, false);
+
+            foreach (BlockTable requestClient in requiredData)
+            {
+                data.Add(requestClient);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _blockRequestRepository.GetTotalCount(whereClauseSyntax);
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+            return new BlockHistoryViewModel
+            {
+                pagingData = data,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+
+            };
+        }
+
+        public void UnblockRequest(int id)
+        {
+            BlockRequest obj = _blockRequestRepository.GetById(id);
+            Request req = _requestRepository.GetById(obj.RequestId);
+            req.Status = 1;
+            _requestRepository.UpdateAsync(req);
+            _blockRequestRepository.Remove(obj);
+
+        }
+        #endregion
+
+        #region Search Record
+        public SearchRecordViewModel SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrentPage = 1)
+        {
+            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+
+            whereClauseSyntax = x => x.Request.IsDeleted == null;
+
+            if (statusOfRequest != 0)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.Status == statusOfRequest);
+            }
+            if (!string.IsNullOrWhiteSpace(Name))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(Name.ToLower()) || e.LastName.ToLower().Contains(Name.ToLower()));
+            }
+            if (requestType != 0)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.RequestTypeId == requestType);
+            }
+            if (DateOfService.HasValue)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.CreatedDate.Date >= DateOfService.Value.Date);
+            }
+            if (ToDateOfService.HasValue)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.CreatedDate.Date >= ToDateOfService.Value.Date);
+            }
+            if (!string.IsNullOrWhiteSpace(physician))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.Physician.FirstName.ToLower().Contains(physician.ToLower()) || e.Request.Physician.LastName.ToLower().Contains(physician.ToLower()));
+            }
+            if (!string.IsNullOrWhiteSpace(Email))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
+            }
+            if (!string.IsNullOrWhiteSpace(PhoneNumber))
+            {
+                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
+            }
+
+            List<SearchRecordTable> data = new List<SearchRecordTable>();
+            var temp = _requestclientRepository.GetAllWithPagination(x => new SearchRecordTable
+            {
+                address = x.Street + "," + x.City + "," + x.State + "," + x.ZipCode,
+                CancelByProviderNote = "-",
+                CloseCaseDate = DateTime.Now,
+                DateOfService = x.Request.CreatedDate,
+                AdminNote = x.Request.RequestNotes.First(u => u.RequestId == x.RequestId).AdminNotes,
+                PatientName = x.FirstName + " " + x.LastName,
+                Requestor = x.Request.FirstName + " " + x.Request.LastName,
+                email = x.Email,
+                phone = x.PhoneNumber,
+                physician = x.Request.Physician.FirstName + " " + x.Request.Physician.LastName,
+                RequestClientId = x.RequestClientId,
+                requestStatus = x.Request.StatusNavigation.Statusname,
+                zip = x.ZipCode,
+                PatientNote = x.Notes,
+                PhysicianNote = x.Request.RequestNotes.First(u => u.RequestId == x.RequestId).PhysicianNotes,
+
+            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, true);
+
+            foreach (SearchRecordTable requestClient in temp)
+            {
+                data.Add(requestClient);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+
+            return new SearchRecordViewModel
+            {
+                PagingData = data,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
+        }
+
+        public void DeleteRequest(int id)
+        {
+            RequestClient client = _requestclientRepository.GetById(id);
+            Request req = _requestRepository.GetById(client.RequestId);
+            req.IsDeleted = new BitArray(new bool[] { true });
+            _requestRepository.UpdateAsync(req);
+
+        }
+
         #endregion
 
         #endregion

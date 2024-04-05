@@ -1,0 +1,56 @@
+﻿@model HalloDoc.Entities.ViewModels.BlockHistoryViewModel
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Patient Name</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Email</th>
+                <th scope="col">Created Date </th>
+                <th scope="col">Notes</th>
+                <th scope="col">Is Active</th>
+
+                <th scope="col">Action</th>
+
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @foreach (var data in Model.pagingData)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@data.BlockId">
+                    <td>
+
+                        @data.PatientName
+                    </td>
+                    <td>
+                        @data.PhoneNumber
+                    </td>
+                    <td>
+                        @data.Email
+                    </td>
+                    <td>@data.CreatedDate</td>
+                    <td>
+                        @data.Note
+                    </td>
+                    <td>
+                        <input type="checkbox" value="" class="checkboxForAll notification" name="selectedFiles" disabled
+                        @if (data.IsActive == "Yes")
+                        {
+                            <text>checked</text>
+                        }
+                        >
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-info" asp-action="UnblockRequest" asp-controller="Admin" asp-route-id="@data.BlockId"> Unblock</a>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <partial name="_Paging.cshtml" />
+
+</div>
