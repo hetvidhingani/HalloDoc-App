@@ -1,0 +1,140 @@
+﻿@model SchedulingModel
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>Scheduling</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="w-100">
+            <div class="row">
+                <div class=" d-flex align-items-center justify-content-between">
+                    <div class="has-search ">
+                        <div class="form-floating form-group">
+                            <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                                <option value="0" selected>All Regions</option>
+
+                                @foreach (var region in Model.regions)
+                                {
+                                    <option value="@region.RegionId">@region.Name</option>
+                                }
+                            </select>
+                            <label>State</label>
+                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="">
+                        <div>
+                            <a class="btn btn-sm btn-info">Providers On Call</a>
+                            <a class="btn btn-sm btn-info">Shifts For Review</a>
+                            <a class="btn btn-sm btn-info" id="addShift" data-bs-toggle="modal" type="button" data-bs-target="#createshift">Add Shift</a>
+                        </div>
+                        <div class="d-flex justify-content-end align-items-center mt-1" style="font-size:12px">
+                            <div class="mx-1" style="width:30px;height:20px;border:1px solid black;border-radius:5px;background-color:lightpink"></div>
+                            <div class="mx-1">Pending Shifts</div>
+                            <div class="mx-1" style="width:30px;height:20px;border:1px solid black;border-radius:5px;background-color:lightgreen"></div>
+
+                            <div class="mx-1">Approved Shifts</div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="calendar"></div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="createshift" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Function to make the AJAX call
+        function loadCalendar(regionId) {
+            $.ajax({
+                url: '/Admin/getCal?regionId=' + regionId,
+                type: 'GET',
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response.resources);
+
+                    var calendarEl = document.getElementById('calendar');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'resourceTimelineDay',
+                        headerToolbar: {
+                            left: 'title,prev,next',
+                            right: 'resourceTimelineDay,resourceTimelineWeek,dayGridMonth'
+                        },
+                        resources: response.resources,
+                        events: response.events,
+                        datesSet: function (dateInfo) {
+                            if (dateInfo.view.type === "resourceTimelineWeek") {
+                                calendar.setOption("slotLabelInterval", "24:00");
+                                calendar.setOption("slotDuration", "24:00");
+                                calendar.setOption("slotInterval", "24:00");
+                                var calendarElements = calendar.el.querySelectorAll(".fc-timeline-slot-cushion.fc-scrollgrid-sync-inner");
+                                calendarElements.forEach(function (element) {
+                                    if (element.textContent.trim() === "12am") {
+                                        element.textContent = element.textContent.trim().replace(element.textContent, "0/24 ");
+                                    }
+                                });
+                            } else {
+                                calendar.setOption("slotDuration", "01:00");
+                                calendar.setOption("slotInterval", "02:00");
+                                calendar.setOption("slotLabelInterval", "01:00");
+                            }
+                        }
+                    });
+                    calendar.render();
+                }
+            });
+        }
+
+        // Call the function initially with the default region ID
+        var defaultRegionId = $('#allregionsearch').val();
+        loadCalendar(defaultRegionId);
+
+        // Call the function whenever the region selection changes
+        $('#allregionsearch').on('change', function () {
+            var selectedRegionId = $(this).val();
+            loadCalendar(selectedRegionId);
+        });
+    });
+
+
+    $('#addShift').click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+           
+            url: "@(Url.Action("CreateShift", "Admin"))",
+            success: function (data) {
+
+                $("#createshift").find('.modal-content').html(data);
+            }
+        });
+    });
+
+</script>
+

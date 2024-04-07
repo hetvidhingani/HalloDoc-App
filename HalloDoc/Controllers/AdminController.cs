@@ -127,6 +127,20 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Create Admin
+        public async Task<IActionResult> CreateAdmin()
+        {
+            var result = await _admin.CreateAdmin();
+            return View(result);
+        }
+        [HttpPost]
+        public IActionResult CreateAdmin(AdminMyProfileViewModel model)
+        {
+            var result = _admin.CreateAdmin(model);
+            return RedirectToAction("UserAccess", result);
+        }
+        #endregion
+
         #region View Case
         [HttpGet]
         public async Task<IActionResult> ViewCase(int Id)
@@ -618,19 +632,7 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region Create Admin
-        public async Task<IActionResult> CreateAdmin()
-        {
-            var result = await _admin.CreateAdmin();
-            return View(result);
-        }
-        [HttpPost]
-        public IActionResult CreateAdmin(AdminMyProfileViewModel model)
-        {
-            var result = _admin.CreateAdmin(model);
-            return RedirectToAction("UserAccess", result);
-        }
-        #endregion
+
 
         #region edit provider details
         public async Task<IActionResult> EditProvider(int id)
@@ -879,6 +881,35 @@ namespace HalloDoc.Controllers
             //});
             return RedirectToAction("Dashboard");
         }
+        #endregion
+
+        #region Scheduling
+        public IActionResult Scheduling()
+        {
+            SchedulingModel model = new()
+            {
+                regions = _admin.getstateDropdown(),
+            };
+            return View(model);
+        }
+        public IActionResult getCal(int regionId)
+        {
+            var result = _admin.Scheduling(regionId);
+            return Json(result);
+        }
+        #endregion
+
+        #region Create Shift
+        public IActionResult CreateShift()
+        {
+
+            CreateShiftViewModel model = new()
+            {
+                regions = _admin.getstateDropdown(),
+            };
+            return PartialView("_createShift", model);
+        }
+
         #endregion
 
         #endregion

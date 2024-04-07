@@ -62,7 +62,7 @@
                             </button>
 
                             <ul class="dropdown-menu layoutTab">
-                                <li><a class="px-3 py-4 fw-bold ViewCasePatient" style="color:dimgrey;text-decoration:none;" id="@data.requestclientID">View Case</a></li>
+                                <li><a class="px-3 py-4 fw-bold" style="color:dimgrey;text-decoration:none;" asp-route-id="@data.requestclientID">View Case</a></li>
                                 <li><a class="px-3 py-4 fw-bold" style="color:dimgrey;text-decoration:none;" href="#">Chat</a></li>
                                 <li><a class="px-3 py-4 fw-bold" style="color:dimgrey;text-decoration:none;" href="#">0 Document</a></li>
                             </ul>
@@ -77,15 +77,3 @@
     <partial name="_Paging.cshtml" />
 
 </div>
-
-<script>
-    $('.ViewCasePatient').click(function () {
-        var id = this.id;
-
-  
-                window.location.href = "@Url.Action("ViewCase", "Admin", new { Id = "_ID_" })".replace("_ID_", id);
-
-             
-           
-    });
-</script>

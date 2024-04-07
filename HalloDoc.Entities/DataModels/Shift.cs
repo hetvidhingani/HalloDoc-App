@@ -26,7 +26,7 @@ public partial class Shift
     public int? RepeatUpto { get; set; }
 
     [StringLength(128)]
-    public string CreatedBy { get; set; } = null!;
+    public string? CreatedBy { get; set; }
 
     [Column(TypeName = "timestamp without time zone")]
     public DateTime CreatedDate { get; set; }
@@ -37,7 +37,7 @@ public partial class Shift
 
     [ForeignKey("CreatedBy")]
     [InverseProperty("Shifts")]
-    public virtual AspNetUser CreatedByNavigation { get; set; } = null!;
+    public virtual AspNetUser? CreatedByNavigation { get; set; }
 
     [ForeignKey("PhysicianId")]
     [InverseProperty("Shifts")]

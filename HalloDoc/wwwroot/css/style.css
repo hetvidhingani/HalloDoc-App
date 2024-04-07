@@ -1,17 +1,64 @@
+
+
+/*#region  - scheduling*/
+.fc-toolbar-title{
+    font-size:16px !important;
+    margin-bottom:5px !important;
+    margin-top:9px !important;
+}
+.fc-prev-button, .fc-next-button {
+    border-radius: 50% !important;
+    background-color: #00bbe8 !important;
+}
+.fc-button-group > * {
+    margin-left: 5px !important;
+    background-color: white !important;
+    color: #00bbe8 !important;
+    border: 1px solid #00bbe8 !important;
+    border-radius:6px !important;
+}
+.fc-button-active {
+    background-color: #00bbe8 !important;
+    color:white !important;
+}
+.fc-scrollgrid-section-header {
+    background-color: #6c6e71 !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+/*.fc-scrollgrid-sync-inner {
+    color: white !important;
+    text-decoration: none !important;
+}
+.fc-datagrid-cell-frame {
+    background-color: #6c6e71 !important;
+    color: white !important;
+    text-decoration: none;
+}
+.fc-datagrid-cell-frame {
+    background-color: white !important;
+}*/
+.fc-scrollgrid-section.fc-scrollgrid-section-header thead, .fc-timeline-slot-cushion.fc-scrollgrid-sync-inner {
+    /* Your CSS styles for the <thead> element here */
+    background-color: #6c6e71;
+    text-decoration:none;
+    color: white;
+}
+
+/*#endregion*/
+/* #region header*/
 input[type=password]::-ms-reveal,
 input[type=password]::-ms-clear {
     display: none;
 }
+
 .form-floating > .form-control:not(:placeholder-shown) ~ label::after {
-    background-color:transparent !important;
+    background-color: transparent !important;
 }
 /*provider*/
 .formrow > div {
     margin-bottom: 8px;
 }
-
-/*legend - provider*/
-/*header*/
 .menuDashboard > *:hover {
     background-color: lightgray;
 }
@@ -31,6 +78,7 @@ input[type=password]::-ms-clear {
     padding: 0px;
     margin: 0px;
 }
+/*#endregion*/
 /*#region admin css*/
 .mainSectionMargin {
     margin: 125px 5px;
@@ -505,7 +553,7 @@ background-color:lightgray;
             }
     }
     /*#endregion*/
-    /*#region patient css*/
+/*#region patient css*/
     body {
     margin: 0;
     padding: 0;

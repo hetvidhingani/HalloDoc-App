@@ -409,9 +409,7 @@ public partial class ApplicationDbContext : DbContext
 
             entity.Property(e => e.WeekDays).IsFixedLength();
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Shifts)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Shift_CreatedBy_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Shifts).HasConstraintName("Shift_CreatedBy_fkey");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Shifts)
                 .OnDelete(DeleteBehavior.ClientSetNull)

@@ -95,6 +95,6 @@ namespace HalloDoc.Services.IServices
         void DeleteRequest(int id);
         List<Region> getstateDropdown();
         Task CreateRequestByAdmin(PatientRequestViewModel viewModel, int adminId);
-
+        SchedulingModel Scheduling(int regionId);
     }
 }

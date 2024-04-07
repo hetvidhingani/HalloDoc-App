@@ -25,6 +25,8 @@ using System.Linq.Expressions;
 using LinqKit;
 using Microsoft.IdentityModel.Tokens;
 
+using Microsoft.Extensions.Logging;
+
 namespace HalloDoc.Services.Services
 {
     public class AdminService : IAdminService
@@ -58,6 +60,7 @@ namespace HalloDoc.Services.Services
         private readonly IEmailLogsRepository _emailLogsRepository;
         private readonly ISMSLogRepository _smmsLogRepository;
         private readonly IAspNetUserRolesRepository _userRolesRepository;
+        private readonly IShiftDetailsRepository _shiftDetailsRepository;
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -70,7 +73,7 @@ namespace HalloDoc.Services.Services
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
-                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository)
+                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -100,6 +103,7 @@ namespace HalloDoc.Services.Services
             _emailLogsRepository = emailLogsRepository;
             _smmsLogRepository = smmsLogRepository;
             _userRolesRepository = userRolesRepository;
+            _shiftDetailsRepository = shiftDetailsRepository;
         }
         #endregion
 
@@ -661,7 +665,7 @@ namespace HalloDoc.Services.Services
             RequestStatusLog log = new RequestStatusLog()
             {
                 RequestId = req.RequestId,
-                Status = req.Status,
+                Status = (short)req.Status,
                 AdminId = 1,
                 CreatedDate = DateTime.Now,
             };
@@ -2208,6 +2212,57 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Schaduling
+        public SchedulingModel Scheduling(int region)
+        {
+            SchedulingModel schedulingModel = new SchedulingModel();
+            
+            List<Resources> resources = new List<Resources>();
+            List<Events> events = new List<Events>();
+
+            Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
+            Expression<Func<ShiftDetail, bool>> ShiftDetailswhereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            whereClauseSyntax = x => x.IsDeleted == null;
+            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null ;
+
+            if (region != 0)
+            {
+                whereClauseSyntax = whereClauseSyntax.And(x => x.RegionId == region);
+                ShiftDetailswhereClauseSyntax = ShiftDetailswhereClauseSyntax.And(x => x.RegionId == region);
+
+            }
+            var temp =_physicianRepository.GetAllData(x => new Resources
+            {
+                id = x.PhysicianId.ToString(),
+                title = x.FirstName + " " + x.LastName,
+                avtar = "null"
+            }, whereClauseSyntax);
+            foreach (Resources resource in temp)
+            {
+                resources.Add(resource);
+            }
+            temp = _shiftDetailsRepository.GetAllData(x => new Events
+            {
+                id = x.ShiftDetailId.ToString(),
+                resourceId = x.Shift.PhysicianId.ToString(),
+                start = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.StartTime.Hour).AddMinutes(x.StartTime.Minute).ToUniversalTime().ToString("O"),
+                end = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute).ToUniversalTime().ToString("O"),
+                title = x.StartTime.ToString() + "-" + x.EndTime + "\n" + x.Shift.Physician.FirstName,
+                color = x.Status == 2 ? "lightgreen" : "pink"
+            }, ShiftDetailswhereClauseSyntax);
+            foreach (Events e in temp)
+            {
+                events.Add(e);
+            }
+            schedulingModel.events = events;
+            schedulingModel.resources = resources;
+            return schedulingModel;
+        }
+        #endregion
+
+        #region Create Shift
+       
+        #endregion
         #endregion
     }
 }

@@ -27,7 +27,7 @@ public partial class ShiftDetail
     public short Status { get; set; }
 
     [Column(TypeName = "bit(1)")]
-    public BitArray IsDeleted { get; set; } = null!;
+    public BitArray? IsDeleted { get; set; }
 
     [StringLength(128)]
     public string? ModifiedBy { get; set; }
