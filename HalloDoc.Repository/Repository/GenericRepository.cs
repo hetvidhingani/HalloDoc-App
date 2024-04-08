@@ -166,6 +166,11 @@ namespace HalloDoc.Repository.Repository
         {
             return _genericContext.Where(where).Select(select).ToList();
         }
+
+        public T? IncludeEntity(Expression<Func<T, bool>> expression, Expression<Func<T, object>> Include)
+        {
+            return _genericContext.Where(expression).Include(Include).FirstOrDefault();
+        }
     }
 
 

@@ -909,7 +909,60 @@ namespace HalloDoc.Controllers
             };
             return PartialView("_createShift", model);
         }
+        [HttpPost]
+        public IActionResult AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays)
+        {
+            var AdminId = HttpContext.Session.GetString("AdminAspNetID");
 
+            _admin.AddShift(model, WeekDays, AdminId);
+            return RedirectToAction("Scheduling");
+        }
+        #endregion
+
+        #region EditShift
+        [HttpGet]
+        public IActionResult GetShiftDetailsById(int shiftDetailsId)
+        {
+            return Json(new { data = _admin.GetShiftDetailsById(shiftDetailsId) });
+        }
+        [HttpPost]
+        public IActionResult EditShiftData(CreateShiftViewModel shiftData)
+        {
+            _admin.EditShiftData(shiftData);
+            return Json("success");
+        }
+        public IActionResult returnShift(int id)
+        {
+            _admin.returnShift(id);
+
+            return Json("success");
+
+        }
+            
+        public IActionResult deleteShift(int id)
+        {
+            _admin.deleteShift(id);
+
+            return Json("success");
+        }
+        #endregion
+
+        #region Requested Shift
+        public IActionResult RequestedShift()
+        {
+            RequestedShiftViewModel model = new()
+            {
+                regions = _admin.getstateDropdown(),
+            };
+
+            return View(model);
+        }
+        public IActionResult RequestedShiftTable(int CurrentPage = 1)
+        {
+
+            var result = _admin.RequestedShift(CurrentPage);
+            return PartialView("_RequestedShiftTable", result);
+        }
         #endregion
 
         #endregion

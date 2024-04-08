@@ -96,5 +96,11 @@ namespace HalloDoc.Services.IServices
         List<Region> getstateDropdown();
         Task CreateRequestByAdmin(PatientRequestViewModel viewModel, int adminId);
         SchedulingModel Scheduling(int regionId);
+        void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays,string adminId);
+        CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId);
+        void EditShiftData(CreateShiftViewModel shiftData);
+        object returnShift(int id);
+        void deleteShift(int id);
+        RequestedShiftViewModel RequestedShift(int CurrentPage = 1);
     }
 }

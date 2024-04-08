@@ -15,8 +15,7 @@ public partial class ShiftDetail
 
     public int ShiftId { get; set; }
 
-    [Column(TypeName = "timestamp without time zone")]
-    public DateTime ShiftDate { get; set; }
+    public DateOnly ShiftDate { get; set; }
 
     public int? RegionId { get; set; }
 
@@ -47,6 +46,10 @@ public partial class ShiftDetail
     [ForeignKey("ModifiedBy")]
     [InverseProperty("ShiftDetails")]
     public virtual AspNetUser? ModifiedByNavigation { get; set; }
+
+    [ForeignKey("RegionId")]
+    [InverseProperty("ShiftDetails")]
+    public virtual Region? Region { get; set; }
 
     [ForeignKey("ShiftId")]
     [InverseProperty("ShiftDetails")]

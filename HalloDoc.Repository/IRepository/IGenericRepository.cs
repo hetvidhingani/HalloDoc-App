@@ -25,5 +25,6 @@ namespace HalloDoc.Repository.IRepository
         T GetById(object id);
         Task Remove(T entity);
         dynamic GetAllData(Expression<Func<T, object>> select, Expression<Func<T, bool>> where);
+        T? IncludeEntity(Expression<Func<T, bool>> expression, Expression<Func<T, object>> Include);
     }
 }

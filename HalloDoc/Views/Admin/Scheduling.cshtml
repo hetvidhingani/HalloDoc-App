@@ -33,7 +33,7 @@
                     <div class="">
                         <div>
                             <a class="btn btn-sm btn-info">Providers On Call</a>
-                            <a class="btn btn-sm btn-info">Shifts For Review</a>
+                            <a class="btn btn-sm btn-info" href="@Url.Action("RequestedShift","Admin")" >Shifts For Review</a>
                             <a class="btn btn-sm btn-info" id="addShift" data-bs-toggle="modal" type="button" data-bs-target="#createshift">Add Shift</a>
                         </div>
                         <div class="d-flex justify-content-end align-items-center mt-1" style="font-size:12px">
@@ -61,12 +61,91 @@
         </div>
     </div>
 </div>
+@* edit shift model *@
+<div class="modal fade" id="editshift" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Shift</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editShiftForm" asp-controller="Admin" asp-action="EditShiftData" style="margin-top:-25px;margin-bottom:-25px;" method="post">
+                <input type="hidden" asp-for="createShiftViewModel.ShiftDetailId" id="shiftdetailIDval" />
+                <div class="modal-body m-0">
+                    <div class=" d-flex justify-content-center flex-column  ">
+
+                        <select asp-for="createShiftViewModel.regionId" id="regionSelect" class="form-select required" disabled>
+                            <option value="">Select Region</option>
+                            @foreach (var i in Model.regions)
+                            {
+                                <option value="@i.RegionId">@i.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="createShiftViewModel.regionId" class="text-danger"></span>
+
+                        <select class="form-select mt-1 h-50" asp-for="createShiftViewModel.physicianId" id="physicianSelect" disabled>
+                            <option value="">Select Physician</option>
+                        </select>
+                        <span asp-validation-for="createShiftViewModel.physicianId" class="text-danger"></span>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                            <div class="form-floating form-group">
+                                <input asp-for="createShiftViewModel.ShiftDate" type="date" class="form-control" placeholder=" " id="shiftDate" disabled>
+                                <label for=" ">Shift Date</label>
+                                <span asp-validation-for="createShiftViewModel.ShiftDate" class="text-danger"></span>
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 mt-1 d-flex justify-content-between">
+                            <div class="col-6 form-floating form-group">
+                                <input asp-for="createShiftViewModel.startTime" type="time" id="starttimeShift" class="form-control" placeholder=" " disabled>
+                                <label for=" ">Start Time</label>
+                                <span asp-validation-for="createShiftViewModel.startTime" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-6 form-floating form-group">
+                                <input asp-for="createShiftViewModel.endTime" type="time" id="endtimeShift" class="form-control" placeholder=" " disabled>
+                                <label for=" ">End Time</label>
+                                <span asp-validation-for="createShiftViewModel.endTime" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-end">
+
+                    <a class="btn btn-info" type="button" id="returnBtn">
+                        Return
+                    </a>
+                    <button class=" btn btn-info" type="button" id="editShiftBtn">
+                        Edit
+                    </button>
+                    <button class="btn btn-info" type="submit" id="saveShiftBtn" style="display:none;">
+                        Save
+                    </button>
+
+                    <button type="button" class="btn btn-danger" id="dltBtn">
+                        Delete
+                    </button>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
 
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -104,6 +183,9 @@
                                 calendar.setOption("slotInterval", "02:00");
                                 calendar.setOption("slotLabelInterval", "01:00");
                             }
+                        },
+                        eventClick: function (calEvent, jsEvent, view) {
+                            EditPopUpModal(calEvent.event._def.publicId);
                         }
                     });
                     calendar.render();
@@ -122,12 +204,111 @@
         });
     });
 
+    //edit pop up
+    function EditPopUpModal(shiftDetailsId) {
 
+        $.ajax({
+            url: 'GetShiftDetailsById',
+            type: 'GET',
+            data: {
+                shiftDetailsId: shiftDetailsId
+            },
+            success: function (response) {
+                console.log("response:", response.data.startTime);
+                console.log("shiftDetailsId:", shiftDetailsId);
+
+                $('#editshift').modal('show');
+                $('#regionSelect').val(response.data.regionId);
+                $.ajax({
+                    type: "GET",
+                    url: '@Url.Action("GetPhysiciansByRegion","Admin")',
+                    data: {
+                        regionId: response.data.regionId
+                    },
+                    success: function (r) {
+                        $("#physicianSelect option").remove();
+
+                        r.map((x) => {
+                            if (Number.parseInt(x.physicianId) === response.data.physicianId) {
+                                $("#physicianSelect").append('<option selected value="' + x.physicianId + '">' + x.firstName + '</option>');
+                            }
+                            else {
+                                $("#physicianSelect").append('<option  value="' + x.physicianId + '">' + x.firstName + '</option>');
+
+                            }
+                        });
+                    }
+                });
+                $('#shiftDate').val(response.data.shiftDate);
+                $('#starttimeShift').val(response.data.startTime);
+                $('#endtimeShift').val(response.data.endTime);
+                $('#shiftdetailIDval').val(response.data.shiftDetailId);
+
+            }
+        });
+        $('#returnBtn').click(function () {
+            id = shiftDetailsId;
+            console.log("id:", id);
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                data: { id },
+                url: "@(Url.Action("returnShift", "Admin"))",
+                success: function (data) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Shift Returnd",
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = '@Url.Action("Scheduling", "Admin")';
+                    });
+
+                }
+            });
+        });
+        $('#dltBtn').click(function () {
+            id = shiftDetailsId;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to Delete Shift!',
+                icon: 'warning',
+                confirmButtonText: 'Yes',
+                showCancelButton: true
+            })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("deleteShift", "Admin")",
+                            data: { id: id },
+                            success: function (response) {
+                                let timerInterval;
+                                Swal.fire({
+                                    title: "Shift Deleted",
+                                    icon: "success",
+                                    timer: 1000,
+                                    allowOutsideClick: false,
+                                    showConfirmButton: false,
+                                })
+                                    .then(function () {
+                                        window.location.href = '@Url.Action("Scheduling", "Admin")';
+                                    });
+                            }
+                        });
+                    }
+                });
+        });
+            }
+
+    //create shift pop up
     $('#addShift').click(function () {
         $.ajax({
             type: "POST",
             dataType: "html",
-           
+
             url: "@(Url.Action("CreateShift", "Admin"))",
             success: function (data) {
 
@@ -136,5 +317,38 @@
         });
     });
 
+    //Cascading DropDown
+    $(document).ready(function () {
+        $("#regionSelect").change(function () {
+            var regionId = $(this).val();
+            var url = "/Admin/GetPhysiciansByRegion?regionId=" + regionId;
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#physicianSelect option").remove();
+                    $("#physicianSelect").append('<option value="0" Selected>Select Physician</option>');
+
+                    data.map((x) => {
+                        $("#physicianSelect").append('<option value="' + x.physicianId + '">' + x.firstName + '</option>');
+                    })
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+    });
+
+    //remove disabled field from edit pop up
+
+    $('#editShiftBtn').click(function () {
+        $('#saveShiftBtn').show();
+        $('#editShiftBtn').hide();
+        $('#shiftDate').prop('disabled', false);
+        $('#starttimeShift').prop('disabled', false);
+        $('#endtimeShift').prop('disabled', false);
+    });
 </script>
 

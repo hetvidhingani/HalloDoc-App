@@ -1,0 +1,51 @@
+﻿@model RequestedShiftViewModel
+
+<div class="table-responsive">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">staff</th>
+                <th scope="col">day</th>
+                <th scope="col">time</th>
+                <th scope="col">region</th>
+                <th scope="col">action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+
+            @foreach (var u in Model.PagingData)
+            {
+                <tr>
+                    <input type="hidden" asp-for="@u.shiftdetailId">
+
+
+                    <td>@u.staff</td>
+                    <td>@u.day</td>
+                    <td>@u.time</td>
+                    <td>@u.region </td>
+                    <td>-</td>
+                    <td>
+                        <div class="d-flex">
+                            @*  @if (u.PhysicianID != 0)
+                        {
+
+                        <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
+                        }
+                        else
+                        {
+                        <a class="btn btn-outline-info mx-1" asp-action="EditAdminAccount" asp-controller="Admin" asp-route-id="@u.AdminID">Edit</a>
+
+                        } *@
+                        </div>
+                    </td>
+
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+    <partial name="_Paging.cshtml" />
+    </div>
+   

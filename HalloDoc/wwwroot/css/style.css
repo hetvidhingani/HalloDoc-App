@@ -44,7 +44,18 @@
     text-decoration:none;
     color: white;
 }
-
+.fc-col-header-cell-cushion{
+    text-decoration:none;
+    color:white;
+}
+.fc-daygrid-day-number{
+    text-decoration: none;
+    color: black;
+}
+.fc-event {
+    text-decoration: none;
+    color: black;
+}
 /*#endregion*/
 /* #region header*/
 input[type=password]::-ms-reveal,

@@ -20,7 +20,7 @@ public partial class Shift
     [Column(TypeName = "bit(1)")]
     public BitArray IsRepeat { get; set; } = null!;
 
-    [StringLength(7)]
+    [StringLength(100)]
     public string? WeekDays { get; set; }
 
     public int? RepeatUpto { get; set; }

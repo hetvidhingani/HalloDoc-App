@@ -407,8 +407,6 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.ShiftId).HasName("Shift_pkey");
 
-            entity.Property(e => e.WeekDays).IsFixedLength();
-
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Shifts).HasConstraintName("Shift_CreatedBy_fkey");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.Shifts)
@@ -421,6 +419,8 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.ShiftDetailId).HasName("ShiftDetail_pkey");
 
             entity.HasOne(d => d.ModifiedByNavigation).WithMany(p => p.ShiftDetails).HasConstraintName("ShiftDetail_ModifiedBy_fkey");
+
+            entity.HasOne(d => d.Region).WithMany(p => p.ShiftDetails).HasConstraintName("regionid");
 
             entity.HasOne(d => d.Shift).WithMany(p => p.ShiftDetails)
                 .OnDelete(DeleteBehavior.ClientSetNull)

@@ -1,0 +1,104 @@
+﻿@model RequestedShiftViewModel
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>Requested Shift</h3>
+            <a asp-action="Scheduling" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="w-100">
+            <div class="row">
+                <div class=" d-flex align-items-center justify-content-between">
+                    <div class="has-search ">
+                        <div class="form-floating form-group">
+                            <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                                <option value="0" selected>All Regions</option>
+
+                                @foreach (var region in Model.regions)
+                                {
+                                    <option value="@region.RegionId">@region.Name</option>
+                                }
+                            </select>
+                            <label>State</label>
+                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="">
+                        <div>
+                            <a class="btn btn-sm btn-success">View Current Month Shift</a>
+                            <a class="btn btn-sm btn-success">Approved Selected</a>
+                            <a class="btn btn-sm btn-danger" id="addShift" data-bs-toggle="modal" type="button" data-bs-target="#createshift">Delete Selected</a>
+                        </div>
+                       
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mt-2">
+
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    var page;
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        console.log(page);
+        load();
+    }
+    $(document).ready(function () {
+        load();
+
+    });
+    function load() {
+        $.ajax({
+            url: "/Admin/RequestedShiftTable",
+            type: "POST",
+            data: { CurrentPage: page },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/RequestedShiftTable";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+
+    //create shift pop up
+    $('#addShift').click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+
+            url: "@(Url.Action("CreateShift", "Admin"))",
+            success: function (data) {
+
+                $("#createshift").find('.modal-content').html(data);
+            }
+        });
+    });
+
+  
+  
+</script>
+

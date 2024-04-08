@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class RequestNotesRepository:GenericRepository<RequestNote>,IRequestNotesRepository
+    public class RequestNotesRepository : GenericRepository<RequestNote>, IRequestNotesRepository
     {
-      
-            private readonly ApplicationDbContext _context;
-            public RequestNotesRepository(ApplicationDbContext context) : base(context)
-            {
-                _context = context;
-            }
-           public async Task<RequestNote> CheckByRequestID(int id)
+
+        private readonly ApplicationDbContext _context;
+        public RequestNotesRepository(ApplicationDbContext context) : base(context)
+        {
+            _context = context;
+        }
+        public async Task<RequestNote> CheckByRequestID(int id)
         {
             RequestNote user = _context.RequestNotes.Where(x => x.RequestId == id).FirstOrDefault();
             return user;

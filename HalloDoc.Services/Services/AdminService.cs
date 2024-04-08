@@ -61,6 +61,7 @@ namespace HalloDoc.Services.Services
         private readonly ISMSLogRepository _smmsLogRepository;
         private readonly IAspNetUserRolesRepository _userRolesRepository;
         private readonly IShiftDetailsRepository _shiftDetailsRepository;
+        private readonly IShiftRepository _shiftRepository;
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -73,7 +74,7 @@ namespace HalloDoc.Services.Services
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
-                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository)
+                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository, IShiftRepository shiftRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -104,6 +105,7 @@ namespace HalloDoc.Services.Services
             _smmsLogRepository = smmsLogRepository;
             _userRolesRepository = userRolesRepository;
             _shiftDetailsRepository = shiftDetailsRepository;
+            _shiftRepository = shiftRepository;
         }
         #endregion
 
@@ -2141,7 +2143,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Create Request By Admin
-        public async Task CreateRequestByAdmin(PatientRequestViewModel viewModel,int adminId)
+        public async Task CreateRequestByAdmin(PatientRequestViewModel viewModel, int adminId)
         {
             var data = _adminRepository.GetById(adminId);
             Request request = new Request
@@ -2153,9 +2155,9 @@ namespace HalloDoc.Services.Services
                 Email = data.Email,
                 CreatedDate = DateTime.Now,
                 Status = 1,
-                
+
             };
-             await _requestRepository.AddAsync(request);
+            await _requestRepository.AddAsync(request);
 
             RequestClient requestClient = new RequestClient
             {
@@ -2166,7 +2168,7 @@ namespace HalloDoc.Services.Services
                 RegionId = viewModel.RegionId,
                 Street = viewModel.Street,
                 City = viewModel.City,
-                State =await _regionRepository.FindState(viewModel.RegionId),
+                State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
                 Notes = viewModel.Symptoms,
                 Email = viewModel.Email,
@@ -2174,7 +2176,7 @@ namespace HalloDoc.Services.Services
                 IntYear = viewModel.DateOfBirth.Year,
                 StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode,
-                
+
 
             };
             await _requestclientRepository.AddAsync(requestClient);
@@ -2199,7 +2201,7 @@ namespace HalloDoc.Services.Services
                     CreatedDate = DateTime.Now
                 };
 
-                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                await _aspnetuserRepository.AddAsync(newaspNetUSer);
                 AspNetUserRole userRole = new AspNetUserRole
                 {
                     UserId = newaspNetUSer.Id,
@@ -2207,7 +2209,7 @@ namespace HalloDoc.Services.Services
 
                 };
                 await _userRolesRepository.AddAsync(userRole);
-                
+
             }
         }
         #endregion
@@ -2216,14 +2218,14 @@ namespace HalloDoc.Services.Services
         public SchedulingModel Scheduling(int region)
         {
             SchedulingModel schedulingModel = new SchedulingModel();
-            
+
             List<Resources> resources = new List<Resources>();
             List<Events> events = new List<Events>();
 
             Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
             Expression<Func<ShiftDetail, bool>> ShiftDetailswhereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
             whereClauseSyntax = x => x.IsDeleted == null;
-            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null ;
+            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null;
 
             if (region != 0)
             {
@@ -2231,7 +2233,7 @@ namespace HalloDoc.Services.Services
                 ShiftDetailswhereClauseSyntax = ShiftDetailswhereClauseSyntax.And(x => x.RegionId == region);
 
             }
-            var temp =_physicianRepository.GetAllData(x => new Resources
+            var temp = _physicianRepository.GetAllData(x => new Resources
             {
                 id = x.PhysicianId.ToString(),
                 title = x.FirstName + " " + x.LastName,
@@ -2248,7 +2250,7 @@ namespace HalloDoc.Services.Services
                 start = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.StartTime.Hour).AddMinutes(x.StartTime.Minute).ToUniversalTime().ToString("O"),
                 end = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute).ToUniversalTime().ToString("O"),
                 title = x.StartTime.ToString() + "-" + x.EndTime + "\n" + x.Shift.Physician.FirstName,
-                color = x.Status == 2 ? "lightgreen" : "pink"
+                color = x.Status == 1 ? "lightgreen" : "pink"
             }, ShiftDetailswhereClauseSyntax);
             foreach (Events e in temp)
             {
@@ -2261,8 +2263,143 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Create Shift
-       
+        public void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays, string adminId)
+        {
+            Shift shift = new()
+            {
+                PhysicianId = model.physicianId,
+                StartDate = model.ShiftDate,
+                IsRepeat = new BitArray(1, model.toggle),
+                WeekDays = WeekDays.ToString(),
+                RepeatUpto = model.repeatEnd,
+                CreatedBy = adminId.ToString(),
+            };
+            _shiftRepository.AddAsync(shift);
+
+            ShiftDetail shiftDetail = new()
+            {
+                ShiftId = shift.ShiftId,
+                ShiftDate = shift.StartDate,
+                StartTime = model.startTime,
+                EndTime = model.endTime,
+                RegionId = model.regionId,
+            };
+            _shiftDetailsRepository.AddAsync(shiftDetail);
+
+
+            for (int i = 0; i < model.repeatEnd; i++)
+            {
+                DateOnly nextDay = model.ShiftDate.AddDays(7 * i);
+                foreach (DayOfWeek day in WeekDays)
+                {
+                    ShiftDetail nextShift = new ShiftDetail
+                    {
+                        ShiftId = shift.ShiftId,
+                        ShiftDate = day - nextDay.DayOfWeek > 0 ? nextDay.AddDays(day - nextDay.DayOfWeek) : nextDay.AddDays(7 + day - nextDay.DayOfWeek),
+                        StartTime = model.startTime,
+                        EndTime = model.endTime,
+                        RegionId = model.regionId,
+                    };
+                    _shiftDetailsRepository.AddAsync(nextShift);
+                }
+            }
+        }
         #endregion
+
+        #region Edit Shift
+
+        public CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId)
+        {
+            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            ShiftDetail shiftDetail = _shiftDetailsRepository.IncludeEntity(x => x.ShiftDetailId == shiftDetailsId, x => x.Shift);
+
+            CreateShiftViewModel model = new CreateShiftViewModel();
+            model.ShiftDetailId = shiftDetailsId;
+            model.physicianId = shiftDetail.Shift.PhysicianId;
+            model.regionId = (int)shiftDetail.RegionId;
+            model.ShiftDate = shiftDetail.ShiftDate;
+            model.startTime = shiftDetail.StartTime;
+            model.endTime = shiftDetail.EndTime;
+
+            return model;
+        }
+        public void EditShiftData(CreateShiftViewModel viewModel)
+        {
+            ShiftDetail shiftDetail = _shiftDetailsRepository.GetById(viewModel.ShiftDetailId);
+            shiftDetail.StartTime = viewModel.startTime;
+            shiftDetail.EndTime = viewModel.endTime;
+            shiftDetail.ShiftDate = viewModel.ShiftDate;
+            _shiftDetailsRepository.UpdateAsync(shiftDetail);
+
+         
+        }
+        public object returnShift(int id)
+        {
+            ShiftDetail data = _shiftDetailsRepository.GetById(id);
+            if(data.Status ==0 )
+            {
+                data.Status = 1;
+            }
+            else
+            {
+                data.Status = 0;
+
+            }
+            _shiftDetailsRepository.UpdateAsync(data);
+            return data;
+        }
+        public void deleteShift(int id)
+        {
+            ShiftDetail data = _shiftDetailsRepository.GetById(id);
+            data.IsDeleted = new BitArray(1);
+            _shiftDetailsRepository.UpdateAsync(data);
+        }
+        #endregion
+
+        #region Requested Shift
+        public RequestedShiftViewModel RequestedShift(int CurrentPage)
+        {
+            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+
+            whereClauseSyntax = x => x.IsDeleted == null && x.Status == 0;
+          
+            List<shiftTable> vendorTable = new List<shiftTable>();
+
+            var data = _shiftDetailsRepository.GetAllWithPagination(x => new shiftTable
+            {
+                day=x.ShiftDate.ToString(),
+                shiftdetailId=x.ShiftDetailId,
+                staff=x.Shift.Physician.FirstName + " " +x.Shift.Physician.LastName,
+                time=x.StartTime+"-"+x.EndTime,
+                region=x.Region.Name,
+
+            }, whereClauseSyntax, CurrentPage, 5, x => x.ShiftId, true);
+
+            foreach (shiftTable requiredData in data)
+            {
+                vendorTable.Add(requiredData);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = _shiftDetailsRepository.GetTotalCount(whereClauseSyntax);
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+           
+            return new RequestedShiftViewModel
+            {
+                PagingData = vendorTable,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
+        }
+        #endregion
+
         #endregion
     }
 }
