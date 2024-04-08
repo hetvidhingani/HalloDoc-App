@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Entities.ViewModels
 {
-    public class SchedulingModel
+    public class SchedulingModel:CreateShiftViewModel
     {
         public List<Resources> resources { get; set; }
         public List<Events> events { get; set; }
-        public int RegionId {  get; set; }
-        public List<Region> regions { get; set; }
+        public int RegionIds{  get; set; }
+        //public List<Region> regions { get; set; }
         public CreateShiftViewModel createShiftViewModel { get; set; }
     }
     public class Resources

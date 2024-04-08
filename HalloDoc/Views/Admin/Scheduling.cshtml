@@ -17,7 +17,7 @@
                 <div class=" d-flex align-items-center justify-content-between">
                     <div class="has-search ">
                         <div class="form-floating form-group">
-                            <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionIds" >
                                 <option value="0" selected>All Regions</option>
 
                                 @foreach (var region in Model.regions)
@@ -26,7 +26,7 @@
                                 }
                             </select>
                             <label>State</label>
-                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                            <span asp-validation-for="RegionIds" class="text-danger"></span>
                         </div>
 
                     </div>
@@ -73,44 +73,44 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editShiftForm" asp-controller="Admin" asp-action="EditShiftData" style="margin-top:-25px;margin-bottom:-25px;" method="post">
-                <input type="hidden" asp-for="createShiftViewModel.ShiftDetailId" id="shiftdetailIDval" />
+                <input type="hidden" asp-for="ShiftDetailId" id="shiftdetailIDval" />
                 <div class="modal-body m-0">
                     <div class=" d-flex justify-content-center flex-column  ">
 
-                        <select asp-for="createShiftViewModel.regionId" id="regionSelect" class="form-select required" disabled>
+                        <select asp-for="regionId" id="regionSelect" class="form-select" disabled>
                             <option value="">Select Region</option>
                             @foreach (var i in Model.regions)
                             {
                                 <option value="@i.RegionId">@i.Name</option>
                             }
                         </select>
-                        <span asp-validation-for="createShiftViewModel.regionId" class="text-danger"></span>
+                        <span asp-validation-for="regionId" class="text-danger"></span>
 
-                        <select class="form-select mt-1 h-50" asp-for="createShiftViewModel.physicianId" id="physicianSelect" disabled>
+                        <select class="form-select mt-1 h-50" asp-for="physicianId" id="physicianSelect" disabled>
                             <option value="">Select Physician</option>
                         </select>
-                        <span asp-validation-for="createShiftViewModel.physicianId" class="text-danger"></span>
+                        <span asp-validation-for="physicianId" class="text-danger"></span>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
                             <div class="form-floating form-group">
-                                <input asp-for="createShiftViewModel.ShiftDate" type="date" class="form-control" placeholder=" " id="shiftDate" disabled>
+                                <input asp-for="ShiftDate" type="date" class="form-control" placeholder=" " id="shiftDate" disabled>
                                 <label for=" ">Shift Date</label>
-                                <span asp-validation-for="createShiftViewModel.ShiftDate" class="text-danger"></span>
+                                <span asp-validation-for="ShiftDate" class="text-danger"></span>
 
                             </div>
 
                         </div>
                         <div class="col-lg-12 col-md-12 col-sm-12 mt-1 d-flex justify-content-between">
                             <div class="col-6 form-floating form-group">
-                                <input asp-for="createShiftViewModel.startTime" type="time" id="starttimeShift" class="form-control" placeholder=" " disabled>
+                                <input asp-for="startTime" type="time" id="starttimeShift" class="form-control" placeholder=" " disabled>
                                 <label for=" ">Start Time</label>
-                                <span asp-validation-for="createShiftViewModel.startTime" class="text-danger"></span>
+                                <span asp-validation-for="startTime" class="text-danger"></span>
 
                             </div>
                             <div class="col-6 form-floating form-group">
-                                <input asp-for="createShiftViewModel.endTime" type="time" id="endtimeShift" class="form-control" placeholder=" " disabled>
+                                <input asp-for="endTime" type="time" id="endtimeShift" class="form-control" placeholder=" " disabled>
                                 <label for=" ">End Time</label>
-                                <span asp-validation-for="createShiftViewModel.endTime" class="text-danger"></span>
+                                <span asp-validation-for="endTime" class="text-danger"></span>
 
                             </div>
                         </div>
@@ -154,7 +154,7 @@
             $.ajax({
                 url: '/Admin/getCal?regionId=' + regionId,
                 type: 'GET',
-                dataType: 'json',
+              
                 success: function (response) {
                     console.log(response.resources);
 
@@ -349,6 +349,32 @@
         $('#shiftDate').prop('disabled', false);
         $('#starttimeShift').prop('disabled', false);
         $('#endtimeShift').prop('disabled', false);
+    });
+    $('#editShiftForm').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                if (response=="success") {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Shift saved Successfully",
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        window.location.href = '@Url.Action("scheduling", "Admin")';
+                    });
+                }
+            });
     });
 </script>
 
