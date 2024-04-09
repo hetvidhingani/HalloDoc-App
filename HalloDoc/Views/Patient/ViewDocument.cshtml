@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@model IEnumerable<HalloDoc.Entities.ViewModels.DashboardViewModel>;
+@model HalloDoc.Entities.ViewModels.DashboardViewModel;
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -78,20 +78,35 @@
                             </tr>
 
                         </thead>
-                        @foreach (var r in Model)
+                        @foreach (var r in Model.RequestWiseFiles)
                         {
                             <tbody>
                                 <tr>
                                     <td>
 
-                                        <input type="checkbox" value="@r.RequestWiseFileID" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                                        <input type="checkbox" value="@r.RequestWiseFileId" class="checkboxForAll" name="selectedFiles">  @r.FileName
                                     </td>
 
 
-                                    <td>@r.Username</td>
+                                    <td>
+                                        @if (r.AdminId == null)
+                                        {
+                                            <p>
+                                                @r.Request.FirstName &nbsp;@r.Request.LastName
+
+                                            </p>
+                                        }
+                                        else
+                                        {
+                                            <p>
+                                                @r.Admin.FirstName &nbsp;@r.Admin.LastName
+                                            </p>
+                                        }
+
+                                    </td>
                                     <td>@r.CreatedDate</td>
                                     <td>
-                                        <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileID })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
                                     </td>
@@ -106,18 +121,18 @@
 
                 <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
 
-                    @foreach (var r in Model)
+                    @foreach (var r in Model.RequestWiseFiles)
                     {
 
                         <div class="mobileviewdashboard my-2 p-3" style="background-color:white">
 
                             <button type="button" class="table-btn collapsible" style="background-color:white">
-                                <input type="checkbox" value="@r.RequestWiseFileID" class="checkboxForAll" name="selectedFiles">  @r.FileName
+                                <input type="checkbox" value="@r.RequestWiseFileId" class="checkboxForAll" name="selectedFiles">  @r.FileName
 
                             </button>
                             <div class="content mx-2">
                                 <div class="provider d-flex gap-2">
-                                    @r.Username <span></span>
+                                    @*  @r.Request.FirstName @r.Request.LastName *@<span></span>
                                 </div>
                                 <div class="provider d-flex gap-2">
 
@@ -125,7 +140,7 @@
 
                                 </div>
                                 <div class="provider d-flex pt-2 gap-2">
-                                    <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileID })" class="btn btn-outline-info download-link">
+                                    <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileId })" class="btn btn-outline-info download-link">
                                         <i class="bi bi-cloud-arrow-down"></i>
                                     </a>
                                 </div>

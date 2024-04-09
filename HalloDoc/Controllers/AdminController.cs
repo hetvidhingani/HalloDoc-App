@@ -38,6 +38,11 @@ namespace HalloDoc.Controllers
                 HttpContext.Session.Remove("AdminSession");
                 HttpContext.Session.Clear();
                 Response.Cookies.Delete("jwt");
+                Response.Cookies.Delete("RoleMenu");
+                Response.Cookies.Delete("AdminID");
+                Response.Cookies.Delete("UserNameAdmin");
+                Response.Cookies.Delete("AspNetIdAdmin");
+
                 return RedirectToAction("AdminLogin", "Custom");
             }
             return View();
@@ -47,7 +52,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Dashboard
-       // [RoleAuthorize(5)]
+        [RoleAuthorize(1)]
         public async Task<IActionResult> Dashboard()
         {
             //var cookie = Request.Cookies["jwt"];
@@ -344,7 +349,11 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> ViewUploads(int Id)
         {
             HttpContext.Session.SetInt32("reqID", Id);
-            ViewBag.MySession = HttpContext.Session.GetString("UserName");
+
+            var request = HttpContext.Request;
+            ViewBag.MySession = request.Cookies["UserNameAdmin"];
+
+            // = HttpContext.Session.GetString("UserName");
             var result = await _customService.ViewDocument(Id);
             return View(result);
         }
@@ -573,7 +582,7 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-      
+
         #endregion
 
         #region provider
@@ -939,7 +948,7 @@ namespace HalloDoc.Controllers
             return Json("success");
 
         }
-            
+
         public IActionResult deleteShift(int id)
         {
             _admin.deleteShift(id);
@@ -958,15 +967,15 @@ namespace HalloDoc.Controllers
 
             return View(model);
         }
-        public IActionResult RequestedShiftTable(int month,int regionId, int CurrentPage = 1)
+        public IActionResult RequestedShiftTable(int month, int regionId, int CurrentPage = 1)
         {
 
-            var result = _admin.RequestedShift(month,regionId, CurrentPage);
+            var result = _admin.RequestedShift(month, regionId, CurrentPage);
             return PartialView("_RequestedShiftTable", result);
         }
         public IActionResult ApproveShift(List<int> documentValues)
         {
-             _admin.ApproveShift(documentValues);
+            _admin.ApproveShift(documentValues);
             return RedirectToAction("RequestedShift");
         }
         public IActionResult DeleteSelectedShift(List<int> documentValues)
@@ -984,6 +993,16 @@ namespace HalloDoc.Controllers
             return View();
         }
         #endregion
+
+        #region MD's On call
+        public IActionResult MdOnCall(int regionId = 0)
+        {
+           
+            var result=_admin.GetProvidersOnCall(regionId);
+            return View(result);
+        }
+        #endregion
+
         #endregion
 
     }

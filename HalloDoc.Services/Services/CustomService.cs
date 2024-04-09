@@ -21,6 +21,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Threading.Tasks;
 using HalloDoc.Repository.IRepository;
+using System.Data.Entity;
+using System.Runtime.Intrinsics.X86;
 
 namespace HalloDoc.Services.Services
 {
@@ -59,7 +61,7 @@ namespace HalloDoc.Services.Services
                                IOrderDetailsRepository orderDetailsRepository, IHealthProfessionalsRepository healthProfessionalsRepository,
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
-                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository,IAspNetUserRolesRepository aspNetUserRolesRepository,
+                               IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IAspNetUserRolesRepository aspNetUserRolesRepository,
                                IEmailLogsRepository emailLogsRepository)
         {
             _userRepository = userRepository;
@@ -86,6 +88,22 @@ namespace HalloDoc.Services.Services
             _emailLogsRepository = emailLogsRepository;
         }
         #endregion
+
+        public  AspNetUser checkEmailPassword(string email, string password)
+        {
+            AspNetUser user = _aspnetuserRepository.GetAll().Where(u=>u.Email==email).FirstOrDefault();
+            var pwd =_aspnetuserRepository.DecodeFrom64(user.PasswordHash);
+            var result = _aspnetuserRepository.GetAll().Where(u => u.Email == email && password == pwd).FirstOrDefault();
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+
+        }
 
         #region Send Mail
         public string SendEmail(string email, string link, string subject, string body, List<string> attachmentFilePath = null)
@@ -125,7 +143,7 @@ namespace HalloDoc.Services.Services
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
 
-               
+
                 var abc = "Success";
                 return abc;
             }
@@ -138,7 +156,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region View Uploads / View Documents
-       
+
         public async Task<DashboardViewModel> ViewDocument(int Id)
         {
             DashboardViewModel viewModel = new DashboardViewModel();
@@ -154,7 +172,12 @@ namespace HalloDoc.Services.Services
                                          {
                                              CreatedDate = rwf.CreatedDate,
                                              FileName = rwf.FileName,
-                                             RequestWiseFileId = rwf.RequestWiseFileId
+                                             RequestWiseFileId = rwf.RequestWiseFileId,
+                                             RequestId = rwf.RequestId,
+                                             AdminId = rwf.AdminId,
+                                             Admin = rwf.Admin,
+                                             Request = rwf.Request,
+
 
                                          }).ToList();
             return viewModel;
@@ -295,10 +318,10 @@ namespace HalloDoc.Services.Services
         #endregion
 
 
-        public void EmailLog(int requestclientID, string Email, string link, string subject, string body , int AdminId)
+        public void EmailLog(int requestclientID, string Email, string link, string subject, string body, int AdminId)
         {
             RequestClient req = _requestclientRepository.GetById(requestclientID);
-            Request request =_requestRepository.GetById(req.RequestId);
+            Request request = _requestRepository.GetById(req.RequestId);
             Admin admin = _adminRepository.GetById(AdminId);
 
             EmailLog log = new EmailLog();

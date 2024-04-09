@@ -1,0 +1,104 @@
+﻿@model ProvidersOnCallViewModel
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="w-100 d-flex justify-content-between align-items-center ">
+            <h3>Requested Shift</h3>
+            <a asp-action="Scheduling" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="w-100">
+            <div class="row">
+                <div class=" d-flex align-items-center justify-content-between">
+                    <div class="has-search ">
+                        <div class="form-floating form-group">
+                            <select style="height:38px;" id="region" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="regionId">
+                                <option value="0" selected>All Regions</option>
+
+                                @foreach (var region in Model.regions)
+                                {
+                                    <option value="@region.RegionId">@region.Name</option>
+                                }
+                            </select>
+                            <label>State</label>
+                            <span asp-validation-for="regionId" class="text-danger"></span>
+                        </div>
+
+                    </div>
+                    <div class="">
+                        <div>
+                            <a class="btn btn-sm btn-success">Calender View</a>
+                            <a class="btn btn-sm btn-info" href="@Url.Action("RequestedShift","Admin")">Shifts For Review</a>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row mt-2">
+              
+
+                <h3>Provider Off Duty</h3>
+                @foreach (var phy in Model.PaggingData)
+                {
+                    <div class="col-lg-4 col-md-3 col-sm-6">
+                        <div class="d-flex mx-1">
+                            @phy.physicianName
+                            </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script>
+
+    var RegionId;
+
+
+
+    //create shift pop up
+    $('#addShift').click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+
+            url: "@(Url.Action("CreateShift", "Admin"))",
+            success: function (data) {
+
+                $("#createshift").find('.modal-content').html(data);
+            }
+        });
+    });
+
+
+
+    function currMonthShift() {
+        const currentDate = new Date();
+        Monthdata = currentDate.getMonth() + 1;
+        load();
+    }
+    $("#region").on("input", function () {
+
+
+        RegionId = $(this).val();
+
+        load();
+
+    });
+
+</script>
+

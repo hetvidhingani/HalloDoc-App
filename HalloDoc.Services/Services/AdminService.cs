@@ -113,16 +113,8 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region common methods
-        public async Task<AspNetUser> checkEmailPassword(string email, string password)
-        {
-
-            return await _aspnetuserRepository.Login(email, password);
-        }
-        public async Task<User> GetUser(string email)
-        {
-            User user = await _userRepository.CheckUserByEmail(email);
-            return user;
-        }
+       
+    
         public async Task<Admin> GetAdmin(string email)
         {
             Admin user = await _adminRepository.CheckUserByEmail(email);
@@ -2429,6 +2421,51 @@ namespace HalloDoc.Services.Services
         public List<PhysicianLocation> ProviderLocation()
         {
             return _physicianLocationRepository.GetAll().ToList();
+        }
+        #endregion
+
+        #region MD on Call
+        public ProvidersOnCallViewModel? GetProvidersOnCall(int regionId)
+        {
+            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            Expression<Func<Physician, bool>> PhysicianwhereClauseSyntax = PredicateBuilder.New<Physician>();
+            PhysicianwhereClauseSyntax = x => x.IsDeleted == null;
+            if (regionId != 0)
+            {
+                PhysicianwhereClauseSyntax = PhysicianwhereClauseSyntax.And(x => x.RegionId == regionId);
+            }
+            whereClauseSyntax = x => x.IsDeleted == null;
+            whereClauseSyntax = whereClauseSyntax.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
+            whereClauseSyntax = whereClauseSyntax.And(x => x.StartTime < TimeOnly.FromDateTime(DateTime.Now));
+            whereClauseSyntax = whereClauseSyntax.And(x => x.EndTime > TimeOnly.FromDateTime(DateTime.Now));
+
+            List<PhysicianOnCallModal> physicians = new List<PhysicianOnCallModal>();
+            List<int> physicianOnCall = new List<int>();
+            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.PhysicianId, whereClauseSyntax);
+            foreach (int item in data)
+            {
+                physicianOnCall.Add(item);
+            }
+
+            ProvidersOnCallViewModel providersOnCallViewModel = new ProvidersOnCallViewModel();
+            providersOnCallViewModel.regions = getstateDropdown();
+
+            var temp = _physicianRepository.GetAllData(x => new PhysicianOnCallModal
+            {
+                physicianId = x.PhysicianId,
+                physicianName = x.FirstName + " " + x.LastName,
+                Photo = x.Photo!
+            }, PhysicianwhereClauseSyntax);
+            foreach (PhysicianOnCallModal physician in temp)
+            {
+                if (physicianOnCall.Contains(physician.physicianId))
+                {
+                    physician.IsOnCall = true;
+                };
+                physicians.Add(physician);
+            }
+            providersOnCallViewModel.PaggingData = physicians;
+            return providersOnCallViewModel;
         }
         #endregion
 

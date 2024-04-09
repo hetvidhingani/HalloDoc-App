@@ -15,8 +15,6 @@ namespace HalloDoc.Services.IServices
     {
         string SendEmail(string email, string link,string subject, string body, List<string> attachmentFilePath = null);
         Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
-        Task<AspNetUser> checkEmailPassword(string email, string password);
-        Task<User> GetUser(string email);
         Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
         Task<object> AdminMyProfile(int? adminId);
@@ -105,5 +103,6 @@ namespace HalloDoc.Services.IServices
         RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage = 1);
        void ApproveShift(List<int> selectedShift);
         List<PhysicianLocation> ProviderLocation();
+        ProvidersOnCallViewModel? GetProvidersOnCall(int regionId);
     }
 }

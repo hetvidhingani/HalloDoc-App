@@ -22,6 +22,6 @@ namespace HalloDoc.Services.IServices
         Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel);
         Task<string> AdminResetPassword(CreateAccountViewModel createAccountViewModel);
         void EmailLog(int requestclientID, string Email,string link,string  subject,string body,int AdminId);
-
+        AspNetUser checkEmailPassword(string data, string password);
     }
 }

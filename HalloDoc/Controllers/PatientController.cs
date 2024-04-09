@@ -14,6 +14,8 @@ using HalloDoc.Entities.ViewModels;
 using Microsoft.AspNetCore.Http.HttpResults;
 using HalloDoc.Services.Services;
 using HalloDoc.Repository.Repository;
+using System.Linq;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace HalloDoc.Controllers
 {
@@ -53,7 +55,9 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> Dashboard()
         {
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            int? userID = HttpContext.Session.GetInt32("UserSession");
+           
+            var request = HttpContext.Request;
+            var userID = Int32.Parse(request.Cookies["UserID"]);
             var result = await _patient.Dashboard(userID);
             return View(result);
 
@@ -147,16 +151,20 @@ namespace HalloDoc.Controllers
         #region Patient My Profile
         public async Task<IActionResult> Profile(PatientRequestViewModel requestViewModel)
         {
-            int? userId = HttpContext.Session.GetInt32("UserSession");
-            var result = await _patient.Profile(requestViewModel, userId);
+            var request = HttpContext.Request;
+            var userID = Int32.Parse(request.Cookies["UserID"]);
+            var result = await _patient.Profile(requestViewModel, userID);
             return View(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> EditUser(PatientRequestViewModel patientRequestViewModel)
         {
-            int? userId = HttpContext.Session.GetInt32("UserSession");
-            var result = await _patient.EditUser(patientRequestViewModel, userId);
+            var request = HttpContext.Request;
+            var userID = Int32.Parse(request.Cookies["UserID"]);
+            var result = await _patient.EditUser(patientRequestViewModel, userID);
+
+            HttpContext.Response.Cookies.Append("UserNameUser", result.FirstName + " " + result.LastName);
 
             return RedirectToAction("Profile",result);
         }
@@ -171,10 +179,12 @@ namespace HalloDoc.Controllers
                 HttpContext.Session.Remove("UserSession");
                 HttpContext.Session.Clear();
                 Response.Cookies.Delete("jwt");
+                Response.Cookies.Delete("UserID");
+                Response.Cookies.Delete("UserNameUser");
+                Response.Cookies.Delete("AspNetIdUser");
                 return RedirectToAction("RegisterdPatientLogin", "Custom");
-               
             }
-            return View();
+            return RedirectToAction("RegisterdPatientLogin", "Custom");
         }
 
 

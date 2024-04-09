@@ -27,8 +27,11 @@ namespace HalloDoc.Repository.Repository
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
+
             var request = context.HttpContext.Request;
+
             var token = request.Cookies["jwt"];
+
             if (token == null || !jwtService.ValidateToken(token, out JwtSecurityToken jwtToken))
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
@@ -40,7 +43,6 @@ namespace HalloDoc.Repository.Repository
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));
                 return;
             }
-
             if (string.IsNullOrWhiteSpace(_role) || roleClaim.Value != _role)
             {
                 context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Custom", action = "RegisterdPatientLogin" }));

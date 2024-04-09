@@ -38,7 +38,7 @@
 <body>
 
 
-    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null || @HttpContextAccessor?.HttpContext?.Session.GetString("AdminSession") != null)
+    @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null || @HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
     {
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
@@ -62,13 +62,21 @@
                             <h5>
                                 Welcome,
                                 <strong>
-                                    @HttpContextAccessor?.HttpContext?.Session.GetString("UserName")
+                                    @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+                                    {
+                                        @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameAdmin"]
+                                    }
+                                    else
+                                    {
+                                        @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
+
+                                    }
                                 </strong>
                             </h5>
                         </span>
 
                     </div>
-                    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+                    @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null)
                     {
                         <a asp-controller="Patient" asp-action="Logout">
                             <button class="mx-3 logout" type="submit">
@@ -98,7 +106,7 @@
             </div>
 
         </div>
-        @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") != null)
+        @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null)
         {
             <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
                 <div class="topnav" id="myTopnav">

@@ -529,11 +529,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Login
-        public async Task<AspNetUser> checkEmailPassword(string email,string password)
-        {
-
-            return await _aspnetuserRepository.Login(email, password); 
-        }
+      
         public async Task<User> GetUser(string email)
         {
             User user = await _userRepository.CheckUserByEmail(email);
@@ -560,7 +556,7 @@ namespace HalloDoc.Services.Services
                 ).FirstOrDefault(),
                 FileCount = (
             from file in _requestwisefileRepository.GetAll()
-            where file.RequestId == r.RequestId
+            where file.RequestId == r.RequestId && file.IsDeleted==null
             select file.FileName
         ).Count()
             }).ToList();
@@ -762,12 +758,15 @@ namespace HalloDoc.Services.Services
 
                 await _userRepository.UpdateAsync(user);
 
+           
             }
             return user;
         }
 
         #endregion
 
-     
+        #region comon added
+       
+        #endregion
     }
 }

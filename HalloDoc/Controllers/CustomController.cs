@@ -80,16 +80,25 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> AdminLogin(LoginViewModel user)
         {
-            AspNetUser myUser = await _admin.checkEmailPassword(user.Email,user.PasswordHash);
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+            AspNetUser myUser =  _customService.checkEmailPassword(user.Email,user.PasswordHash);
 
             if (myUser != null)
             {
                 Admin userID = await _admin.GetAdmin(myUser.Email);
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
+
                 Response.Cookies.Append("jwt", jwtToken);
+                Response.Cookies.Append("RoleMenu",userID.RoleId.ToString() );
+                Response.Cookies.Append("AdminID",userID.AdminId.ToString());
+                Response.Cookies.Append("UserNameAdmin",userID.FirstName+" "+userID.LastName);
+                Response.Cookies.Append("AspNetIdAdmin",userID.AspNetUserId.ToString());
+
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
-
                 HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
               
                 return RedirectToAction("Dashboard", "Admin");
@@ -182,7 +191,6 @@ namespace HalloDoc.Controllers
         {
             if (HttpContext.Session.GetInt32("UserSession") != null)
             {
-
                 return RedirectToAction("DashBoard", "Patient");
             }
             return View();
@@ -191,16 +199,25 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterdPatientLogin(LoginViewModel viewModel)
         {
-
-            var myUser = await _patient.checkEmailPassword(viewModel.Email, viewModel.PasswordHash);
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+            var myUser =  _customService.checkEmailPassword(viewModel.Email, viewModel.PasswordHash);
 
             if (myUser != null)
             {
 
+                User userID = await _patient.GetUser(myUser.Email);
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
                 Response.Cookies.Append("jwt", jwtToken);
 
-                User userID = await _patient.GetUser(myUser.Email);
+
+                Response.Cookies.Append("UserID", userID.UserId.ToString());
+                Response.Cookies.Append("UserNameUser", userID.FirstName + " " + userID.LastName);
+                Response.Cookies.Append("AspNetIdUser", userID.Id.ToString());
+
+
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
              

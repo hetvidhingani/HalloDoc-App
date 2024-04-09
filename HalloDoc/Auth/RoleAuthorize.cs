@@ -25,8 +25,8 @@ namespace HalloDoc.Repository.Repository
 
             var Role = _context.RoleMenus.Where(u => u.RoleId == Int32.Parse(roleCookie!)).ToList();
             bool flag = false;
-
-            if(Role.Any(u => u.MenuId == _menuId))
+            var result = Role.Any(u => u.MenuId == _menuId);
+            if (result)
             {
                 flag = true;
             }

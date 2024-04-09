@@ -19,7 +19,7 @@ namespace HalloDoc.Services.IServices
         Task<string> BusinessRequest(OtherRequestViewModel viewModel);
         Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
         string? CheckEmail(string email);
-        Task<AspNetUser> checkEmailPassword(string email, string password);
+ 
         Task<User> GetUser(string email);
        
        
@@ -29,8 +29,9 @@ namespace HalloDoc.Services.IServices
         Task<string> CreateAccountRequest(CreateAccountViewModel createAccountViewModel);
         Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId);
         Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId);
-       
-      
+   
+
+
 
     }
 }
