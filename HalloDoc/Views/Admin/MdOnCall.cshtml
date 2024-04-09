@@ -44,14 +44,33 @@
             <div class="row mt-2">
               
 
-                <h3>Provider Off Duty</h3>
+                <h3>MD's On Call</h3>
                 @foreach (var phy in Model.PaggingData)
                 {
+                    @if (phy.IsOnCall)
+                    {
                     <div class="col-lg-4 col-md-3 col-sm-6">
                         <div class="d-flex mx-1">
                             @phy.physicianName
                             </div>
                     </div>
+                        
+                    }
+
+                }
+                <br/>
+                <h3>MD's Off Duty</h3>
+                @foreach (var phy in Model.PaggingData)
+                {
+                    @if (!phy.IsOnCall)
+                    {
+                        <div class="col-lg-4 col-md-3 col-sm-6">
+                            <div class="d-flex mx-1">
+                                @phy.physicianName
+                            </div>
+                        </div>
+
+                    }
 
                 }
             </div>
