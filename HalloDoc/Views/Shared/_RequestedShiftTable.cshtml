@@ -4,11 +4,11 @@
     <table class="table ">
         <thead class="table-secondary">
             <tr>
+                <th scope="col"> <input type="checkbox" id="selectAllFiles" onclick="toggle(this)"></th>
                 <th scope="col">staff</th>
                 <th scope="col">day</th>
                 <th scope="col">time</th>
                 <th scope="col">region</th>
-                <th scope="col">action</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -20,25 +20,12 @@
                     <input type="hidden" asp-for="@u.shiftdetailId">
 
 
+                    <td><input type="checkbox" value="@u.shiftdetailId" class="checkboxForAll" name="selectedShift"></td>
                     <td>@u.staff</td>
                     <td>@u.day</td>
                     <td>@u.time</td>
                     <td>@u.region </td>
-                    <td>-</td>
-                    <td>
-                        <div class="d-flex">
-                            @*  @if (u.PhysicianID != 0)
-                        {
 
-                        <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
-                        }
-                        else
-                        {
-                        <a class="btn btn-outline-info mx-1" asp-action="EditAdminAccount" asp-controller="Admin" asp-route-id="@u.AdminID">Edit</a>
-
-                        } *@
-                        </div>
-                    </td>
 
                 </tr>
             }
@@ -47,5 +34,14 @@
         </tbody>
     </table>
     <partial name="_Paging.cshtml" />
-    </div>
+</div>
+
+<script>
+    function toggle(source) {
+        checkboxes = document.getElementsByClassName('checkboxForAll');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
    
+</script>

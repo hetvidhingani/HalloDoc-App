@@ -17,7 +17,7 @@
                 <div class=" d-flex align-items-center justify-content-between">
                     <div class="has-search ">
                         <div class="form-floating form-group">
-                            <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <select style="height:38px;" id="region" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                                 <option value="0" selected>All Regions</option>
 
                                 @foreach (var region in Model.regions)
@@ -32,19 +32,17 @@
                     </div>
                     <div class="">
                         <div>
-                            <a class="btn btn-sm btn-success">View Current Month Shift</a>
-                            <a class="btn btn-sm btn-success">Approved Selected</a>
-                            <a class="btn btn-sm btn-danger" id="addShift" data-bs-toggle="modal" type="button" data-bs-target="#createshift">Delete Selected</a>
+                            <a class="btn btn-sm btn-success" onclick="currMonthShift()">View Current Month Shift</a>
+                            <a class="btn btn-sm btn-success" onclick="approveSelected()">Approved Selected</a>
+                            <a class="btn btn-sm btn-danger" id="deleteShift" onclick="DeleteSelected()">Delete Selected</a>
                         </div>
-                       
+
                     </div>
                 </div>
 
             </div>
             <div class="row mt-2">
-
                 <div id="admindata" class="mb-5"></div>
-
             </div>
         </div>
 
@@ -56,8 +54,14 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.11/index.global.min.js'></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+
 <script>
     var page;
+    var RegionId;
+    var Monthdata;
     function changepage(CurrentPage) {
         page = CurrentPage;
         console.log(page);
@@ -68,10 +72,12 @@
 
     });
     function load() {
+
+        console.log("data:", Monthdata);
         $.ajax({
             url: "/Admin/RequestedShiftTable",
             type: "POST",
-            data: { CurrentPage: page },
+            data: { month: Monthdata, regionId: RegionId, CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
@@ -98,7 +104,64 @@
         });
     });
 
-  
-  
+    function approveSelected() {
+
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+        var documentValues = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ApproveShift", "Admin")",
+            data: { documentValues: documentValues },
+            success: function (response) {
+                location.reload();
+            }
+        });
+
+    }
+    function DeleteSelected() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to Delete Selected Shift!',
+            icon: 'warning',
+            confirmButtonText: 'Yes, delete all!',
+            showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+                var checkbox = $('input[class="checkboxForAll"]:checked');
+                var documentValues = checkbox.map(function () {
+                    return $(this).val();
+                }).get();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteSelectedShift", "Admin")",
+                    data: { documentValues: documentValues },
+                    success: function (response) {
+                       
+                        toastr.success('Shift Deleted!');
+                    }
+                });
+            }
+        });
+
+        return false;
+    }
+    function currMonthShift() {
+        const currentDate = new Date();
+         Monthdata = currentDate.getMonth() + 1;
+        load();
+    }
+    $("#region").on("input", function () {
+
+
+        RegionId = $(this).val();
+
+        load();
+
+    });
+
 </script>
 

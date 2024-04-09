@@ -3,6 +3,7 @@ using HalloDoc.Entities.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,6 +102,7 @@ namespace HalloDoc.Services.IServices
         void EditShiftData(CreateShiftViewModel shiftData);
         object returnShift(int id);
         void deleteShift(int id);
-        RequestedShiftViewModel RequestedShift(int CurrentPage = 1);
+        RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage = 1);
+       void ApproveShift(List<int> selectedShift);
     }
 }

@@ -2250,7 +2250,10 @@ namespace HalloDoc.Services.Services
                 start = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.StartTime.Hour).AddMinutes(x.StartTime.Minute).ToUniversalTime().ToString("O"),
                 end = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute).ToUniversalTime().ToString("O"),
                 title = x.StartTime.ToString() + "-" + x.EndTime + "\n" + x.Shift.Physician.FirstName,
-                color = x.Status == 1 ? "lightgreen" : "pink"
+                color = x.Status == 1 ? "lightgreen" : "pink",
+               
+                
+
             }, ShiftDetailswhereClauseSyntax);
             foreach (Events e in temp)
             {
@@ -2331,12 +2334,12 @@ namespace HalloDoc.Services.Services
             shiftDetail.ShiftDate = viewModel.ShiftDate;
             _shiftDetailsRepository.UpdateAsync(shiftDetail);
 
-         
+
         }
         public object returnShift(int id)
         {
             ShiftDetail data = _shiftDetailsRepository.GetById(id);
-            if(data.Status ==0 )
+            if (data.Status == 0)
             {
                 data.Status = 1;
             }
@@ -2357,39 +2360,47 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Requested Shift
-        public RequestedShiftViewModel RequestedShift(int CurrentPage)
+        public RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage)
         {
-            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            Expression<Func<ShiftDetail, bool>> table = PredicateBuilder.New<ShiftDetail>();
 
-            whereClauseSyntax = x => x.IsDeleted == null && x.Status == 0;
-          
-            List<shiftTable> vendorTable = new List<shiftTable>();
+            table = x => x.IsDeleted == null && x.Status == 0;
+
+            if(region!=0)
+            {
+                table=table.And(u=>u.RegionId == region);
+            }
+            if(month!=0 )
+            {
+                table = table.And(u => u.ShiftDate.Month == month);
+            }
+            List<shiftTable> shiftTable = new List<shiftTable>();
 
             var data = _shiftDetailsRepository.GetAllWithPagination(x => new shiftTable
             {
-                day=x.ShiftDate.ToString(),
-                shiftdetailId=x.ShiftDetailId,
-                staff=x.Shift.Physician.FirstName + " " +x.Shift.Physician.LastName,
-                time=x.StartTime+"-"+x.EndTime,
-                region=x.Region.Name,
+                day = x.ShiftDate.ToString(),
+                shiftdetailId = x.ShiftDetailId,
+                staff = x.Shift.Physician.FirstName + " " + x.Shift.Physician.LastName,
+                time = x.StartTime + "-" + x.EndTime,
+                region = x.Region.Name,
 
-            }, whereClauseSyntax, CurrentPage, 5, x => x.ShiftId, true);
+            }, table, CurrentPage, 5, x => x.ShiftDate, false);
 
             foreach (shiftTable requiredData in data)
             {
-                vendorTable.Add(requiredData);
+                shiftTable.Add(requiredData);
             }
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _shiftDetailsRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _shiftDetailsRepository.GetTotalCount(table);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
-           
+
             return new RequestedShiftViewModel
             {
-                PagingData = vendorTable,
+                PagingData = shiftTable,
                 TotalCount = totalCount,
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,
@@ -2398,6 +2409,15 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
         }
+        public void ApproveShift(List<int> selectedShift)
+        {
+            foreach (var shift in selectedShift)
+            {
+                returnShift(shift);
+            }
+            
+        }
+
         #endregion
 
         #endregion

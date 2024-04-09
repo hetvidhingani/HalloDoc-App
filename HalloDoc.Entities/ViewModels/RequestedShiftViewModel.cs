@@ -27,5 +27,6 @@ namespace HalloDoc.Entities.ViewModels
         public string time { get; set; }
         public string region { get; set; }
         public int shiftdetailId { get; set; }
+        public List<int> selectedShift {  get; set; }
     }
 }

@@ -957,13 +957,24 @@ namespace HalloDoc.Controllers
 
             return View(model);
         }
-        public IActionResult RequestedShiftTable(int CurrentPage = 1)
+        public IActionResult RequestedShiftTable(int month,int regionId, int CurrentPage = 1)
         {
 
-            var result = _admin.RequestedShift(CurrentPage);
+            var result = _admin.RequestedShift(month,regionId, CurrentPage);
             return PartialView("_RequestedShiftTable", result);
         }
+        public IActionResult ApproveShift(List<int> documentValues)
+        {
+             _admin.ApproveShift(documentValues);
+            return RedirectToAction("RequestedShift");
+        }
+        public IActionResult DeleteSelectedShift(List<int> documentValues)
+        {
+            _admin.ApproveShift(documentValues);
+            return RedirectToAction("RequestedShift");
+        }
         #endregion
+
 
         #endregion
 

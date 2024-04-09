@@ -156,7 +156,6 @@
                 type: 'GET',
               
                 success: function (response) {
-                    console.log(response.resources);
 
                     var calendarEl = document.getElementById('calendar');
                     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -167,6 +166,7 @@
                         },
                         resources: response.resources,
                         events: response.events,
+                      
                         datesSet: function (dateInfo) {
                             if (dateInfo.view.type === "resourceTimelineWeek") {
                                 calendar.setOption("slotLabelInterval", "24:00");
@@ -214,8 +214,7 @@
                 shiftDetailsId: shiftDetailsId
             },
             success: function (response) {
-                console.log("response:", response.data.startTime);
-                console.log("shiftDetailsId:", shiftDetailsId);
+              
 
                 $('#editshift').modal('show');
                 $('#regionSelect').val(response.data.regionId);
