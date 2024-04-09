@@ -44,7 +44,7 @@ builder.Services.AddScoped<IEmailLogsRepository, EmailLogsRepository>();
 builder.Services.AddScoped<ISMSLogRepository,SMSLogRepository>();
 builder.Services.AddScoped<IShiftDetailsRepository, ShiftDetailsRepository>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
-
+builder.Services.AddScoped<IPhysicianLocationRepository, PhysicianLocationRepository>();
 
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();

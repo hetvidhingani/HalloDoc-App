@@ -632,8 +632,6 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-
-
         #region edit provider details
         public async Task<IActionResult> EditProvider(int id)
         {
@@ -975,7 +973,14 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Provider Location
+        public IActionResult ProviderLocation()
+        {
 
+            ViewBag.Locations = _admin.ProviderLocation();
+            return View();
+        }
+        #endregion
         #endregion
 
     }

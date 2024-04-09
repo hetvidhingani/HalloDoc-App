@@ -62,6 +62,7 @@ namespace HalloDoc.Services.Services
         private readonly IAspNetUserRolesRepository _userRolesRepository;
         private readonly IShiftDetailsRepository _shiftDetailsRepository;
         private readonly IShiftRepository _shiftRepository;
+        private readonly IPhysicianLocationRepository _physicianLocationRepository;
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -74,7 +75,8 @@ namespace HalloDoc.Services.Services
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IRoleRepository roleRepository,
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
-                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository, IShiftRepository shiftRepository)
+                               ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
+                               IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -106,6 +108,7 @@ namespace HalloDoc.Services.Services
             _userRolesRepository = userRolesRepository;
             _shiftDetailsRepository = shiftDetailsRepository;
             _shiftRepository = shiftRepository;
+            _physicianLocationRepository = physicianLocationRepository;
         }
         #endregion
 
@@ -2360,6 +2363,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Requested Shift
+
         public RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage)
         {
             Expression<Func<ShiftDetail, bool>> table = PredicateBuilder.New<ShiftDetail>();
@@ -2409,6 +2413,7 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
         }
+
         public void ApproveShift(List<int> selectedShift)
         {
             foreach (var shift in selectedShift)
@@ -2418,6 +2423,13 @@ namespace HalloDoc.Services.Services
             
         }
 
+        #endregion
+
+        #region Physician Location
+        public List<PhysicianLocation> ProviderLocation()
+        {
+            return _physicianLocationRepository.GetAll().ToList();
+        }
         #endregion
 
         #endregion
