@@ -29,6 +29,7 @@ namespace HalloDoc.Controllers
             _customService = customService;
         }
         #region admin
+
         #region Logout
         public IActionResult Logout()
         {
@@ -46,7 +47,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Dashboard
-
+       // [RoleAuthorize(5)]
         public async Task<IActionResult> Dashboard()
         {
             //var cookie = Request.Cookies["jwt"];
@@ -571,6 +572,8 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard");
         }
         #endregion
+
+      
         #endregion
 
         #region provider
