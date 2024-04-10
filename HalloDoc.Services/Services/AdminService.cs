@@ -205,71 +205,60 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
-        public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
+        public AdminDashboardTableViewModel AdminDashboardData(int CurrentPage, string? PatientName, int? ReqType, int? RegionId, string state,int status)
         {
-
-            var tabledashboard = (
-                from r in _requestRepository.GetAll()
-                join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
-                join phy in _physicianRepository.GetAll() on r.PhysicianId equals phy.PhysicianId into physicianGroup
-                from phy in physicianGroup.DefaultIfEmpty()
-
-                where r.Status == status
-
-                select new AdminDashboardViewModel
-                {
-                    PatientName = rec.FirstName + "," + rec.LastName,
-                    DateOfBirth = new DateTime((int)rec.IntYear, Convert.ToInt32(rec.StrMonth), (int)rec.IntDate),
-                    Requestor = r.FirstName + "," + r.LastName,
-                    RequestedDate = r.CreatedDate,
-                    PatientPhone = rec.PhoneNumber,
-                    RequestorPhone = r.PhoneNumber,
-                    Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                    Notes = rec.Notes,
-                    PhysicianName = phy.FirstName + " " + phy.LastName,
-                    RequestTypeID = r.RequestTypeId,
-                    RequstClientId = rec.RequestClientId,
-                    requestID = rec.RequestId,
-                    Email = rec.Email,
-                    RegionId = (int)rec.RegionId,
-                    StateofTable = rec.State,
-                    stateTab = state,
-
-                }).ToList();
-
-            return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
-        }
-
-        public AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState)
-        {
+            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+            whereClauseSyntax = x => x.Request.Status == status;
             if (!string.IsNullOrWhiteSpace(PatientName))
             {
-                newState = newState.Where(a => a.PatientName.ToLower().Contains(PatientName.ToLower())).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(PatientName.ToLower()) || e.LastName.ToLower().Contains(PatientName.ToLower()));
             }
-            if (ReqType != 0 && ReqType != null)
+            if (RegionId != 0 && RegionId!=null)
             {
-                newState = newState.Where(a => a.RequestTypeID == ReqType).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.RegionId == RegionId);
             }
-            if (RegionId != 0 && RegionId != null)
+            if (ReqType != 0 && ReqType !=null)
             {
-                newState = newState.Where(a => a.RegionId == RegionId).ToList();
+                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.RequestTypeId == ReqType);
             }
+            List<AdminDashboard> vendorTable = new List<AdminDashboard>();
+
+            var data = _requestclientRepository.GetAllWithPagination(x => new AdminDashboard
+            {
+                PatientName = x.FirstName + " " + x.LastName,
+                DateOfBirth = new DateTime((int)x.IntYear, Convert.ToInt32(x.StrMonth), (int)x.IntDate),
+                Requestor =x.Request.FirstName+" "+x.Request.LastName,
+                RequestedDate = x.Request.CreatedDate,
+                PatientPhone = x.PhoneNumber,
+                RequestorPhone = x.Request.PhoneNumber,
+                Address = x.Street + "," + x.City + "," + x.State + "," + x.ZipCode,
+                Notes = x.Request.RequestStatusLogs.OrderByDescending(u=>u.CreatedDate).Last(u=>u.RequestId==x.RequestId).Notes,
+                PhysicianName =x.Request.Physician.FirstName+ " "+x.Request.Physician.LastName,
+                RequestTypeID = x.Request.RequestTypeId,
+                RequstClientId = x.RequestClientId,
+                requestID = x.RequestId,
+                Email = x.Email,
+                RegionId = (int)x.RegionId,
+                StateofTable = x.State,
+                stateTab = state,
+            }, whereClauseSyntax, CurrentPage, 5, x => x.Request.ModifiedDate==null? x.Request.CreatedDate:x.Request.ModifiedDate, false);
+
+            foreach (AdminDashboard requiredData in data)
+            {
+                vendorTable.Add(requiredData);
+            }
+
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = newState.Count;
+            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
-            List<AdminDashboardViewModel> clients = newState
-                .OrderByDescending(u => u.CreatedDate)
-                .Skip((CurrentPage - 1) * dataSize)
-                .Take(dataSize)
-                .ToList();
 
-            return new AdminDashboardViewModel
+            return new AdminDashboardTableViewModel
             {
-                stateTab = state,
-                PagingData = clients,
+               
+                PagingData = vendorTable,
                 TotalCount = totalCount,
                 TotalPages = totalPage,
                 CurrentPage = CurrentPage,
@@ -277,12 +266,6 @@ namespace HalloDoc.Services.Services
                 FirstItemIndex = FirstItemIndex,
                 LastItemIndex = LastItemIndex,
             };
-        }
-
-        public async Task<object> DashboardRegions(AdminDashboardViewModel viewModel)
-        {
-            viewModel.State = await _regionRepository.GetRegions();
-            return viewModel;
         }
         #endregion
 
@@ -2429,12 +2412,12 @@ namespace HalloDoc.Services.Services
         {
             Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
             Expression<Func<Physician, bool>> PhysicianwhereClauseSyntax = PredicateBuilder.New<Physician>();
-            PhysicianwhereClauseSyntax = x => x.IsDeleted == null ;
+            PhysicianwhereClauseSyntax = x => x.IsDeleted == null;
             if (regionId != 0)
             {
                 PhysicianwhereClauseSyntax = PhysicianwhereClauseSyntax.And(x => x.RegionId == regionId);
             }
-            whereClauseSyntax = x => x.IsDeleted == null && x.Status==1;
+            whereClauseSyntax = x => x.IsDeleted == null && x.Status == 1;
             whereClauseSyntax = whereClauseSyntax.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
             whereClauseSyntax = whereClauseSyntax.And(x => x.StartTime < TimeOnly.FromDateTime(DateTime.Now));
             whereClauseSyntax = whereClauseSyntax.And(x => x.EndTime > TimeOnly.FromDateTime(DateTime.Now));
@@ -2460,10 +2443,10 @@ namespace HalloDoc.Services.Services
             {
                 if (physicianOnCall.Contains(physician.physicianId))
                 {
-                  
 
-                        physician.IsOnCall = true;
-                    
+
+                    physician.IsOnCall = true;
+
                 };
                 physicians.Add(physician);
             }

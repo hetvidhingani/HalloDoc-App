@@ -55,9 +55,8 @@ namespace HalloDoc.Controllers
         [RoleAuthorize(1)]
         public async Task<IActionResult> Dashboard()
         {
-            //var cookie = Request.Cookies["jwt"];
-            //var cookiedata = _jwtService.GetTokenData(cookie);
-            var viewModel = new AdminDashboardViewModel
+            
+            var viewModel = new AdminDashboardTableViewModel
             {
                 NewCount = await _admin.GetCount(1),
                 PendingCount = await _admin.GetCount(2),
@@ -67,66 +66,55 @@ namespace HalloDoc.Controllers
                 UnpaidCount = await _admin.GetCount(9),
 
             };
-            var result = await _admin.DashboardRegions(viewModel);
+            viewModel.State =  _admin.getstateDropdown();
 
-            return View(result);
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult GetTable(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId)
+        public IActionResult GetTable( int CurrentPage, string? PatientName, int? ReqType, int? RegionId, string state)
         {
             if (ModelState.IsValid)
             {
-                List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
-
                 switch (state)
                 {
                     case "New":
                         ViewBag.state = "New";
-                        var result = _admin.Admintbl(state, list, 1);
-                        var paging = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result);
+                         var paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state,1);
                         return PartialView("_TablePartialView", paging);
 
                     case "Pending":
                         ViewBag.state = "Pending";
-                        var result2 = _admin.Admintbl(state, list, 2);
-                        var paging2 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result2);
-
-                        return PartialView("_TablePartialView", paging2);
+                         paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 2);
+                        return PartialView("_TablePartialView", paging);
 
                     case "Active":
                         ViewBag.state = "Active";
-                        var result3 = _admin.Admintbl(state, list, 4);
-                        var paging3 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result3);
+                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 4);
+                        return PartialView("_TablePartialView", paging);
 
-                        return PartialView("_TablePartialView", paging3);
 
                     case "Conclude":
                         ViewBag.state = "Conclude";
-                        var result4 = _admin.Admintbl(state, list, 6);
-                        var paging4 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result4);
-
-                        return PartialView("_TablePartialView", paging4);
+                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 6);
+                        return PartialView("_TablePartialView", paging);
 
                     case "Toclose":
                         ViewBag.state = "Toclose";
-                        var result5 = _admin.Admintbl(state, list, 3);
-                        var paging5 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result5);
+                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 3);
+                        return PartialView("_TablePartialView", paging);
 
-                        return PartialView("_TablePartialView", paging5);
 
                     case "Unpaid":
                         ViewBag.state = "Unpaid";
-                        var result6 = _admin.Admintbl(state, list, 9);
-                        var paging6 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result6);
+                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 9);
+                        return PartialView("_TablePartialView", paging);
 
-                        return PartialView("_TablePartialView", paging6);
 
                     default:
-                        var result7 = _admin.Admintbl(state, list, 1);
-                        var paging7 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result7);
+                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 1);
+                        return PartialView("_TablePartialView", paging);
 
-                        return PartialView("_TablePartialView", paging7);
                 }
             }
             return View();

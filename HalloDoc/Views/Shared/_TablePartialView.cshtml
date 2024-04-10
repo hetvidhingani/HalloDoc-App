@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel;
+﻿@model HalloDoc.Entities.ViewModels.AdminDashboardTableViewModel;
 
 
 @* admin dashboard Desktop *@
@@ -75,7 +75,7 @@
                     <td id="PatientName">@request.PatientName</td>
                     @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Toclose")
                     {
-                        <td>@request.DateOfBirth</td>
+                        <td>@request.DateOfBirth.ToShortDateString()</td>
                     }
                     @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
                     {
@@ -85,13 +85,22 @@
 
                     @if (@ViewBag.state == "New")
                     {
-                        <td>@request.RequestedDate</td>
+                        <td>@request.RequestedDate.ToShortDateString()</td>
                     }
                     @if (@ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                     {
-                        <td>@request.PhysicianName</td>
+                        <td>
+                            @if(@request.PhysicianName!=null)
+                            {
+                                @request.PhysicianName
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
 
-                        <td>@request.RequestedDate</td>
+                        <td>@request.RequestedDate.ToShortDateString()</td>
 
                     }
                     @if (@ViewBag.state == "Toclose")
@@ -151,7 +160,16 @@
                     <td>@request.Address</td>
                     @if (@ViewBag.state == "New" || @ViewBag.state == "Pending" || @ViewBag.state == "Active")
                     {
-                        <td>@request.Notes</td>
+                        <td>
+                            @if(@request.Notes!=null)
+                            {
+                                @request.Notes
+                            }
+                            else
+                            {
+                                <p>-</p>
+                            }
+                        </td>
                     }
                     <td>
                         <div class=" d-flex flex-column justify-content-center ">
