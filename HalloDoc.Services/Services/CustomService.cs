@@ -174,6 +174,7 @@ namespace HalloDoc.Services.Services
                                              FileName = rwf.FileName,
                                              RequestWiseFileId = rwf.RequestWiseFileId,
                                              RequestId = rwf.RequestId,
+                                            
                                              AdminId = rwf.AdminId,
                                              Admin = rwf.Admin,
                                              Request = rwf.Request,
@@ -182,7 +183,7 @@ namespace HalloDoc.Services.Services
                                          }).ToList();
             return viewModel;
         }
-        public async Task<string> ViewDocument(IFormFile a, int Id)
+        public async Task<string> ViewDocument(IFormFile a, int Id,int adminid,int userid)
         {
             if (a != null && a.Length > 0)
             {
@@ -198,7 +199,8 @@ namespace HalloDoc.Services.Services
                     RequestId = Id,
                     FileName = fileName,
                     CreatedDate = DateTime.Now,
-                    AdminId = 1,
+                    AdminId = adminid==0?null:adminid,
+                    
                 };
                 await _requestwisefileRepository.AddAsync(newRequestWiseFile);
             }
@@ -240,7 +242,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
-            var filesRow = await _requestwisefileRepository.FindFileByRequestID(requestid).ToListAsync();
+            var filesRow =  _requestwisefileRepository.GetAll().Where(x=>x.RequestId==requestid).ToList();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>

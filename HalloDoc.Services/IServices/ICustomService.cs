@@ -15,7 +15,7 @@ namespace HalloDoc.Services.IServices
         string SendEmail(string email, string link, string subject, string body,List<string> attachmentFilePath = null);
        
         Task<DashboardViewModel> ViewDocument(int Id);
-        Task<string> ViewDocument(IFormFile a, int Id);
+        Task<string> ViewDocument(IFormFile a, int Id, int adminID, int userid);
         Task<RequestWiseFile> DownloadFile(int fileId);
         Task<byte[]> DownloadAllByChecked(IEnumerable<int> documentValues);
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);

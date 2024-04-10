@@ -45,7 +45,7 @@ namespace HalloDoc.Controllers
 
                 return RedirectToAction("AdminLogin", "Custom");
             }
-            return View();
+            return RedirectToAction("AdminLogin", "Custom");
         }
 
 
@@ -362,7 +362,9 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(IFormFile a, int Id)
         {
-            await _customService.ViewDocument(a, Id);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            await _customService.ViewDocument(a, Id, AdminID,0);
             return RedirectToAction("ViewUploads");
         }
 
@@ -381,7 +383,7 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues,int ReqID)
         {
             if (documentValues.Count() > 0)
             {
@@ -392,9 +394,8 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                int? requestid = HttpContext.Session.GetInt32("reqID");
-
-                byte[] fileBytes = await _customService.DownloadAll(documentValues, requestid);
+               
+                byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
             }

@@ -52,16 +52,18 @@
                 </div>
             </form>
             <form asp-action="DownloadAll" asp-controller="Patient" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="RequstId" id="reqID" />
+
                 <div class="row ">
                     <div class="col-6 d-flex align-items-center">
                         <h3>Documents</h3>
                     </div>
                     <div class="col-6 d-flex justify-content-end align-items-center">
-                        <input type="submit" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll">
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll" onclick="DownloadAll()">Download All</button>
+
                         <button type="submit" class="logoutIcon normalbtn mt-2 mb-3 p-2" value="DownloadAll">
                             <i class="bi bi-cloud-arrow-down"></i>
                         </button>
-
 
                     </div>
                 </div>
@@ -181,5 +183,40 @@
             checkboxes[i].checked = source.checked;
         }
     }
+    function DownloadAll() {
+        var checkbox = $('input[class="checkboxForAll"]:checked');
 
+        var requestid = $("#reqID").val();
+        console.log(requestid);
+        var documentValues = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("DownloadAll", "Patient")",
+            data: { documentValues: documentValues, ReqID: requestid },
+            success: function (response) {
+                if (response.success) {
+                    var link = document.createElement('a');
+                    link.href = 'data:application/zip;base64,' + response.zipFileData;
+                    link.download = 'Documents.zip';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    $('input[type="checkbox"]').prop('checked', false);
+                } else {
+                    console.error('Error:', response.error);
+                }
+            },
+            error: function (response) {
+
+                console.log("error");
+            }
+        });
+
+
+        return false; // prevent default form submission behavior
+    }
 </script>

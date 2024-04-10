@@ -113,8 +113,8 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region common methods
-       
-    
+
+
         public async Task<Admin> GetAdmin(string email)
         {
             Admin user = await _adminRepository.CheckUserByEmail(email);
@@ -2246,8 +2246,8 @@ namespace HalloDoc.Services.Services
                 end = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute).ToUniversalTime().ToString("O"),
                 title = x.StartTime.ToString() + "-" + x.EndTime + "\n" + x.Shift.Physician.FirstName,
                 color = x.Status == 1 ? "lightgreen" : "pink",
-               
-                
+
+
 
             }, ShiftDetailswhereClauseSyntax);
             foreach (Events e in temp)
@@ -2356,17 +2356,17 @@ namespace HalloDoc.Services.Services
 
         #region Requested Shift
 
-        public RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage)
+        public RequestedShiftViewModel RequestedShift(int month, int region, int CurrentPage)
         {
             Expression<Func<ShiftDetail, bool>> table = PredicateBuilder.New<ShiftDetail>();
 
             table = x => x.IsDeleted == null && x.Status == 0;
 
-            if(region!=0)
+            if (region != 0)
             {
-                table=table.And(u=>u.RegionId == region);
+                table = table.And(u => u.RegionId == region);
             }
-            if(month!=0 )
+            if (month != 0)
             {
                 table = table.And(u => u.ShiftDate.Month == month);
             }
@@ -2412,7 +2412,7 @@ namespace HalloDoc.Services.Services
             {
                 returnShift(shift);
             }
-            
+
         }
 
         #endregion
@@ -2429,12 +2429,12 @@ namespace HalloDoc.Services.Services
         {
             Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
             Expression<Func<Physician, bool>> PhysicianwhereClauseSyntax = PredicateBuilder.New<Physician>();
-            PhysicianwhereClauseSyntax = x => x.IsDeleted == null;
+            PhysicianwhereClauseSyntax = x => x.IsDeleted == null ;
             if (regionId != 0)
             {
                 PhysicianwhereClauseSyntax = PhysicianwhereClauseSyntax.And(x => x.RegionId == regionId);
             }
-            whereClauseSyntax = x => x.IsDeleted == null;
+            whereClauseSyntax = x => x.IsDeleted == null && x.Status==1;
             whereClauseSyntax = whereClauseSyntax.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
             whereClauseSyntax = whereClauseSyntax.And(x => x.StartTime < TimeOnly.FromDateTime(DateTime.Now));
             whereClauseSyntax = whereClauseSyntax.And(x => x.EndTime > TimeOnly.FromDateTime(DateTime.Now));
@@ -2454,13 +2454,16 @@ namespace HalloDoc.Services.Services
             {
                 physicianId = x.PhysicianId,
                 physicianName = x.FirstName + " " + x.LastName,
-                Photo = x.Photo!
+                Photo = x.Photo!,
             }, PhysicianwhereClauseSyntax);
             foreach (PhysicianOnCallModal physician in temp)
             {
                 if (physicianOnCall.Contains(physician.physicianId))
                 {
-                    physician.IsOnCall = true;
+                  
+
+                        physician.IsOnCall = true;
+                    
                 };
                 physicians.Add(physician);
             }

@@ -75,7 +75,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<object> RegionListUser(PatientRequestViewModel viewModel)
         {
-            
+
             viewModel.State = await _regionRepository.GetRegions();
             return viewModel;
         }
@@ -85,24 +85,24 @@ namespace HalloDoc.Services.Services
         public async Task<object> PatientRequest(int? userId)
         {
             PatientRequestViewModel viewModel = new PatientRequestViewModel();
-            viewModel.State = await _regionRepository.GetRegions();
-            if (userId != null)
+            viewModel.State = _regionRepository.GetAll().ToList();
+            if (userId != 0)
             {
                 User user = await _userRepository.GetByIdAsync(userId);
 
                 if (user != null)
                 {
-                DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
+                    DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
                     viewModel.FirstName = user.FirstName;
                     viewModel.LastName = user.LastName;
                     viewModel.City = user.City;
-                    viewModel.State = await _regionRepository.GetRegions();
+                    viewModel.State = _regionRepository.GetAll().ToList();
                     viewModel.Street = user.Street;
                     viewModel.Email = user.Email;
                     viewModel.PhoneNumber = user.Mobile;
                     viewModel.RegionId = (int)user.RegionId;
                     viewModel.ZipCode = user.ZipCode;
-                    viewModel.DateOfBirth =dob;
+                    viewModel.DateOfBirth = dob;
                     return viewModel;
                 }
             }
@@ -144,23 +144,23 @@ namespace HalloDoc.Services.Services
                 IntDate = viewModel.DateOfBirth.Day,
                 IntYear = viewModel.DateOfBirth.Year,
                 StrMonth = viewModel.DateOfBirth.Month.ToString(),
-                Address = viewModel.Street + "," + viewModel.City +"," + viewModel.ZipCode
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
 
             };
             await _requestclientRepository.AddAsync(requestClient);
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                    RequestWiseFile newFile = new RequestWiseFile
-                    {
-                        RequestId = request.RequestId,
-                        FileName = viewModel.File.FileName,
-                        CreatedDate = DateTime.Now,
-                        DocType = 1,
-                    };
+                RequestWiseFile newFile = new RequestWiseFile
+                {
+                    RequestId = request.RequestId,
+                    FileName = viewModel.File.FileName,
+                    CreatedDate = DateTime.Now,
+                    DocType = 1,
+                };
 
-                    await _requestwisefileRepository.AddAsync(newFile);
-                
+                await _requestwisefileRepository.AddAsync(newFile);
+
             }
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
@@ -184,7 +184,7 @@ namespace HalloDoc.Services.Services
                 AspNetUserRole userRole = new AspNetUserRole
                 {
                     UserId = newaspNetUSer.Id,
-                    RoleId="2"
+                    RoleId = "2"
 
                 };
                 await _userRolesRepository.AddAsync(userRole);
@@ -200,9 +200,9 @@ namespace HalloDoc.Services.Services
                     State = requestClient.State,
                     ZipCode = requestClient.ZipCode,
 
-                   IntDate = requestClient.IntDate,
-                   IntYear= requestClient.IntYear,
-                   StrMonth= requestClient.StrMonth,
+                    IntDate = requestClient.IntDate,
+                    IntYear = requestClient.IntYear,
+                    StrMonth = requestClient.StrMonth,
                     CreatedBy = "Admin",
                     CreatedDate = DateTime.Now,
                     RegionId = viewModel.RegionId
@@ -273,7 +273,7 @@ namespace HalloDoc.Services.Services
 
             }
 
-          
+
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
@@ -519,7 +519,7 @@ namespace HalloDoc.Services.Services
         public string? CheckEmail(string email)
         {
             var tmp = _aspnetuserRepository.CheckUserByEmail(email);
-           if(tmp.Result == null)
+            if (tmp.Result == null)
             {
                 return "";
             }
@@ -529,7 +529,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Login
-      
+
         public async Task<User> GetUser(string email)
         {
             User user = await _userRepository.CheckUserByEmail(email);
@@ -556,7 +556,7 @@ namespace HalloDoc.Services.Services
                 ).FirstOrDefault(),
                 FileCount = (
             from file in _requestwisefileRepository.GetAll()
-            where file.RequestId == r.RequestId && file.IsDeleted==null
+            where file.RequestId == r.RequestId && file.IsDeleted == null
             select file.FileName
         ).Count()
             }).ToList();
@@ -578,7 +578,7 @@ namespace HalloDoc.Services.Services
                 Email = userExist.Email,
                 CreatedDate = DateTime.Now,
                 RelationName = viewModel.RelationName,
-                
+
                 Status = 1
             };
             await _requestRepository.AddAsync(request);
@@ -600,7 +600,7 @@ namespace HalloDoc.Services.Services
                 StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode,
                 Email = viewModel.Email,
-                
+
             };
             await _requestclientRepository.AddAsync(requestClient);
 
@@ -718,7 +718,7 @@ namespace HalloDoc.Services.Services
         public async Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId)
         {
             User user = await _userRepository.GetByIdAsync(userId);
-            DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate) ;
+            DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
             if (user != null)
             {
                 requestViewModel.FirstName = user.FirstName;
@@ -748,7 +748,7 @@ namespace HalloDoc.Services.Services
                 user.Street = patientRequestViewModel.Street;
                 user.City = patientRequestViewModel.City;
                 user.Mobile = patientRequestViewModel.PhoneNumber;
-                user.RegionId=patientRequestViewModel.RegionId;
+                user.RegionId = patientRequestViewModel.RegionId;
                 user.State = await _regionRepository.FindState(patientRequestViewModel.RegionId);
                 user.ZipCode = patientRequestViewModel.ZipCode;
                 user.IntDate = patientRequestViewModel.DateOfBirth.Day;
@@ -758,7 +758,7 @@ namespace HalloDoc.Services.Services
 
                 await _userRepository.UpdateAsync(user);
 
-           
+
             }
             return user;
         }
@@ -766,7 +766,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region comon added
-       
+
         #endregion
     }
 }

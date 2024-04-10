@@ -46,7 +46,7 @@
                 </div>
             </form>
             <form asp-action="DownloadAll" asp-controller="Admin" method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="RequstId" />
+                <input type="hidden" asp-for="RequstId" id="reqID"/>
                 <div class="row ">
                     <div class="col-6 d-flex align-items-center">
                         <h3>Documents</h3>
@@ -263,7 +263,8 @@
     function DownloadAll() {
         var checkbox = $('input[class="checkboxForAll"]:checked');
 
-
+       var requestid = $("#reqID").val();
+        console.log(requestid);
         var documentValues = checkbox.map(function () {
             return $(this).val();
         }).get();
@@ -272,7 +273,7 @@
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("DownloadAll", "Admin")",
-                data: { documentValues: documentValues },
+                data: { documentValues: documentValues,ReqID: requestid},
                 success: function (response) {
                     if (response.success) {
                         var link = document.createElement('a');

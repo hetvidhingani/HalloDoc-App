@@ -54,13 +54,10 @@ namespace HalloDoc.Controllers
         #region Dashboard
         public async Task<IActionResult> Dashboard()
         {
-            ViewBag.MySession = HttpContext.Session.GetString("UserName");
-           
             var request = HttpContext.Request;
-            var userID = Int32.Parse(request.Cookies["UserID"]);
+            int userID = Int32.Parse(request.Cookies["UserID"]);
             var result = await _patient.Dashboard(userID);
             return View(result);
-
         }
         [HttpPost]
         public IActionResult DashBoard()
@@ -109,7 +106,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> ViewDocument(IFormFile a, int Id)
         {
-            await _customService.ViewDocument(a, Id);
+            var request = HttpContext.Request;
+            int userID = Int32.Parse(request.Cookies["UserID"]);
+            await _customService.ViewDocument(a, Id,0,userID);
             return RedirectToAction("ViewDocument");
         }
 
@@ -128,7 +127,7 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues,int ReqID)
         {
             if (documentValues.Count() > 0)
             {
@@ -139,10 +138,11 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                int? requestid = HttpContext.Session.GetInt32("reqID");
 
-                byte[] fileBytes = await _customService.DownloadAll(documentValues, requestid);
-                return File(fileBytes, "application/zip", "download.zip");
+
+                 byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
+                string zipFileData = Convert.ToBase64String(fileBytes);
+                return Json(new { success = true, zipFileData });
             }
         }
 

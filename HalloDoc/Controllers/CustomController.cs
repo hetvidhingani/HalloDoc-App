@@ -14,20 +14,24 @@ namespace HalloDoc.Controllers
         public IPatientService _patient;
         private IAdminService _admin;
         private IJwtService _jwtService;
-       private ICustomService _customService;
+        private ICustomService _customService;
 
         #region constructor
-        public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService,ICustomService customService)
+        public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService, ICustomService customService)
         {
             _context = context;
             _patient = patient;
             _admin = admin;
             _jwtService = jwtService;
-            _customService=customService;
+            _customService = customService;
 
         }
         public IActionResult PatientSite()
         {
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
             return View();
         }
         public IActionResult AdminForgotPassword()
@@ -84,7 +88,7 @@ namespace HalloDoc.Controllers
             {
                 Response.Cookies.Delete(cookie);
             }
-            AspNetUser myUser =  _customService.checkEmailPassword(user.Email,user.PasswordHash);
+            AspNetUser myUser = _customService.checkEmailPassword(user.Email, user.PasswordHash);
 
             if (myUser != null)
             {
@@ -92,15 +96,15 @@ namespace HalloDoc.Controllers
                 var jwtToken = _jwtService.GenerateJwtToken(myUser);
 
                 Response.Cookies.Append("jwt", jwtToken);
-                Response.Cookies.Append("RoleMenu",userID.RoleId.ToString() );
-                Response.Cookies.Append("AdminID",userID.AdminId.ToString());
-                Response.Cookies.Append("UserNameAdmin",userID.FirstName+" "+userID.LastName);
-                Response.Cookies.Append("AspNetIdAdmin",userID.AspNetUserId.ToString());
+                Response.Cookies.Append("RoleMenu", userID.RoleId.ToString());
+                Response.Cookies.Append("AdminID", userID.AdminId.ToString());
+                Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
+                Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
 
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
                 HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
-              
+
                 return RedirectToAction("Dashboard", "Admin");
             }
             else
@@ -112,21 +116,21 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region EmailSending
-     
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult ResetPasswordRequest(string email)
+        public IActionResult ResetPasswordRequest(string email)
         {
             if (string.IsNullOrEmpty(email))
             {
                 return Json(new { success = false, message = "Please enter an email address" });
             }
-            
+
             var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
             _customService.SendEmail(email, link, subject, body);
-           
+
             return Json(new { success = true, message = "A password reset link has been sent to your email." });
         }
 
@@ -203,7 +207,7 @@ namespace HalloDoc.Controllers
             {
                 Response.Cookies.Delete(cookie);
             }
-            var myUser =  _customService.checkEmailPassword(viewModel.Email, viewModel.PasswordHash);
+            var myUser = _customService.checkEmailPassword(viewModel.Email, viewModel.PasswordHash);
 
             if (myUser != null)
             {
@@ -220,7 +224,7 @@ namespace HalloDoc.Controllers
 
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
-             
+
                 return RedirectToAction("DashBoard", "Patient");
             }
             else
@@ -239,7 +243,7 @@ namespace HalloDoc.Controllers
             return View();
 
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
@@ -291,8 +295,6 @@ namespace HalloDoc.Controllers
                 return View("PatientSite");
 
             }
-
-
             return View("PatientSite");
         }
 
@@ -303,17 +305,14 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> BusinessRequest(OtherRequestViewModel viewModel)
         {
 
-           await _patient.BusinessRequest(viewModel);
+            await _patient.BusinessRequest(viewModel);
 
             await LinkToCreateAccount(new CreateAccountViewModel
             {
                 Email = viewModel.Email
             });
             return View("PatientSite");
-
-            
         }
-
 
         #endregion
 
@@ -349,21 +348,19 @@ namespace HalloDoc.Controllers
 
         }
 
-
-
         #endregion
 
         #region send Agreement
         [HttpGet]
         public async Task<IActionResult> ReviewAgreement()
         {
-            
+
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> AcceptAgreement(int id)
         {
-          
+
             await _admin.AcceptAgreement(id);
             return Json("success");
         }
@@ -371,14 +368,14 @@ namespace HalloDoc.Controllers
         [HttpGet]
         public async Task<IActionResult> CancelAgreement(int id)
         {
-           var result =  await _admin.GetRequestClientByID(id);
+            var result = await _admin.GetRequestClientByID(id);
             var name = result.FirstName + " " + result.LastName;
             return Json(name);
         }
         [HttpPost]
         public async Task<string> ConfirmCancelAgreement(int id, string note)
         {
-            await _admin.ConfirmCancelAgreement(id,note);
+            await _admin.ConfirmCancelAgreement(id, note);
             return "";
         }
         #endregion

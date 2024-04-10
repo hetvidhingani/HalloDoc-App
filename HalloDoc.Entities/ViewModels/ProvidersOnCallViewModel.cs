@@ -20,5 +20,6 @@ namespace HalloDoc.Entities.ViewModels
         public int physicianId { get; set; }
         public string physicianName { get; set; }
         public string Photo {  get; set; }
+        public int status { get; set; }
     }
 }

@@ -58,7 +58,6 @@ namespace HalloDoc.Repository.Repository
         {
             try
             {
-
                 _context.Add(entity);
                 _context.SaveChanges();
             }
@@ -171,6 +170,11 @@ namespace HalloDoc.Repository.Repository
         {
             return _genericContext.Where(expression).Include(Include).FirstOrDefault();
         }
+
+        //public List<T> getstateDropdown()
+        //{
+        //    return _regionRepository.GetAll().ToList();
+        //}
     }
 
 
