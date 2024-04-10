@@ -1,0 +1,159 @@
+﻿@model PatientDashboardViewModel
+<div class="container-fluid  dashboardtbl  h-100 ">
+    <div class="d-flex justify-content-end">
+        <a asp-action="PatientRequest" asp-controller="Patient" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <span class="logouttxt">  Create New Request</span>
+            <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
+        </a>
+    </div>
+<div class="table-responsive">
+    <table class="table dashboardtbl mt-2" id="responsive-table">
+        <thead class="table-secondary">
+            <tr>
+                <th>Created Date</th>
+                <th>Status</th>
+                <th>File Name</th>
+            </tr>
+        </thead>
+        <tbody >
+            @{
+                string status = "";
+                foreach (var r in Model.DashboardData)
+                {
+                        <tr >
+                            <td > @r.CreatedDate</td>
+                        @switch (@r.Status)
+                        {
+                            case 1:
+                                status = "New";
+                                break;
+                            case 2:
+                                status = "Pending";
+                                break;
+                            case 4:
+                                status = "Active";
+                                break;
+                            case 6:
+                                status = "Conclude";
+                                break;
+                            case 3:
+                                status = "To Close";
+                                break;
+                            case 9:
+                                status = "Unpaid";
+                                break;
+                            default:
+                                status = " ";
+                                break;
+                        }
+                            <td >@status </td>
+                        <td>
+                            @if (@r.FileName != null)
+                            {
+                                <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                                    <button class="btn btn-sm btn-outline-info">Download (@r.FileCount)</button>
+                                </a>
+                            }
+                        </td>
+
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+   
+
+    <partial name="_Paging.cshtml" />
+
+</div>
+</div>
+<div class="mbltbl  mt-3  shadow mb-3  rounded h-100  ">
+    <div class="d-flex justify-content-end">
+        <a class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
+        </a>
+    </div>
+
+
+
+
+    @foreach (var r in Model.DashboardData)
+    {
+
+        <div class="mobileviewdashboard my-3 p-4">
+
+            <button type="button" class="table-btn collapsible">
+                <i class="bi bi-clock"></i>
+                <strong>Created Date: </strong>
+                @r.CreatedDate
+            </button>
+
+
+            <div class="content" style="display:none">
+                <div class="provider d-flex gap-2">
+                    <i class="bi bi-person-circle"></i>
+                    Provider: <span>-</span>
+                </div>
+                <div class="provider d-flex gap-2">
+                    <div class="icons">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                    @switch (@r.Status)
+                    {
+                        case 1:
+                            status = "new";
+                            break;
+                        case 2:
+                            status = "pending";
+                            break;
+                        case 4:
+                            status = "active";
+                            break;
+                        case 6:
+                            status = "conclude";
+                            break;
+                        case 3:
+                            status = "toclose";
+                            break;
+                        case 9:
+                            status = "unpaid";
+                            break;
+                        default:
+                            status = "abc";
+                            break;
+                    }
+                    Current Status: @status
+                </div>
+                <div class="provider d-flex gap-2">
+                    @if (@r.FileName != null)
+                    {
+                        <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                            <button class="normalbtn">Download (@r.FileCount)</button>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+    <partial name="_Paging.cshtml" />
+
+
+</div>
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        });
+    }
+</script>

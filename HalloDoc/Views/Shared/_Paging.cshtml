@@ -1,7 +1,7 @@
 ﻿
-<nav class="p-4 d-flex justify-content-center justify-content-md-between flex-column flex-md-row align-items-center">
+<nav class=" d-flex justify-content-center justify-content-md-between flex-column flex-md-row align-items-center " >
 
-    <span class="mb-2">@Model.FirstItemIndex - @Model.LastItemIndex of @Model.TotalCount</span>
+    <span class="mb-2" style="font-weight:600;">@Model.FirstItemIndex - @Model.LastItemIndex of @Model.TotalCount</span>
 
     <ul class="pagination me-2">
         <li class="page-item @(Model.CurrentPage <= 1 ? "disabled" : "")">

@@ -24,11 +24,12 @@ namespace HalloDoc.Services.IServices
        
        
         Task<T> GetTempData<T>(string key);
-        Task<object> Dashboard(int? userId);
-        Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel,int? userId);
+        Task<object> Dashboard(int? userId,int CurrentPage);
+         
+        Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel patientRequestViewModel, int userId);
         Task<string> CreateAccountRequest(CreateAccountViewModel createAccountViewModel);
-        Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId);
-        Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId);
+        Task<object> Profile(int userId);
+        Task<User> EditUser(UserMyProfileViewModel patientRequestViewModel);
    
 
 

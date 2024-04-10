@@ -89,14 +89,22 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public  AspNetUser checkEmailPassword(string email, string password)
+        public AspNetUser checkEmailPassword(string email, string password)
         {
-            AspNetUser user = _aspnetuserRepository.GetAll().Where(u=>u.Email==email).FirstOrDefault();
-            var pwd =_aspnetuserRepository.DecodeFrom64(user.PasswordHash);
-            var result = _aspnetuserRepository.GetAll().Where(u => u.Email == email && password == pwd).FirstOrDefault();
-            if (result != null)
+            AspNetUser user = _aspnetuserRepository.GetAll().Where(u => u.Email == email).FirstOrDefault();
+            if (user != null)
             {
-                return result;
+
+                var pwd = _aspnetuserRepository.DecodeFrom64(user.PasswordHash);
+                var result = _aspnetuserRepository.GetAll().Where(u => u.Email == email && password == pwd).FirstOrDefault();
+                if (result != null)
+                {
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
@@ -162,7 +170,7 @@ namespace HalloDoc.Services.Services
             DashboardViewModel viewModel = new DashboardViewModel();
             Request req = await _requestRepository.GetByIdAsync(Id);
             RequestClient requestClient = await _requestclientRepository.CheckUserByClientID(req.RequestId);
-            viewModel.FirstName = requestClient.FirstName;
+            viewModel.Username = requestClient.FirstName + " " + requestClient.LastName;
             viewModel.RequstId = Id;
             viewModel.Email = requestClient.Email;
             viewModel.RequestWiseFiles = (
@@ -174,16 +182,13 @@ namespace HalloDoc.Services.Services
                                              FileName = rwf.FileName,
                                              RequestWiseFileId = rwf.RequestWiseFileId,
                                              RequestId = rwf.RequestId,
-                                            
                                              AdminId = rwf.AdminId,
                                              Admin = rwf.Admin,
                                              Request = rwf.Request,
-
-
                                          }).ToList();
             return viewModel;
         }
-        public async Task<string> ViewDocument(IFormFile a, int Id,int adminid,int userid)
+        public async Task<string> ViewDocument(IFormFile a, int Id, int adminid, int userid)
         {
             if (a != null && a.Length > 0)
             {
@@ -199,8 +204,8 @@ namespace HalloDoc.Services.Services
                     RequestId = Id,
                     FileName = fileName,
                     CreatedDate = DateTime.Now,
-                    AdminId = adminid==0?null:adminid,
-                    
+                    AdminId = adminid == 0 ? null : adminid,
+
                 };
                 await _requestwisefileRepository.AddAsync(newRequestWiseFile);
             }
@@ -242,7 +247,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
-            var filesRow =  _requestwisefileRepository.GetAll().Where(x=>x.RequestId==requestid).ToList();
+            var filesRow = _requestwisefileRepository.GetAll().Where(x => x.RequestId == requestid).ToList();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>
@@ -261,31 +266,20 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        public AspNetUser checkIfExist(string email)
+        {
+            AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            return myUser;
+        }
         #region PatientForgotPassword
         public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
-            AspNetUser myUser = await _aspnetuserRepository.CheckUserByEmail(createAccountViewModel.Email);
+            AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == createAccountViewModel.Email).FirstOrDefault();
 
-            if (myUser != null)
-            {
-                if (createAccountViewModel.PasswordHash == createAccountViewModel.ConfirmPassword)
-                {
-                    myUser.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(createAccountViewModel.ConfirmPassword);
-                    await _aspnetuserRepository.UpdateAsync(myUser);
-                    _aspnetuserRepository.SetTempData("Message", "Password Updated");
-                    return "RegisterdPatientLogin";
-                }
-                else
-                {
-                    _aspnetuserRepository.SetTempData("Message", "Password and Confirm Password must be same!!!");
-
-                }
-            }
-            else
-            {
-                _aspnetuserRepository.SetTempData("Message", "Invalid User Name");
-            }
-            return "AdminLogin";
+            myUser.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(createAccountViewModel.ConfirmPassword);
+            await _aspnetuserRepository.UpdateAsync(myUser);
+            _aspnetuserRepository.SetTempData("Message", "Password Updated");
+            return "RegisterdPatientLogin";
 
         }
         #endregion

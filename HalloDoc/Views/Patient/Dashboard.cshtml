@@ -2,7 +2,10 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.dashboard = "active";
+    ViewData["Title"] = "Dashboard";
 }
+
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -18,13 +21,13 @@
                     Here,I want to create new request for...
                 </p>
                 <div class=" d-flex justify-content-center ">
-                    <button  type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
+                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('me')">
                         Me
                     </button>
 
 
 
-                    <button  type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
+                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('else')">
                         Someone Else
                     </button>
 
@@ -46,182 +49,53 @@
     </div>
 </div>
 
-
 <div class="patientDashboardMargin formshadow rounded mx-auto">
-    <h2 class="p-3">Medical History</h2>
-    <div class="container-fluid  dashboardtbl     h-100 p-4 " >
-        <div class="d-flex justify-content-end">
-            <a asp-action="PatientRequest" asp-controller="Patient" class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <span class="logouttxt">  Create New Request</span>
-                <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
-            </a>
-
-
-        </div>
-        <div class="table-responsive">
-            <table class="table dashboardtbl" id="responsive-table">
-                <thead>
-                    <tr >
-                        <th>Created Date</th>
-                        <th>Status</th>
-                        <th>File Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        string status = "";
-                        foreach (var r in Model)
-                        {
-                                <tr>
-                                    <td> @r.CreatedDate</td>
-                                @switch (@r.Status)
-                                {
-                                    case 1:
-                                        status = "New";
-                                        break;
-                                    case 2:
-                                        status = "Pending";
-                                        break;
-                                    case 4:
-                                        status = "Active";
-                                        break;
-                                    case 6:
-                                        status = "Conclude";
-                                        break;
-                                    case 3:
-                                        status = "To Close";
-                                        break;
-                                    case 9:
-                                        status = "Unpaid";
-                                        break;
-                                    default:
-                                        status = " ";
-                                        break;
-                                }
-                                    <td>@status </td>
-                                    <td>
-                                        @if (@r.FileName != null)
-                                    {
-                                            <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
-                                                <button class="normalbtn">Download (@r.FileCount)</button>
-                                            </a>
-                                    }
-                                    </td>
-
-                                </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-    <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " >
-        <div class="d-flex justify-content-end">
-            <a class="createNewReqBtn" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
-            </a>
-        </div>
-        @foreach (var r in Model)
-        {
-
-            <div class="mobileviewdashboard my-3 p-4">
-
-                <button type="button" class="table-btn collapsible">
-                    <i class="bi bi-clock"></i>
-                    <strong>Created Date: </strong>
-                    @r.CreatedDate
-                </button>
-
-
-                <div class="content" style="display:none">
-                    <div class="provider d-flex gap-2">
-                        <i class="bi bi-person-circle"></i>
-                        Provider: <span>-</span>
-                    </div>
-                    <div class="provider d-flex gap-2">
-                        <div class="icons">
-                            <i class="bi bi-check-circle"></i>
-                        </div>
-                        
-                        @switch (@r.Status)
-                        {
-                            case 1:
-                                status = "new";
-                                break;
-                            case 2:
-                                status = "pending";
-                                break;
-                            case 4:
-                                status = "active";
-                                break;
-                            case 6:
-                                status = "conclude";
-                                break;
-                            case 3:
-                                status = "toclose";
-                                break;
-                            case 9:
-                                status = "unpaid";
-                                break;
-                            default:
-                                status = "abc";
-                                break;
-                        }
-                        Current Status: @status
-                    </div>
-                    <div class="provider d-flex gap-2">
-                        @if (@r.FileName != null)
-                        {
-                            <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
-                                <button class="normalbtn">Download (@r.FileCount)</button>
-                            </a>
-                        }
-                    </div>
-                </div>
-            </div>
-
-        }
-
-
-    </div>
-
-
-
+    <h2 class="px-4 pt-3">Medical History</h2>
+    <div id="admindata" class="mb-3"></div>
 </div>
 
 <script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
 
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function () {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "none") {
-                content.style.display = "block";
-            } else {
-                content.style.display = "none";
-            }
-        });
-    }
     // Submit Request for me or someone else
     let selectedOption = "";
 
     function selectOption(option) {
         selectedOption = option;
-
     }
     function continueToPage() {
         if (selectedOption == 'me') {
             sessionStorage.setItem("currentId", "me");
             window.location.href = '@Url.Action("PatientRequest","Custom" )';
-
         } else {
             sessionStorage.setItem("currentId", "else");
             window.location.href = '@Url.Action("SubmitInformationSomeoneElse", "Patient")';
 
         }
     }
+    //pagination
+    var page;
+    $(document).ready(function () {
+        load();
 
+    });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
+
+    function load() {
+        $.ajax({
+            url: "/Patient/GetPatientDashboardData",
+            type: "POST",
+            data: { CurrentPage: page },
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+            },
+            error: function () {
+                $("#admindata").html('An error has occurred');
+                alert("No Projects Found");
+            }
+        });
+    }
 </script>

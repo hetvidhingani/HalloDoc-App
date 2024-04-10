@@ -10,6 +10,13 @@ namespace HalloDoc.Entities.ViewModels
     public class PatientDashboardViewModel
     {
         public List<DashboardData> DashboardData { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; set; }
+        public int currData { get; set; }
+        public int TotalCount { get; set; }
+        public int FirstItemIndex { get; set; }
+        public int LastItemIndex { get; set; }
     }
     public class DashboardData
     {

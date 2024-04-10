@@ -26,15 +26,15 @@ namespace HalloDoc.Controllers
         private readonly ApplicationDbContext _context;
         public IPatientService _patient;
         public ICustomService _customService;
-        public PatientController(ApplicationDbContext context, IPatientService patient,ICustomService customService)
+        public PatientController(ApplicationDbContext context, IPatientService patient, ICustomService customService)
         {
             _context = context;
             _patient = patient;
-            _customService=customService;
+            _customService = customService;
         }
-       
+
         #region view
-       
+
         public IActionResult ReviewAgreement()
         {
             return View();
@@ -54,10 +54,15 @@ namespace HalloDoc.Controllers
         #region Dashboard
         public async Task<IActionResult> Dashboard()
         {
+            return View();
+        }
+
+        public async Task<IActionResult> GetPatientDashboardData(int CurrentPage = 1)
+        {
             var request = HttpContext.Request;
             int userID = Int32.Parse(request.Cookies["UserID"]);
-            var result = await _patient.Dashboard(userID);
-            return View(result);
+            var result = await _patient.Dashboard(userID, CurrentPage);
+            return PartialView("_PatientDashboardPartialView", result);
         }
         [HttpPost]
         public IActionResult DashBoard()
@@ -72,35 +77,38 @@ namespace HalloDoc.Controllers
             }
             return View();
         }
-
-
         #endregion
-        
+
         #region create new request
 
         [HttpPost]
-        public async Task<IActionResult> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel)
+        public async Task<IActionResult> SubmitInformationSomeoneElse(PatientRequestViewModel model)
         {
             if (ModelState.IsValid)
             {
-                int? userId = HttpContext.Session.GetInt32("UserSession");
+                var request = HttpContext.Request;
+                int userId = Int32.Parse(request.Cookies["UserID"]);
+                var result = await _patient.SubmitInformationSomeoneElse(model, userId);
+                TempData["SuccessFormSave"] = "Form Saved Successfully.";
 
-                var result = await _patient.SubmitInformationSomeoneElse(viewModel, userId);
-                return RedirectToAction(result, viewModel);
+                return RedirectToAction(result);
             }
-
+            else
+            {
+                TempData["ErrorFormSave"] = "Error Saving Data";
+            }
             return View();
         }
 
         #endregion
-        
+
         #region View Document
-        
+
         public async Task<IActionResult> ViewDocument(int Id)
         {
-            HttpContext.Session.SetInt32("reqID", Id);
+
             ViewBag.MySession = HttpContext.Session.GetString("UserName");
-            var result =await  _customService.ViewDocument(Id);
+            var result = await _customService.ViewDocument(Id);
             return View(result);
         }
         [HttpPost]
@@ -108,7 +116,7 @@ namespace HalloDoc.Controllers
         {
             var request = HttpContext.Request;
             int userID = Int32.Parse(request.Cookies["UserID"]);
-            await _customService.ViewDocument(a, Id,0,userID);
+            await _customService.ViewDocument(a, Id, 0, userID);
             return RedirectToAction("ViewDocument");
         }
 
@@ -127,20 +135,17 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues,int ReqID)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues, int ReqID)
         {
             if (documentValues.Count() > 0)
             {
                 byte[] fileBytes = await _customService.DownloadAllByChecked(documentValues);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
-
             }
             else
             {
-
-
-                 byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
+                byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
             }
@@ -149,28 +154,36 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Patient My Profile
-        public async Task<IActionResult> Profile(PatientRequestViewModel requestViewModel)
+        public async Task<IActionResult> Profile()
         {
             var request = HttpContext.Request;
             var userID = Int32.Parse(request.Cookies["UserID"]);
-            var result = await _patient.Profile(requestViewModel, userID);
+            var result = await _patient.Profile(userID);
             return View(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditUser(PatientRequestViewModel patientRequestViewModel)
+        public async Task<IActionResult> EditUser(UserMyProfileViewModel patientRequestViewModel)
         {
-            var request = HttpContext.Request;
-            var userID = Int32.Parse(request.Cookies["UserID"]);
-            var result = await _patient.EditUser(patientRequestViewModel, userID);
+            if (ModelState.IsValid)
+            {
+                var result = await _patient.EditUser(patientRequestViewModel);
+                HttpContext.Response.Cookies.Append("UserNameUser", result.FirstName + " " + result.LastName);
+                TempData["SuccessFormSave"] = "Form Saved Successfully.";
 
-            HttpContext.Response.Cookies.Append("UserNameUser", result.FirstName + " " + result.LastName);
+                return RedirectToAction("Profile", result);
 
-            return RedirectToAction("Profile",result);
+            }
+            else
+            {
+                TempData["ErrorFormSave"] = "Error Saving Data";
+
+                return RedirectToAction("Profile");
+            }
         }
 
         #endregion
-        
+
         #region Logout
         public IActionResult Logout()
         {

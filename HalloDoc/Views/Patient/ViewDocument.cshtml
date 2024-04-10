@@ -2,6 +2,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @model HalloDoc.Entities.ViewModels.DashboardViewModel;
+@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -27,8 +28,7 @@
                     <h6>Patient Name:</h6>
 
                     <div class="col-12 fw-bold">
-
-                        @ViewBag.MySession
+                        @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
                         (MD051023TETE0001)
                     </div>
                     <div class="col-12">
@@ -106,7 +106,7 @@
                                         }
 
                                     </td>
-                                    <td>@r.CreatedDate</td>
+                                    <td>@r.CreatedDate.ToShortDateString()</td>
                                     <td>
                                         <a href="@Url.Action("DownloadFile", "Patient", new { fileId = r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>

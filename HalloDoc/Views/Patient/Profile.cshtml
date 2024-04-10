@@ -1,23 +1,25 @@
-﻿@model HalloDoc.Entities.ViewModels.PatientRequestViewModel;
+﻿@model HalloDoc.Entities.ViewModels.UserMyProfileViewModel;
+@{
+    ViewBag.profile = "active";
+    ViewData["Title"] = "Profile";
 
+}
 
 <div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
-        <div class="PatientInfo">
-            <a asp-action="Dashboard" asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
-                <button class="back mb-3">
-                    <i class="bi bi-chevron-left"></i>
-                    back
-                </button>
+        <div class="PatientInfo" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
+            <a asp-action="Dashboard" asp-controller="Patient" type="button" class="btn btn-outline-info mb-3">
+                <i class="bi bi-chevron-left"></i>
+                back
             </a>
         </div>
 
         <div class="p-4 formshadow mb-3  rounded h-100 PatientInfo">
             <form asp-controller="Patient" asp-action="EditUser" method="post" enctype="multipart/form-data">
 
-        
+                <input type="hidden" asp-for="userid" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <h4>General Information</h4>
@@ -30,6 +32,8 @@
                             <label for=" ">First Name</label>
 
                         </div>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -37,13 +41,17 @@
                             <label for=" ">Last Name</label>
 
                         </div>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                                <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " readonly>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" placeholder=" " readonly>
                             <label for=" ">Date Of Birth</label>
 
                         </div>
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
                     </div>
 
                 </div>
@@ -51,33 +59,35 @@
                 <h4> Contact Information</h4>
                 <div class="row ">
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-between ">
-                        <div class="col-4 "> 
+                   
+                        <div class="col-lg-2  col-md-2 col-sm-12">
 
                             <div class="form-floating  ">
-                                    <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example" readonly>
-                                    <option selected>Mobile </option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                <select class="form-select" id="floatingSelectGrid" aria-label="Floating label select example" disabled>
+                                    <option selected value="0">Mobile </option>
+
+                                    <option value="1">LandLine</option>
                                 </select>
                                 <label for="floatingSelectGrid">Type </label>
+
                             </div>
                         </div>
-                        <div class="col-8 ">
+                        <div class="col-lg-4 col-md-4 col-sm-12">
                             <div class="form-floating form-group  border">
-                                    <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" readonly />
+                                <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" disabled />
 
                             </div>
-                        </div>
-                    </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
 
+                        </div>
+                  
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Email"
-                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                                       class="form-control" placeholder=" " readonly>
+                                   id="patientEmail" type="email" autocomplete="off"
+                                   class="form-control" placeholder=" " readonly>
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -89,18 +99,22 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                                <input asp-for="Street" type="text" class="form-control" placeholder=" " readonly>
+                            <input asp-for="Street" type="text" class="form-control" id="street" placeholder=" " readonly>
                             <label for=" ">Street</label>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                                <input asp-for="City" type="text" class="form-control" placeholder=" " readonly>
+                            <input asp-for="City" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
+                        <select class="form-select form-select-sm" aria-label="Default select example" style="height:60px" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -108,26 +122,39 @@
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <div class="form-floating form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex">
+                        <span>
+                            <div class="form-floating form-group">
                                 <input asp-for="ZipCode" type="text" class="form-control" placeholder=" " readonly>
-                            <label for=" ">Zip code</label>
-                        </div>
+                                <label for=" ">Zip code</label>
+                                <span asp-validation-for="ZipCode" class="text-danger"></span>
+                            </div>
+
+                        </span>
+
+                        <a class="btn btn-outline-info mx-1 rounded d-flex align-items-center" style="height: 58px; width:70px;" id="map" type="button">
+                            <small class=""><i class="bi bi-geo-alt-fill"></i>Map</small>
+                        </a>
                     </div>
-
-
+                </div>
+                <div class="modal-content" id="mappart" style="display:none; margin-10px;">
+                    <section>
+                        <div class="mapouter">
+                            <div class="gmap_canvas">
+                                <iframe width="100%" height="500" id="gmap_canvas" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                            </div>
+                        </div>
+                    </section>
                 </div>
 
-                   
-                   
                 <div class="row ">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
-                    <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
-
-                
-                    <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />
+                        <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
+                        <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />
                     </div>
                 </div>
 
@@ -135,7 +162,20 @@
         </div>
     </div>
 </div>
+
 <script>
+    $(document).ready(function () {
+        $("#map").click(function () {
+            $('#mappart').toggle();
+            var Address = '@Model.Street';
+            var address = "https://maps.google.com/maps?q=" + Address + "&t=&z=13&ie=UTF8&iwloc=&output=embed";
+            $("#gmap_canvas").attr("src", address);
+        });
+    });
+
+
+
+    //Mobile Number
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
@@ -149,10 +189,13 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 
     });
+    //edit-save Button
     var editButton = document.getElementById("edit-button");
     editButton.addEventListener("click", function () {
         var form = editButton.closest("form");
         var inputs = form.querySelectorAll("input[readonly]");
+        var inputdisable = form.querySelectorAll("input[disabled]");
+
         var select = form.querySelectorAll("select[disabled]");
 
         var saveButton = form.querySelector("input[type='submit']");
@@ -164,11 +207,14 @@
         select.forEach(function (select) {
             select.removeAttribute("disabled");
         });
+        inputdisable.forEach(function (input) {
+            input.removeAttribute("disabled");
+        });
         saveButton.removeAttribute("disabled");
         saveButton.style.display = "block";
 
         editButton.style.display = "none";
 
     });
-        
+
 </script>

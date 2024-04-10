@@ -34,10 +34,26 @@
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
 </head>
 <body>
-
-
+    @if (TempData["ErrorFormSave"] != null)
+    {
+        <script type="text/javascript">
+            toastr.error('@TempData["ErrorFormSave"]', 'Oops!!!', {
+                timeOut: 3000, 
+                progressBar: true 
+            });
+        </script>
+    }
+    @if (TempData["SuccessFormSave"] != null)
+    {
+        <script type="text/javascript">
+            toastr.success("@TempData["SuccessFormSave"]")
+        </script>
+    }
     @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null || @HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
     {
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
@@ -110,10 +126,10 @@
         {
             <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
                 <div class="topnav" id="myTopnav">
-                    <strong>
-                        <a asp-action="Dashboard" asp-controller="Patient" class="py-2" style="color:#01BCE9">Dashboard</a>
-                        <a asp-action="Profile" asp-controller="Patient" class="py-2" style="color:#01BCE9">Profile</a>
-                    </strong>
+                    <span>
+                        <a id="1" asp-action="Dashboard" asp-controller="Patient" class="nav-link py-2 @ViewBag.dashboard" style="color:dimgrey">Dashboard</a>
+                        <a id="2" asp-action="Profile" asp-controller="Patient" class="nav-link py-2 @ViewBag.profile" style="color:dimgrey">My Profile</a>
+                  </span>
                 </div>
 
             </div>
@@ -123,8 +139,8 @@
             <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
                 <div class="topnav" id="myTopnav">
                     <span>
-                        <a id="1" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2 active" style="color:dimgrey">Dashboard</a>
-                        <a id="2" asp-action="ProviderLocation" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">Provider Location</a>
+                        <a id="1" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Dashboard</a>
+                        <a id="2" asp-action="ProviderLocation" asp-controller="Admin" class="nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Provider Location</a>
 
                         <a  id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">My Profile</a>
                         <div class="dropdown " id="4 " >
@@ -190,41 +206,41 @@
 
     @RenderBody()
 
-    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:3000 ;padding:5px">
+    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:5000 ;padding:5px">
         <div class="d-flex justify-content-end align-items-center footlink">
             <a href="#" style="color:white">Terms and Conditions  </a> |
             <a href="#" style="color:white;">Privacy Policy</a>
 
         </div>
     </footer>
-
+   
     <script>
-        $(document).ready(function () {
-            // Check if there's a saved state in local storage
-            var activeLink = localStorage.getItem("activeLink");
-            if (activeLink) {
-                // Remove active class from all links and then add it to the saved active link
-                $(".nav-link").removeClass("active");
-                $("#" + activeLink).addClass("active");
-            }
+        // $(document).ready(function () {
+        //     // Check if there's a saved state in local storage
+        //     var activeLink = localStorage.getItem("activeLink");
+        //     if (activeLink) {
+        //         // Remove active class from all links and then add it to the saved active link
+        //         $(".nav-link").removeClass("active");
+        //         $("#" + activeLink).addClass("active");
+        //     }
 
-            // Handle click events for dashboard links
-            $(".nav-link").click(function (event) {
-                // Prevent default behavior of the link
-                event.preventDefault();
+        //     // Handle click events for dashboard links
+        //     $(".nav-link").click(function (event) {
+        //         // Prevent default behavior of the link
+        //         event.preventDefault();
 
-                // Remove active class from all links
-                $(".nav-link").removeClass("active");
-                // Add active class to the clicked link
-                $(this).addClass("active");
+        //         // Remove active class from all links
+        //         $(".nav-link").removeClass("active");
+        //         // Add active class to the clicked link
+        //         $(this).addClass("active");
 
-                // Save the id of the clicked link to local storage
-                localStorage.setItem("activeLink", $(this).attr("id"));
+        //         // Save the id of the clicked link to local storage
+        //         localStorage.setItem("activeLink", $(this).attr("id"));
 
-                // Now navigate to the desired place
-                window.location.href = $(this).attr("href");
-            });
-        });
+        //         // Now navigate to the desired place
+        //         window.location.href = $(this).attr("href");
+        //     });
+        // });
 
 
 

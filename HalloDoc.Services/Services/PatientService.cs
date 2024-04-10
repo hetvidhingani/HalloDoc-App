@@ -538,36 +538,59 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
-        public async Task<object> Dashboard(int? userId)
+        public async Task<object> Dashboard(int? userId, int CurrentPage)
         {
             int? userID = userId;
             var tabledashboard = (
-            from r in _requestRepository.GetAll()
-            where r.UserId == userID
-            select new DashboardViewModel
+                from r in _requestRepository.GetAll()
+                where r.UserId == userID
+                select new DashboardData
+                {
+                    RequstId = r.RequestId,
+                    CreatedDate = r.CreatedDate.ToShortDateString(),
+                    Status = r.Status,
+                    FileName = (
+                        from file in _requestwisefileRepository.GetAll()
+                        where file.RequestId == r.RequestId
+                        select file.FileName
+                    ).FirstOrDefault(),
+                    FileCount = (
+                from file in _requestwisefileRepository.GetAll()
+                where file.RequestId == r.RequestId && file.IsDeleted == null
+                select file.FileName).Count(),
+                }
+             ).ToList();
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = tabledashboard.Count;
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+            List<DashboardData> clients = tabledashboard
+                
+                .Skip((CurrentPage - 1) * dataSize)
+                .Take(dataSize)
+                .ToList();
+
+            return new PatientDashboardViewModel
             {
-                RequstId = r.RequestId,
-                CreatedDate = r.CreatedDate.ToShortDateString(),
-                Status = r.Status,
-                FileName = (
-                    from file in _requestwisefileRepository.GetAll()
-                    where file.RequestId == r.RequestId
-                    select file.FileName
-                ).FirstOrDefault(),
-                FileCount = (
-            from file in _requestwisefileRepository.GetAll()
-            where file.RequestId == r.RequestId && file.IsDeleted == null
-            select file.FileName
-        ).Count()
-            }).ToList();
-            return tabledashboard;
+                DashboardData = clients,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
+
+            
         }
         #endregion
 
         #region create new request(someoneElse)
-        public async Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel, int? userId)
+        public async Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel ,int userId)
         {
-
             User userExist = await _userRepository.GetByIdAsync(userId);
             Request request = new Request
             {
@@ -644,8 +667,6 @@ namespace HalloDoc.Services.Services
 
                 await _aspnetuserRepository.AddAsync(newaspNetUSer);
 
-
-
             }
             return "Dashboard";
         }
@@ -715,31 +736,28 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Patient My Profile
-        public async Task<object> Profile(PatientRequestViewModel requestViewModel, int? userId)
+        public async Task<object> Profile(int userId)
         {
+            UserMyProfileViewModel requestViewModel = new UserMyProfileViewModel();
             User user = await _userRepository.GetByIdAsync(userId);
             DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
-            if (user != null)
-            {
+                requestViewModel.userid = user.UserId;
                 requestViewModel.FirstName = user.FirstName;
                 requestViewModel.LastName = user.LastName;
                 requestViewModel.City = user.City;
                 requestViewModel.RegionId = (int)user.RegionId;
-                requestViewModel.State = await _regionRepository.GetRegions();
+                requestViewModel.State =  _regionRepository.GetAll().ToList();
                 requestViewModel.Street = user.Street;
                 requestViewModel.Email = user.Email;
                 requestViewModel.PhoneNumber = user.Mobile;
                 requestViewModel.ZipCode = user.ZipCode;
                 requestViewModel.DateOfBirth = dob;
                 return requestViewModel;
-
-            }
-            return "";
         }
 
-        public async Task<User> EditUser(PatientRequestViewModel patientRequestViewModel, int? userId)
+        public async Task<User> EditUser(UserMyProfileViewModel patientRequestViewModel)
         {
-            User user = await _userRepository.GetByIdAsync(userId);
+            User user = await _userRepository.GetByIdAsync(patientRequestViewModel.userid);
             if (user != null)
             {
                 user.FirstName = patientRequestViewModel.FirstName;
@@ -757,8 +775,6 @@ namespace HalloDoc.Services.Services
                 user.ModifiedDate = DateTime.Now;
 
                 await _userRepository.UpdateAsync(user);
-
-
             }
             return user;
         }

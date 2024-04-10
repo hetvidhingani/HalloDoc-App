@@ -1,2 +1,90 @@
-﻿@{    ViewData["Title"] = "Provider Location";}<link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps.css'><style>    #marker {        background-image: url("https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png");        background-size: cover;        width: 30px;        height: 30px;    }    #mapAreash {        height: 68vh;    }</style><div class=" mx-5 " style="margin-top:120px;">    <div class="d-flex justify-content-between">        <div class="d-flex align-self-center">            <h4><strong>Provider Location</strong></h4>        </div>        <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">            <button class="back">                <i class="bi bi-chevron-left"></i>                back            </button>        </a>    </div>    <div id="mapAreash" class="mt-3"></div></div><script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps-web.min.js"></script><script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/services/services-web.min.js"></script><script>    const APIKey = "vAGt9S9PBmdnXyrThMamaHFh71MVeya3";    var Lagos = { lat: 13.000000, lng: 80.000000 };    var map = tt.map({        key: APIKey,        container: "mapAreash",        center: Lagos,        zoom: 4    });    var sourcearray = null;    var sites = [];        @foreach (var location in ViewBag.Locations)
-        {            <text>                console.log(sites);            sites.push({                lat: @location.Latitude,                lng: @location.Longitude,                name: '@location.PhysicianName'            });            </text>        }            sites.forEach(function (site) {                var element = document.createElement("div");                element.id = "marker";                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);                var popup = new tt.Popup({ anchor: 'top' }).setHTML("<b style=\"color:red\">" + site.name + "</b>");                marker.setPopup(popup).togglePopup();            });        // not usefull for temp value        function moveMapTo(newLoc) {            map.flyTo({                center: newLoc,                zoom: 20            });        }        async function fetchshreyansLoc() {            const response = await tt.services.fuzzySearch({                key: APIKey,                query: document.querySelector("#query").value            });            if (response.results) {                moveMapTo(response.results[0].position);            }        }        $('.admin-tab').removeClass("active");        $('#provider-location-tab').addClass("active");</script>
+﻿@{
+    ViewData["Title"] = "Provider Location";
+}
+<link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps.css'>
+<style>
+    #marker {
+        background-image: url("https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png");
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+    }
+
+    #mapAreash {
+        height: 68vh;
+    }
+</style>
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-self-center">
+            <h4><strong>Provider Location</strong></h4>
+        </div>
+        <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+            <button class="back">
+                <i class="bi bi-chevron-left"></i>
+                back
+            </button>
+        </a>
+    </div>
+    <div id="mapAreash" class="mt-3"></div>
+</div>
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps-web.min.js"></script>
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/services/services-web.min.js"></script>
+
+<script>
+    const APIKey = "vAGt9S9PBmdnXyrThMamaHFh71MVeya3";
+    var Lagos = { lat: 13.000000, lng: 80.000000 };
+    var map = tt.map({
+        key: APIKey,
+        container: "mapAreash",
+        center: Lagos,
+        zoom: 4
+    });
+
+    var sourcearray = null;
+    var sites = [];
+
+
+
+        @foreach (var location in ViewBag.Locations)
+        {
+            <text>
+                console.log(sites);
+            sites.push({
+                lat: @location.Latitude,
+                lng: @location.Longitude,
+                name: '@location.PhysicianName'
+            });
+            </text>
+        }
+
+            sites.forEach(function (site) {
+                var element = document.createElement("div");
+                element.id = "marker";
+                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);
+                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);
+                var popup = new tt.Popup({ anchor: 'top' }).setHTML("<b style=\"color:red\">" + site.name + "</b>");
+                marker.setPopup(popup).togglePopup();
+            });
+
+        // not usefull for temp value
+        function moveMapTo(newLoc) {
+            map.flyTo({
+                center: newLoc,
+                zoom: 20
+            });
+        }
+        async function fetchshreyansLoc() {
+            const response = await tt.services.fuzzySearch({
+                key: APIKey,
+                query: document.querySelector("#query").value
+            });
+
+            if (response.results) {
+                moveMapTo(response.results[0].position);
+            }
+        }
+
+        $('.admin-tab').removeClass("active");
+        $('#provider-location-tab').addClass("active");
+</script>

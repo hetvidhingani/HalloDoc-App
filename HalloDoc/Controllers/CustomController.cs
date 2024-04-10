@@ -121,17 +121,25 @@ namespace HalloDoc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult ResetPasswordRequest(string email)
         {
-            if (string.IsNullOrEmpty(email))
+
+            var result = _customService.checkIfExist(email);
+            if (result == null)
             {
-                return Json(new { success = false, message = "Please enter an email address" });
+                TempData["EnterEmail"] = "Please Provide Registerd Email.";
+                return RedirectToAction("ResetPassword");
+
             }
+            else
+            {
+                var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
+                var subject = "Reset Account Password";
+                var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
+                _customService.SendEmail(email, link, subject, body);
+                TempData["EnterEmailSuccess"] = "Email is successfully Sent to your Registerd Email.";
 
-            var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
-            var subject = "Reset Account Password";
-            var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-            _customService.SendEmail(email, link, subject, body);
+                return RedirectToAction("ResetPassword");
 
-            return Json(new { success = true, message = "A password reset link has been sent to your email." });
+            }
         }
 
         [HttpPost]
@@ -229,7 +237,7 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                ViewBag.Message = "Login Failed!";
+                TempData["LoginFail"] = "Invalid User Name or Password";
             }
 
             return View();
@@ -241,16 +249,25 @@ namespace HalloDoc.Controllers
         public IActionResult PatientForgotPassword()
         {
             return View();
-
         }
 
         [HttpPost]
         public async Task<IActionResult> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
-            var result = await _customService.PatientForgotPassword(createAccountViewModel);
-            string Message = await _patient.GetTempData<string>("Message");
-            ViewBag.Message = Message;
-            return View(result);
+            var data = _customService.checkIfExist(createAccountViewModel.Email);
+            if (data != null)
+            {
+                await _customService.PatientForgotPassword(createAccountViewModel);
+                string Message = await _patient.GetTempData<string>("Message");
+                TempData["PwdUpdate"] = "Password Updated";
+            }
+            else
+            {
+                TempData["EnterEmail"] = "Use Your Registerd Email only!!!";
+
+            }
+
+            return View();
         }
         #endregion
 
@@ -273,9 +290,15 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _patient.PatientRequest(viewModel);
+                TempData["SuccessFormSave"] = "Form Saved Successfully.";
+
                 return RedirectToAction(result);
             }
-            return View(viewModel);
+            else
+            {
+                TempData["ErrorFormSave"] = "Error Saving Data";
+                return View(viewModel);
+            }
         }
 
         #endregion

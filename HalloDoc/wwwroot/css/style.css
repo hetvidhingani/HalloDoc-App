@@ -898,12 +898,12 @@ header {
     
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 5000;
 }
 .subHeader {
     position: fixed;
     top: 66px;
-   
+   z-index:5000 !important;
    
 }
 .shadow {
@@ -1260,7 +1260,7 @@ form > div > div {
         position: absolute;
         right: 0;
         top: 0;
-        padding: 22px;
+        padding: 28px;
         content: '';
         background: url('../images/cloud-arrow-up.svg') no-repeat center center;
         display: inline-block;
@@ -1288,7 +1288,7 @@ form > div > div {
         position: absolute;
         right: 0;
         top: 0;
-        padding: 10px;
+        padding: 20px;
         content: 'Upload';
         background: url('../images/cloud-arrow-up.svg') no-repeat 16px ;
        

@@ -1,4 +1,5 @@
 ﻿@model HalloDoc.Entities.ViewModels.DashboardViewModel;
+@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
@@ -25,7 +26,7 @@
 
                     <div class="col-12 fw-bold">
 
-                        @Model.FirstName
+                       @Model.Username
                         (MD051023TETE0001)
                     </div>
                     <div class="col-12">
@@ -93,7 +94,7 @@
                                     </td>
 
 
-                                    <td>@r.CreatedDate</td>
+                                    <td>@r.CreatedDate.ToShortDateString()</td>
                                     <td>
                                         <a href="@Url.Action("DownloadFile", "Admin", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
@@ -101,10 +102,6 @@
                                         <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
                                             <i class="bi bi-trash"></i>
                                         </a>
-
-                                        @*  <a asp-route-fileID="@r.RequestWiseFileId" asp-action="DeleteFile" asp-controller="Admin" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
-                                    <i class="bi bi-trash"></i>
-                                    </a> *@
                                     </td>
 
                                 </tr>
