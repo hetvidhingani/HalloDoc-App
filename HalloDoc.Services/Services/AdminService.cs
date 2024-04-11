@@ -26,6 +26,9 @@ using LinqKit;
 using Microsoft.IdentityModel.Tokens;
 
 using Microsoft.Extensions.Logging;
+using System.Globalization;
+using System.Security.Policy;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HalloDoc.Services.Services
 {
@@ -205,10 +208,10 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Dashboard
-        public AdminDashboardTableViewModel AdminDashboardData(int CurrentPage, string? PatientName, int? ReqType, int? RegionId, string state,int status)
+        public AdminDashboardTableViewModel AdminDashboardData(string state, string? PatientName, int? ReqType, int? RegionId, int status, int CurrentPage)
         {
             Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
-            whereClauseSyntax = x => x.Request.Status == status;
+            whereClauseSyntax = x => x.Request.Status == status ;
             if (!string.IsNullOrWhiteSpace(PatientName))
             {
                 whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(PatientName.ToLower()) || e.LastName.ToLower().Contains(PatientName.ToLower()));
@@ -222,35 +225,66 @@ namespace HalloDoc.Services.Services
                 whereClauseSyntax = whereClauseSyntax.And(e => e.Request.RequestTypeId == ReqType);
             }
             List<AdminDashboard> vendorTable = new List<AdminDashboard>();
-
-            var data = _requestclientRepository.GetAllWithPagination(x => new AdminDashboard
+            if (CurrentPage == 0)
             {
-                PatientName = x.FirstName + " " + x.LastName,
-                DateOfBirth = new DateTime((int)x.IntYear, Convert.ToInt32(x.StrMonth), (int)x.IntDate),
-                Requestor =x.Request.FirstName+" "+x.Request.LastName,
-                RequestedDate = x.Request.CreatedDate,
-                PatientPhone = x.PhoneNumber,
-                RequestorPhone = x.Request.PhoneNumber,
-                Address = x.Street + "," + x.City + "," + x.State + "," + x.ZipCode,
-                Notes = x.Request.RequestStatusLogs.OrderByDescending(u=>u.CreatedDate).Last(u=>u.RequestId==x.RequestId).Notes,
-                PhysicianName =x.Request.Physician.FirstName+ " "+x.Request.Physician.LastName,
-                RequestTypeID = x.Request.RequestTypeId,
-                RequstClientId = x.RequestClientId,
-                requestID = x.RequestId,
-                Email = x.Email,
-                RegionId = (int)x.RegionId,
-                StateofTable = x.State,
-                stateTab = state,
-            }, whereClauseSyntax, CurrentPage, 5, x => x.Request.ModifiedDate==null? x.Request.CreatedDate:x.Request.ModifiedDate, false);
-
-            foreach (AdminDashboard requiredData in data)
+                var data = _requestclientRepository.GetAllData(x => new AdminDashboard
+                {
+                    PatientName = x.FirstName + " " + x.LastName,
+                    DateOfBirth = new DateTime((int)x.IntYear, Convert.ToInt32(x.StrMonth), (int)x.IntDate),
+                    Requestor = x.Request.FirstName + " " + x.Request.LastName,
+                    RequestedDate = x.Request.CreatedDate,
+                    PatientPhone = x.PhoneNumber,
+                    RequestorPhone = x.Request.PhoneNumber,
+                    Address = x.Street + "," + x.City + "," + x.State + "," + x.ZipCode,
+                    Notes = x.Request.RequestStatusLogs.OrderByDescending(u => u.CreatedDate).Last(u => u.RequestId == x.RequestId).Notes,
+                    PhysicianName = x.Request.Physician.FirstName + " " + x.Request.Physician.LastName,
+                    RequestTypeID = x.Request.RequestTypeId,
+                    RequstClientId = x.RequestClientId,
+                    requestID = x.RequestId,
+                    Email = x.Email,
+                    RegionId = (int)x.RegionId,
+                    StateofTable = x.State,
+                    stateTab = state,
+                }, whereClauseSyntax.And(u=>u.Request.Status== status));
+                CurrentPage = 1;
+                foreach (AdminDashboard requiredData in data)
+                {
+                    vendorTable.Add(requiredData);
+                }
+            }
+            else
             {
-                vendorTable.Add(requiredData);
+                 var data = _requestclientRepository.GetAllWithPagination(x => new AdminDashboard
+                {
+                    PatientName = x.FirstName + " " + x.LastName,
+                    DateOfBirth = new DateTime((int)x.IntYear, Convert.ToInt32(x.StrMonth), (int)x.IntDate),
+                    Requestor = x.Request.FirstName + " " + x.Request.LastName,
+                    RequestedDate = x.Request.CreatedDate,
+                    PatientPhone = x.PhoneNumber,
+                    RequestorPhone = x.Request.PhoneNumber,
+                    Address = x.Street + "," + x.City + "," + x.State + "," + x.ZipCode,
+                    Notes = x.Request.RequestStatusLogs.OrderByDescending(u => u.CreatedDate).Last(u => u.RequestId == x.RequestId).Notes,
+                    PhysicianName = x.Request.Physician.FirstName + " " + x.Request.Physician.LastName,
+                    RequestTypeID = x.Request.RequestTypeId,
+                    RequstClientId = x.RequestClientId,
+                    requestID = x.RequestId,
+                    Email = x.Email,
+                    RegionId = (int)x.RegionId,
+                    StateofTable = x.State,
+                    stateTab = state,
+                }, whereClauseSyntax.And(u => u.Request.UserId != null), CurrentPage, 5, x => x.Request.ModifiedDate == null ? x.Request.CreatedDate : x.Request.ModifiedDate, false);
+
+                foreach (AdminDashboard requiredData in data)
+                {
+                    vendorTable.Add(requiredData);
+                }
             }
 
-            if (CurrentPage == 0) { CurrentPage = 1; }
+
+
+            
             int dataSize = 5;
-            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax.And(u=>u.Request.UserId!=null));
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -266,6 +300,34 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
         }
+
+        //public object exportdata()
+        //{
+        //    List<DashboardPartialTableViewModel> filtereddata = _adminLogin.ExportData(dashboardFilterWithPagination);
+
+        //    using (var memoryStream = new MemoryStream())
+        //    using (var writer = new StreamWriter(memoryStream))
+        //    using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+        //    {
+        //        csvWriter.WriteRecords(filtereddata);
+        //        writer.Flush();
+        //        var result = memoryStream.ToArray();
+        //        var fileName = "filtered_data_" + Guid.NewGuid().ToString() + ".csv";
+        //        var webRootPath = _hostingEnvironment.WebRootPath;
+
+        //        // Combine the web root path and filename to get the full path
+        //        var filePath = Path.Combine(webRootPath, "tempFiles", fileName); // Assuming "temp" is the directory for temporary files
+
+        //        // Write the CSV data to the file
+        //        System.IO.File.WriteAllBytes(filePath, result);
+
+        //        // Return the URL of the generated file
+        //        var fileUrl = Url.Content("~/tempFiles/" + fileName);
+        //        return Ok(fileUrl);
+        //        //return File(result, "text/csv", "filtered_data.csv");
+        //    }
+        //}
+
         #endregion
 
         #region View Case
@@ -1140,7 +1202,7 @@ namespace HalloDoc.Services.Services
             model.Address1 = phy.Address1;
             model.Address2 = phy.Address2;
             model.City = phy.City;
-            model.RegionId = phy.RegionId;
+            model.RegionId = (int)phy.RegionId;
             model.Regions = await _regionRepository.GetRegions();
             model.Zip = phy.Zip;
             model.BillingPhoneNumber = phy.AltPhone;
@@ -2202,7 +2264,7 @@ namespace HalloDoc.Services.Services
             Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
             Expression<Func<ShiftDetail, bool>> ShiftDetailswhereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
             whereClauseSyntax = x => x.IsDeleted == null;
-            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null;
+            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null ;
 
             if (region != 0)
             {
@@ -2247,7 +2309,7 @@ namespace HalloDoc.Services.Services
         {
             Shift shift = new()
             {
-                PhysicianId = model.physicianId,
+                PhysicianId = model.physicianID,
                 StartDate = model.ShiftDate,
                 IsRepeat = new BitArray(1, model.toggle),
                 WeekDays = WeekDays.ToString(),
@@ -2295,7 +2357,7 @@ namespace HalloDoc.Services.Services
 
             CreateShiftViewModel model = new CreateShiftViewModel();
             model.ShiftDetailId = shiftDetailsId;
-            model.physicianId = shiftDetail.Shift.PhysicianId;
+            model.physicianID = shiftDetail.Shift.PhysicianId;
             model.regionId = (int)shiftDetail.RegionId;
             model.ShiftDate = shiftDetail.ShiftDate;
             model.startTime = shiftDetail.StartTime;
@@ -2342,7 +2404,7 @@ namespace HalloDoc.Services.Services
         {
             Expression<Func<ShiftDetail, bool>> table = PredicateBuilder.New<ShiftDetail>();
 
-            table = x => x.IsDeleted == null && x.Status == 0;
+            table = x => x.IsDeleted == null && x.Status == 0 && x.ShiftDate >= DateOnly.FromDateTime(DateTime.Now);
 
             if (region != 0)
             {

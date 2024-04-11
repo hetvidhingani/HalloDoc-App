@@ -48,7 +48,7 @@
                 </div>
 
                 <div class="col-lg-6 col-md-6 col-sm-12">
-                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleId">
+                        <select class="form-select form-select-sm  edit2" style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RoleId">
                         <option value="0" selected disabled>Role</option>
 
                         @foreach (var role in Model.Role)
@@ -97,8 +97,8 @@
                     <div class="form-floating form-group  border">
                         <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" />
 
-                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 ">
                     <div class="form-floating form-group">
@@ -171,7 +171,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                    <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                    <select class="form-select form-select-sm  edit2" style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                         <option value="0" selected disabled>State</option>
 
                         @foreach (var region in Model.State)

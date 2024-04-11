@@ -5,7 +5,7 @@
 
         <div class="w-100 d-flex justify-content-between align-items-center ">
             <h3>Requested Shift</h3>
-            <a asp-action="Scheduling" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
@@ -107,48 +107,76 @@
     function approveSelected() {
 
         var checkbox = $('input[class="checkboxForAll"]:checked');
-        var documentValues = checkbox.map(function () {
-            return $(this).val();
-        }).get();
+        
+        if (checkbox == null || checkbox.length == 0 || checkbox.length == "") {
+            Swal.fire({
+                title: 'Please Select Shifts To Approve',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
+        }
+        else {
+            var documentValues = checkbox.map(function () {
+                return $(this).val();
+            }).get();
 
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("ApproveShift", "Admin")",
-            data: { documentValues: documentValues },
-            success: function (response) {
-                location.reload();
-            }
-        });
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ApproveShift", "Admin")",
+                data: { documentValues: documentValues },
+                success: function (response) {
+                    location.reload();
+                }
+            });
+        }
+        
 
     }
     function DeleteSelected() {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You want to Delete Selected Shift!',
-            icon: 'warning',
-            confirmButtonText: 'Yes, delete all!',
-            showCancelButton: true
-        }).then((result) => {
-            if (result.value) {
-                var checkbox = $('input[class="checkboxForAll"]:checked');
-                var documentValues = checkbox.map(function () {
-                    return $(this).val();
-                }).get();
 
-                $.ajax({
-                    type: "POST",
-                    url: "@Url.Action("DeleteSelectedShift", "Admin")",
-                    data: { documentValues: documentValues },
-                    success: function (response) {
-                       
-                        toastr.success('Shift Deleted!');
-                    }
-                });
-            }
-        });
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+        if (checkbox == null || checkbox.length == 0 || checkbox.length == "") {
+            Swal.fire({
+                title: 'Please Select Shifts To Delete',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
+        }
+        else {
 
-        return false;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to Delete Selected Shift!',
+                icon: 'warning',
+                confirmButtonText: 'Yes, delete all!',
+                showCancelButton: true
+            }).then((result) => {
+                if (result.value) {
+                    var documentValues = checkbox.map(function () {
+                        return $(this).val();
+                    }).get();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Action("DeleteSelectedShift", "Admin")",
+                        data: { documentValues: documentValues },
+                        success: function (response) {
+
+                            toastr.success('Shift Deleted!');
+                            location.reload();
+                        }
+                    });
+                }
+            });
+
+            return false;
+
+
+        }
+
+
     }
+    
     function currMonthShift() {
         const currentDate = new Date();
          Monthdata = currentDate.getMonth() + 1;

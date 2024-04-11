@@ -244,14 +244,16 @@
 
 
 
-        function myFunction1() {
-            var x = document.getElementById("myTopnav");
-            if (x.className === "topnav") {
-                x.className += " responsive";
-            } else {
-                x.className = "topnav";
+       
+            function myFunction1() {
+            document.getElementById("myTopnav").style.display = "block";
+            console.log("Called")
             }
-        }
+
+            function closeNav() {
+            document.getElementById("myTopnav").style.display = "none";
+            }
+       
             $(document).ready(function () {
            
 

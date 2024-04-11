@@ -17,11 +17,11 @@
             </select>
             <span asp-validation-for="regionId" class="text-danger"></span>
 
-            <select class="form-select mt-1 h-50" name="physicianID" asp-for="physicianId" id="physicianSelect">
+            <select class="form-select mt-1  h-50" name="physicianID" asp-for="physicianID" id="physicianSelect">
                 <option value="">Select Physician</option>
-            </select>
-            <span asp-validation-for="physicianId" class="text-danger"></span>
 
+            </select>
+            <span asp-validation-for="physicianID" class="text-danger"></span>
             <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
                 <div class="form-floating form-group">
                     <input asp-for="ShiftDate" type="date"  class="form-control" placeholder=" ">
@@ -33,13 +33,13 @@
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 mt-1 d-flex justify-content-between">
                 <div class="col-6 form-floating form-group">
-                    <input asp-for="startTime" type="time" class="form-control" placeholder=" ">
+                    <input asp-for="startTime" type="time" class="form-control time" placeholder=" ">
                     <label for=" ">Start Time</label>
-                    <span asp-validation-for="startTime" class="text-danger"></span>
+                    <span asp-validation-for="startTime" class="text-danger time"></span>
 
                 </div>
                 <div class="col-6 form-floating form-group">
-                    <input asp-for="endTime" type="time" class="form-control" placeholder=" ">
+                    <input asp-for="endTime" type="time" class="form-control time" placeholder=" ">
                     <label for=" ">End Time</label>
                     <span asp-validation-for="endTime" class="text-danger"></span>
 
@@ -114,6 +114,8 @@
 <script>
     //Cascading DropDown
     $(document).ready(function () {
+            $('.time').attr('value', "00");
+
         $("#regionSelect").change(function () {
             var regionId = $(this).val();
             var url = "/Admin/GetPhysiciansByRegion?regionId=" + regionId;

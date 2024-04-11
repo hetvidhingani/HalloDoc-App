@@ -26,11 +26,11 @@
             <span asp-validation-for="physicianID" class="text-danger"></span>
 
             <div class="form-floating mt-1 form-group  rounded-3">
-                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " ></textarea>
+                <textarea asp-for="AdditionalNotes" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Discription
                 </label>
-
+                <span  class="text-danger validate"></span>
             </div>
 
 
@@ -87,7 +87,13 @@
 
 
     $('#myForm').on('submit', function (e) {
+       
         e.preventDefault();
+        var additionalNotes = $('#additionalNotes').val();
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+            return;
+        }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();

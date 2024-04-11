@@ -34,24 +34,27 @@ namespace HalloDoc.Entities.ViewModels
     }
     public class CreateShiftViewModel
     {
-        public List<Region>? regions { get; set; }
 
         [Required(ErrorMessage = "Please Select Region. ")]
         public int regionId { get; set; }
 
-        public List<Physician>? physician { get; set; }
 
         [Required(ErrorMessage = "Please Select Physician. ")]
-        public int physicianId { get; set; }
+        public int physicianID { get; set; }
 
+        [Required(ErrorMessage = "Please Select date. ")]
         public DateOnly ShiftDate { get; set; }
 
+        [Required(ErrorMessage = "Please Select start time. ")]
         public TimeOnly startTime { get; set; }
 
+        [Required(ErrorMessage = "Please Select end time. ")]
         public TimeOnly endTime { get; set; }
 
         public bool toggle { get; set; } = false;
+        public List<Physician>? physician { get; set; }
 
+        public List<Region>? regions { get; set; }
         public int ShiftDetailId { get; set; }
         public int repeatEnd { get; set; } = 0;
     }

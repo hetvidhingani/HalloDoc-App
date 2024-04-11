@@ -23,12 +23,12 @@
             <span asp-validation-for="CaseTagID" class="text-danger"></span>
            
             <div class="form-floating form-group  rounded-3">
-                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <textarea asp-for="AdditionalNotes" class="form-control note" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " required></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Additional Notes
                 </label>
-                @* <span asp-validation-for="AdditionalNotes" class="text-danger"></span> *@
-
+                
+                <span class="validate text-danger"></span>
             </div>
 
 
@@ -50,33 +50,43 @@
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <script>
+    
     $('#cancelcase').on('submit', function (e) {
         e.preventDefault();
+        var additionalNotes = $('#additionalNotes').val();
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+            return;
+        }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();
+        var check = $('.note').val();
+        if (check != null) {
 
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: data
-        })
-            .done(function (response) {
-                if (response.success) {
-                    let timerInterval;
-                    Swal.fire({
-                        title: "Done",
-                        text: "Request Canceled Successfully of Patient @Model.PatientName",
-                        icon: "success",
-                        timer: 2000,
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                    }).then(function () {
-                        window.location.href = '@Url.Action("Dashboard", "Admin")';
-                    });
-                }
-            });
-          
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Done",
+                            text: "Request Canceled Successfully of Patient @Model.PatientName",
+                            icon: "success",
+                            timer: 2000,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        }).then(function () {
+                            window.location.href = '@Url.Action("Dashboard", "Admin")';
+                        });
+                    }
+                });
+        }
+       
     });
 
 </script>

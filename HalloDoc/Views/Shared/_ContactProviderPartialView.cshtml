@@ -31,11 +31,11 @@
                 </label>
             </div>
             <div class="form-floating mt-1 form-group  rounded-3">
-                <textarea asp-for="message" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <textarea asp-for="message" class="form-control" id="message" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Message
                 </label>
-                <span asp-validation-for="message" class="text-danger"></span>
+                <span asp-validation-for="message" class="text-danger error"></span>
 
             </div>
 
@@ -57,7 +57,13 @@
 </form>
 <script>
     $('#contactmodel').on('submit', function (e) {
+
         e.preventDefault();
+        var message = $('#message').val();
+        if (message == null || message == "") {
+            document.getElementsByClassName("error")[0].innerText = "Please enter message.";
+            return;
+        }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();

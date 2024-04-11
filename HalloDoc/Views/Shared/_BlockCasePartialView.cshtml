@@ -4,7 +4,7 @@
     <h5 class="modal-title">Confirm Cancellation</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form id="blockCaseForm" asp-controller="Admin" asp-action="BlockCaseRequest" asp-route-id="@Model.RequestClientID">
+<form id="blockCaseForm" asp-controller="Admin" asp-action="BlockCaseRequest" asp-route-id="@Model.RequestClientID" data-val="false">
     <div class="modal-body">
 
         <p>
@@ -13,11 +13,11 @@
         <div class=" d-flex justify-content-center flex-column  ">
            
             <div class="form-floating form-group  rounded-3">
-                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <textarea asp-for="AdditionalNotes" class="form-control note" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                    Reason for block request
                 </label>
-
+                <span  class="text-danger validate"></span>
             </div>
 
 
@@ -42,13 +42,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
+     
     $('#blockCaseForm').on('submit', function (e) {
+        
         e.preventDefault();
+        var additionalNotes = $('#additionalNotes').val();
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+            return;
+        }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();
-
+       
         $.ajax({
             type: "POST",
             url: url,

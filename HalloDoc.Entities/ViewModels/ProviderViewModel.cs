@@ -58,8 +58,9 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter Phone Number Here")]
         [RegularExpression(@"^\+\d{1,3}\d{10}$", ErrorMessage = "Invalid phone number format. Use country code followed by 10 digits.")]
         public string BillingPhoneNumber { get; set; }
+        [Required(ErrorMessage = "Enter State Here")]
 
-        public int? RegionId { get; set; }
+        public int RegionId { get; set; }
 
         public List<Region>? Regions { get; set; }
 
@@ -73,7 +74,11 @@ namespace HalloDoc.Entities.ViewModels
         public string? NPINumber { get; set; }
         public string? SyncEmail { get; set; }
         public string? description { get; set; }
+        [Required(ErrorMessage = "Enter Business Name Here")]
+
         public string? BusinessName { get; set;}
+        [Required(ErrorMessage = "Enter Business Website Here")]
+
         public string? BusinessWebsite { get; set; }
         public IFormFile? File { get; set; }
         public IFormFile? Signature { get; set; }

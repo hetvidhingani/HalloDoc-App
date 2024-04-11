@@ -190,11 +190,11 @@
                             <i class="fa-solid fa-file-pen"></i>
                             <span class="tabIcon"> Create Requests</span>
                         </a>
-                        <a class="btn btn-sm  btn-info text-white px-2  mb-1">
+                        <a class="btn btn-sm  btn-info text-white px-2  mb-1" onclick="ExportDataWithFilter()">
                             <i class="fa-solid fa-share"></i>
                             <span class="tabIcon">Export</span>
                         </a>
-                        <a class ="btn  btn-sm btn-info text-white px-2  mb-1">
+                        <a class="btn  btn-sm btn-info text-white px-2  mb-1" onclick="ExportAll()">
                             <i class="fa-solid fa-share-from-square"></i>
                             <span class="tabIcon ">
                                 Export All
@@ -308,7 +308,7 @@
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
-            data: { CurrentPage: page, PatientName: PatientName, ReqType: requestType, RegionId: regionId , state: state},
+            data: { state: state, PatientName: PatientName, ReqType: requestType, RegionId: regionId, CurrentPage: page },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
@@ -442,6 +442,32 @@
     document.getElementById("ConcludeCount").innerText = @Model.ConcludeCount;
     document.getElementById("ToCloseCount").innerText = @Model.ToCloseCount;
     document.getElementById("UnpaidCount").innerText = @Model.UnpaidCount;
-  
 
+    function ExportAll() {
+        $.ajax({
+            url: '/Admin/ExportAll',
+            type: 'GET',
+            data: {},
+            success: function (data) {
+                window.location.href = data;
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred: " + error);
+            }
+        });
+    }
+    function ExportDataWithFilter() {
+  
+        $.ajax({
+            url: '/Admin/ExportFilterWise',
+            type: 'POST',
+            data: { state: state, PatientName: PatientName, ReqType: requestType, RegionId: regionId},
+            success: function (data) {
+                window.location.href = data;
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred: " + error);
+            }
+        });
+    }
 </script>

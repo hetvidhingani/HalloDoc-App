@@ -86,10 +86,10 @@
                         </select>
                         <span asp-validation-for="regionId" class="text-danger"></span>
 
-                        <select class="form-select mt-1 h-50" asp-for="physicianId" id="physicianSelect" disabled>
+                        <select class="form-select mt-1 h-50" asp-for="physicianID" id="physicianSelect" disabled>
                             <option value="">Select Physician</option>
                         </select>
-                        <span asp-validation-for="physicianId" class="text-danger"></span>
+                        <span asp-validation-for="physicianID" class="text-danger"></span>
 
                         <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
                             <div class="form-floating form-group">
@@ -228,11 +228,11 @@
                         $("#physicianSelect option").remove();
 
                         r.map((x) => {
-                            if (Number.parseInt(x.physicianId) === response.data.physicianId) {
-                                $("#physicianSelect").append('<option selected value="' + x.physicianId + '">' + x.firstName + '</option>');
+                            if (Number.parseInt(x.physicianID) === response.data.physicianID) {
+                                $("#physicianSelect").append('<option selected value="' + x.physicianID + '">' + x.firstName + '</option>');
                             }
                             else {
-                                $("#physicianSelect").append('<option  value="' + x.physicianId + '">' + x.firstName + '</option>');
+                                $("#physicianSelect").append('<option  value="' + x.physicianID + '">' + x.firstName + '</option>');
 
                             }
                         });

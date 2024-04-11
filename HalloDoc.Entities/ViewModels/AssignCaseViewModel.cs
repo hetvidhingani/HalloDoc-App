@@ -10,7 +10,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class AssignCaseViewModel
     {
-        
+        [Required(ErrorMessage ="please enter notes")]
         public string? AdditionalNotes { get; set; }
         public int RequestID { get; set; }
         public int RequestClientID { get; set; }

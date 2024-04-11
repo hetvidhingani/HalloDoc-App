@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Org.BouncyCastle.Ocsp;
 using System.Diagnostics.Contracts;
+using System.Drawing;
+using System.Globalization;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-
 namespace HalloDoc.Controllers
 {
     [CustomAuthorize("1")]
@@ -19,14 +20,14 @@ namespace HalloDoc.Controllers
         private IAdminService _admin;
         private IJwtService _jwtService;
         private ICustomService _customService;
-
-
-        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService, ICustomService customService)
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+        public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
             _context = context;
             _admin = admin;
             _jwtService = jwtService;
             _customService = customService;
+            _hostingEnvironment = hostingEnvironment;
         }
         #region admin
 
@@ -55,7 +56,7 @@ namespace HalloDoc.Controllers
         [RoleAuthorize(1)]
         public async Task<IActionResult> Dashboard()
         {
-            
+
             var viewModel = new AdminDashboardTableViewModel
             {
                 NewCount = await _admin.GetCount(1),
@@ -66,13 +67,13 @@ namespace HalloDoc.Controllers
                 UnpaidCount = await _admin.GetCount(9),
 
             };
-            viewModel.State =  _admin.getstateDropdown();
+            viewModel.State = _admin.getstateDropdown();
 
             return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult GetTable( int CurrentPage, string? PatientName, int? ReqType, int? RegionId, string state)
+        public IActionResult GetTable(string state, string? PatientName, int? ReqType, int? RegionId, int CurrentPage = 1)
         {
             if (ModelState.IsValid)
             {
@@ -80,45 +81,124 @@ namespace HalloDoc.Controllers
                 {
                     case "New":
                         ViewBag.state = "New";
-                         var paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state,1);
+                        var paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 1, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
                     case "Pending":
                         ViewBag.state = "Pending";
-                         paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 2);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 2, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
                     case "Active":
                         ViewBag.state = "Active";
-                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 4);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 4, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
 
                     case "Conclude":
                         ViewBag.state = "Conclude";
-                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 6);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 6, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
                     case "Toclose":
                         ViewBag.state = "Toclose";
-                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 3);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 3, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
 
                     case "Unpaid":
                         ViewBag.state = "Unpaid";
-                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 9);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 9, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
 
                     default:
-                        paging = _admin.AdminDashboardData(CurrentPage, PatientName, ReqType, RegionId, state, 1);
+                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 1, CurrentPage);
                         return PartialView("_TablePartialView", paging);
 
                 }
             }
             return View();
         }
+        //[HttpPost]
+        //[Obsolete]
+        public IActionResult ExportFilterWise(string state, string? PatientName, int? ReqType, int? RegionId)
+        {
+            int data;
+            switch (state)
+            {
+                case "New":
+
+                    data = 1;
+                    break;
+
+                case "Pending":
+                    data = 2;
+                    break;
+                case "Active":
+                    data = 4;
+                    break;
+
+
+                case "Conclude":
+                    data = 6;
+                    break;
+
+                case "Toclose":
+                    data = 3;
+                    break;
+
+                case "Unpaid":
+                    data = 9;
+                    break;
+
+
+                default:
+
+                    data = 1;
+                    break;
+            }
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
+            using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(_admin.AdminDashboardData(state, PatientName, ReqType, RegionId, data, 0).PagingData);
+                writer.Flush();
+                var result = memoryStream.ToArray();
+                var fileName = "filtered_data_" + Guid.NewGuid().ToString() + ".csv";
+                var webRootPath = _hostingEnvironment.WebRootPath;
+                var filePath = Path.Combine(webRootPath, "uploads", fileName);
+
+                System.IO.File.WriteAllBytes(filePath, result);
+
+                var fileUrl = Url.Content("~/uploads/" + fileName);
+                return Ok(fileUrl);
+            }
+        }
+
+        //[HttpGet]
+        //[Obsolete]
+        //public IActionResult ExportAll()
+        //{
+        //    using (var memoryStream = new MemoryStream())
+        //    using (var writer = new StreamWriter(memoryStream))
+        //    using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+        //    {
+        //        csvWriter.WriteRecords(_adminLogin.ExportAllData());
+        //        writer.Flush();
+        //        var result = memoryStream.ToArray();
+        //        var fileName = "filtered_data_" + Guid.NewGuid().ToString() + ".csv";
+        //        var webRootPath = _hostingEnvironment.WebRootPath;
+        //        var filePath = Path.Combine(webRootPath, "tempFiles", fileName);
+
+        //        System.IO.File.WriteAllBytes(filePath, result);
+
+        //        var fileUrl = Url.Content("~/tempFiles/" + fileName);
+        //        return Ok(fileUrl);
+        //    }
+        //}
+
+
         #endregion
 
         #region Create Admin
@@ -200,7 +280,8 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _admin.ConfirmCancelCase(viewModel, id);
-                return RedirectToAction("Dashboard");
+
+                return Json(new { success = true });
             }
             return RedirectToAction("Dashboard");
 
@@ -352,7 +433,7 @@ namespace HalloDoc.Controllers
         {
             var request = HttpContext.Request;
             int AdminID = Int32.Parse(request.Cookies["AdminID"]);
-            await _customService.ViewDocument(a, Id, AdminID,0);
+            await _customService.ViewDocument(a, Id, AdminID, 0);
             return RedirectToAction("ViewUploads");
         }
 
@@ -371,7 +452,7 @@ namespace HalloDoc.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, filename);
         }
 
-        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues,int ReqID)
+        public async Task<IActionResult> DownloadAll(IEnumerable<int> documentValues, int ReqID)
         {
             if (documentValues.Count() > 0)
             {
@@ -382,7 +463,7 @@ namespace HalloDoc.Controllers
             }
             else
             {
-               
+
                 byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
@@ -984,11 +1065,19 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region MD's On call
-        public IActionResult MdOnCall(int regionId = 0)
+        public IActionResult MdOnCall()
         {
-           
-            var result=_admin.GetProvidersOnCall(regionId);
-            return View(result);
+
+            ProvidersOnCallViewModel model = new()
+            {
+                regions = _admin.getstateDropdown(),
+            };
+            return View(model);
+        }
+        public IActionResult GetProvidersOnCall(int regionId = 0)
+        {
+            var result = _admin.GetProvidersOnCall(regionId);
+            return PartialView("_MDonCallPartialView", result);
         }
         #endregion
 

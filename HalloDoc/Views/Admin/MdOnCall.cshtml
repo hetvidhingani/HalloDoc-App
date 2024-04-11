@@ -1,5 +1,5 @@
 ﻿@model ProvidersOnCallViewModel
-<div class=" mx-5 " style="margin-top:120px;">
+<div class=" mx-5 " style="margin-top:120px;" >
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
 
@@ -41,39 +41,12 @@
                 </div>
 
             </div>
-            <div class="row mt-2 formshadow p-4 mb-5 " style="background-color:white">
+           
+                <div id="admindata" class="mb-5"></div>
+
+
               
-
-                <h3>MD's On Call</h3>
-                @foreach (var phy in Model.PaggingData)
-                {
-                    @if (phy.IsOnCall)
-                    {
-                    <div class="col-lg-3 col-md-4 col-sm-6">
-                        <div class="d-flex mx-1">
-                            @phy.physicianName
-                            </div>
-                    </div>
-                        
-                    }
-
-                }
-                <br/>
-                <h3 class="mt-5">MD's Off Duty</h3>
-                @foreach (var phy in Model.PaggingData)
-                {
-                    @if (!phy.IsOnCall)
-                    {
-                        <div class="col-lg-3 col-md-4 col-sm-6 mt-2">
-                            <div class="d-flex mx-1">
-                                @phy.physicianName
-                            </div>
-                        </div>
-
-                    }
-
-                }
-            </div>
+            
         </div>
 
     </div>
@@ -89,21 +62,10 @@
 
 
 
-    //create shift pop up
-    $('#addShift').click(function () {
-        $.ajax({
-            type: "POST",
-            dataType: "html",
+    $(document).ready(function () {
+        load();
 
-            url: "@(Url.Action("CreateShift", "Admin"))",
-            success: function (data) {
-
-                $("#createshift").find('.modal-content').html(data);
-            }
-        });
     });
-
-
 
     function currMonthShift() {
         const currentDate = new Date();
@@ -118,6 +80,21 @@
         load();
 
     });
+    function load() {
 
+        $.ajax({
+            url: "/Admin/GetProvidersOnCall",
+            type: "POST",
+            data: { regionId :RegionId},
+           dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
 </script>
 

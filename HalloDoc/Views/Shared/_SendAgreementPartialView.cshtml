@@ -85,14 +85,7 @@
                 }).then(function () {
                     window.location.href = '@Url.Action("Dashboard", "Admin")';
                 });
-            })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-                Swal.fire({
-                    title: "Error",
-                    text: "Error cancelling case: " + textStatus + ": " + errorThrown,
-                    icon: "error",
-                    confirmButtonText: "OK"
-                });
             });
+            
     });
 </script>

@@ -74,7 +74,7 @@
                         <label class="form-label" for="textAreaExample2">
                             Additional Notes
                         </label>
-
+                        <span asp-validation-for="AdditionalNotes" class="text-danger w-100 validate"></span>
                     </div>
                     <div class="row ">
 
@@ -90,12 +90,18 @@
     </div>
 
 </div>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
 
     $('.saveChangesButton').click(function () {
       
         var additionalNotes = $('#additionalNotes').val();
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+            return;
+        }
         var adminNotes = $('#adminNotes').text();
         var id = this.id;
         console.log(id);
@@ -106,10 +112,8 @@
             data: { additionalNotes: additionalNotes, adminNotes: adminNotes, id: id },
             url: "@(Url.Action("ViewNotes", "Admin"))",
             success: function (data) {
-                console.log("abc");
-                // Handle the response from the server
+   
                 location.reload();
-                console.log(data);
             },
             error: function () {
                 console.log("error");

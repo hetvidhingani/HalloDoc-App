@@ -9,29 +9,27 @@
         <small>To Transfer this Request, search and select another Physician.</small>
 
         <div class=" d-flex justify-content-center flex-column  ">
-            <select class="form-select mb-3 h-50" aria-label="Default select example" name="RegionID" asp-for="regionID" id="regionSelect">
-                <option>Open this select menu</option>
-                @foreach (var r in Model.Region)
+            <select asp-for="regionID" id="regionSelect" class="form-select required">
+                <option value="">Select Region</option>
+                @foreach (var i in Model.Region)
                 {
-                    <option value="@r.RegionId">
-                        @r.Name
-                    </option>
+                    <option value="@i.RegionId">@i.Name</option>
                 }
             </select>
             <span asp-validation-for="regionID" class="text-danger"></span>
 
-            <select class="form-select mb-3 h-50" name="physicianID" asp-for="physicianID" id="physicianSelect">
-                <option>Select Physician</option>
+            <select class="form-select mt-1  h-50" name="physicianID" asp-for="physicianID" id="physicianSelect">
+                <option value="">Select Physician</option>
 
             </select>
             <span asp-validation-for="physicianID" class="text-danger"></span>
 
             <div class="form-floating form-group  rounded-3">
-                <textarea asp-for="AdditionalNotes" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                <textarea asp-for="AdditionalNotes" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
                 <label class="form-label" for="textAreaExample2">
                     Discription
                 </label>
-                <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
+                <span class="validate3 text-danger"></span>
 
             </div>
 
@@ -86,10 +84,20 @@
         });
     });
     $('#TransferRequest').on('submit', function (e) {
-            e.preventDefault();
-            var form = $(this);
-            var url = form.attr('action');
-            var data = form.serialize();
+        e.preventDefault();
+        var additionalNotes = $('#additionalNotes').val();
+
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate3")[0].innerText = "Please enter additional notes.";
+
+            return;
+        }
+
+
+
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
 
         $.ajax({
             type: "POST",
@@ -111,7 +119,7 @@
                     });
                 }
             });
-                
-        });
+
+    });
 
 </script>

@@ -1,13 +1,15 @@
 ﻿using HalloDoc.Entities.DataModels;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace HalloDoc.Entities.ViewModels
 {
-    public class AdminDashboardTableViewModel:AdminDashboard
+    public class AdminDashboardTableViewModel : AdminDashboard
     {
 
         public int CurrentPage { get; set; }
@@ -49,5 +51,11 @@ namespace HalloDoc.Entities.ViewModels
         public string? StateofTable { get; set; }
         public string Email { get; set; }
         public string stateTab { get; set; }
+
+        
+
+
     }
+
+
 }
