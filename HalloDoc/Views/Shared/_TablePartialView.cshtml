@@ -3,7 +3,7 @@
 
 @* admin dashboard Desktop *@
 <div class=" table-responsive mt-3  adminDashTable">
-    <table class="table" id="patientTable">
+    <table class="table" id="patientTable" >
         <thead class="table-secondary">
             <tr>
                 <th scope="col">Name</th>
@@ -90,7 +90,7 @@
                     @if (@ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                     {
                         <td>
-                            @if(@request.PhysicianName!=null)
+                            @if(@request.PhysicianName!=null&&request.PhysicianName!=" ")
                             {
                                 @request.PhysicianName
                             }
@@ -141,17 +141,17 @@
                                 display = "none";
                             }
                         }
-                        <button class=" dashboardBTN">
-                            <i class="bi bi-telephone-fill"></i>
+                        <button class="btn btn-light bg-transparent text-white d-flex"  style="">
+                            <i class="bi bi-telephone-fill mx-2"></i>
                             @request.PatientPhone
                         </button>
                         (Patient)
 
                         <div style="display:@display">
 
-                            <br>
-                            <button class=" dashboardBTN">
-                                <i class="bi bi-telephone-fill"></i>
+                        
+                            <button class="btn btn-light bg-transparent text-white d-flex">
+                                <i class="bi bi-telephone-fill mx-2"></i>
                                 @request.RequestorPhone
                             </button>
                             (@requestor)
@@ -172,53 +172,58 @@
                         </td>
                     }
                     <td>
-                        <div class=" d-flex flex-column justify-content-center ">
+                       
                             @if (@ViewBag.state == "Toclose" || @ViewBag.state == "Pending" || @ViewBag.state == "Active" || @ViewBag.state == "Conclude" || @ViewBag.state == "Unpaid")
                             {
 
-                                <button class=" dashboardBTN" style="border-radius: 9px;">
+                                <button class=" btn btn-sm d-flex align-items-center justify-content-center mb-1 " aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                     Patient
                                 </button>
                             }
-                            <button class=" dashboardBTN" aria-expanded="false" style="border-radius: 9px;">
+                            <button class=" btn btn-sm d-flex align-items-center justify-content-center " aria-expanded="false" style="border-radius: 4px;color:white;border:1px solid white">
                                 <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                 Provider
                             </button>
 
-                        </div>
+                       
                     </td>
                     <td>
-                        <div class="btn-group dropstart">
-                            <button type="button" class="dashboardBTN" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="btn-group dropstart ">
+                            <button type="button" class="btn btn-light btn-sm text-white bg-transparent rounded" data-bs-toggle="dropdown" aria-expanded="false">
                                 Actions
                             </button>
                             <ul class="dropdown-menu ">
                                 <span class="d-flex flex-column  align-items-center menuDashboard">
                                     @if (ViewBag.state == "New")
                                     {
-                                    <li>
+                                    <li >
                                         <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-checklist mx-2"></i>
                                             Assign Case
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        <a class="Cancel1 " data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-x-circle mx-2"></i>
                                             Cancle Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Block" data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-ban mx-2"></i>
                                             Block Patient
                                         </a>
                                     </li>
@@ -227,26 +232,33 @@
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
+
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Transfer" data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-folder-symlink mx-2"></i>
                                             Transfer
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <i class="bi bi-x-circle mx-2"></i>
+
                                             Clear Case
                                         </a>
                                     </li>
@@ -254,6 +266,7 @@
 
                                     <li>
                                         <a class="SendAgreement" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-arrow-up mx-2"></i>
                                             Send Agreement
                                         </a>
                                     </li>
@@ -262,32 +275,38 @@
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId ,status= @request.stateTab})" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-bag-plus mx-2"></i>
                                             Orders
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <i class="bi bi-person-lines-fill mx-2"></i>
                                             Doctors Note
                                         </a>
                                     </li>
 
                                     <li>
                                         <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journals mx-2"></i>
                                             Encounter
                                         </a>
                                     </li>
@@ -296,26 +315,31 @@
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-bag-plus mx-2"></i>
                                             Orders
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-person-lines-fill mx-2"></i>
                                             Doctors Note
                                         </a>
                                     </li>
@@ -330,37 +354,46 @@
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId ,status= @request.stateTab})" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-bag-plus mx-2"></i>
                                             Orders
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("CloseCase", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-x-circle mx-2"></i>
+
                                             Close Case
                                         </a>
                                     </li>
 
                                     <li>
                                         <a class="Cancel1" data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-person-lines-fill mx-2"></i>
                                             Doctors Note
                                         </a>
                                     </li>
                                     <li>
                                         <a class="Clear" data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <i class="bi bi-x-circle mx-2"></i>
+
                                             Clear Case
                                         </a>
                                     </li>
@@ -375,16 +408,19 @@
                                     {
                                     <li>
                                         <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
                                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
                                     </li>
@@ -563,7 +599,9 @@
                     {
                         <button data-bs-toggle="modal" data-bs-target="#AssignCase" id=@request.RequstClientId class="Assign col-5 mobileDashBtn adminDashBtn">Assign</button>
 
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId class="Cancel1 col-5 mobileDashBtn bg-danger">Cancel Case</button>
+                      
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId class="Cancel1 col-5 mobileDashBtn bg-danger">
+                            Cancel Case</button>
 
                         <button data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId class="Block col-5 mobileDashBtn bg-danger">Block Patient</button>
                     }

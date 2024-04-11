@@ -257,7 +257,6 @@ namespace HalloDoc.Services.Services
 
             return new AdminDashboardTableViewModel
             {
-               
                 PagingData = vendorTable,
                 TotalCount = totalCount,
                 TotalPages = totalPage,

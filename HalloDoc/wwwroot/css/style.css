@@ -1,11 +1,10 @@
 
-
-/*#region  - scheduling*/
-.fc-toolbar-title{
-    font-size:16px !important;
-    margin-bottom:5px !important;
-    margin-top:9px !important;
-}
+    /*#region  - scheduling*/
+    .fc-toolbar-title {
+        font-size: 16px !important;
+        margin-bottom: 5px !important;
+        margin-top: 9px !important;
+    }
 .fc-prev-button, .fc-next-button {
     border-radius: 50% !important;
     background-color: #00bbe8 !important;
@@ -77,22 +76,32 @@ input[type=password]::-ms-clear {
 .menuDashboard > li > a {
     width: 100%;
     display: flex;
-    justify-content: center;
+    font-weight:500;
 }
-
+.dropdown-menu {
+    width: 180px;
+}
 .menuDashboard > * {
     width: 100%;
     height: 100%;
-    margin: auto;
+    color: gray;
     align-items: center;
-    border-bottom: 1px solid lightgrey;
-    padding: 0px;
-    margin: 0px;
+    padding: 6px 5px;
+    margin: 0px !important;
+    border-top: 0.5px solid lightgray;
 }
+.menuDashboard > li:first-child {
+    border-top: none;
+}
+
 /*#endregion*/
 /*#region admin css*/
-.mainSectionMargin {
+/*.mainSectionMargin {
     margin: 125px 5px;
+}*/
+.mainSectionMargin {
+margin-top:8rem;
+  
 }
 .tabactive
 {
@@ -397,6 +406,7 @@ background-color:lightgray;
             text-align: center;
             width: 27vw;
             border-radius: 0px;
+            padding:0px !important;
         }
         .inputSearchbox{
             display:flex;
@@ -416,7 +426,7 @@ background-color:lightgray;
             font-size: 20px;
         }
             .cardContaint{
-               font-size: 15px;
+               font-size: 11px;
             }
         .headerfontDash {
             font-size: 15px;
