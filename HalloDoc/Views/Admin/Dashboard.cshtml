@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.AdminDashboardTableViewModel
+﻿@model HalloDoc.Entities.ViewModels.AdminDashboardViewModel
 @* model *@
 <div class="modal fade" id="CancelCase" tabindex="-1" role="dialog"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -48,9 +48,60 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="support" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Request DTY Support</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="supprtForm" asp-controller="Admin" asp-action="sendMailToAllPhysicians">
+                <div class="modal-body">
+                    <small>To All unscheduled Physicians: We are short on covergae and needs additional  support on call to respond requests.</small>
+
+                    <div class=" d-flex justify-content-center flex-column  ">
+
+                        <div class="form-floating mt-1 form-group  rounded-3">
+                            <textarea asp-for="Notes" class="form-control" id="additionalNotes" name="notess" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                            <label class="form-label" for="textAreaExample2">
+                                Message
+                            </label>
+                            <span class="text-danger validate"></span>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-end">
+
+                    <button class="btn btn-info" type="submit" >
+                        Confirm
+                    </button>
+
+                    <button type="button" class="btn btn-outline-info" data-bs-dismiss="modal">
+                        Cancle
+                    </button>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sendLinkToPatient" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content" id="modalBody">
+        </div>
+    </div>
+</div>
 @* model end *@
 <main class="mainSectionMargin">
-    <div class="container-fluid dashboardMain " >
+    <div class="container-fluid dashboardMain ">
         <div>
             <div class="row cardRow g-2 ">
                 <div class="col-lg-2 col-md-2 col-sm-2 cust-col ">
@@ -179,7 +230,7 @@
                         </span>
                     </div>
                     <div class="dashboardLinks d-flex  flex-wrap justify-content-end" style="float:right">
-                        <a class="btn  btn-sm btn-info text-white px-2  mb-1  ">
+                        <a class="btn  btn-sm btn-info text-white px-2  mb-1  sendLink" data-bs-toggle="modal" type="button" data-bs-target="#sendLinkToPatient">
                             <i class="fa-regular fa-paper-plane"></i>
                             <span class="tabIcon">
                                 Send Link
@@ -202,11 +253,11 @@
                             </span>
                         </a>
 
-                        <a class ="btn btn-sm btn-info text-white px-2  mb-1">
+                        <a class="btn btn-sm btn-info text-white px-2  mb-1" onclick="support()">
                             <i class="fa-solid fa-hospital-user"></i>
                             <span class="tabIcon">Request DTY Support</span>
                         </a>
-                        
+
 
 
                     </div>
@@ -228,7 +279,7 @@
                             <div class="has-search ">
 
                                 <select style="height:38px;" id="allregionsearch" class="form-select form-select-sm " aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
-                                    <option value="0" selected  >All Regions</option>
+                                    <option value="0" selected>All Regions</option>
 
                                     @foreach (var region in Model.State)
                                     {
@@ -260,23 +311,23 @@
 </main>
 <script>
 
-    
+
 
     //cards design
     $(document).ready(function () {
         $(".cards").click(function () {
             $(".cards").removeClass("active");
             $(this).addClass("active");
-            
+
         });
     });
 
     //partialview
-   
+
     function loadTable(STATE) {
         state = STATE;
         document.getElementById('status').innerText = "( " + (state) + " )";
-       
+
         page = 1;
         AjaxAll();
 
@@ -304,11 +355,11 @@
         // var activeCard = $('.cards.active');
 
         // var state = activeCard.attr('id');
-      
+
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
-            data: { state: state, PatientName: PatientName, ReqType: requestType, RegionId: regionId, CurrentPage: page },
+            data: { state: state, CurrentPage: page, PatientName: PatientName, ReqType: requestType, RegionId: regionId },
             dataType: "html",
             success: function (data) {
                 $("#admindata").html(data);
@@ -355,7 +406,7 @@
     localStorage.removeItem("state");
 
     if (state1 == "New") {
-        
+
         $("#New").click();
         $(".cards").removeClass("active");
 
@@ -365,7 +416,7 @@
     }
 
     else if (state1 == "Pending") {
-      
+
         $("#Pending").click();
 
         $(".cards").removeClass("active");
@@ -375,7 +426,7 @@
 
     }
     else if (state1 == "Active") {
-      
+
         $("#Active").click();
 
         $(".cards").removeClass("active");
@@ -415,7 +466,7 @@
 
     }
 
-  
+
 
 
     //responsive mobile view
@@ -457,11 +508,11 @@
         });
     }
     function ExportDataWithFilter() {
-  
+
         $.ajax({
             url: '/Admin/ExportFilterWise',
             type: 'POST',
-            data: { state: state, PatientName: PatientName, ReqType: requestType, RegionId: regionId},
+            data: { state: state, PatientName: PatientName, ReqType: requestType, RegionId: regionId },
             success: function (data) {
                 window.location.href = data;
             },
@@ -470,4 +521,44 @@
             }
         });
     }
+    function support() {
+        $('#support').modal('show');
+    }
+
+    $('.sendLink').click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+          
+            url: "@(Url.Action("sendLink", "Admin"))",
+            success: function (data) {
+
+                $("#sendLinkToPatient").find('.modal-content').html(data);
+            }
+        });
+    });
+
+    $('#supprtForm').on('submit', function (e) {
+
+        var additionalNotes = $('#additionalNotes').val();
+        if (additionalNotes == null || additionalNotes == "") {
+            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+            return;
+        }
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            success: function (data) {
+
+                location.reload();
+            }
+        });
+            
+    });
 </script>

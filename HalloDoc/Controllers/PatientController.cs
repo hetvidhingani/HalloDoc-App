@@ -89,13 +89,13 @@ namespace HalloDoc.Controllers
                 var request = HttpContext.Request;
                 int userId = Int32.Parse(request.Cookies["UserID"]);
                 var result = await _patient.SubmitInformationSomeoneElse(model, userId);
-                TempData["SuccessFormSave"] = "Form Saved Successfully.";
+                TempData["success"] = "Form Saved Successfully.";
 
                 return RedirectToAction(result);
             }
             else
             {
-                TempData["ErrorFormSave"] = "Error Saving Data";
+                TempData["error"] = "Error Saving Data";
             }
             return View();
         }
@@ -169,14 +169,14 @@ namespace HalloDoc.Controllers
             {
                 var result = await _patient.EditUser(patientRequestViewModel);
                 HttpContext.Response.Cookies.Append("UserNameUser", result.FirstName + " " + result.LastName);
-                TempData["SuccessFormSave"] = "Form Saved Successfully.";
+                TempData["success"] = "Form Saved Successfully.";
 
                 return RedirectToAction("Profile", result);
 
             }
             else
             {
-                TempData["ErrorFormSave"] = "Error Saving Data";
+                TempData["error"] = "Error Saving Data";
 
                 return RedirectToAction("Profile");
             }

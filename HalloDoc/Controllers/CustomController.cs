@@ -275,7 +275,8 @@ namespace HalloDoc.Controllers
         [HttpGet]
         public async Task<IActionResult> PatientRequest()
         {
-            int? userId = HttpContext.Session.GetInt32("UserSession");
+            var request = HttpContext.Request;
+            int userId = Int32.Parse(request.Cookies["UserID"]);
             var result = await _patient.PatientRequest(userId);
             if (result == "")
             {
@@ -290,13 +291,13 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _patient.PatientRequest(viewModel);
-                TempData["SuccessFormSave"] = "Form Saved Successfully.";
+                TempData["success"] = "Form Saved Successfully.";
 
                 return RedirectToAction(result);
             }
             else
             {
-                TempData["ErrorFormSave"] = "Error Saving Data";
+                TempData["error"] = "Error Saving Data";
                 return View(viewModel);
             }
         }

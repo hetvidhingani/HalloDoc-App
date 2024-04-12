@@ -132,13 +132,14 @@
     //sweet alert
     $('#sendorder').on('submit', function (e) {
         event.preventDefault();
-        var email = $("#email").val();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
 
         $.ajax({
             type: "POST",
-            url: "/Admin/SendOrderDetails", 
-            data: { email: email },
-          
+            url: url,
+            data: data
         })
             .done(function (response) {
                 if (response.success) {

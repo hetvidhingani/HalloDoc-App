@@ -29,6 +29,7 @@ namespace HalloDoc.Controllers
             _customService = customService;
             _hostingEnvironment = hostingEnvironment;
         }
+
         #region admin
 
         #region Logout
@@ -57,13 +58,13 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> Dashboard()
         {
 
-            var viewModel = new AdminDashboardTableViewModel
+            var viewModel = new AdminDashboardViewModel()
             {
                 NewCount = await _admin.GetCount(1),
                 PendingCount = await _admin.GetCount(2),
                 ActiveCount = await _admin.GetCount(4),
                 ConcludeCount = await _admin.GetCount(6),
-                ToCloseCount = await _admin.GetCount(3),
+                ToCloseCount = await _admin.GetCount(3) + await _admin.GetCount(7),
                 UnpaidCount = await _admin.GetCount(9),
 
             };
@@ -73,62 +74,72 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public IActionResult GetTable(string state, string? PatientName, int? ReqType, int? RegionId, int CurrentPage = 1)
+        public IActionResult GetTable(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId)
         {
             if (ModelState.IsValid)
             {
+                List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
+
                 switch (state)
                 {
                     case "New":
-                        ViewBag.state = "New";
-                        var paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 1, CurrentPage);
+                        var result = _admin.Admintbl(state, list, 1);
+                        var paging = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result);
                         return PartialView("_TablePartialView", paging);
 
                     case "Pending":
-                        ViewBag.state = "Pending";
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 2, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
+                        var result2 = _admin.Admintbl(state, list, 2);
+                        var paging2 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result2);
+
+                        return PartialView("_TablePartialView", paging2);
 
                     case "Active":
-                        ViewBag.state = "Active";
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 4, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
+                        var result3 = _admin.Admintbl(state, list, 4);
+                        var paging3 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result3);
 
+                        return PartialView("_TablePartialView", paging3);
 
                     case "Conclude":
-                        ViewBag.state = "Conclude";
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 6, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
+                        var result4 = _admin.Admintbl(state, list, 6);
+                        var paging4 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result4);
+
+                        return PartialView("_TablePartialView", paging4);
 
                     case "Toclose":
-                        ViewBag.state = "Toclose";
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 3, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
 
+                        var result5 = _admin.Admintbl(state, list, 3);
+                        result5.AddRange(_admin.Admintbl(state, list, 7));
+                        var paging5 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result5);
+
+                        return PartialView("_TablePartialView", paging5);
 
                     case "Unpaid":
-                        ViewBag.state = "Unpaid";
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 9, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
+                        var result6 = _admin.Admintbl(state, list, 9);
+                        var paging6 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result6);
 
+                        return PartialView("_TablePartialView", paging6);
 
                     default:
-                        paging = _admin.AdminDashboardData(state, PatientName, ReqType, RegionId, 1, CurrentPage);
-                        return PartialView("_TablePartialView", paging);
+                        var result7 = _admin.Admintbl(state, list, 1);
+                        var paging7 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result7);
 
+                        return PartialView("_TablePartialView", paging7);
                 }
             }
             return View();
         }
-        //[HttpPost]
-        //[Obsolete]
-        public IActionResult ExportFilterWise(string state, string? PatientName, int? ReqType, int? RegionId)
+
+
+        [HttpPost]
+        [Obsolete]
+        public IActionResult ExportFilterWise(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId)
         {
             int data;
+            List<AdminDashboardViewModel> list = new List<AdminDashboardViewModel>();
+
             switch (state)
             {
                 case "New":
-
                     data = 1;
                     break;
 
@@ -138,7 +149,6 @@ namespace HalloDoc.Controllers
                 case "Active":
                     data = 4;
                     break;
-
 
                 case "Conclude":
                     data = 6;
@@ -152,20 +162,22 @@ namespace HalloDoc.Controllers
                     data = 9;
                     break;
 
-
                 default:
-
                     data = 1;
                     break;
             }
+            var result1 = _admin.Admintbl(state, list, data);
+            var paging6 = _admin.Pagination(state, 0, PatientName, ReqType, RegionId, result1).PagingData;
             using (var memoryStream = new MemoryStream())
             using (var writer = new StreamWriter(memoryStream))
             using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
             {
-                csvWriter.WriteRecords(_admin.AdminDashboardData(state, PatientName, ReqType, RegionId, data, 0).PagingData);
+
+
+                csvWriter.WriteRecords(paging6);
                 writer.Flush();
                 var result = memoryStream.ToArray();
-                var fileName = "filtered_data_" + Guid.NewGuid().ToString() + ".csv";
+                var fileName = "HalloDoc_exportData_" + Guid.NewGuid().ToString() + ".csv";
                 var webRootPath = _hostingEnvironment.WebRootPath;
                 var filePath = Path.Combine(webRootPath, "uploads", fileName);
 
@@ -176,29 +188,66 @@ namespace HalloDoc.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Obsolete]
-        //public IActionResult ExportAll()
-        //{
-        //    using (var memoryStream = new MemoryStream())
-        //    using (var writer = new StreamWriter(memoryStream))
-        //    using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
-        //    {
-        //        csvWriter.WriteRecords(_adminLogin.ExportAllData());
-        //        writer.Flush();
-        //        var result = memoryStream.ToArray();
-        //        var fileName = "filtered_data_" + Guid.NewGuid().ToString() + ".csv";
-        //        var webRootPath = _hostingEnvironment.WebRootPath;
-        //        var filePath = Path.Combine(webRootPath, "tempFiles", fileName);
+        [HttpGet]
+        [Obsolete]
+        public IActionResult ExportAll()
+        {
+            using (var memoryStream = new MemoryStream())
+            using (var writer = new StreamWriter(memoryStream))
+            using (var csvWriter = new CsvHelper.CsvWriter(writer, CultureInfo.InvariantCulture))
+            {
+                csvWriter.WriteRecords(_admin.ExportAllData());
+                writer.Flush();
+                var result = memoryStream.ToArray();
+                var fileName = "HalloDoc_ExportALLData_" + Guid.NewGuid().ToString() + ".csv";
+                var webRootPath = _hostingEnvironment.WebRootPath;
+                var filePath = Path.Combine(webRootPath, "uploads", fileName);
 
-        //        System.IO.File.WriteAllBytes(filePath, result);
+                System.IO.File.WriteAllBytes(filePath, result);
 
-        //        var fileUrl = Url.Content("~/tempFiles/" + fileName);
-        //        return Ok(fileUrl);
-        //    }
-        //}
+                var fileUrl = Url.Content("~/uploads/" + fileName);
+                return Ok(fileUrl);
+            }
+        }
+        [HttpPost]
+        public IActionResult sendMailToAllPhysicians(string notess)
+        {
+            var result = _admin.UnscheduledPhysicians(notess);
+            if (result == null)
+            {
+
+                TempData["success"] = "Email is sent successfully to Unscheduled Physicians";
+            }
+            else
+            {
+
+                TempData["error"] = "No Physicians available to provide service.";
+
+            }
+
+            return Json("success");
 
 
+        }
+        public IActionResult sendLink()
+        {
+            return PartialView("_SendLink");
+        }
+        [HttpPost]
+        public IActionResult SendLinkPatient(string email)
+        {
+            if (email != null)
+            {
+                var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientRequest/" + email;
+                var subject = "Create Request";
+                var body = "Click here " + "<a href=" + link + ">Create New Request</a>" + ".";
+                _customService.SendEmail(email, link, subject, body);
+
+                TempData["success"] = "Email is sent successfully to your email account";
+            }
+
+            return RedirectToAction("Dashboard");
+        }
         #endregion
 
         #region Create Admin
@@ -368,15 +417,15 @@ namespace HalloDoc.Controllers
         #region Clear Case
         public async Task<IActionResult> ClearCase(int id)
         {
-            HttpContext.Session.SetInt32("requestID", id);
+            ViewBag.id = id;
 
             return PartialView("_ClearCasePartialView");
         }
-        public async Task<IActionResult> ClearRequest()
+        public async Task<IActionResult> ClearRequest(int id)
         {
             if (ModelState.IsValid)
             {
-                var id = HttpContext.Session.GetInt32("requestID");
+              
 
                 await _admin.ClearRequest(id);
                 return RedirectToAction("Dashboard");
@@ -417,12 +466,12 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(int Id)
         {
-            HttpContext.Session.SetInt32("reqID", Id);
+  
 
             var request = HttpContext.Request;
             ViewBag.MySession = request.Cookies["UserNameAdmin"];
 
-            // = HttpContext.Session.GetString("UserName");
+      
             var result = await _customService.ViewDocument(Id);
             return View(result);
         }
@@ -470,29 +519,27 @@ namespace HalloDoc.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteFile(int fileID)
+        public async Task<IActionResult> DeleteFile(int fileID,int RequstId)
         {
-            int? requstId = HttpContext.Session.GetInt32("reqID");
-            await _admin.DeleteFile(fileID, requstId);
-
-            return RedirectToAction("ViewUploads", new { Id = requstId });
+            await _admin.DeleteFile(fileID, RequstId);
+            TempData["success"] = "Deleted Successfully!";
+            return RedirectToAction("ViewUploads", new { Id = RequstId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues)
+        public async Task<IActionResult> DeleteFileByChecked(List<int> documentValues, int requestID)
         {
-            int? requestid = HttpContext.Session.GetInt32("reqID");
             if (documentValues.Count() > 0)
             {
                 foreach (var items in documentValues)
                 {
 
-                    await _admin.DeleteFile(items, requestid);
+                    await _admin.DeleteFile(items, requestID);
                 }
             }
             else
             {
-                await _admin.DeleteFile(0, requestid);
+                await _admin.DeleteFile(0, requestID);
 
             }
 
@@ -526,8 +573,8 @@ namespace HalloDoc.Controllers
             var result = await _admin.GetBusinessDetails(BusinessId);
             return Json(result);
         }
-        [HttpPost]
 
+        [HttpPost]
         public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
         {
             if (!ModelState.IsValid)
@@ -537,9 +584,11 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                string? adminID = HttpContext.Session.GetString("AdminAspNetID");
+                var request = HttpContext.Request;
+                string AdminID = request.Cookies["AspNetIdAdmin"];
+                
 
-                await _admin.SendOrderDetails(viewModel, Id, adminID);
+                await _admin.SendOrderDetails(viewModel, Id, AdminID);
 
             }
             return Json(new { success = true });
@@ -558,7 +607,8 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> SendAgreementLink(ViewCaseViewModel viewModel)
         {
-            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var request = HttpContext.Request;
+            int AdminId = Int32.Parse(request.Cookies["AdminID"]);
 
             if (ModelState.IsValid)
             {
@@ -587,8 +637,9 @@ namespace HalloDoc.Controllers
         #region Admin MyProfile
         public async Task<IActionResult> AdminMyProfile()
         {
-            var AdminId = HttpContext.Session.GetInt32("AdminSession");
-            var result = await _admin.AdminMyProfile(AdminId);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            var result = await _admin.AdminMyProfile(AdminID);
             return View(result);
         }
         public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
@@ -775,8 +826,9 @@ namespace HalloDoc.Controllers
         #region Create Role
         public IActionResult CreateRole()
         {
-            var AdminId = HttpContext.Session.GetInt32("AdminSession");
-            var data = _admin.CreateRole((int)AdminId);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            var data = _admin.CreateRole((int)AdminID);
             return View(data);
         }
         [HttpPost]
@@ -797,7 +849,8 @@ namespace HalloDoc.Controllers
         #region Edit Role
         public IActionResult EditAccountAccess(int id)
         {
-            var AdminId = HttpContext.Session.GetInt32("AdminSession");
+            var request = HttpContext.Request;
+            int AdminId = Int32.Parse(request.Cookies["AdminID"]);
             var data = _admin.EditAccountAccess(id, (int)AdminId);
             return View(data);
         }
@@ -953,8 +1006,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRequest(PatientRequestViewModel model)
         {
-            var adminID = HttpContext.Session.GetInt32("AdminSession");
-            await _admin.CreateRequestByAdmin(model, (int)adminID);
+            var request = HttpContext.Request;
+            int AdminId = Int32.Parse(request.Cookies["AdminID"]);
+            await _admin.CreateRequestByAdmin(model, (int)AdminId);
             //await LinkToCreateAccount(new CreateAccountViewModel
             //{
             //    Email = viewModel.Email
@@ -992,9 +1046,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public IActionResult AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays)
         {
-            var AdminId = HttpContext.Session.GetString("AdminAspNetID");
-
-            _admin.AddShift(model, WeekDays, AdminId);
+            var request = HttpContext.Request;
+            string AdminID = request.Cookies["AspNetIdAdmin"];
+            _admin.AddShift(model, WeekDays, AdminID);
             return RedirectToAction("Scheduling");
         }
         #endregion

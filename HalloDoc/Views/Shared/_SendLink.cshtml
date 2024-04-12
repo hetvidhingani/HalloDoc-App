@@ -1,0 +1,76 @@
+﻿@model HalloDoc.Entities.ViewModels.SendLinkViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Send Link</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form id="sendLink" asp-controller="Admin" asp-action="SendLinkPatient">
+    <div class="modal-body">
+        <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
+
+        <div class=" d-flex justify-content-center flex-column  ">
+            <div class="form-floating mt-2 form-group">
+                <input asp-for="FirstName" type="text" class="form-control"  placeholder=" ">
+                <label for="FirstName">First Name</label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                <div class="form-floating mt-2 form-group">
+                    <input asp-for="LastName" type="text" class="form-control"  placeholder=" ">
+                    <label for="LastName">Last Name</label>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+
+                </div>
+            </div>
+
+            <div class="form-floating mt-2 form-group">
+                <div class="form-floating form-group  border">
+                    <input asp-for="mobile" id="phone" type="tel" style="border: none;height: 54px;" required />
+                    <label for="mobile">phone</label>
+                </div>
+                <span asp-validation-for="mobile" class="text-danger"></span>
+
+            </div>
+
+            <div class="form-floating mt-2 form-group">
+                <input asp-for="email" type="email" class="form-control" placeholder=" ">
+                <label for="email">Email</label>
+                <span asp-validation-for="email" class="text-danger"></span>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+
+        <button class="createNewReqBtn submitBtn" type="submit" >
+            Confirm
+        </button>
+
+        <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+            Cancle
+        </button>
+
+
+    </div>
+</form>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    var phoneInputField = document.querySelector("#phone");
+
+    var phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    $('#phone').attr('value', "+91");
+   
+</script>

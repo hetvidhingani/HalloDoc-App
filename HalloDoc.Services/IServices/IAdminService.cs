@@ -103,6 +103,9 @@ namespace HalloDoc.Services.IServices
         List<PhysicianLocation> ProviderLocation();
         ProvidersOnCallViewModel? GetProvidersOnCall(int regionId);
 
-        AdminDashboardTableViewModel AdminDashboardData(string state, string? PatientName, int? ReqType, int? RegionId, int status, int CurrentPage );
+        List<AdminDashboardViewModel> ExportAllData();
+        List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status);
+        AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
+        string UnscheduledPhysicians (string message);
     }
 }

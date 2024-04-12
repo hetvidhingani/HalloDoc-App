@@ -1,6 +1,7 @@
 ﻿<div class="d-flex justify-content-center mb-4 mt-4">
     <img src="~/images/warning.png" alt="" width="100px" style="border:1px solid #F7AC05;border-radius:50%;">
 </div>
+<input type="hidden" value="@ViewBag.id" id="requestID" />
 <div class="modal-body">
     <h4 class="text-center">Confirmation for clear case</h4>
     <p class="mt-3 text-center">
@@ -8,8 +9,8 @@
     </p>
 </div>
 <div class="modal-footer d-flex justify-content-center">
-    <button type="button" class="btn btn-info text-white clearBTN"
-            data-bs-dismiss="modal">
+    <button type="button" class="btn btn-info text-white clearBTN" 
+            >
         Clear
     </button>
     <button type="button" class="btn btn-primary-outline "
@@ -19,11 +20,12 @@
 </div>
 <script>
     $('.clearBTN').click(function () {
-      
+        var id = $("#requestID").val();
+        console.log(id);
         $.ajax({
             type: "POST",
             dataType: "html",
-          
+            data: {id},
             url: "@(Url.Action("ClearRequest", "Admin"))",
             success: function (response) { 
                 location.reload();

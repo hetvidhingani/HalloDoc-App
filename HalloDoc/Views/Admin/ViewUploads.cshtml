@@ -99,7 +99,7 @@
                                         <a href="@Url.Action("DownloadFile", "Admin", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                             <i class="bi bi-cloud-arrow-down"></i>
                                         </a>
-                                        <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
+                                        <a href="@Url.Action("DeleteFile", "Admin", new { fileID = @r.RequestWiseFileId, RequstId =r.RequestId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </td>
@@ -230,6 +230,8 @@
 
 
     function DeleteAll() {
+        var requestid = $("#reqID").val();
+
         // Show SweetAlert dialog asking the user to confirm deletion
         Swal.fire({
             title: 'Are you sure?',
@@ -247,7 +249,7 @@
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("DeleteFileByChecked", "Admin")",
-                    data: { documentValues: documentValues },
+                    data: { documentValues: documentValues, requestID: requestid },
                     success: function (response) {
                         location.reload();
                     }

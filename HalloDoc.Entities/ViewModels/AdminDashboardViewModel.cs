@@ -14,7 +14,7 @@ namespace HalloDoc.Entities.ViewModels
         public int RequestTypeID { get; set; }
         public int? RequstClientId { get; set; }
         public string PatientName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
+        public DateTime DateOfBirth { get; set; }
         public string? Requestor { get; set; }
         public DateTime RequestedDate { get; set; }
         public string PatientPhone { get; set; }
@@ -22,7 +22,7 @@ namespace HalloDoc.Entities.ViewModels
         public string Address { get; set; }
         public string Notes { get; set; }
         public string? PhysicianName { get; set; }
-        public DateTime? DateOfService { get; set; }
+        public DateTime DateOfService { get; set; }
         public int? RegionId { get; set; }
         public int NewCount { get; set; }
         public int PendingCount { get; set; }

@@ -30,7 +30,8 @@
                 <label class="form-label" for="textAreaExample2">
                     Discription
                 </label>
-                <span  class="text-danger validate"></span>
+                @* <span  class="text-danger validate"></span> *@
+                <span asp-validation-for="AdditionalNotes" class="text-black"></span>
             </div>
 
 
@@ -89,11 +90,11 @@
     $('#myForm').on('submit', function (e) {
        
         e.preventDefault();
-        var additionalNotes = $('#additionalNotes').val();
-        if (additionalNotes == null || additionalNotes == "") {
-            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
-            return;
-        }
+        // var additionalNotes = $('#additionalNotes').val();
+        // if (additionalNotes == null || additionalNotes == "") {
+        //     document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+        //     return;
+        // }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();
