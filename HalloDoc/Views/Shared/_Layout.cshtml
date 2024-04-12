@@ -37,7 +37,122 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <style>
+        .bar {
+            background: #1b1a1b;
+            backdrop-filter: blur(15px);
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            overflow-y: auto;
+            transition: 0.6s ease;
+            transition-property: left;
+        }
+
+            .bar::-webkit-scrollbar {
+                width: 0px;
+            }
+
+
+
+            .bar.active {
+                left: 0;
+            }
+
+        h1 {
+            text-align: center;
+            font-weight: 500;
+            font-size: 25px;
+            padding-bottom: 13px;
+            font-family: sans-serif;
+            letter-spacing: 2px;
+        }
+
+        .bar .menu {
+            width: 100%;
+            margin-top: 30px;
+        }
+
+            .bar .menu .item {
+                position: relative;
+                cursor: pointer;
+            }
+
+                .bar .menu .item a {
+                    color: #fff;
+                    font-size: 16px;
+                    text-decoration: none;
+                    display: block;
+                    padding: 5px 30px;
+                    line-height: 60px;
+                }
+
+                    .bar .menu .item a:hover {
+                        background: #33363a;
+                        transition: 0.3s ease;
+                    }
+
+                .bar .menu .item i {
+                    margin-right: 15px;
+                }
+
+                .bar .menu .item a .dropdown {
+                    position: absolute;
+                    right: 0;
+                    margin: 20px;
+                    transition: 0.3s ease;
+                }
+
+                .bar .menu .item .sub-menu {
+                    background: #262627;
+                    display: none;
+                }
+
+                    .bar .menu .item .sub-menu a {
+                        padding-left: 80px;
+                    }
+
+        .rotate {
+            transform: rotate(90deg);
+        }
+
+        .close-btn {
+            position: absolute;
+            color: #fff;
+            font-size: 23px;
+            right: 0px;
+            margin: 15px;
+            cursor: pointer;
+        }
+
+        .menu-btn {
+            position: absolute;
+            color: rgb(0, 0, 0);
+            font-size: 35px;
+            margin: 25px;
+            cursor: pointer;
+        }
+
+        .main {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px;
+        }
+
+            .main h1 {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 60px;
+                text-align: center;
+                line-height: 80px;
+            }
+
+    </style>
 </head>
+
 <body>
     @if (TempData["error"] != null)
     {
@@ -59,7 +174,7 @@
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
            <div class="d-flex align-items-center">
-                <a href="javascript:void(0);" class="topicon" onclick="myFunction1()">
+                <a href="javascript:void(0);" class="menu-btn" >
                     <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
                         <i class="bi bi-list"></i>
                     </button>
@@ -183,7 +298,39 @@
                 </div>
 
             </div>
-          
+            <div class="bar " style="z-index:5000;">
+
+                <header>
+
+
+
+                    <div class="close-btn">
+
+                        <i class="fas fa-times"></i>
+                    </div>
+                    
+                    <h1>Mystery Code</h1>
+                </header>
+                <div class="menu">
+                    <a id="1" asp-action="Dashboard" asp-controller="Admin" class="item nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Dashboard</a>
+                    <a id="2" asp-action="ProviderLocation" asp-controller="Admin" class="item nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Provider Location</a>
+
+                    <a id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="item nav-link py-2" style="color:dimgrey">My Profile</a>
+                    <div class="dropdown item" id="4 ">
+                        
+                            <a class="sub-btn">Providers<i class="fas fa-angle-right dropdown"></i></a>
+                        <div class="sub-menu">
+                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a>
+                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="Scheduling" asp-controller="Admin">Scheduling</a>
+                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Invocing</a>
+                        </div>
+
+                       
+                    </div>
+                    <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="nav-link py-2 item" style="color:dimgrey">Partners</a>
+                    
+                </div>
+            </div>
         }
 
     }
@@ -241,7 +388,24 @@
         //         window.location.href = $(this).attr("href");
         //     });
         // });
+        $(document).ready(function () {
+            //jquery for toggle sub menus
+            $('.sub-btn').click(function () {
+                $(this).next('.sub-menu').slideToggle();
+                $(this).find('.dropdown').toggleClass('rotate');
+            });
 
+            //jquery for expand and collapse the sidebar
+            $('.menu-btn').click(function () {
+                $('.bar').addClass('active');
+                $('.menu-btn').css("visibility", "hidden");
+            });
+
+            $('.close-btn').click(function () {
+                $('.bar').removeClass('active');
+                $('.menu-btn').css("visibility", "visible");
+            });
+        });
 
 
        
