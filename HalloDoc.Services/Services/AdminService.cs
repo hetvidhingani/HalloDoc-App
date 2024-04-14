@@ -338,7 +338,7 @@ namespace HalloDoc.Services.Services
             List<string> emailList = new List<string>();
             var data = _shiftDetailsRepository.GetAllData(x => x.Shift.Physician.Email, whereClauseSyntax);
 
-            if(data.Count >0)
+            if (data.Count > 0)
             {
                 var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
                 var senderPassword = "Hkd$9503";
@@ -1134,6 +1134,8 @@ namespace HalloDoc.Services.Services
             ProviderViewModel model = new ProviderViewModel();
             model.State = await _regionRepository.GetRegions();
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
+            model.status = _statusRepository.GetAll().ToList();
+
             return model;
         }
         public async Task<object> CreateProvider(ProviderViewModel model)
@@ -1149,30 +1151,79 @@ namespace HalloDoc.Services.Services
             };
             await _aspnetuserRepository.AddAsync(user);
 
-            Physician physician = new Physician();
-
-            physician.Id = user.Id;
-            physician.FirstName = model.FirstName;
-            physician.LastName = model.LastName;
-            physician.Email = model.Email;
-            physician.MedicalLicense = model.MedicalLicense;
-            physician.Mobile = model.PhoneNumber;
-            physician.AdminNotes = model.AdminNotes;
-            physician.Address1 = model.Address1;
-            physician.Address2 = model.Address2;
-            physician.Zip = model.Zip;
-            physician.City = model.City;
-            physician.RegionId = model.RegionId;
-            physician.RoleId = model.RoleId;
-            physician.CreatedDate = DateTime.Now;
-            physician.Status = 3;
-            physician.CreatedBy = user.Id;
-            physician.BusinessName = model.BusinessName;
-            physician.BusinessWebsite = model.BusinessWebsite;
-            //physician.Photo=model.File.FileName;
-
+            Physician physician = new Physician
+            {
+                Id = user.Id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                MedicalLicense = model.MedicalLicense,
+                Mobile = model.PhoneNumber,
+                AdminNotes = model.AdminNotes,
+                Address1 = model.Address1,
+                Address2 = model.Address2,
+                Zip = model.Zip,
+                City = model.City,
+                RegionId = model.RegionId,
+                RoleId = model.RoleId,
+                CreatedDate = DateTime.Now,
+                Status = 3,
+                CreatedBy = user.Id,
+                BusinessName = model.BusinessName,
+                BusinessWebsite = model.BusinessWebsite,
+                Photo = model.Photo.FileName,
+            };
 
             await _physicianRepository.AddAsync(physician);
+            if (model.Photo.FileName != null)
+            {
+
+                var fileName = $"{physician.PhysicianId}_Photo.pdf";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\image", fileName);
+                using var stream = System.IO.File.Create(filePath);
+                model.Photo.CopyTo(stream);
+            }
+            if (model.contractoragreement.FileName != null)
+            {
+
+                var fileName1 = $"{physician.PhysicianId}_contractoragreement.pdf";
+                var filePath1 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName1);
+                using var stream1 = System.IO.File.Create(filePath1);
+                model.Photo.CopyTo(stream1);
+                physician.IsAgreementDoc = new BitArray(1);
+            }
+            if (model.backgroundcheck.FileName != null)
+            {
+
+                var fileName2 = $"{physician.PhysicianId}_backgroundcheck.pdf";
+                var filePath2 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName2);
+                using var stream2 = System.IO.File.Create(filePath2);
+                model.Photo.CopyTo(stream2);
+                physician.IsBackgroundDoc = new BitArray(1);
+            }
+
+            if (model.hippa.FileName != null)
+            {
+
+                var fileName3 = $"{physician.PhysicianId}_hippa.pdf";
+                var filePath3 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName3);
+                using var stream3 = System.IO.File.Create(filePath3);
+                model.Photo.CopyTo(stream3);
+                physician.IsTrainingDoc = new BitArray(1);
+            }
+
+            if (model.nondisclosure.FileName != null)
+            {
+
+                var fileName4 = $"{physician.PhysicianId}_nondisclosure.pdf";
+                var filePath4 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName4);
+                using var stream4 = System.IO.File.Create(filePath4);
+                model.Photo.CopyTo(stream4);
+                physician.IsNonDisclosureDoc = new BitArray(1);
+            }
+
+
+
             return "ViewUploads";
         }
 

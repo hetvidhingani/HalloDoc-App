@@ -14,14 +14,14 @@
         </div>
         <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input data-valmsg-replace="true"  type="hidden" asp-for="PhysicianId" />
+            <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" />
 
             <h3>Account Information</h3>
 
             <div class="row formrow ">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-floating form-group">
-                        <input data-valmsg-replace="true"  asp-for="UserName" type="text" class="form-control " placeholder=" " readonly>
+                        <input data-valmsg-replace="true" asp-for="UserName" type="text" class="form-control " placeholder=" " readonly>
                         <label for=" ">UserName</label>
                         <span asp-validation-for="UserName" class="text-danger"></span>
 
@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-floating form-group">
-                        <input data-valmsg-replace="true"  asp-for="Password" type="password" class="form-control " id="Password" placeholder=" " data-valmsg-replace="true">
+                        <input data-valmsg-replace="true" asp-for="Password" type="password" class="form-control " id="Password" placeholder=" " data-valmsg-replace="true">
                         <label for=" ">Password</label>
                         <span asp-validation-for="Password" class="text-danger password-validation-message"></span>
                     </div>
@@ -38,7 +38,7 @@
             @* //form 1 *@
             <form id="form1" asp-action="changeRoleStatus" asp-controller="Admin" asp-route-id="@Model.PhysicianId" method="post" data-form-id="1">
                 <div class="row formrow ">
-                    <input data-valmsg-replace="true"  type="hidden" asp-for="PhysicianId" />
+                    <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" />
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -87,11 +87,11 @@
 
             <form id="form2" asp-action="savePhysicianInformation" asp-controller="Admin" asp-route-id="@Model.PhysicianId" method="post">
                 <h3> Physician Information</h3>
-                <input data-valmsg-replace="true"  type="hidden" asp-for="PhysicianId" id="PhysicianId" />
+                <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" id="PhysicianId" />
                 <div class="row formrow ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true" asp-for="FirstName" type="text" id="firstName" name="FirstName"  class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="FirstName" type="text" id="firstName" name="FirstName" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">First Name</label>
                             <span asp-validation-for="FirstName" class="text-danger checkhere"></span>
 
@@ -107,25 +107,25 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Email"
+                            <input data-valmsg-replace="true" asp-for="Email"
                                    id="Email" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Email</label>
-                            <span asp-validation-for="Email"  class="text-danger email"></span>
+                            <span asp-validation-for="Email" class="text-danger email"></span>
 
                         </div>
                     </div>
 
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input data-valmsg-replace="true"  asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+                            <input data-valmsg-replace="true" asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
 
                             <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="MedicalLicense"
+                            <input data-valmsg-replace="true" asp-for="MedicalLicense"
                                    type="text" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">MedicalLicense</label>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="NPINumber"
+                            <input data-valmsg-replace="true" asp-for="NPINumber"
                                    onblur="AlertName()" type="number" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">NPInumber</label>
@@ -145,7 +145,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="SyncEmail"
+                            <input data-valmsg-replace="true" asp-for="SyncEmail"
                                    id="suncEmail" type="email" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Syncronization Email Address</label>
@@ -168,12 +168,12 @@
 
             <form asp-action="saveBillingInformation" asp-controller="Admin" asp-route-id="@Model.PhysicianId" id="form3" method="post">
                 <h3> Mailing & Billing Information</h3>
-                <input data-valmsg-replace="true"  type="hidden" asp-for="PhysicianId" id="PhysicianId" />
+                <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" id="PhysicianId" />
 
                 <div class="row formrow">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Address1" type="text" class="form-control edit" id="address1" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="Address1" type="text" class="form-control edit" id="address1" placeholder=" " readonly>
                             <label for=" ">Address1</label>
                             <span asp-validation-for="Address1" class="text-danger address1"></span>
 
@@ -181,7 +181,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Address2" type="text" id="address2" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="Address2" type="text" id="address2" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Address2 </label>
                             <span asp-validation-for="Address2" class="text-danger address2"></span>
 
@@ -189,7 +189,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="City" id="city" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="City" id="city" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">City </label>
                             <span asp-validation-for="City" class="text-danger city"></span>
 
@@ -212,7 +212,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="Zip" type="text" id="zip" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="Zip" type="text" id="zip" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="Zip" class="text-danger zip"></span>
 
@@ -220,7 +220,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input data-valmsg-replace="true"  asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+                            <input data-valmsg-replace="true" asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit" readonly />
 
                         </div>
                         <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
@@ -243,7 +243,7 @@
                 <div class="row formrow">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="BusinessName" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="BusinessName" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Business Name</label>
                             <span asp-validation-for="BusinessName" class="text-danger"></span>
 
@@ -251,7 +251,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true"  asp-for="BusinessWebsite" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="BusinessWebsite" type="text" class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Business Website </label>
                             <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
 
@@ -260,20 +260,20 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <div class="input-group mb-3">
-                                <input data-valmsg-replace="true"  asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control edit" id="UploadButton" disabled>
+                                <input data-valmsg-replace="true" asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control edit" id="UploadButton" disabled>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 d-flex">
                         <div class="form-floating form-group col-9">
                             <div class="input-group mb-3">
-                                <input data-valmsg-replace="true"  asp-for="Signature" style="border-radius:10px" name="Signature" type="file" class="form-control edit" id="UploadButton2" disabled>
+                                <input data-valmsg-replace="true" asp-for="Signature" style="border-radius:10px" name="Signature" type="file" class="form-control edit" id="UploadButton2" disabled>
                             </div>
 
                         </div>
                         <div class="col-1 mx-1">
-                            <input data-valmsg-replace="true"  type="button" id="upload" hidden class="edit" disabled/>
-                            <label for="upload" class="edit" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.7rem;font-family: sans-serif;border-radius: 0.4rem;cursor: pointer;" >Create</label>
+                            <input data-valmsg-replace="true" type="button" id="upload" hidden class="edit" disabled />
+                            <label for="upload" class="edit" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.7rem;font-family: sans-serif;border-radius: 0.4rem;cursor: pointer;">Create</label>
 
                         </div>
                     </div>
@@ -302,40 +302,25 @@
 
             <hr />
             <h3> Onboarding</h3>
+            <table>
+                <tr>
+                    <td> <input type="checkbox" id="contractoragreement" class="mx-2" /> </td>
+                    <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
+                    <td>
+                        <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
+                        <label type="button" class="btn btn-info text-white mx-2" for="file1">Upload</label>
+                    </td>
+                    <td>
+                        <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn1">View</a>
+                        @if (Model.IsAgreementDoc == true)
+                        {
 
-            <div class="row formrow">
-                <div class="col-12 d-flex  align-items-center">
-                    <div class="col-6">Independent Contractor Agreement</div>
-                    <div class="col-6">
-                        <input data-valmsg-replace="true"  type="file" id="upload" hidden />
-                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
-                    </div>
-                </div>
-                <div class="col-12 d-flex justify-content-between">
-                    <div>Background Check</div>
-                    <div class="col-6">
-                        <input data-valmsg-replace="true"  type="file" id="upload" hidden />
-                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
-                    </div>
-                </div>
-                <div class="col-12 d-flex justify-content-between">
-                    <div>HIPPA Compliance</div>
-                    <div class="col-6">
-                        <input data-valmsg-replace="true"  type="file" id="upload" hidden />
-                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
-                    </div>
-                </div>
-                <div class="col-12 d-flex justify-content-between">
-                    <div>Non - disclosure Agreement</div>
-                    <div class="col-6">
-                        <input data-valmsg-replace="true"  type="file" id="upload" hidden />
-                        <label for="upload" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.5rem;font-family: sans-serif;border-radius: 0.3rem;cursor: pointer;">Upload</label>
-                    </div>
-                </div>
-
-
-
-            </div>
+                            var newName = Model.PhysicianId + "_contractoragreement.pdf";
+                            <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/@newName" target="_blank">View</a>
+                        }
+                    </td>
+                </tr>
+            </table>
             <hr />
             <div class="d-flex justify-content-end">
                 <button class="btn btn-info">Save</button>
@@ -347,7 +332,84 @@
 </div>
 
 <script>
+    $('input[type = "file"]').change(function () {
+        var files = this.files;
+        var id = this.id;
+        if (files.length != 0) {
+            if (id == "file1") {
+                $('#contractoragreement').prop('checked', true);
+                $('#viewbtn1').removeClass('d-none');
+                $('#viewbtn-1').addClass('d-none');
+                $('#viewbtn1').attr('href', URL.createObjectURL(this.files[0]));
+                $('#viewbtn1').attr('target', '_blank');
+            }
+            if (id == "file2") {
+                $('#backgroundcheck').prop('checked', true);
+                $('#viewbtn2').removeClass('d-none');
+                $('#viewbtn-2').addClass('d-none');
+                $('#viewbtn2').attr('href', URL.createObjectURL(this.files[0]));
+                $('#viewbtn2').attr('target', '_blank');
+            }
+            if (id == "file3") {
+                $('#hipaa').prop('checked', true);
+                $('#viewbtn3').removeClass('d-none');
+                $('#viewbtn-3').addClass('d-none');
+                $('#viewbtn3').attr('href', URL.createObjectURL(this.files[0]));
+                $('#viewbtn3').attr('target', '_blank');
+            }
+            if (id == "file4") {
+                $('#non-disclosureagreement').prop('checked', true);
+                $('#viewbtn4').removeClass('d-none');
+                $('#viewbtn-4').addClass('d-none');
+                $('#viewbtn4').attr('href', URL.createObjectURL(this.files[0]));
+                $('#viewbtn4').attr('target', '_blank');
+            }
+            if (id == "file5") {
+                $('#licensedocument').prop('checked', true);
+                $('#viewbtn5').removeClass('d-none');
+                $('#viewbtn-5').addClass('d-none');
+                $('#viewbtn5').attr('href', URL.createObjectURL(this.files[0]));
+                $('#viewbtn5').attr('target', '_blank');
+            }
+        }
+        else {
+            if (id == "file1") {
+                $('#contractoragreement').prop('checked', false);
+                $('#viewbtn1').addClass('d-none');
+                $('#viewbtn-1').removeClass('d-none');
+                $('#viewbtn1').removeAttr('href');
 
+            }
+            if (id == "file2") {
+                $('#backgroundcheck').prop('checked', false);
+                $('#viewbtn2').addClass('d-none');
+                $('#viewbtn-2').removeClass('d-none');
+                $('#viewbtn2').removeAttr('href');
+
+            }
+            if (id == "file3") {
+                $('#hipaa').prop('checked', false);
+                $('#viewbtn3').addClass('d-none');
+                $('#viewbtn-3').removeClass('d-none');
+                $('#viewbtn3').removeAttr('href');
+
+            }
+            if (id == "file4") {
+                $('#non-disclosureagreement').prop('checked', false);
+                $('#viewbtn4').addClass('d-none');
+                $('#viewbtn-4').removeClass('d-none');
+                $('#viewbtn4').removeAttr('href');
+
+            }
+            if (id == "file5") {
+                $('#licensedocument').prop('checked', false);
+                $('#viewbtn5').addClass('d-none');
+                $('#viewbtn-5').removeClass('d-none');
+                $('#viewbtn5').removeAttr('href');
+
+            }
+        }
+    });
 
     // save-edit button
 
@@ -459,13 +521,13 @@
         var altphone = $("#altphone").val();
         var businessname = $("#businessname").val();
         var businessweb = $("#businessweb").val();
-        
-       
-        if (firstname.length <=0){
+
+
+        if (firstname.length <= 0) {
             document.getElementsByClassName('checkhere')[0].innerText = "Plese Enter FirstName";
             return;
         }
-       
+
 
         if (lastname.length <= 0) {
             document.getElementsByClassName('lastname')[0].innerText = "Please Enter LastName";
@@ -685,10 +747,10 @@
                 document.getElementsByClassName('password-validation-message')[0].innerText = "Password must be between 8 and 16 characters long.";
                 return;
             }
-           
+
 
             $.ajax({
-                url: "@Url.Action("ResetPasswordProvider","Admin")",
+                url: "@Url.Action("ResetPasswordProvider", "Admin")",
                 type: "POST",
                 data: { physicianId: physicianId, newPassword: password },
 

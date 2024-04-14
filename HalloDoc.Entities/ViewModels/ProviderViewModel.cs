@@ -91,5 +91,16 @@ namespace HalloDoc.Entities.ViewModels
         public string RegionName { get; set; }
         public string RoleName { get; set; }
         public List<Physician> physicians { get; set; }
+        public bool IsAgreementDoc {  get; set; }
+        public bool isbackgroundcheck { get; set; }
+        public bool Ishippa { get; set; }
+        public bool IsAgreementDocnondisclosure { get; set; }
+
+        public IFormFile? Photo { get; set; }
+        public IFormFile? contractoragreement { get; set; }
+        public IFormFile? backgroundcheck { get; set; }
+        public IFormFile? hippa { get; set; }
+        public IFormFile? nondisclosure { get; set; }
+
     }
 }
