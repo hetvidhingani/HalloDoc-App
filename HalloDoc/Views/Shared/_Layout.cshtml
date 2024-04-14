@@ -119,13 +119,13 @@
             cursor: pointer;
         }
 
-        .menu-btn {
+        /* .menu-btn {
             position: absolute;
             color: #696969;
             font-size: 35px;
             margin: 25px;
             cursor: pointer;
-        }
+        } */
 
    </style>
 </head>
@@ -151,7 +151,7 @@
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
             <div class="d-flex align-items-center">
-                <a href="javascript:void(0);" class="menu-btn">
+                <a href="javascript:void(0);" class="menu-btn" >
                     <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
                         <i class="bi bi-list"></i>
                     </button>
@@ -216,7 +216,7 @@
         </div>
         @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null)
         {
-            <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
+            <div class="col-12 bg-white subHeader shadow" style="z-index:10">
                 <div class="topnav" id="myTopnav">
                     <span>
                         <a id="1" asp-action="Dashboard" asp-controller="Patient" class="nav-link py-2 @ViewBag.dashboard" style="color:dimgrey">Dashboard</a>
@@ -225,11 +225,49 @@
                 </div>
 
             </div>
+            <div class="bar " style="z-index:10;">
+                <div class="d-flex">
+                    <a asp-action="Dashboard" class="Logo px-3">
+                        <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+                    </a>
+                    <div class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="menu">
+                    <div class="item  mx-4">
+                        <h5 class="d-flex">
+                            Welcome,<div class="sub-btn fw-bold mx-2" style="color:rgba(0, 0, 0, 0.584)">
+                                @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameAdmin"]
+                                }
+                                else
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
+
+                                }
+                            </div>
+                        </h5>
+                    </div>
+                    <div class="item">
+                        <a id="1" asp-action="Dashboard" asp-controller="Patient" class="sub-btn fw-bold @ViewBag.subHeader"
+                           style="color:dimgrey">Dashboard</a>
+                    </div>
+                    <div class="item">
+
+                        <a id="2" asp-action="Profile" asp-controller="Admin"
+                           class=" sub-btn fw-bold  @ViewBag.subHeader" style="color:dimgrey">Profile</a>
+                    </div>
+                   
+                   
+                </div>
+            </div>
         }
         else
         {
             @* dashboard *@
-            <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
+            <div class="col-12 bg-white subHeader shadow" style="z-index:10">
                 <div class="topnav" id="myTopnav">
                     <span>
                         <a id="1" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Dashboard</a>
@@ -277,7 +315,7 @@
 
             </div>
             @* mobile *@
-            <div class="bar " style="z-index:5000;">
+            <div class="bar " style="z-index:10;">
                 <div class="d-flex">
                 <a asp-action="Dashboard" class="Logo px-3">
                     <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
@@ -290,7 +328,15 @@
                     <div class="item  mx-4">
                         <h5 class="d-flex">
                             Welcome,<div class="sub-btn fw-bold mx-2" style="color:rgba(0, 0, 0, 0.584)">
-                                Admin
+                                @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameAdmin"]
+                                }
+                                else
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
+
+                                }
                             </div>
                         </h5>
                     </div>
@@ -370,7 +416,7 @@
 
     @RenderBody()
 
-    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:5000 ;padding:5px">
+    <footer style="position:fixed;bottom: 0;height: 40px;background-color: black; width: 100%;z-index:10 ;padding:5px">
         <div class="d-flex justify-content-end align-items-center footlink">
             <a href="#" style="color:white">Terms and Conditions  </a> |
             <a href="#" style="color:white;">Privacy Policy</a>
