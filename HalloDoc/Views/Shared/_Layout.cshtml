@@ -18,16 +18,16 @@
     @* <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/HalloDoc.styles.css" asp-append-version="true" />
-    
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
-    
-   
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" 
-    integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+          integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -37,17 +37,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-    <style>
+   <style>
         .bar {
-            background: #1b1a1b;
-            backdrop-filter: blur(15px);
+            background: rgb(251, 249, 249);
+            backdrop-filter: blur(25px);
             width: 250px;
             height: 100vh;
             position: fixed;
             top: 0;
             left: -250px;
             overflow-y: auto;
-            transition: 0.6s ease;
+            transition: 0.2s ease;
             transition-property: left;
         }
 
@@ -61,58 +61,50 @@
                 left: 0;
             }
 
-        h1 {
-            text-align: center;
-            font-weight: 500;
-            font-size: 25px;
-            padding-bottom: 13px;
-            font-family: sans-serif;
-            letter-spacing: 2px;
-        }
 
-        .bar .menu {
-            width: 100%;
-            margin-top: 30px;
-        }
 
-            .bar .menu .item {
-                position: relative;
-                cursor: pointer;
+            .bar .menu {
+                width: 100%;
+                margin-top: 20px;
             }
 
-                .bar .menu .item a {
-                    color: #fff;
-                    font-size: 16px;
-                    text-decoration: none;
-                    display: block;
-                    padding: 5px 30px;
-                    line-height: 60px;
+                .bar .menu .item {
+                    position: relative;
+                    cursor: pointer;
                 }
 
-                    .bar .menu .item a:hover {
-                        background: #33363a;
-                        transition: 0.3s ease;
+                    .bar .menu .item a {
+                        color: #696969;
+                        font-size: 16px;
+                        text-decoration: none;
+                        display: block;
+                        padding: 1px 30px;
+                        line-height: 40px;
                     }
 
-                .bar .menu .item i {
-                    margin-right: 15px;
-                }
+                        .bar .menu .item a:hover {
+                            background: rgb(140, 215, 240);
+                            transition: 0.1s ease;
+                        }
 
-                .bar .menu .item a .dropdown {
-                    position: absolute;
-                    right: 0;
-                    margin: 20px;
-                    transition: 0.3s ease;
-                }
-
-                .bar .menu .item .sub-menu {
-                    background: #262627;
-                    display: none;
-                }
-
-                    .bar .menu .item .sub-menu a {
-                        padding-left: 80px;
+                    .bar .menu .item i {
+                        margin-right: 20px;
                     }
+
+                    .bar .menu .item a .dropdown {
+                        position: absolute;
+                        right: 0;
+                        margin: 15px;
+                        transition: 0.2s ease;
+                    }
+
+                    .bar .menu .item .sub-menu {
+                        display: none;
+                    }
+
+                        .bar .menu .item .sub-menu a {
+                            padding-left: 35px;
+                        }
 
         .rotate {
             transform: rotate(90deg);
@@ -120,37 +112,22 @@
 
         .close-btn {
             position: absolute;
-            color: #fff;
+            color: rgb(140, 215, 240);
             font-size: 23px;
             right: 0px;
-            margin: 15px;
+            margin: 18px;
             cursor: pointer;
         }
 
         .menu-btn {
             position: absolute;
-            color: rgb(0, 0, 0);
+            color: #696969;
             font-size: 35px;
             margin: 25px;
             cursor: pointer;
         }
 
-        .main {
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 50px;
-        }
-
-            .main h1 {
-                color: rgba(255, 255, 255, 0.8);
-                font-size: 60px;
-                text-align: center;
-                line-height: 80px;
-            }
-
-    </style>
+   </style>
 </head>
 
 <body>
@@ -158,8 +135,8 @@
     {
         <script type="text/javascript">
             toastr.error('@TempData["error"]', 'Oops!!!', {
-                timeOut: 3000, 
-                progressBar: true 
+                timeOut: 3000,
+                progressBar: true
             });
         </script>
     }
@@ -173,17 +150,17 @@
     {
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
-           <div class="d-flex align-items-center">
-                <a href="javascript:void(0);" class="menu-btn" >
+            <div class="d-flex align-items-center">
+                <a href="javascript:void(0);" class="menu-btn">
                     <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
                         <i class="bi bi-list"></i>
                     </button>
                 </a>
 
-                <a asp-action="Dashboard"  class="Logo">
+                <a asp-action="Dashboard" class="Logo">
                     <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
                 </a>
-           </div>
+            </div>
 
             <div class="d-flex " style="margin-left:auto">
                 <div class="d-flex righttabs align-items-center">
@@ -228,8 +205,8 @@
                         </a>
                     }
 
-                  
-                    <div  class="moon-icon" style="d-flex justify-content-center align-items-center">
+
+                    <div class="moon-icon" style="d-flex justify-content-center align-items-center">
                         <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
                     </div>
                 </div>
@@ -244,21 +221,22 @@
                     <span>
                         <a id="1" asp-action="Dashboard" asp-controller="Patient" class="nav-link py-2 @ViewBag.dashboard" style="color:dimgrey">Dashboard</a>
                         <a id="2" asp-action="Profile" asp-controller="Patient" class="nav-link py-2 @ViewBag.profile" style="color:dimgrey">My Profile</a>
-                  </span>
+                    </span>
                 </div>
 
             </div>
         }
         else
         {
+            @* dashboard *@
             <div class="col-12 bg-white subHeader shadow" style="z-index:1000">
                 <div class="topnav" id="myTopnav">
                     <span>
                         <a id="1" asp-action="Dashboard" asp-controller="Admin" class="nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Dashboard</a>
                         <a id="2" asp-action="ProviderLocation" asp-controller="Admin" class="nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Provider Location</a>
 
-                        <a  id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">My Profile</a>
-                        <div class="dropdown " id="4 " >
+                        <a id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="nav-link py-2" style="color:dimgrey">My Profile</a>
+                        <div class="dropdown " id="4 ">
                             <a class="nav-link py-2" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
                                 Providers
                             </a>
@@ -298,39 +276,78 @@
                 </div>
 
             </div>
+            @* mobile *@
             <div class="bar " style="z-index:5000;">
-
-                <header>
-
-
-
+                <div class="d-flex">
+                <a asp-action="Dashboard" class="Logo px-3">
+                    <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+                </a>
                     <div class="close-btn">
-
                         <i class="fas fa-times"></i>
                     </div>
-                    
-                    <h1>Mystery Code</h1>
-                </header>
+                </div>
                 <div class="menu">
-                    <a id="1" asp-action="Dashboard" asp-controller="Admin" class="item nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Dashboard</a>
-                    <a id="2" asp-action="ProviderLocation" asp-controller="Admin" class="item nav-link py-2 @ViewBag.subHeader" style="color:dimgrey">Provider Location</a>
+                    <div class="item  mx-4">
+                        <h5 class="d-flex">
+                            Welcome,<div class="sub-btn fw-bold mx-2" style="color:rgba(0, 0, 0, 0.584)">
+                                Admin
+                            </div>
+                        </h5>
+                    </div>
+                    <div class="item">
+                        <a id="1" asp-action="Dashboard" asp-controller="Admin" class="sub-btn fw-bold @ViewBag.subHeader"
+                           style="color:dimgrey">Dashboard</a>
+                    </div>
+                    <div class="item">
 
-                    <a id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="item nav-link py-2" style="color:dimgrey">My Profile</a>
-                    <div class="dropdown item" id="4 ">
-                        
-                            <a class="sub-btn">Providers<i class="fas fa-angle-right dropdown"></i></a>
+                        <a id="2" asp-action="ProviderLocation" asp-controller="Admin"
+                           class=" sub-btn fw-bold  @ViewBag.subHeader" style="color:dimgrey">Provider Location</a>
+                    </div>
+                    <div class="item">
+
+                        <a id="3" asp-action="AdminMyProfile" asp-controller="Admin" class="item sub-btn fw-bold "
+                           style="color:dimgrey">My Profile</a>
+                    </div>
+                    <div class=" item" id="4 ">
+                        <a class="sub-btn fw-bold">Providers<i class="fas fa-angle-right dropdown"></i></a>
                         <div class="sub-menu">
-                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a>
-                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="Scheduling" asp-controller="Admin">Scheduling</a>
-                            <a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Invocing</a>
+                            <a class=" " style="color:dimgrey" asp-action="ProviderInformation"
+                               asp-controller="Admin">Provider</a>
+                            <a class="" style="color:dimgrey" asp-action="Scheduling" asp-controller="Admin">Scheduling</a>
+                            <a class=" " style="color:dimgrey" href="#">Invocing</a>
                         </div>
 
-                       
                     </div>
-                    <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="nav-link py-2 item" style="color:dimgrey">Partners</a>
-                    
+                    <div class="item">
+
+                        <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="sub-btn fw-bold item"
+                           style="color:dimgrey">Partners</a>
+                    </div>
+                    <div class="item" id="4 ">
+                        <a class="sub-btn fw-bold"> Records<i class="fas fa-angle-right dropdown"></i></a>
+                        <div class="sub-menu">
+                            <a class=" " style="color:dimgrey" asp-action="SearchRecord" asp-controller="Admin">
+                                Search
+                                Records
+                            </a>
+                            <a class="" style="color:dimgrey" asp-action="EmailLogs" asp-controller="Admin">Email Logs</a>
+                            <a class=" " style="color:dimgrey" asp-action="SMSLogs" asp-controller="Admin">SMS Logs</a>
+                            <a class=" " style="color:dimgrey" asp-action="PatientHistory" asp-controller="Admin">
+                                Patient
+                                Records
+                            </a>
+                            <a class=" " style="color:dimgrey" asp-action="BlockHistory" asp-controller="Admin">
+                                Blocked
+                                History
+                            </a>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
+
+           
         }
 
     }
@@ -360,7 +377,7 @@
 
         </div>
     </footer>
-   
+
     <script>
         // $(document).ready(function () {
         //     // Check if there's a saved state in local storage
@@ -408,28 +425,28 @@
         });
 
 
-       
-            function myFunction1() {
+
+        function myFunction1() {
             document.getElementById("myTopnav").style.display = "block";
             console.log("Called")
-            }
+        }
 
-            function closeNav() {
+        function closeNav() {
             document.getElementById("myTopnav").style.display = "none";
-            }
-       
-            $(document).ready(function () {
-           
+        }
 
-                $(".nav-link").click(function () {
-                   
-                
-                    $(".nav-link").removeClass("tabactive");
+        $(document).ready(function () {
 
-                   
-                    $(this).addClass("tabactive");
-                });
+
+            $(".nav-link").click(function () {
+
+
+                $(".nav-link").removeClass("tabactive");
+
+
+                $(this).addClass("tabactive");
             });
+        });
 
     </script>
 

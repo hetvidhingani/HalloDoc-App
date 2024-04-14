@@ -1,10 +1,12 @@
 
-    /*#region  - scheduling*/
-    .fc-toolbar-title {
-        font-size: 16px !important;
-        margin-bottom: 5px !important;
-        margin-top: 9px !important;
-    }
+
+
+/*#region  - scheduling*/
+.fc-toolbar-title {
+    font-size: 16px !important;
+    margin-bottom: 5px !important;
+    margin-top: 9px !important;
+}
 .fc-prev-button, .fc-next-button {
     border-radius: 50% !important;
     background-color: #00bbe8 !important;
