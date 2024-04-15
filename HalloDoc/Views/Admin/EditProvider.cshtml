@@ -302,11 +302,22 @@
 
             <hr />
             <h3> Onboarding</h3>
-            <form >
+            <form asp-action="documentsProvider" asp-controller="Admin" method="post" enctype="multipart/form-data">
+
                 <input type="hidden" asp-for="PhysicianId" />
                 <table>
                     <tr>
-                        <td> <input type="checkbox" id="contractoragreement" class="mx-2" /> </td>
+                        <td> 
+                            @if (Model.IsAgreementDoc == true)
+                            {
+                                <input type="checkbox" id="contractoragreement" class="mx-2" asp-for="IsAgreementDoc" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="contractoragreement" class="mx-2" asp-for="IsAgreementDoc" />
+
+                            }
+                        </td>
                         <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
                         <td>
                             <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
@@ -323,7 +334,17 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="backgroundcheck" class="mx-2" /> </td>
+                        <td>
+                            @if (Model.isbackgroundcheck == true)
+                            {
+                                <input type="checkbox" id="backgroundcheck" class="mx-2" asp-for="isbackgroundcheck" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="backgroundcheck" class="mx-2" asp-for="isbackgroundcheck" />
+
+                            }
+                        </td>
                         <td> <span class="mx-2">Background Check</span> </td>
                         <td>
                             <input asp-for="@Model.backgroundcheck" type="file" id="file2" hidden />
@@ -335,13 +356,23 @@
                             {
 
                                 var newName = Model.PhysicianId + "_backgroundcheck.pdf";
-                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName"  target="_blank">View</a>
                             }
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="hipaa" class="mx-2" /> </td>
-                        <td> <span class="mx-2">Background Check</span> </td>
+                        <td>
+                            @if (Model.Ishippa == true)
+                            {
+                                <input type="checkbox" id="hipaa" class="mx-2" asp-for="Ishippa" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="hipaa" class="mx-2" asp-for="Ishippa" />
+
+                            }
+                        </td>
+                        <td> <span class="mx-2">HIPPA Compliance</span> </td>
                         <td>
                             <input asp-for="@Model.hippa" type="file" id="file3" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file3">Upload</label>
@@ -357,7 +388,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="non-disclosureagreement" class="mx-2" /> </td>
+                        <td>@if (Model.IsAgreementDocnondisclosure == true)
+                            {
+                                <input type="checkbox" id="non-disclosureagreement" class="mx-2" asp-for="IsAgreementDocnondisclosure" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="non-disclosureagreement" class="mx-2" asp-for="IsAgreementDocnondisclosure" />
+
+                            }
+                        </td>
                         <td> <span class="mx-2">Non Disclosureagreement</span> </td>
                         <td>
                             <input asp-for="@Model.nondisclosure" type="file" id="file4" hidden />
@@ -365,7 +405,7 @@
                         </td>
                         <td>
                             <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn4">View</a>
-                            @if (Model.Ishippa == true)
+                            @if (Model.IsAgreementDocnondisclosure == true)
                             {
 
                                 var newName = Model.PhysicianId + "_nonDisclosure.pdf";
@@ -374,13 +414,13 @@
                         </td>
                     </tr>
                 </table>
-          
-            <hr />
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-info">Save</button>
 
-                <a href="@Url.Action("DeleteProvider","Admin")"   class="btn btn-danger">Delete Account</a>
-            </div>
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-info">Save</button>
+
+                    <a href="@Url.Action("DeleteProvider","Admin")" class="btn btn-danger">Delete Account</a>
+                </div>
             </form>
         </div>
     </div>
@@ -823,6 +863,6 @@
             });
         });
     });
-    
+
 </script>
 

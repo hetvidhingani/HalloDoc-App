@@ -258,7 +258,7 @@
                 <h3> Onboarding</h3>
                 <table>
                     <tr>
-                        <td> <input type="checkbox" id="contractoragreement" class="mx-2" /> </td>
+                        <td> <input type="checkbox" asp-for="@Model.IsAgreementDoc" id="contractoragreement" class="mx-2" /> </td>
                         <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
                         <td>
                             <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
@@ -275,7 +275,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="backgroundcheck" class="mx-2" /> </td>
+                        <td> <input type="checkbox" asp-for="@Model.isbackgroundcheck" id="backgroundcheck" class="mx-2" /> </td>
                         <td> <span class="mx-2">Background Check</span> </td>
                         <td>
                             <input asp-for="@Model.backgroundcheck" type="file" id="file2" hidden />
@@ -292,8 +292,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="hipaa" class="mx-2" /> </td>
-                        <td> <span class="mx-2">Background Check</span> </td>
+                        <td> <input type="checkbox" id="hipaa" asp-for="@Model.Ishippa" class="mx-2" /> </td>
+                        <td> <span class="mx-2">HIPPA Compliance</span> </td>
                         <td>
                             <input asp-for="@Model.hippa" type="file" id="file3" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file3">Upload</label>
@@ -309,7 +309,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td> <input type="checkbox" id="non-disclosureagreement" class="mx-2" /> </td>
+                        <td> <input type="checkbox" asp-for="@Model.IsAgreementDocnondisclosure" id="non-disclosureagreement" class="mx-2" /> </td>
                         <td> <span class="mx-2">Non Disclosureagreement</span> </td>
                         <td>
                             <input asp-for="@Model.nondisclosure" type="file" id="file4" hidden />

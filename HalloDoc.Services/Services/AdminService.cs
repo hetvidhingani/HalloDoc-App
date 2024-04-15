@@ -1183,42 +1183,42 @@ namespace HalloDoc.Services.Services
                 using var stream = System.IO.File.Create(filePath);
                 model.Photo.CopyTo(stream);
             }
-            if (model.contractoragreement != null)
+            if (model.IsAgreementDoc == true && model.contractoragreement != null)
             {
 
                 var fileName1 = $"{physician.PhysicianId}_contractoragreement.pdf";
                 var filePath1 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName1);
                 using var stream1 = System.IO.File.Create(filePath1);
-                model.Photo.CopyTo(stream1);
+                model.contractoragreement.CopyTo(stream1);
                 physician.IsAgreementDoc = new BitArray(new bool[] { true });
             }
-            if (model.backgroundcheck != null)
+            if (model.isbackgroundcheck == true && model.backgroundcheck != null)
             {
 
                 var fileName2 = $"{physician.PhysicianId}_backgroundcheck.pdf";
                 var filePath2 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName2);
                 using var stream2 = System.IO.File.Create(filePath2);
-                model.Photo.CopyTo(stream2);
+                model.backgroundcheck.CopyTo(stream2);
                 physician.IsBackgroundDoc = new BitArray(new bool[] { true });
             }
 
-            if (model.hippa != null)
+            if (model.Ishippa == true && model.hippa != null)
             {
 
                 var fileName3 = $"{physician.PhysicianId}_hippa.pdf";
                 var filePath3 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName3);
                 using var stream3 = System.IO.File.Create(filePath3);
-                model.Photo.CopyTo(stream3);
+                model.hippa.CopyTo(stream3);
                 physician.IsTrainingDoc = new BitArray(new bool[] { true });
             }
 
-            if (model.nondisclosure != null)
+            if (model.IsAgreementDocnondisclosure == true && model.nondisclosure != null)
             {
 
                 var fileName4 = $"{physician.PhysicianId}_nonDisclosure.pdf";
                 var filePath4 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName4);
                 using var stream4 = System.IO.File.Create(filePath4);
-                model.Photo.CopyTo(stream4);
+                model.nondisclosure.CopyTo(stream4);
                 physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
             }
 
@@ -1313,8 +1313,10 @@ namespace HalloDoc.Services.Services
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             model.statusId = (int)phy.Status;
             model.status = _statusRepository.GetAll().ToList();
-            model.IsAgreementDoc = phy.IsAgreementDoc;
-            model.isbackgroundcheck = phy.IsBackgroundDoc;
+            model.IsAgreementDoc = phy.IsAgreementDoc == null ? false : true;
+            model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
+            model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
+            model.Ishippa = phy.IsTrainingDoc == null ? false : true;
 
             return model;
         }
@@ -1479,8 +1481,11 @@ namespace HalloDoc.Services.Services
         public object documentsProvider(ProviderViewModel model)
         {
             Physician physician = _physicianRepository.GetById(model.PhysicianId);
-            if (model.contractoragreement != null)
+
+            if (model.IsAgreementDoc == true && model.contractoragreement != null)
             {
+
+
                 var newName = $"{model.PhysicianId}_contractoragreement.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
@@ -1492,9 +1497,17 @@ namespace HalloDoc.Services.Services
                 model.contractoragreement.CopyTo(stream);
 
                 physician.IsAgreementDoc = new BitArray(new bool[] { true });
+
             }
-            if (model.backgroundcheck != null)
+            else
             {
+                physician.IsAgreementDoc = null;
+
+            }
+            if (model.isbackgroundcheck == true && model.backgroundcheck != null)
+            {
+
+
                 var newName = $"{model.PhysicianId}_backgroundcheck.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
@@ -1506,9 +1519,15 @@ namespace HalloDoc.Services.Services
                 model.backgroundcheck.CopyTo(stream);
 
                 physician.IsAgreementDoc = new BitArray(new bool[] { true });
+
             }
-            if (model.hippa != null)
+            else
             {
+                physician.IsBackgroundDoc = null;
+            }
+            if (model.Ishippa == true && model.hippa != null)
+            {
+
                 var newName = $"{model.PhysicianId}_hippa.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
@@ -1520,9 +1539,15 @@ namespace HalloDoc.Services.Services
                 model.hippa.CopyTo(stream);
 
                 physician.IsTrainingDoc = new BitArray(new bool[] { true });
+
             }
-            if (model.nondisclosure != null)
+            else
             {
+                physician.IsTrainingDoc = null;
+            }
+            if (model.IsAgreementDocnondisclosure == true && model.nondisclosure != null)
+            {
+
                 var newName = $"{model.PhysicianId}_nonDisclosure.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
@@ -1534,6 +1559,11 @@ namespace HalloDoc.Services.Services
                 model.nondisclosure.CopyTo(stream);
 
                 physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
+
+            }
+            else
+            {
+                physician.IsNonDisclosureDoc = null;
             }
 
 
