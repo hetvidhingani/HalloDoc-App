@@ -74,8 +74,16 @@ namespace HalloDoc.Repository.Repository
         //}
         public async Task UpdateAsync(T entity)
         {
+            try
+            {
+
             _context.Update(entity);
             _context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+
+            }
 
         }
 

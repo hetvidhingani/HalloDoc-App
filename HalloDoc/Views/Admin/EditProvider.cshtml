@@ -29,9 +29,9 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-floating form-group">
-                        <input data-valmsg-replace="true" asp-for="Password" type="password" class="form-control " id="Password" placeholder=" " data-valmsg-replace="true">
+                        <input asp-for="Password" type="text" class="form-control " id="Password" placeholder=" ">
                         <label for=" ">Password</label>
-                        <span asp-validation-for="Password" class="text-danger password-validation-message"></span>
+                        <span asp-validation-for="Password" class="text-danger passwordvalidate"></span>
                     </div>
                 </div>
             </div>
@@ -43,24 +43,23 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
 
-                            <select class="form-select form-select-sm  edit" style="height:55px;" aria-label="Default select example" aria-height="5vh" asp-for="statusId" disabled>
+                            <select class="form-select form-select-sm  edit" style="height:55px;" aria-label="Default select example" id="statusID" aria-height="5vh" asp-for="statusId" disabled>
                                 <option value="0" selected disabled>Status</option>
 
                                 @foreach (var status in Model.status)
                                 {
-
                                     <option value="@status.Statusid">@status.Statusname</option>
                                 }
                             </select>
                             <label for="">Status</label>
-                            <span asp-validation-for="statusId" class="text-danger"></span>
+                            <span asp-validation-for="statusId" class="text-danger status"></span>
                         </div>
                     </div>
 
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <select class="form-select form-select-sm  edit" style="height:55px;" aria-label="Default select example" aria-height="5vh" asp-for="RoleId" disabled>
+                            <select class="form-select form-select-sm  edit" style="height:55px;" aria-label="Default select example" id="roleID" aria-height="5vh" asp-for="RoleId" disabled>
                                 <option value="0" selected disabled>Role</option>
 
                                 @foreach (var role in Model.Role)
@@ -69,7 +68,7 @@
                                 }
                             </select>
                             <label for="">Role</label>
-                            <span asp-validation-for="RoleId" class="text-danger"></span>
+                            <span asp-validation-for="RoleId" class="text-danger role"></span>
                         </div>
                     </div>
                 </div>
@@ -78,9 +77,7 @@
                     <button class="btn btn-info edit-button" id="edit-button4" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveBillingInfo" id="save-button1" style="display:none;" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button1" style="display:none;" type="reset" disabled>Cancel</button>
-
-
-                    <button class="btn btn-outline-info ResetPassword mx-1" id="resetpasswordBtnProvider">Reset Password</button>
+                    <button class="btn btn-outline-info  mx-1" id="resetpasswordBtnProvider">Reset Password</button>
                 </div>
 
             </form>
@@ -161,7 +158,6 @@
                     <button class="btn btn-info edit-button" id="edit-button3" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" id="save-button2" type="submit" disabled>Save</button>
                     <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button2" style="display:none;" type="reset" disabled>Cancel</button>
-
                 </div>
 
             </form>
@@ -206,7 +202,7 @@
                                 }
                             </select>
                             <label for="">State</label>
-                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                            <span asp-validation-for="RegionId" class="text-danger state"></span>
                         </div>
                     </div>
 
@@ -243,7 +239,7 @@
                 <div class="row formrow">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true" asp-for="BusinessName" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="BusinessName" type="text" class="form-control edit" id="businessname" placeholder=" " readonly>
                             <label for=" ">Business Name</label>
                             <span asp-validation-for="BusinessName" class="text-danger"></span>
 
@@ -251,7 +247,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input data-valmsg-replace="true" asp-for="BusinessWebsite" type="text" class="form-control edit" placeholder=" " readonly>
+                            <input data-valmsg-replace="true" asp-for="BusinessWebsite" type="text" class="form-control edit" id="businessweb" placeholder=" " readonly>
                             <label for=" ">Business Website </label>
                             <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
 
@@ -259,24 +255,27 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <div class="input-group mb-3">
-                                <input data-valmsg-replace="true" asp-for="File" style="border-radius:10px" name="File" type="file" class="form-control edit" id="UploadButton" disabled>
+                            <div class="form-floating form-group input-group mb-3">
+                                <input asp-for="@Model.Photo" style="border-radius:10px" type="file" class="form-control" id="UploadButton">
+                                <label class="form-label">Select File</label>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex">
-                        <div class="form-floating form-group col-9">
-                            <div class="input-group mb-3">
-                                <input data-valmsg-replace="true" asp-for="Signature" style="border-radius:10px" name="Signature" type="file" class="form-control edit" id="UploadButton2" disabled>
-                            </div>
-
-                        </div>
-                        <div class="col-1 mx-1">
-                            <input data-valmsg-replace="true" type="button" id="upload" hidden class="edit" disabled />
-                            <label for="upload" class="edit" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.7rem;font-family: sans-serif;border-radius: 0.4rem;cursor: pointer;">Create</label>
-
-                        </div>
+                    @*    <div class="col-lg-6 col-md-6 col-sm-12 d-flex">
+                    <div class="form-floating form-group col-9">
+                    <div class="input-group mb-3">
+                    <input data-valmsg-replace="true" asp-for="Signature" style="border-radius:10px" name="Signature" type="file" class="form-control edit" id="UploadButton2" disabled>
+                    <label for=""></label>
                     </div>
+
+                    </div>
+                    <div class="col-1 mx-1">
+                    <input data-valmsg-replace="true" type="button" id="upload" hidden class="edit" disabled />
+                    <label for="upload" class="edit" style=" display: inline-block;background-color: #00bbe8;color: white;padding: 0.7rem;font-family: sans-serif;border-radius: 0.4rem;cursor: pointer;">Create</label>
+
+                    </div>
+                    </div> *@
 
                     <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
                         <div class="form-floating form-group ">
@@ -302,12 +301,12 @@
 
             <hr />
             <h3> Onboarding</h3>
-            <form asp-action="documentsProvider" asp-controller="Admin" method="post" enctype="multipart/form-data">
+            <form asp-action="documentsProvider" asp-controller="Admin" method="post" id="form5" enctype="multipart/form-data">
 
                 <input type="hidden" asp-for="PhysicianId" />
                 <table>
                     <tr>
-                        <td> 
+                        <td>
                             @if (Model.IsAgreementDoc == true)
                             {
                                 <input type="checkbox" id="contractoragreement" class="mx-2" asp-for="IsAgreementDoc" checked />
@@ -315,7 +314,6 @@
                             else
                             {
                                 <input type="checkbox" id="contractoragreement" class="mx-2" asp-for="IsAgreementDoc" />
-
                             }
                         </td>
                         <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
@@ -327,7 +325,6 @@
                             <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn1">View</a>
                             @if (Model.IsAgreementDoc == true)
                             {
-
                                 var newName = Model.PhysicianId + "_contractoragreement.pdf";
                                 <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/physician/doc/@newName" target="_blank">View</a>
                             }
@@ -356,7 +353,7 @@
                             {
 
                                 var newName = Model.PhysicianId + "_backgroundcheck.pdf";
-                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName"  target="_blank">View</a>
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName" target="_blank">View</a>
                             }
                         </td>
                     </tr>
@@ -388,7 +385,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>@if (Model.IsAgreementDocnondisclosure == true)
+                        <td>
+                            @if (Model.IsAgreementDocnondisclosure == true)
                             {
                                 <input type="checkbox" id="non-disclosureagreement" class="mx-2" asp-for="IsAgreementDocnondisclosure" checked />
                             }
@@ -400,7 +398,7 @@
                         </td>
                         <td> <span class="mx-2">Non Disclosureagreement</span> </td>
                         <td>
-                            <input asp-for="@Model.nondisclosure" type="file" id="file4" hidden />
+                            <input asp-for="@Model.nondisclosure" type="file" id="file4" data-val="true" data-val-filetype="Please select a PDF file." data-val-filetype-allowed="application/pdf" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file4">Upload</label>
                         </td>
                         <td>
@@ -417,9 +415,9 @@
 
                 <hr />
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-info">Save</button>
+                    <button class="btn btn-info save-button5" id="@Model.PhysicianId">Save</button>
 
-                    <a href="@Url.Action("DeleteProvider","Admin")" class="btn btn-danger">Delete Account</a>
+                    <a href="@Url.Action("DeleteProvider","Admin",new{id = Model.PhysicianId})" class="btn btn-danger">Delete Account</a>
                 </div>
             </form>
         </div>
@@ -427,86 +425,131 @@
 </div>
 
 <script>
-    $('input[type = "file"]').change(function () {
-        var files = this.files;
-        var id = this.id;
-        if (files.length != 0) {
-            if (id == "file1") {
-                $('#contractoragreement').prop('checked', true);
-                $('#viewbtn1').removeClass('d-none');
-                $('#viewbtn-1').addClass('d-none');
-                $('#viewbtn1').attr('href', URL.createObjectURL(this.files[0]));
-                $('#viewbtn1').attr('target', '_blank');
-            }
-            if (id == "file2") {
-                $('#backgroundcheck').prop('checked', true);
-                $('#viewbtn2').removeClass('d-none');
-                $('#viewbtn-2').addClass('d-none');
-                $('#viewbtn2').attr('href', URL.createObjectURL(this.files[0]));
-                $('#viewbtn2').attr('target', '_blank');
-            }
-            if (id == "file3") {
-                $('#hipaa').prop('checked', true);
-                $('#viewbtn3').removeClass('d-none');
-                $('#viewbtn-3').addClass('d-none');
-                $('#viewbtn3').attr('href', URL.createObjectURL(this.files[0]));
-                $('#viewbtn3').attr('target', '_blank');
-            }
-            if (id == "file4") {
-                $('#non-disclosureagreement').prop('checked', true);
-                $('#viewbtn4').removeClass('d-none');
-                $('#viewbtn-4').addClass('d-none');
-                $('#viewbtn4').attr('href', URL.createObjectURL(this.files[0]));
-                $('#viewbtn4').attr('target', '_blank');
-            }
-            if (id == "file5") {
-                $('#licensedocument').prop('checked', true);
-                $('#viewbtn5').removeClass('d-none');
-                $('#viewbtn-5').addClass('d-none');
-                $('#viewbtn5').attr('href', URL.createObjectURL(this.files[0]));
-                $('#viewbtn5').attr('target', '_blank');
-            }
+    const fileInput = document.getElementById('UploadButton');
+    fileInput.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            Swal.fire({
+                title: "Please upload Image only.",
+                text: 'Required types can be : jpeg / jpg / png',
+                icon: "warning",
+                timer: 1500,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+            })
+            this.value = "";
+            return false;
         }
-        else {
-            if (id == "file1") {
-                $('#contractoragreement').prop('checked', false);
-                $('#viewbtn1').addClass('d-none');
-                $('#viewbtn-1').removeClass('d-none');
-                $('#viewbtn1').removeAttr('href');
+    });
+    $('.save-button5').click(function () {
+        event.preventDefault();
+        const form = this.closest("form");
 
-            }
-            if (id == "file2") {
-                $('#backgroundcheck').prop('checked', false);
-                $('#viewbtn2').addClass('d-none');
-                $('#viewbtn-2').removeClass('d-none');
-                $('#viewbtn2').removeAttr('href');
+        const formData = new FormData(form);
+        const formElement = form.closest("form");
+        const url = formElement.action;
 
-            }
-            if (id == "file3") {
-                $('#hipaa').prop('checked', false);
-                $('#viewbtn3').addClass('d-none');
-                $('#viewbtn-3').removeClass('d-none');
-                $('#viewbtn3').removeAttr('href');
+        var physicianId = $("#PhysicianId").val();
 
-            }
-            if (id == "file4") {
-                $('#non-disclosureagreement').prop('checked', false);
-                $('#viewbtn4').addClass('d-none');
-                $('#viewbtn-4').removeClass('d-none');
-                $('#viewbtn4').removeAttr('href');
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                if (response.success) {
+                    toastr.success("Data Saved Successfully.");
 
+                }
             }
-            if (id == "file5") {
-                $('#licensedocument').prop('checked', false);
-                $('#viewbtn5').addClass('d-none');
-                $('#viewbtn-5').removeClass('d-none');
-                $('#viewbtn5').removeAttr('href');
+        });
 
-            }
-        }
     });
 
 
+
+    $('#form5').on('change', 'input[type = "file"]', function (event) {
+        if (event.target.type === 'file') {
+            var files = this.files;
+            var id = this.id;
+            if (files.length != 0) {
+                if (id == "file1") {
+                    $('#contractoragreement').prop('checked', true);
+                    $('#viewbtn1').removeClass('d-none');
+                    $('#viewbtn-1').addClass('d-none');
+                    $('#viewbtn1').attr('href', URL.createObjectURL(this.files[0]));
+                    $('#viewbtn1').attr('target', '_blank');
+                }
+                if (id == "file2") {
+                    $('#backgroundcheck').prop('checked', true);
+                    $('#viewbtn2').removeClass('d-none');
+                    $('#viewbtn-2').addClass('d-none');
+                    $('#viewbtn2').attr('href', URL.createObjectURL(this.files[0]));
+                    $('#viewbtn2').attr('target', '_blank');
+                }
+                if (id == "file3") {
+                    $('#hipaa').prop('checked', true);
+                    $('#viewbtn3').removeClass('d-none');
+                    $('#viewbtn-3').addClass('d-none');
+                    $('#viewbtn3').attr('href', URL.createObjectURL(this.files[0]));
+                    $('#viewbtn3').attr('target', '_blank');
+                }
+                if (id == "file4") {
+                    $('#non-disclosureagreement').prop('checked', true);
+                    $('#viewbtn4').removeClass('d-none');
+                    $('#viewbtn-4').addClass('d-none');
+                    $('#viewbtn4').attr('href', URL.createObjectURL(this.files[0]));
+                    $('#viewbtn4').attr('target', '_blank');
+                }
+                if (id == "file5") {
+                    $('#licensedocument').prop('checked', true);
+                    $('#viewbtn5').removeClass('d-none');
+                    $('#viewbtn-5').addClass('d-none');
+                    $('#viewbtn5').attr('href', URL.createObjectURL(this.files[0]));
+                    $('#viewbtn5').attr('target', '_blank');
+                }
+            }
+            else {
+                if (id == "file1") {
+                    $('#contractoragreement').prop('checked', false);
+                    $('#viewbtn1').addClass('d-none');
+                    $('#viewbtn-1').removeClass('d-none');
+                    $('#viewbtn1').removeAttr('href');
+
+                }
+                if (id == "file2") {
+                    $('#backgroundcheck').prop('checked', false);
+                    $('#viewbtn2').addClass('d-none');
+                    $('#viewbtn-2').removeClass('d-none');
+                    $('#viewbtn2').removeAttr('href');
+
+                }
+                if (id == "file3") {
+                    $('#hipaa').prop('checked', false);
+                    $('#viewbtn3').addClass('d-none');
+                    $('#viewbtn-3').removeClass('d-none');
+                    $('#viewbtn3').removeAttr('href');
+
+                }
+                if (id == "file4") {
+                    $('#non-disclosureagreement').prop('checked', false);
+                    $('#viewbtn4').addClass('d-none');
+                    $('#viewbtn-4').removeClass('d-none');
+                    $('#viewbtn4').removeAttr('href');
+
+                }
+                if (id == "file5") {
+                    $('#licensedocument').prop('checked', false);
+                    $('#viewbtn5').addClass('d-none');
+                    $('#viewbtn-5').removeClass('d-none');
+                    $('#viewbtn5').removeAttr('href');
+
+                }
+            }
+        }
+    });
     // save-edit button
 
     var editButton = document.getElementById("edit-button");
@@ -598,6 +641,7 @@
     });
     //form submit
     // Save data function
+
     function saveFormData(form) {
 
         const formData = new FormData(form);
@@ -605,75 +649,7 @@
         const url = formElement.action;
 
         var physicianId = $("#PhysicianId").val();
-        var firstname = $("#firstName").val();
-        var lastname = $("#lastname").val();
-        var email = $("#Email").val();
-        var phone = $("#phone").val();
-        var address1 = $("#address1").val();
-        var address2 = $("#address2").val();
-        var city = $("#city").val();
-        var state = $("#state").val();
-        var zip = $("#zip").val();
-        var altphone = $("#altphone").val();
-        var businessname = $("#businessname").val();
-        var businessweb = $("#businessweb").val();
 
-
-        if (firstname.length <= 0) {
-            document.getElementsByClassName('checkhere')[0].innerText = "Plese Enter FirstName";
-            return;
-        }
-
-
-        if (lastname.length <= 0) {
-            document.getElementsByClassName('lastname')[0].innerText = "Please Enter LastName";
-            return;
-        }
-
-        // if (email.length <= 0) {
-        //     document.getElementsByClassName('email')[0].innerText = "Please Enter Email";
-        //     return;
-        // }
-
-        // if (phone.length <= 0) {
-        //     document.getElementsByClassName('phone')[0].innerText = "Please Enter Phone";
-        //     return;
-        // }
-
-        // if (address1.length <= 0) {
-        //     document.getElementsByClassName('address1')[0].innerText = "Please Enter Address 1";
-        //     return;
-        // }
-
-        // if (city.length <= 0) {
-        //     document.getElementsByClassName('city')[0].innerText = "Please Enter City";
-        //     return;
-        // }
-
-        // if (state.length <= 0) {
-        //     document.getElementsByClassName('state')[0].innerText = "Please Enter State";
-        //     return;
-        // }
-
-        // if (zip.length <= 0) {
-        //     document.getElementsByClassName('zip')[0].innerText = "Please Enter Zip";
-        //     return;
-        // }
-
-        // if (altphone.length <= 0) {
-        //     document.getElementsByClassName('altphone')[0].innerText = "Please Enter Alternate Phone";
-        //     return;
-        // }
-
-        // if (businessname.length <= 0) {
-        //     document.getElementsByClassName('businessname')[0].innerText = "Please Enter Business Name";
-        //     return;
-        // }
-
-        // if (businessweb.length <= 0) {
-        //     document.getElementsByClassName('businessweb')[0].innerText = "Please Enter Business Website";
-        //     return;
-        // }
         $.ajax({
             type: 'POST',
             url: url,
@@ -681,8 +657,7 @@
             processData: false,
             contentType: false,
             success: function (response) {
-                if (response == "success") {
-
+                if (response.success) {
                     // You can perform any other actions you want here, like hiding the save button and edit button
                     var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
                     inputs.forEach(function (input) {
@@ -699,71 +674,139 @@
 
                     var canclebtn45 = formElement.querySelector(".cancelbtn");
                     canclebtn45.style.display = "none";
+                    toastr.success("Data Saved Successfully.");
 
                 }
             }
         });
     }
-    function cancelFormData(form) {
-        const formElement = form.closest("form");
-        var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
-        inputs.forEach(function (input) {
-            input.setAttribute("readonly", "readonly");
-            input.setAttribute("disabled", "disabled");
-        });
 
-        // Hide save and cancel buttons and show edit button
-        var editButtons11 = formElement.querySelector(".edit-button");
-        editButtons11.style.display = "block";
-        var saveButtons23 = formElement.querySelector(".savebtn");
-        saveButtons23.style.display = "none";
-
-        var canclebtn45 = formElement.querySelector(".cancelbtn");
-        canclebtn45.style.display = "none";
-    }
     // Event listeners for save buttons
     document.getElementById("save-button1").addEventListener("click", function (event) {
+        var statusID = $("#statusID").val();
+        var roleID = $("#roleID").val();
+
+        if (statusID == 0) {
+            document.getElementsByClassName('status')[0].innerText = "Plese Select Status";
+            return;
+        }
+        if (roleID == 0) {
+            document.getElementsByClassName('role')[0].innerText = "Plese Select Role";
+            return;
+        }
         event.preventDefault();
         const currentForm = this.closest("form");
         saveFormData(currentForm);
     });
 
     document.getElementById("save-button2").addEventListener("click", function (event) {
+        var firstname = $("#firstName").val();
+        var lastname = $("#lastname").val();
+        var email = $("#Email").val();
+        var phone = $("#phone").val();
+
+        if (firstname.length <= 0) {
+            document.getElementsByClassName('checkhere')[0].innerText = "Plese Enter FirstName";
+            return;
+        }
+
+
+        if (lastname.length <= 0) {
+            document.getElementsByClassName('lastname')[0].innerText = "Please Enter LastName";
+            return;
+        }
+
+        if (email.length <= 0) {
+            document.getElementsByClassName('email')[0].innerText = "Please Enter Email";
+            return;
+        }
+
+        if (phone.length <= 0) {
+            document.getElementsByClassName('phone')[0].innerText = "Please Enter Phone";
+            return;
+        }
         event.preventDefault();
         const currentForm = this.closest("form");
         saveFormData(currentForm);
     });
 
     document.getElementById("save-button3").addEventListener("click", function (event) {
+        var address1 = $("#address1").val();
+        var address2 = $("#address2").val();
+        var city = $("#city").val();
+        var state = $("#state").val();
+        var zip = $("#zip").val();
+        var altphone = $("#altphone").val();
+
+        if (address1.length <= 0) {
+            document.getElementsByClassName('address1')[0].innerText = "Please Enter Address 1";
+            return;
+        }
+
+        if (city.length <= 0) {
+            document.getElementsByClassName('city')[0].innerText = "Please Enter City";
+            return;
+        }
+
+        if (state == 0) {
+            document.getElementsByClassName('state')[0].innerText = "Please Enter State";
+            return;
+        }
+
+        if (zip.length <= 0) {
+            document.getElementsByClassName('zip')[0].innerText = "Please Enter Zip";
+            return;
+        }
+
+        if (altphone.length <= 0 || altphone == "" || altphone == null) {
+            document.getElementsByClassName('altphone')[0].innerText = "Please Enter Alternate Phone";
+            return;
+        }
         event.preventDefault();
         const currentForm = this.closest("form");
         saveFormData(currentForm);
     });
 
     document.getElementById("save-button4").addEventListener("click", function (event) {
+        var businessname = $("#businessname").val();
+        var businessweb = $("#businessweb").val();
+
+        if (businessname.length <= 0 || businessname == "" || businessname == null) {
+            document.getElementsByClassName('businessname')[0].innerText = "Please Enter Business Name";
+            return;
+        }
+
+        if (businessweb.length <= 0 || businessweb == "" || businessweb == null) {
+            document.getElementsByClassName('businessweb')[0].innerText = "Please Enter Business Website";
+            return;
+        }
         event.preventDefault();
         const currentForm = this.closest("form");
         saveFormData(currentForm);
     });
     document.getElementById("cancel-button1").addEventListener("click", function (event) {
+
         event.preventDefault();
         const currentForm = this.closest("form");
         cancelFormData(currentForm);
     });
 
     document.getElementById("cancel-button2").addEventListener("click", function (event) {
+
         event.preventDefault();
         const currentForm = this.closest("form");
         cancelFormData(currentForm);
     });
 
     document.getElementById("cancel-button3").addEventListener("click", function (event) {
+
         event.preventDefault();
         const currentForm = this.closest("form");
         cancelFormData(currentForm);
     });
 
     document.getElementById("cancel-button4").addEventListener("click", function (event) {
+
         event.preventDefault();
         const currentForm = this.closest("form");
         cancelFormData(currentForm);
@@ -772,6 +815,10 @@
     function cancelFormData(form) {
         const formElement = form.closest("form");
         var inputs = formElement.querySelectorAll("input:not([readonly]),select:not([disabled])");
+        var validationSpans = formElement.querySelectorAll("span.text-danger");
+        validationSpans.forEach(function (validationSpan) {
+            validationSpan.innerText = "";
+        });
         inputs.forEach(function (input) {
             input.setAttribute("readonly", "readonly");
             input.setAttribute("disabled", "disabled");
@@ -788,17 +835,8 @@
 
         formElement.reset(); // reset form
     }
-    function resetValidationErrors(formElement) {
-        var validationSummaries = formElement.querySelectorAll("div[data-valmsg-for]");
-        validationSummaries.forEach(function (validationSummary) {
-            validationSummary.innerText = "";
-        });
 
-        var validationSpans = formElement.querySelectorAll("span[data-valmsg-replace]");
-        validationSpans.forEach(function (validationSpan) {
-            validationSpan.innerText = "";
-        });
-    }
+
     //end
     //dark theme
     if (localStorage.getItem("Mytheme")) {
@@ -833,36 +871,44 @@
 
     });
 
-    $(document).ready(function () {
-        $("#resetpasswordBtnProvider").on("click", function () {
-            console.log("click");
-            var password = $("#Password").val();
-            var physicianId = $("#PhysicianId").val();
 
-            if (!password || password.length < 8 || password.length > 16) {
-                document.getElementsByClassName('password-validation-message')[0].innerText = "Password must be between 8 and 16 characters long.";
-                return;
-            }
+    $("#resetpasswordBtnProvider").on("click", function () {
+        event.preventDefault();
+
+        var password = $("#Password").val();
+        var physicianId = $("#PhysicianId").val();
+
+        if (password == "" || password.length < 6 || password == null) {
+            document.getElementsByClassName('password-validation-message')[0].innerText = "Password must be between 8 and 16 characters long.";
+            return;
+        }
 
 
-            $.ajax({
-                url: "@Url.Action("ResetPasswordProvider", "Admin")",
-                type: "POST",
-                data: { physicianId: physicianId, newPassword: password },
 
-                success: function (response) {
-                    if (response = "success") {
-                        alert("Password reset successfully.");
-                    } else {
-                        alert("Failed to reset password.");
-                    }
-                },
-                error: function () {
-                    alert("An error occurred while resetting the password.");
+        $.ajax({
+            url: "@Url.Action("ResetPasswordProvider", "Admin")",
+            type: "POST",
+            data: { physicianId: physicianId, newPassword: password },
+
+            success: function (response) {
+
+
+                if (response = "success") {
+                    console.log("hi");
+                    document.getElementsByClassName("passwordvalidate").innerText = "";
+                    toastr.success("Password Saved Successfully.");
+
+                } else {
+                    toastr.success("Password not Saved .");
+
                 }
-            });
+            },
+            error: function () {
+                alert("An error occurred while resetting the password.");
+            }
         });
     });
+
 
 </script>
 

@@ -1150,7 +1150,13 @@ namespace HalloDoc.Services.Services
                 CreatedDate = DateTime.Now,
             };
             await _aspnetuserRepository.AddAsync(user);
+            AspNetUserRole userRole = new AspNetUserRole
+            {
+                UserId = user.Id,
+                RoleId = "3"
 
+            };
+            await _userRolesRepository.AddAsync(userRole);
             Physician physician = new Physician
             {
                 Id = user.Id,
@@ -1250,6 +1256,14 @@ namespace HalloDoc.Services.Services
                 CreatedDate = DateTime.Now,
             };
             await _aspnetuserRepository.AddAsync(user);
+
+            AspNetUserRole userRole = new AspNetUserRole
+            {
+                UserId = user.Id,
+                RoleId = "1"
+
+            };
+            await _userRolesRepository.AddAsync(userRole);
             Admin admin = new Admin()
             {
                 AspNetUserId = user.Id,
@@ -1308,7 +1322,7 @@ namespace HalloDoc.Services.Services
             model.BusinessName = phy.BusinessName;
             model.BusinessWebsite = phy.BusinessWebsite;
             model.UserName = asp.UserName;
-            model.Password = asp.PasswordHash;
+            model.Password = _aspnetuserRepository.DecodeFrom64(asp.PasswordHash);
             model.RoleId = (int)phy.RoleId;
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             model.statusId = (int)phy.Status;
@@ -1482,9 +1496,10 @@ namespace HalloDoc.Services.Services
         {
             Physician physician = _physicianRepository.GetById(model.PhysicianId);
 
-            if (model.IsAgreementDoc == true && model.contractoragreement != null)
+            if (model.IsAgreementDoc == true )
             {
-
+                if( model.contractoragreement != null)
+                {
 
                 var newName = $"{model.PhysicianId}_contractoragreement.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
@@ -1497,6 +1512,12 @@ namespace HalloDoc.Services.Services
                 model.contractoragreement.CopyTo(stream);
 
                 physician.IsAgreementDoc = new BitArray(new bool[] { true });
+                }
+                else if(model.contractoragreement ==null && physician.IsAgreementDoc !=null)
+                {
+                    physician.IsAgreementDoc = new BitArray(new bool[] { true });
+
+                }
 
             }
             else
@@ -1504,9 +1525,11 @@ namespace HalloDoc.Services.Services
                 physician.IsAgreementDoc = null;
 
             }
-            if (model.isbackgroundcheck == true && model.backgroundcheck != null)
+            if (model.isbackgroundcheck == true )
             {
 
+                if( model.backgroundcheck != null)
+                {
 
                 var newName = $"{model.PhysicianId}_backgroundcheck.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
@@ -1518,15 +1541,22 @@ namespace HalloDoc.Services.Services
                 using var stream = System.IO.File.Create(filePath);
                 model.backgroundcheck.CopyTo(stream);
 
-                physician.IsAgreementDoc = new BitArray(new bool[] { true });
+                physician.IsBackgroundDoc = new BitArray(new bool[] { true });
+                }
+                else if(model.backgroundcheck == null && physician.IsBackgroundDoc !=null)
+                {
+                    physician.IsBackgroundDoc = new BitArray(new bool[] { true });
 
+                }
             }
             else
             {
                 physician.IsBackgroundDoc = null;
             }
-            if (model.Ishippa == true && model.hippa != null)
+            if (model.Ishippa == true )
             {
+                if (model.hippa != null)
+                {
 
                 var newName = $"{model.PhysicianId}_hippa.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
@@ -1539,14 +1569,21 @@ namespace HalloDoc.Services.Services
                 model.hippa.CopyTo(stream);
 
                 physician.IsTrainingDoc = new BitArray(new bool[] { true });
+                }
+                else if (model.hippa == null && physician.IsTrainingDoc != null)
+                {
+                    physician.IsTrainingDoc = new BitArray(new bool[] { true });
 
+                }
             }
             else
             {
                 physician.IsTrainingDoc = null;
             }
-            if (model.IsAgreementDocnondisclosure == true && model.nondisclosure != null)
+            if (model.IsAgreementDocnondisclosure == true )
             {
+                if (model.nondisclosure != null)
+                {
 
                 var newName = $"{model.PhysicianId}_nonDisclosure.pdf";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
@@ -1559,7 +1596,12 @@ namespace HalloDoc.Services.Services
                 model.nondisclosure.CopyTo(stream);
 
                 physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
+                }
+                else if (model.nondisclosure == null && physician.IsNonDisclosureDoc != null)
+                {
+                    physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
 
+                }
             }
             else
             {
@@ -1568,7 +1610,7 @@ namespace HalloDoc.Services.Services
 
 
 
-            _physicianRepository.UpdateAsync(physician);
+             _physicianRepository.UpdateAsync(physician);
 
             return physician;
         }
@@ -2443,10 +2485,8 @@ namespace HalloDoc.Services.Services
                 {
                     UserId = newaspNetUSer.Id,
                     RoleId = "2"
-
                 };
                 await _userRolesRepository.AddAsync(userRole);
-
             }
         }
         #endregion
@@ -2713,8 +2753,6 @@ namespace HalloDoc.Services.Services
             return providersOnCallViewModel;
         }
         #endregion
-
-
 
         #endregion
 

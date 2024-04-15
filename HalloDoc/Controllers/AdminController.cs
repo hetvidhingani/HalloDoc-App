@@ -646,6 +646,7 @@ namespace HalloDoc.Controllers
         {
 
             await _admin.ResetPasswordAdmin(model);
+            TempData["success"] = "Password Updated Successfully.";
             return RedirectToAction("AdminMyProfile");
 
 
@@ -654,14 +655,14 @@ namespace HalloDoc.Controllers
         {
 
             await _admin.SaveAdminInfo(model, notification);
-            return RedirectToAction("AdminMyProfile");
+            return Json(new { success = true });
 
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
 
             await _admin.SaveBillingInfo(model);
-            return RedirectToAction("AdminMyProfile");
+            return Json(new { success = true });
 
         }
         #endregion
@@ -774,6 +775,7 @@ namespace HalloDoc.Controllers
         public IActionResult DeleteProvider(int id)
         {
             _admin.DeleteProvider(id);
+            TempData["success"] = "Provider Deleted Successfully.";
             return RedirectToAction("ProviderInformation");
         }
         #endregion
@@ -794,23 +796,23 @@ namespace HalloDoc.Controllers
         {
             var result = _admin.savePhysicianInformation(model, id);
             model.PhysicianId = result.PhysicianId;
-            return Json("success");
+            return Json(new { success = true }); ;
         }
         public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
             var result = _admin.saveBillingInformation(model, id);
-            return Json("success");
+            return Json(new { success = true }); 
+
         }
         public IActionResult providerProfile(ProviderViewModel model, int id)
         {
             var result = _admin.providerProfile(model, id);
-            return Json("success");
+            return Json(new { success = true });
         }
         public IActionResult documentsProvider(ProviderViewModel model)
         {
             var result = _admin.documentsProvider(model);
-
-            return Json("success");
+            return Json(new { success = true });
 
         }
         #endregion

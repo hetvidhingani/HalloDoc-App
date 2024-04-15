@@ -216,8 +216,6 @@ namespace HalloDoc.Services.Services
 
             return "RegisterdPatientLogin";
         }
-
-
         #endregion
 
         #region Family Freind Request

@@ -271,6 +271,7 @@ namespace HalloDoc.Services.Services
             AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
             return myUser;
         }
+
         #region PatientForgotPassword
         public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
@@ -312,7 +313,6 @@ namespace HalloDoc.Services.Services
 
         }
         #endregion
-
 
         public void EmailLog(int requestclientID, string Email, string link, string subject, string body, int AdminId)
         {
