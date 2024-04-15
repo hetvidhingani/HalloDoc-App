@@ -270,7 +270,7 @@
                             {
 
                                 var newName = Model.PhysicianId + "_contractoragreement.pdf";
-                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/doc/@newName" target="_blank">View</a>
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/physician/doc/@newName" target="_blank">View</a>
                             }
                         </td>
                     </tr>
@@ -287,7 +287,7 @@
                             {
 
                                 var newName = Model.PhysicianId + "_backgroundcheck.pdf";
-                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/doc/@newName" target="_blank">View</a>
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName" target="_blank">View</a>
                             }
                         </td>
                     </tr>
@@ -304,7 +304,24 @@
                             {
 
                                 var newName = Model.PhysicianId + "_hippa.pdf";
-                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-3" href="/uploads/doc/@newName" target="_blank">View</a>
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-3" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <input type="checkbox" id="non-disclosureagreement" class="mx-2" /> </td>
+                        <td> <span class="mx-2">Non Disclosureagreement</span> </td>
+                        <td>
+                            <input asp-for="@Model.nondisclosure" type="file" id="file4" hidden />
+                            <label type="button" class="btn btn-info text-white mx-2" for="file4">Upload</label>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn4">View</a>
+                            @if (Model.Ishippa == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_nonDisclosure.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-4" href="/uploads/physician/doc/@newName" target="_blank">View</a>
                             }
                         </td>
                     </tr>

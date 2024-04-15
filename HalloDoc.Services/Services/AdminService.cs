@@ -1178,53 +1178,53 @@ namespace HalloDoc.Services.Services
             if (model.Photo.FileName != null)
             {
 
-                var fileName = $"{physician.PhysicianId}_Photo.pdf";
+                var fileName = $"{physician.PhysicianId}_Photo.jpg";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\image", fileName);
                 using var stream = System.IO.File.Create(filePath);
                 model.Photo.CopyTo(stream);
             }
-            if (model.contractoragreement.FileName != null)
+            if (model.contractoragreement != null)
             {
 
                 var fileName1 = $"{physician.PhysicianId}_contractoragreement.pdf";
                 var filePath1 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName1);
                 using var stream1 = System.IO.File.Create(filePath1);
                 model.Photo.CopyTo(stream1);
-                physician.IsAgreementDoc = new BitArray(1);
+                physician.IsAgreementDoc = new BitArray(new bool[] { true });
             }
-            if (model.backgroundcheck.FileName != null)
+            if (model.backgroundcheck != null)
             {
 
                 var fileName2 = $"{physician.PhysicianId}_backgroundcheck.pdf";
                 var filePath2 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName2);
                 using var stream2 = System.IO.File.Create(filePath2);
                 model.Photo.CopyTo(stream2);
-                physician.IsBackgroundDoc = new BitArray(1);
+                physician.IsBackgroundDoc = new BitArray(new bool[] { true });
             }
 
-            if (model.hippa.FileName != null)
+            if (model.hippa != null)
             {
 
                 var fileName3 = $"{physician.PhysicianId}_hippa.pdf";
                 var filePath3 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName3);
                 using var stream3 = System.IO.File.Create(filePath3);
                 model.Photo.CopyTo(stream3);
-                physician.IsTrainingDoc = new BitArray(1);
+                physician.IsTrainingDoc = new BitArray(new bool[] { true });
             }
 
-            if (model.nondisclosure.FileName != null)
+            if (model.nondisclosure != null)
             {
 
-                var fileName4 = $"{physician.PhysicianId}_nondisclosure.pdf";
+                var fileName4 = $"{physician.PhysicianId}_nonDisclosure.pdf";
                 var filePath4 = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\doc", fileName4);
                 using var stream4 = System.IO.File.Create(filePath4);
                 model.Photo.CopyTo(stream4);
-                physician.IsNonDisclosureDoc = new BitArray(1);
+                physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
             }
 
+            await _physicianRepository.UpdateAsync(physician);
 
-
-            return "ViewUploads";
+            return "ProviderInformation";
         }
 
         #endregion
@@ -1313,6 +1313,9 @@ namespace HalloDoc.Services.Services
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             model.statusId = (int)phy.Status;
             model.status = _statusRepository.GetAll().ToList();
+            model.IsAgreementDoc = phy.IsAgreementDoc;
+            model.isbackgroundcheck = phy.IsBackgroundDoc;
+
             return model;
         }
         public void DeleteProvider(int id)
@@ -1468,6 +1471,72 @@ namespace HalloDoc.Services.Services
                 physician.Signature = model.Signature.FileName;
                 physician.Photo = model.File.FileName;
             }
+
+            _physicianRepository.UpdateAsync(physician);
+
+            return physician;
+        }
+        public object documentsProvider(ProviderViewModel model)
+        {
+            Physician physician = _physicianRepository.GetById(model.PhysicianId);
+            if (model.contractoragreement != null)
+            {
+                var newName = $"{model.PhysicianId}_contractoragreement.pdf";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.contractoragreement.CopyTo(stream);
+
+                physician.IsAgreementDoc = new BitArray(new bool[] { true });
+            }
+            if (model.backgroundcheck != null)
+            {
+                var newName = $"{model.PhysicianId}_backgroundcheck.pdf";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.backgroundcheck.CopyTo(stream);
+
+                physician.IsAgreementDoc = new BitArray(new bool[] { true });
+            }
+            if (model.hippa != null)
+            {
+                var newName = $"{model.PhysicianId}_hippa.pdf";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.hippa.CopyTo(stream);
+
+                physician.IsTrainingDoc = new BitArray(new bool[] { true });
+            }
+            if (model.nondisclosure != null)
+            {
+                var newName = $"{model.PhysicianId}_nonDisclosure.pdf";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.nondisclosure.CopyTo(stream);
+
+                physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
+            }
+
+
 
             _physicianRepository.UpdateAsync(physician);
 

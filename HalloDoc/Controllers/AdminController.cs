@@ -761,7 +761,7 @@ namespace HalloDoc.Controllers
         public IActionResult CreateProvider(ProviderViewModel model)
         {
             var result = _admin.CreateProvider(model);
-            return RedirectToAction("Dashboard");
+            return RedirectToAction("ProviderInformation");
         }
         #endregion
 
@@ -805,6 +805,13 @@ namespace HalloDoc.Controllers
         {
             var result = _admin.providerProfile(model, id);
             return Json("success");
+        }
+        public IActionResult documentsProvider(ProviderViewModel model)
+        {
+            var result = _admin.documentsProvider(model);
+
+            return Json("success");
+
         }
         #endregion
 

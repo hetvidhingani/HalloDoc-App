@@ -302,31 +302,86 @@
 
             <hr />
             <h3> Onboarding</h3>
-            <table>
-                <tr>
-                    <td> <input type="checkbox" id="contractoragreement" class="mx-2" /> </td>
-                    <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
-                    <td>
-                        <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
-                        <label type="button" class="btn btn-info text-white mx-2" for="file1">Upload</label>
-                    </td>
-                    <td>
-                        <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn1">View</a>
-                        @if (Model.IsAgreementDoc == true)
-                        {
+            <form >
+                <input type="hidden" asp-for="PhysicianId" />
+                <table>
+                    <tr>
+                        <td> <input type="checkbox" id="contractoragreement" class="mx-2" /> </td>
+                        <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
+                        <td>
+                            <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
+                            <label type="button" class="btn btn-info text-white mx-2" for="file1">Upload</label>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn1">View</a>
+                            @if (Model.IsAgreementDoc == true)
+                            {
 
-                            var newName = Model.PhysicianId + "_contractoragreement.pdf";
-                            <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/@newName" target="_blank">View</a>
-                        }
-                    </td>
-                </tr>
-            </table>
+                                var newName = Model.PhysicianId + "_contractoragreement.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <input type="checkbox" id="backgroundcheck" class="mx-2" /> </td>
+                        <td> <span class="mx-2">Background Check</span> </td>
+                        <td>
+                            <input asp-for="@Model.backgroundcheck" type="file" id="file2" hidden />
+                            <label type="button" class="btn btn-info text-white mx-2" for="file2">Upload</label>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn2">View</a>
+                            @if (Model.isbackgroundcheck == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_backgroundcheck.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <input type="checkbox" id="hipaa" class="mx-2" /> </td>
+                        <td> <span class="mx-2">Background Check</span> </td>
+                        <td>
+                            <input asp-for="@Model.hippa" type="file" id="file3" hidden />
+                            <label type="button" class="btn btn-info text-white mx-2" for="file3">Upload</label>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn3">View</a>
+                            @if (Model.Ishippa == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_hippa.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-3" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <input type="checkbox" id="non-disclosureagreement" class="mx-2" /> </td>
+                        <td> <span class="mx-2">Non Disclosureagreement</span> </td>
+                        <td>
+                            <input asp-for="@Model.nondisclosure" type="file" id="file4" hidden />
+                            <label type="button" class="btn btn-info text-white mx-2" for="file4">Upload</label>
+                        </td>
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn4">View</a>
+                            @if (Model.Ishippa == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_nonDisclosure.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-4" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                </table>
+          
             <hr />
             <div class="d-flex justify-content-end">
                 <button class="btn btn-info">Save</button>
 
-                <a href="@Url.Action("DeleteProvider","Admin") class="btn btn-danger">Delete Account</a>
+                <a href="@Url.Action("DeleteProvider","Admin")"   class="btn btn-danger">Delete Account</a>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -410,6 +465,7 @@
             }
         }
     });
+
 
     // save-edit button
 
@@ -767,20 +823,6 @@
             });
         });
     });
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     var passwordInput = document.getElementById("Password");
-    //     var passwordValidationMessage = document.querySelector(".password-validation-message");
-
-    //     passwordInput.addEventListener("blur", function () {
-    //         if (!passwordInput.value) {
-    //             passwordValidationMessage.textContent = "Please enter a new password.";
-    //         }
-    //     });
-
-    //     // Clear the validation message when the input is focused
-    //     passwordInput.addEventListener("focus", function () {
-    //         passwordValidationMessage.textContent = "";
-    //     });
-    // });
+    
 </script>
 
