@@ -1,5 +1,6 @@
 ﻿@model HalloDoc.Entities.ViewModels.ProviderInfoViewModel
-<div class="table-responsive">
+
+<div class="table-responsive desktopviewTable">
     <table class="table ">
         <thead class="table-secondary">
             <tr>
@@ -57,10 +58,94 @@
     <partial name="_Paging.cshtml" />
 
 </div>
+
+@* mobile view *@
+<div class="adminDashMobile viewMobile mb-5">
+    @foreach (var u in Model.PagingData)
+    {
+        <input type="hidden" asp-for="@u.PhysicianID">
+
+     
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block align-items-center">
+                    <div class="d-flex mx-1 align-items-center">
+                        <input type="checkbox" value="" class="checkboxForAll notification" name="selectedFiles" onclick="selectCheck()"
+                        @if (u.stopNotification == "1")
+                        {
+                            <text>checked</text>
+                        }
+                        >
+                        @u.ProviderName
+                    </div>
+                    <div>
+
+                  On Call Status:  @u.onCallStatus
+                    </div>
+                </div>
+                
+            </button>
+
+            <div class="content" style="display:none">
+                <hr />
+               
+                
+
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Role: 
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.roleName</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Status:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.status</div>
+                </div>
+             
+                
+                <div class="d-flex justify-content-end align-items-center mt-2">
+                   
+                    <button class="mx-1 bg-transparent btn btn-sm btn-outline-info">Contact</button>
+                    <button class="bg-transparent btn btn-sm btn-outline-info">Edit</button>
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
+
+
+
 @* model *@
 
 <script>
+    var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
 
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+        });
+    }
     function selectCheck() {
         var saveButton = document.getElementById("savebtn");
         saveButton.style.display = "block";

@@ -454,7 +454,9 @@ background-color:lightgray;
         .adminDashTable {
             display: none;
         }
-
+        .desktopviewTable {
+            display: none;
+        }
         .adminDashBtn {
             background-color: #228b22;
         }
@@ -522,6 +524,9 @@ background-color:lightgray;
         {
             font-size:14px;
         }
+        .viewMobile{
+            padding:0px;
+        }
     }
 
     @media only screen and (min-width: 600px) {
@@ -538,6 +543,9 @@ background-color:lightgray;
         }
         .adminDashMobile {
             display: none;
+        }
+        .viewMobile{
+            display:none;
         }
         .inputSearchbox {
             display: flex;
