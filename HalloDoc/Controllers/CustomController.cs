@@ -134,7 +134,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
                 var subject = "Reset Account Password";
                 var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-                _customService.SendEmail(email, link, subject, body);
+                _customService.SendEmail(email, link, subject, body,0,0);
                 TempData["EnterEmailSuccess"] = "Email is successfully Sent to your Registerd Email.";
 
                 return RedirectToAction("ResetPassword");
@@ -154,7 +154,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/AdminResetPassword/" + email;
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-            _customService.SendEmail(email, link, subject, body);
+            _customService.SendEmail(email, link, subject, body,0,0);
 
             return Json(new { success = true, message = "A password reset link has been sent to your email." });
         }
@@ -173,7 +173,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
             var subject = "Create Account";
             var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
-            _customService.SendEmail(req.Email, link, subject, body);
+            _customService.SendEmail(req.Email, link, subject, body, 0, 0  );
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
@@ -275,8 +275,9 @@ namespace HalloDoc.Controllers
         [HttpGet]
         public async Task<IActionResult> PatientRequest()
         {
-            var request = HttpContext.Request;
-            int userId = Int32.Parse(request.Cookies["UserID"]);
+            //var request = HttpContext.Request;
+            //int? userId = Int32.Parse(request.Cookies["UserID"]);
+            int? userId = HttpContext.Session.GetInt32("UserSession");
             var result = await _patient.PatientRequest(userId);
             if (result == "")
             {

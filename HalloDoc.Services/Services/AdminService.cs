@@ -462,7 +462,7 @@ namespace HalloDoc.Services.Services
             return viewmodel;
         }
 
-        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id)
+        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id,string AdminID)
         {
 
 
@@ -481,7 +481,7 @@ namespace HalloDoc.Services.Services
                 requestNote1.RequestId = id;
                 requestNote1.AdminNotes = additionalNotes;
                 requestNote1.CreatedDate = DateTime.Now;
-                requestNote1.CreatedBy = "bda27f31-02b1-442f-9120-bed8f09a4966";
+                requestNote1.CreatedBy = AdminID;
                 await _requestNotesRepository.AddAsync(requestNote1);
                 adminNotes = requestNote1.AdminNotes;
 
@@ -965,7 +965,6 @@ namespace HalloDoc.Services.Services
             };
             return model;
 
-
         }
         public async Task<object> ResetPasswordAdmin(AdminMyProfileViewModel model)
         {
@@ -1144,7 +1143,7 @@ namespace HalloDoc.Services.Services
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = model.UserName,
-                PasswordHash = model.Password,
+                PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password),
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 CreatedDate = DateTime.Now,
@@ -1250,7 +1249,7 @@ namespace HalloDoc.Services.Services
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = model.UserName,
-                PasswordHash = model.Password,
+                PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password),
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 CreatedDate = DateTime.Now,
@@ -1496,24 +1495,24 @@ namespace HalloDoc.Services.Services
         {
             Physician physician = _physicianRepository.GetById(model.PhysicianId);
 
-            if (model.IsAgreementDoc == true )
+            if (model.IsAgreementDoc == true)
             {
-                if( model.contractoragreement != null)
+                if (model.contractoragreement != null)
                 {
 
-                var newName = $"{model.PhysicianId}_contractoragreement.pdf";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+                    var newName = $"{model.PhysicianId}_contractoragreement.pdf";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-                using var stream = System.IO.File.Create(filePath);
-                model.contractoragreement.CopyTo(stream);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    using var stream = System.IO.File.Create(filePath);
+                    model.contractoragreement.CopyTo(stream);
 
-                physician.IsAgreementDoc = new BitArray(new bool[] { true });
+                    physician.IsAgreementDoc = new BitArray(new bool[] { true });
                 }
-                else if(model.contractoragreement ==null && physician.IsAgreementDoc !=null)
+                else if (model.contractoragreement == null && physician.IsAgreementDoc != null)
                 {
                     physician.IsAgreementDoc = new BitArray(new bool[] { true });
 
@@ -1525,25 +1524,25 @@ namespace HalloDoc.Services.Services
                 physician.IsAgreementDoc = null;
 
             }
-            if (model.isbackgroundcheck == true )
+            if (model.isbackgroundcheck == true)
             {
 
-                if( model.backgroundcheck != null)
+                if (model.backgroundcheck != null)
                 {
 
-                var newName = $"{model.PhysicianId}_backgroundcheck.pdf";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+                    var newName = $"{model.PhysicianId}_backgroundcheck.pdf";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-                using var stream = System.IO.File.Create(filePath);
-                model.backgroundcheck.CopyTo(stream);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    using var stream = System.IO.File.Create(filePath);
+                    model.backgroundcheck.CopyTo(stream);
 
-                physician.IsBackgroundDoc = new BitArray(new bool[] { true });
+                    physician.IsBackgroundDoc = new BitArray(new bool[] { true });
                 }
-                else if(model.backgroundcheck == null && physician.IsBackgroundDoc !=null)
+                else if (model.backgroundcheck == null && physician.IsBackgroundDoc != null)
                 {
                     physician.IsBackgroundDoc = new BitArray(new bool[] { true });
 
@@ -1553,22 +1552,22 @@ namespace HalloDoc.Services.Services
             {
                 physician.IsBackgroundDoc = null;
             }
-            if (model.Ishippa == true )
+            if (model.Ishippa == true)
             {
                 if (model.hippa != null)
                 {
 
-                var newName = $"{model.PhysicianId}_hippa.pdf";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+                    var newName = $"{model.PhysicianId}_hippa.pdf";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-                using var stream = System.IO.File.Create(filePath);
-                model.hippa.CopyTo(stream);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    using var stream = System.IO.File.Create(filePath);
+                    model.hippa.CopyTo(stream);
 
-                physician.IsTrainingDoc = new BitArray(new bool[] { true });
+                    physician.IsTrainingDoc = new BitArray(new bool[] { true });
                 }
                 else if (model.hippa == null && physician.IsTrainingDoc != null)
                 {
@@ -1580,22 +1579,22 @@ namespace HalloDoc.Services.Services
             {
                 physician.IsTrainingDoc = null;
             }
-            if (model.IsAgreementDocnondisclosure == true )
+            if (model.IsAgreementDocnondisclosure == true)
             {
                 if (model.nondisclosure != null)
                 {
 
-                var newName = $"{model.PhysicianId}_nonDisclosure.pdf";
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
+                    var newName = $"{model.PhysicianId}_nonDisclosure.pdf";
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/doc", newName);
 
-                if (System.IO.File.Exists(filePath))
-                {
-                    System.IO.File.Delete(filePath);
-                }
-                using var stream = System.IO.File.Create(filePath);
-                model.nondisclosure.CopyTo(stream);
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                    using var stream = System.IO.File.Create(filePath);
+                    model.nondisclosure.CopyTo(stream);
 
-                physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
+                    physician.IsNonDisclosureDoc = new BitArray(new bool[] { true });
                 }
                 else if (model.nondisclosure == null && physician.IsNonDisclosureDoc != null)
                 {
@@ -1610,7 +1609,7 @@ namespace HalloDoc.Services.Services
 
 
 
-             _physicianRepository.UpdateAsync(physician);
+            _physicianRepository.UpdateAsync(physician);
 
             return physician;
         }
@@ -1752,7 +1751,7 @@ namespace HalloDoc.Services.Services
 
             foreach (var rolemenu in roleMenu)
             {
-                await _roleMenuRepository.Remove(rolemenu);
+                 _roleMenuRepository.Remove(rolemenu);
             }
 
 
@@ -1984,6 +1983,14 @@ namespace HalloDoc.Services.Services
             };
             return model;
         }
+
+        public void DeleteVendor(int id)
+        {
+            HealthProfessional healthProfessional = _healthProfessionalsRepository.GetById(id);
+            healthProfessional.IsDeleted = new BitArray(new bool[] { true });
+            _healthProfessionalsRepository.UpdateAsync(healthProfessional);
+        }
+
         #endregion
 
         #region Email Logs & SMS Logs
@@ -2329,7 +2336,7 @@ namespace HalloDoc.Services.Services
         {
             Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
 
-            whereClauseSyntax = x => x.Request.IsDeleted == null;
+            whereClauseSyntax = x => x.Request.IsDeleted == null && x.Request.UserId!=null;
 
             if (statusOfRequest != 0)
             {
@@ -2736,7 +2743,7 @@ namespace HalloDoc.Services.Services
             {
                 physicianId = x.PhysicianId,
                 physicianName = x.FirstName + " " + x.LastName,
-                Photo = x.Photo!,
+                Photo = Path.Combine("/uploads/physician/image", $"{x.PhysicianId}_Photo.jpg"),
             }, PhysicianwhereClauseSyntax);
             foreach (PhysicianOnCallModal physician in temp)
             {
@@ -2752,6 +2759,7 @@ namespace HalloDoc.Services.Services
             providersOnCallViewModel.PaggingData = physicians;
             return providersOnCallViewModel;
         }
+
         #endregion
 
         #endregion

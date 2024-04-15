@@ -24,7 +24,7 @@ namespace HalloDoc.Services.IServices
         Task<Admin> GetAdmin(string email);
         Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
         Task<ViewNotesViewModel> ViewNotes(int id);
-        Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id);
+        Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id,string AdminID);
         Task<object> CancelCase(CancelCaseViewModel viewModel, int id);
         Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
         Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
@@ -82,6 +82,8 @@ namespace HalloDoc.Services.IServices
         VendorsViewModel AddVendor();
         Task<VendorsViewModel> AddVendor(VendorsViewModel model);
         VendorsViewModel EditVendor(int id);
+        void DeleteVendor(int id);
+
         LogsViewModel Logs();
         LogsViewModel LogTable(int RoleID, string ReciverName, string email,string phoneNo, DateTime? createdDate, DateTime? sentDate,int type,int CurrPage);
         PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber,int CurrentPage);

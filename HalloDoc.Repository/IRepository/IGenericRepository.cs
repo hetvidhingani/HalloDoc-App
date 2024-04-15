@@ -23,7 +23,7 @@ namespace HalloDoc.Repository.IRepository
         public dynamic GetAllWithPagination(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int PageIndex, int PageSize, Expression<Func<T, object>> orderBy, bool IsAcc);
         public int GetTotalCount(Expression<Func<T, bool>> where);
         T GetById(object id);
-        Task Remove(T entity);
+        void Remove(T entity);
         dynamic GetAllData(Expression<Func<T, object>> select, Expression<Func<T, bool>> where);
         T? IncludeEntity(Expression<Func<T, bool>> expression, Expression<Func<T, object>> Include);
     }

@@ -116,7 +116,7 @@ namespace HalloDoc.Repository.Repository
             return _context.Set<T>();
         }
 
-        public async Task Remove(T entity)
+        public  void Remove(T entity)
         {
             try
             {

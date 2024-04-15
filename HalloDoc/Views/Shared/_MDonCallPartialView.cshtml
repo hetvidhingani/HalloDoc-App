@@ -4,12 +4,15 @@
 @foreach (var phy in Model.PaggingData)
 {
     @if (phy.IsOnCall)
-    {
-        <div class="col-lg-3 col-md-4 col-sm-6">
-            <div class="d-flex mx-1">
-                @phy.physicianName
-            </div>
-        </div>
+        {
+            <div class="d-flex align-items-center">
+                <img src="@phy.Photo" class="img-fluid" style="width:75px;" />
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="d-flex mx-1">
+                        @phy.physicianName
+                    </div>
+                </div>
+                </div>
 
     }
 
@@ -20,11 +23,16 @@
 {
     @if (!phy.IsOnCall)
     {
-        <div class="col-lg-3 col-md-4 col-sm-6 mt-2">
-            <div class="d-flex mx-1">
-                @phy.physicianName
-            </div>
-        </div>
+            <div class="d-flex align-items-center">
+
+                <img src="@phy.Photo" class="img-fluid " style="width:75px;" />
+
+                <div class="col-lg-3 col-md-4 col-sm-6 mt-2">
+                    <div class="d-flex mx-1">
+                        @phy.physicianName
+                    </div>
+                </div>
+                </divcl>
 
     }
 

@@ -60,7 +60,7 @@
 </div>
 
 @* mobile view *@
-<div class="adminDashMobile viewMobile mb-5">
+@* <div class="adminDashMobile viewMobile mb-5">
     @foreach (var u in Model.PagingData)
     {
         <input type="hidden" asp-for="@u.PhysicianID">
@@ -117,7 +117,7 @@
     }
     <partial name="_Paging.cshtml" />
 
-</div>
+</div> *@
 
 
 
@@ -178,17 +178,7 @@
             dataType: "html",
             data: { ids: ids },
             url: "@(Url.Action("StopNotificationPhysician", "Admin"))",
-            success: function (response) {
-                if (response == "success") {
-
-                }
-                else {
-                    location.reload();
-                }
-            },
-            error: function () {
-                console.log("error");
-            }
+            
         });
     });
     $('.contactProviderc').click(function () {

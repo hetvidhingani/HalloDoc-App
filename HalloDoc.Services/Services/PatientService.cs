@@ -151,16 +151,22 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                RequestWiseFile newFile = new RequestWiseFile
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                using (var stream = System.IO.File.Create(filePath))
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.File.FileName,
-                    CreatedDate = DateTime.Now,
-                    DocType = 1,
-                };
+                    viewModel.File.CopyTo(stream);
 
-                await _requestwisefileRepository.AddAsync(newFile);
 
+                    RequestWiseFile newFile = new RequestWiseFile
+                    {
+                        RequestId = request.RequestId,
+                        FileName = viewModel.File.FileName,
+                        CreatedDate = DateTime.Now,
+                        DocType = 1,
+                    };
+
+                    await _requestwisefileRepository.AddAsync(newFile);
+                }
             }
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
@@ -259,16 +265,22 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                RequestWiseFile newFile = new RequestWiseFile
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                using (var stream = System.IO.File.Create(filePath))
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.File.FileName,
-                    CreatedDate = DateTime.Now,
-                    DocType = 1,
-                };
+                    viewModel.File.CopyTo(stream);
 
-                await _requestwisefileRepository.AddAsync(newFile);
 
+                    RequestWiseFile newFile = new RequestWiseFile
+                    {
+                        RequestId = request.RequestId,
+                        FileName = viewModel.File.FileName,
+                        CreatedDate = DateTime.Now,
+                        DocType = 1,
+                    };
+
+                    await _requestwisefileRepository.AddAsync(newFile);
+                }
             }
 
 
@@ -362,16 +374,22 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                RequestWiseFile newFile = new RequestWiseFile
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                using (var stream = System.IO.File.Create(filePath))
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.File.FileName,
-                    CreatedDate = DateTime.Now,
-                    DocType = 1,
-                };
+                    viewModel.File.CopyTo(stream);
 
-                await _requestwisefileRepository.AddAsync(newFile);
 
+                    RequestWiseFile newFile = new RequestWiseFile
+                    {
+                        RequestId = request.RequestId,
+                        FileName = viewModel.File.FileName,
+                        CreatedDate = DateTime.Now,
+                        DocType = 1,
+                    };
+
+                    await _requestwisefileRepository.AddAsync(newFile);
+                }
             }
 
 
@@ -461,16 +479,22 @@ namespace HalloDoc.Services.Services
 
             if (viewModel.File != null && viewModel.File.Length > 0)
             {
-                RequestWiseFile newFile = new RequestWiseFile
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", viewModel.File.FileName);
+                using (var stream = System.IO.File.Create(filePath))
                 {
-                    RequestId = request.RequestId,
-                    FileName = viewModel.File.FileName,
-                    CreatedDate = DateTime.Now,
-                    DocType = 1,
-                };
+                    viewModel.File.CopyTo(stream);
 
-                await _requestwisefileRepository.AddAsync(newFile);
 
+                    RequestWiseFile newFile = new RequestWiseFile
+                    {
+                        RequestId = request.RequestId,
+                        FileName = viewModel.File.FileName,
+                        CreatedDate = DateTime.Now,
+                        DocType = 1,
+                    };
+
+                    await _requestwisefileRepository.AddAsync(newFile);
+                }
             }
 
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);

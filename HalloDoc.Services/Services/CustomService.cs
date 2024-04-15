@@ -114,7 +114,7 @@ namespace HalloDoc.Services.Services
         }
 
         #region Send Mail
-        public string SendEmail(string email, string link, string subject, string body, List<string> attachmentFilePath = null)
+        public string SendEmail(string email, string link, string subject, string body,int id,int AdminId, List<string> attachmentFilePath = null)
         {
             try
             {
@@ -150,7 +150,26 @@ namespace HalloDoc.Services.Services
 
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
+                if(id!=0)
+                {
+                    RequestClient req = _requestclientRepository.GetById(id);
+                    Request request = _requestRepository.GetById(req.RequestId);
+                    Admin admin = _adminRepository.GetById(AdminId);
 
+                    EmailLog log = new EmailLog();
+                    log.EmailTemplate = body;
+                    log.SubjectName = subject;
+                    log.EmailId = email;
+                    log.RoleId = admin.RoleId;
+                    log.RequestId = req.RequestId;
+                    log.AdminId = admin.AdminId;
+                    log.SentDate = DateTime.Now;
+                    log.SentTries = 1;
+                    log.CreateDate = request.CreatedDate;
+                    log.IsEmailSent = new BitArray(new bool[] { true });
+
+                    _emailLogsRepository.AddAsync(log);
+                }
 
                 var abc = "Success";
                 return abc;
@@ -247,7 +266,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
-            var filesRow = _requestwisefileRepository.GetAll().Where(x => x.RequestId == requestid).ToList();
+            var filesRow = _requestwisefileRepository.GetAll().Where(x => x.RequestId == requestid&&x.IsDeleted==null).ToList();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>
@@ -314,25 +333,9 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public void EmailLog(int requestclientID, string Email, string link, string subject, string body, int AdminId)
-        {
-            RequestClient req = _requestclientRepository.GetById(requestclientID);
-            Request request = _requestRepository.GetById(req.RequestId);
-            Admin admin = _adminRepository.GetById(AdminId);
-
-            EmailLog log = new EmailLog();
-            log.EmailTemplate = body;
-            log.SubjectName = subject;
-            log.EmailId = Email;
-            log.RoleId = admin.RoleId;
-            log.RequestId = req.RequestId;
-            log.AdminId = admin.AdminId;
-            log.SentDate = DateTime.Now;
-            log.SentTries = 1;
-            log.CreateDate = request.CreatedDate;
-            log.IsEmailSent = new BitArray(new bool[] { true });
-
-            _emailLogsRepository.AddAsync(log);
-        }
+        //public void EmailLog(int requestclientID, string Email, string link, string subject, string body, int AdminId)
+        //{
+            
+        //}
     }
 }
