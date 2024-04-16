@@ -1,9 +1,11 @@
 ﻿@model ProvidersOnCallViewModel
 <div class="row mt-2 formshadow p-4 mb-5 " style="background-color:white">
-<h3>MD's On Call</h3>
-@foreach (var phy in Model.PaggingData)
-{
-    @if (phy.IsOnCall)
+    <h3>MD's On Call</h3>
+        <div class="d-flex">
+    @foreach (var phy in Model.PaggingData)
+    {
+
+        @if (phy.IsOnCall)
         {
             <div class="d-flex align-items-center">
                 <img src="@phy.Photo" class="img-fluid" style="width:75px;" />
@@ -12,29 +14,32 @@
                         @phy.physicianName
                     </div>
                 </div>
-                </div>
+            </div>
 
+        }
     }
-
-}
-<br />
-<h3 class="mt-5">MD's Off Duty</h3>
-@foreach (var phy in Model.PaggingData)
-{
-    @if (!phy.IsOnCall)
+        </div>
+    <br />
+    <h3 class="mt-5">MD's Off Duty</h3>
+        <div class="row">
+    @foreach (var phy in Model.PaggingData)
     {
-            <div class="d-flex align-items-center">
+        @if (!phy.IsOnCall)
+        {
+            <div class="d-flex col-lg-3 align-items-center">
 
                 <img src="@phy.Photo" class="img-fluid " style="width:75px;" />
 
-                <div class="col-lg-3 col-md-4 col-sm-6 mt-2">
+                <div class=" mt-2">
                     <div class="d-flex mx-1">
                         @phy.physicianName
                     </div>
                 </div>
-                </divcl>
+            </div>
+
+        }
+
 
     }
-
-}
+    </div>
 </div>

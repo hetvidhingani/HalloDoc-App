@@ -256,8 +256,8 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <div class="form-floating form-group input-group mb-3">
-                                <input asp-for="@Model.Photo" style="border-radius:10px" type="file" class="form-control" id="UploadButton">
-                                <label class="form-label">Select File</label>
+                                <input asp-for="@Model.Photo" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton" disabled >
+                                <label style="color:black" >Select File</label>
 
                             </div>
                         </div>
@@ -279,7 +279,7 @@
 
                     <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
                         <div class="form-floating form-group ">
-                            <textarea asp-for="AdminNotes" class="form-control edit" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " readonly></textarea>
+                            <textarea asp-for="AdminNotes" class="form-control edit" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " disabled></textarea>
                             <label class="form-label" for="textAreaExample2">
                                 Admin Notes
 
@@ -632,6 +632,12 @@
 
 
         });
+        inputs.forEach(function (textarea) {
+            textarea.removeAttribute("readonly");
+            textarea.removeAttribute("disabled");
+
+
+        });
         editButton4.style.display = "none";
         saveButton4.removeAttribute("disabled");
         saveButton4.style.display = "block";
@@ -736,7 +742,7 @@
         var city = $("#city").val();
         var state = $("#state").val();
         var zip = $("#zip").val();
-        var altphone = $("#altphone").val();
+        var altphone = $("#phone2").val();
 
         if (address1.length <= 0) {
             document.getElementsByClassName('address1')[0].innerText = "Please Enter Address 1";
@@ -758,7 +764,7 @@
             return;
         }
 
-        if (altphone.length <= 0 || altphone == "" || altphone == null) {
+        if (altphone.length <= 0 ) {
             document.getElementsByClassName('altphone')[0].innerText = "Please Enter Alternate Phone";
             return;
         }
@@ -823,7 +829,11 @@
             input.setAttribute("readonly", "readonly");
             input.setAttribute("disabled", "disabled");
         });
+        inputs.forEach(function (textarea) {
+            textarea.removeAttribute("readonly");
+            textarea.removeAttribute("disabled");
 
+        });
         // Hide save and cancel buttons and show edit button
         var editButtons11 = formElement.querySelector(".edit-button");
         editButtons11.style.display = "block";

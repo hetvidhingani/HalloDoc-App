@@ -61,7 +61,7 @@
 
                                 <td>@r.CreatedDate</td>
                                 <td>
-                                    <a href="@Url.Action("downloadfile", "admin", new { name = @r.FileName })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                    <a href="@Url.Action("downloadfile", "admin", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
                                         <i class="bi bi-cloud-arrow-down"></i>
                                     </a>
                                    

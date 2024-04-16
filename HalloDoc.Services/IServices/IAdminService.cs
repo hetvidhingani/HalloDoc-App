@@ -13,7 +13,7 @@ namespace HalloDoc.Services.IServices
 
     public interface IAdminService
     {
-        string SendEmail(string email, string link,string subject, string body, List<string> attachmentFilePath = null);
+        
         Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
         Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);

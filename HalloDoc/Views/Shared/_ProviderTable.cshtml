@@ -50,8 +50,8 @@
 
         </tbody>
     </table>
-   <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary " id="savebtn" style="display:none">Save Changes</button>
+   <div class="d-flex justify-content-end mb-5">
+        <button type="button" class="btn  btn-info mx-2" id="savebtn" style="display:none">Save Changes</button>
         <button type="reset" class="btn btn-outline-danger " id="cancelbtn" onclick="cancelCheck()" style="display:none">Cancel</button>
 
    </div>
@@ -178,7 +178,16 @@
             dataType: "html",
             data: { ids: ids },
             url: "@(Url.Action("StopNotificationPhysician", "Admin"))",
-            
+            success: function (response) {
+                
+                    toastr.success("Notification Updated.");
+                var saveButton = document.getElementById("savebtn");
+                saveButton.style.display = "none";
+
+                var cancelButton = document.getElementById("cancelbtn");
+                cancelButton.style.display = "none";
+               
+            },
         });
     });
     $('.contactProviderc').click(function () {

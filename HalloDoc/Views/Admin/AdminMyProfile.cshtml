@@ -103,7 +103,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input required asp-for="ConfirmEmail"
-                                   id="confirmemail"  type="email" autocomplete="off"
+                                   id="confirmemail"  type="email" onblur="check()" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Confirm Email</label>
                             <span asp-validation-for="ConfirmEmail" class="text-danger confirmemail"></span>
@@ -112,7 +112,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input required asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+                            <input required asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" disabled />
 
                             <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
                         </div>
@@ -136,7 +136,7 @@
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button" id="edit-button" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveAdminInfo" style="display:none;" id="save-button1" type="submit" disabled>Save</button>
-                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button1" style="display:none;" type="reset" disabled>Cancel</button>
+                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button1" style="display:none;"  disabled>Cancel</button>
 
                 </div>
 
@@ -194,7 +194,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input required asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;"  class="edit2" readonly />
+                            <input required asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;"  class="edit2" disabled />
 
                         </div>
                         <span asp-validation-for="BillingPhoneNumber" class="text-danger altphone"></span>
@@ -205,7 +205,7 @@
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button" id="edit-button2" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" id="save-button2" type="submit" disabled>Save</button>
-                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button2" style="display:none;" type="reset" disabled>Cancel</button>
+                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button2" style="display:none;"  disabled>Cancel</button>
 
                 </div>
             </form>
@@ -290,7 +290,6 @@
         utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
 
     });
-    $('#phone').attr('value', "+91");
 
 
     //save-edit button
@@ -337,7 +336,15 @@
 
     });
     
+   
 
+    function check(){
+        var confirmEmail = $('#confirmemail').val();
+        var email = $('#Email').val();
+        if (confirmEmail !== email) {
+            $('.confirmemail').text('Confirm Email and Email should be same!');
+        } 
+    };
     document.getElementById("save-button1").addEventListener("click", function (event) {
         var firstname = $("#firstname").val();
         var lastname = $("#lastname").val();

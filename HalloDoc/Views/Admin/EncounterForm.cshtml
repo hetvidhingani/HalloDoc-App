@@ -345,19 +345,19 @@
     }
 
     const phoneInputField = document.querySelector("#phone");
+
     const phoneInput = window.intlTelInput(phoneInputField, {
-        utilsScript:
-            "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
     });
-    var flag = document.getElementsByClassName('iti__selected-flag');
-    window.onload = function () {
-
-
-        var input = document.querySelector("#phone");
-        input.removeAttribute("title");
-
-
-    }
+    $('#phone').attr('value', "+91");
     $('.savechanges').click(function () {
         var form = $(this).closest('form');
       

@@ -60,6 +60,8 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Enter your Email Here")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
+        [Compare("Password", ErrorMessage = "Passwords do not match.")]
+
         public string ConfirmEmail { get; set; }
 
         public List<int>? notification { get; set; }

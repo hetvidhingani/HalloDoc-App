@@ -459,6 +459,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _admin.ConfirmCloseCase(id);
+                TempData["success"] = "Request Moved to UnPaid";
                 return RedirectToAction("Dashboard");
             }
             return RedirectToAction("Dashboard");
@@ -684,6 +685,7 @@ namespace HalloDoc.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _admin.EncounterFormSaveChanges(model);
+                TempData["success"] = "Data Saved Successfully.";
                 return RedirectToAction("EncounterForm", result);
             }
             return View(model);
@@ -753,7 +755,7 @@ namespace HalloDoc.Controllers
         public IActionResult StopNotificationPhysician(List<int> ids)
         {
             _admin.StopNotificationPhysician(ids);
-            return RedirectToAction("ProviderInformation");
+            return Json("success");
         }
         #endregion
 
@@ -789,7 +791,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> changeRoleStatus(ProviderViewModel model, int id)
         {
             await _admin.resetRoleStatus(model, id);
-            return Json("success");
+            return Json(new { success = true }); 
         }
         [HttpPost]
         public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword)
@@ -801,7 +803,7 @@ namespace HalloDoc.Controllers
         {
             var result = _admin.savePhysicianInformation(model, id);
             model.PhysicianId = result.PhysicianId;
-            return Json(new { success = true }); ;
+            return Json(new { success = true }) ;
         }
         public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
@@ -925,10 +927,12 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> AddVendor(VendorsViewModel model)
         {
             await _admin.AddVendor(model);
+
             return RedirectToAction("VendorsDetails");
         }
         public IActionResult EditVendor(int id)
         {
+
             var result = _admin.EditVendor(id);
             return View(result);
         }
@@ -936,6 +940,7 @@ namespace HalloDoc.Controllers
         public IActionResult DeleteVendor(int id)
         {
            _admin.DeleteVendor(id);
+
             return RedirectToAction("VendorsDetails");
         }
         #endregion
@@ -1042,6 +1047,8 @@ namespace HalloDoc.Controllers
             //{
             //    Email = viewModel.Email
             //});
+            TempData["success"] = "Request Created Successfully.";
+    
             return RedirectToAction("Dashboard");
         }
         #endregion

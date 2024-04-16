@@ -159,53 +159,6 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Admin
-        #region Send Mail
-        public string SendEmail(string email, string link, string subject, string body, List<string> attachmentFilePath = null)
-        {
-            try
-            {
-                var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
-                var senderPassword = "Hkd$9503";
-
-                SmtpClient smtpClient = new SmtpClient("smtp.office365.com")
-                {
-                    Port = 587,
-                    Credentials = new NetworkCredential(senderMail, senderPassword),
-                    EnableSsl = true,
-                    DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = false
-                };
-
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress(senderMail),
-                    Subject = subject,
-                    IsBodyHtml = true,
-                    Body = body,
-                };
-
-                if (attachmentFilePath != null && attachmentFilePath.Count > 0)
-                {
-
-                    foreach (var attachmentFilePaths in attachmentFilePath)
-                    {
-                        Attachment attachment = new Attachment(attachmentFilePaths);
-                        mailMessage.Attachments.Add(attachment);
-                    }
-                }
-
-                mailMessage.To.Add(email);
-                smtpClient.Send(mailMessage);
-                var abc = "Success";
-                return abc;
-            }
-            catch (Exception ex)
-            {
-                var abc = "Success";
-                return ex.Message.ToString();
-            }
-        }
-        #endregion
 
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
@@ -228,7 +181,7 @@ namespace HalloDoc.Services.Services
                     PatientPhone = rec.PhoneNumber,
                     RequestorPhone = r.PhoneNumber,
                     Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
-                    Notes = rec.Notes,
+                    Notes = rec.Request.RequestStatusLogs.OrderBy(u => u.CreatedDate).Last(u => u.RequestId == rec.RequestId).Notes,
                     PhysicianName = phy.FirstName + " " + phy.LastName,
                     RequestTypeID = r.RequestTypeId,
                     RequstClientId = rec.RequestClientId,
@@ -447,7 +400,7 @@ namespace HalloDoc.Services.Services
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                        join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
                                        from p in g.DefaultIfEmpty()
-                                       where r.RequestId == req.RequestId
+                                       where r.RequestId == req.RequestId && rsl.Status !=7 && rsl.Status !=3 && rsl.Status !=8
                                        orderby rsl.CreatedDate descending
                                        select new TransferNotesViewModel
                                        {
@@ -457,6 +410,17 @@ namespace HalloDoc.Services.Services
                                            CreatedDate = rsl.CreatedDate,
                                            Note = rsl.Notes,
                                            PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
+                                       }).ToList();
+            viewmodel.CancelationNotes = (from r in _requestRepository.GetAll()
+                                       join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
+                                      
+                                       where r.RequestId == req.RequestId &&( rsl.Status == 7 || rsl.Status == 3 || rsl.Status == 8)
+                                       orderby rsl.CreatedDate descending
+                                       select new TransferNotesViewModel
+                                       {
+                                          
+                                           Note = rsl.Notes,
+                                           
                                        }).ToList();
 
             return viewmodel;
@@ -915,7 +879,7 @@ namespace HalloDoc.Services.Services
             RequestStatusLog log = new RequestStatusLog
             {
                 RequestId = req.RequestId,
-                Status = 3,
+                Status = 7,
                 Notes = "Declined By Patient:" + note,
             };
             await _requestStatusLogRepository.AddAsync(log);
@@ -1086,7 +1050,7 @@ namespace HalloDoc.Services.Services
             encounter.Firstname = model.FirstName;
             encounter.Lastname = model.LastName;
             encounter.Location = model.Location;
-            //encounter.Dateofbirth = model.DateOfBirth;
+           // encounter.Dateofbirth = model.DateOfBirth;
             encounter.Phonenumber = model.PhoneNumber;
             encounter.Medicalreport = model.MedicalReport;
             //   encounter.Date = model.Date.Value;
@@ -1408,7 +1372,7 @@ namespace HalloDoc.Services.Services
 
         public void StopNotificationPhysician(List<int> ids)
         {
-            var existingPhysicians = _physicianNotificationRepository.GetAll();
+            var existingPhysicians = _physicianNotificationRepository.GetAll().ToList();
 
             //var physiciansToRemove = existingPhysicians.Where(p => ids.Contains(p.PhysicianId)).ToList();
             foreach (var physician in existingPhysicians)

@@ -6,7 +6,7 @@
     <div class="d-flex flex-column align-items-center justify-content-center ">
         <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
             <h3>Notes</h3>
-             <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
                 <button class="back">
                     <i class="bi bi-chevron-left"></i>
                     back
@@ -15,20 +15,36 @@
 
         </div>
 
-            <div class="p-4 bg-transparent mb-3  h-100 PatientInfo">
+        <div class="p-4 bg-transparent mb-3  h-100 PatientInfo">
             <form asp-action="ViewNotes" asp-controller="Admin" method="post" enctype="multipart/form-data">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                   
-                    <div class="row justify-content-between">
-                    <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  p-4 shadow-lg d-flex flex-column" >
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row justify-content-between">
+                    <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  p-4 shadow-lg d-flex flex-column">
                         <strong> Transfer Notes</strong>
-                        @if(Model.TransferNotes!=null)
+                        @if (Model.TransferNotes != null)
                         {
-                            <hr/>
+                            <hr />
                             @foreach (var z in Model.TransferNotes)
                             {
 
-                                <small><b>Admin</b> Transferd to Dr. <b>@z.PhysicianName</b> on @z.CreatedDate : @z.Note </small>
+                                <small>
+                                    <b>Admin</b>Transferd @if (z.PhysicianName != null)
+                                    {
+                                        <span>
+                                             to Dr.
+                                            <b>@z.PhysicianName</b>
+                                        </span>
+                                    } on @z.CreatedDate : 
+                                    @if(z.Note!=null)
+                                    {
+                                        @z.Note
+                                    }
+                                    else
+                                    {
+                                        <span>-</span>
+                                    }
+                                </small>
                                 <hr />
                             }
                         }
@@ -52,11 +68,12 @@
                             </div>
                         </small>
 
-                        </div>
+                    </div>
                     <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1   p-4 shadow-lg d-flex  flex-column">
                         <strong> Admin Notes</strong>
-                        <small><div id="adminNotes">
-                                @if (@Model.AdminNotes!=null)
+                        <small>
+                            <div id="adminNotes">
+                                @if (@Model.AdminNotes != null)
                                 {
                                     @Model.AdminNotes
                                 }
@@ -64,12 +81,28 @@
                                 {
                                     <span>-</span>
                                 }
-                            </div></small>
+                            </div>
+                        </small>
+
+                    </div>
+                    @if (Model.CancelationNotes.Count > 0)
+                    {
+                        <div class="col-lg-5 col-md-5 col-sm-12 bg-white mx-1  p-4 shadow-lg d-flex flex-column">
+                            <strong> Cancelation Notes</strong>
+                            <hr />
+                            @foreach (var z in Model.CancelationNotes)
+                            {
+
+                                <small> @z.Note </small>
+                                <hr />
+                            }
 
                         </div>
-                    </div>
-                <div class="bg-white p-3 shadow-lg  rounded-2" >
-                <div class="form-floating form-group  rounded-3">
+                    }
+                </div>
+
+                <div class="bg-white p-3 shadow-lg  rounded-2">
+                    <div class="form-floating form-group  rounded-3">
                         <textarea asp-for="AdditionalNotes" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
                         <label class="form-label" for="textAreaExample2">
                             Additional Notes
@@ -84,9 +117,9 @@
                     </div>
                 </div>
 
-                </form>
-            </div>
-       
+            </form>
+        </div>
+
     </div>
 
 </div>
@@ -96,7 +129,7 @@
 <script>
 
     $('.saveChangesButton').click(function () {
-      
+
         var additionalNotes = $('#additionalNotes').val();
         if (additionalNotes == null || additionalNotes == "") {
             document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
@@ -112,7 +145,7 @@
             data: { additionalNotes: additionalNotes, adminNotes: adminNotes, id: id },
             url: "@(Url.Action("ViewNotes", "Admin"))",
             success: function (data) {
-   
+
                 location.reload();
             },
             error: function () {
@@ -124,10 +157,10 @@
     if (localStorage.getItem("Mytheme")) {
         body.classList.toggle(localStorage.getItem("Mytheme"));
     }
-   
-        document.addEventListener("DOMContentLoaded", function () {
+
+    document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("additionalNotes").value = "";
-        });
+    });
 
 
 </script>
