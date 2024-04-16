@@ -63,8 +63,6 @@
             var regionId = $(this).val();
             var url = "/Admin/GetPhysiciansByRegion?regionId=" + regionId;
            
-           
-
             $.ajax({
                 url: url,
                 type: 'GET',
@@ -90,11 +88,11 @@
     $('#myForm').on('submit', function (e) {
        
         e.preventDefault();
-        var additionalNotes = $('#additionalNotes').val();
-        if (additionalNotes == null || additionalNotes == "") {
-            document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
-            return;
-        }
+        // var additionalNotes = $('#additionalNotes').val();
+        // if (additionalNotes == null || additionalNotes == "") {
+        //     document.getElementsByClassName("validate")[0].innerText = "Please enter additional notes.";
+        //     return;
+        // }
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();

@@ -129,9 +129,12 @@ namespace HalloDoc.Controllers
             return View();
         }
 
+        public IActionResult RoleAuthorization()
+        {
+            return View();
+        }
 
         [HttpPost]
-        [Obsolete]
         public IActionResult ExportFilterWise(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId)
         {
             int data;
@@ -189,7 +192,6 @@ namespace HalloDoc.Controllers
         }
 
         [HttpGet]
-        [Obsolete]
         public IActionResult ExportAll()
         {
             using (var memoryStream = new MemoryStream())
@@ -209,20 +211,18 @@ namespace HalloDoc.Controllers
                 return Ok(fileUrl);
             }
         }
+
         [HttpPost]
         public IActionResult sendMailToAllPhysicians(string notess)
         {
             var result = _admin.UnscheduledPhysicians(notess);
             if (result == null)
             {
-
                 TempData["success"] = "Email is sent successfully to Unscheduled Physicians";
             }
             else
             {
-
                 TempData["error"] = "No Physicians available to provide service.";
-
             }
 
             return Json("success");
@@ -553,6 +553,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Send Order
+        [RoleAuthorize(13)]
         [HttpGet]
         public async Task<IActionResult> SendOrder(int Id)
         {
@@ -639,6 +640,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Admin MyProfile
+        [RoleAuthorize(3)]
         public async Task<IActionResult> AdminMyProfile()
         {
             var request = HttpContext.Request;
@@ -710,7 +712,6 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard");
         }
         #endregion
-
 
         #endregion
 
@@ -904,10 +905,11 @@ namespace HalloDoc.Controllers
             ViewBag.PageHeader = "Edit Admin Account";
             return View("AdminMyProfile",result);
         }
-       
+
         #endregion
 
         #region Vendors
+        [RoleAuthorize(12)]
         public IActionResult VendorsDetails()
         {
             var result = _admin.VendorDetail();
@@ -944,7 +946,7 @@ namespace HalloDoc.Controllers
             return RedirectToAction("VendorsDetails");
         }
         #endregion
-
+        [RoleAuthorize(14)]
         #region Email Logs
         public IActionResult EmailLogs()
         {
@@ -959,6 +961,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region SMS Logs
+        [RoleAuthorize(15)]
         public IActionResult SMSLogs()
         {
             var result = _admin.Logs();
@@ -967,6 +970,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Patient History
+        [RoleAuthorize(2)]
         public IActionResult PatientHistory()
         {
 
@@ -994,6 +998,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Block History
+        [RoleAuthorize(7)]
         public IActionResult BlockHistory()
         {
             return View();
@@ -1012,6 +1017,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Search Record
+        [RoleAuthorize(8)]
         public IActionResult SearchRecord()
         {
 
@@ -1054,6 +1060,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Scheduling
+        [RoleAuthorize(10)]
         public IActionResult Scheduling()
         {
             SchedulingModel model = new()
@@ -1146,6 +1153,7 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Provider Location
+        [RoleAuthorize(5)]
         public IActionResult ProviderLocation()
         {
 

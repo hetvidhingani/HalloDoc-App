@@ -281,15 +281,15 @@ namespace HalloDoc.Services.Services
 
         public string UnscheduledPhysicians(string message)
         {
-            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            Expression<Func<ShiftDetail, bool>> tableData = PredicateBuilder.New<ShiftDetail>();
 
-            whereClauseSyntax = x => x.IsDeleted == null && x.Status == 0;
-            whereClauseSyntax = whereClauseSyntax.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
-            whereClauseSyntax = whereClauseSyntax.And(x => x.StartTime >= TimeOnly.FromDateTime(DateTime.Now));
-            whereClauseSyntax = whereClauseSyntax.And(x => x.EndTime >= TimeOnly.FromDateTime(DateTime.Now));
+            tableData = x => x.IsDeleted == null && x.Status == 0;
+            tableData = tableData.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
+            tableData = tableData.And(x => x.StartTime >= TimeOnly.FromDateTime(DateTime.Now));
+            tableData = tableData.And(x => x.EndTime >= TimeOnly.FromDateTime(DateTime.Now));
 
             List<string> emailList = new List<string>();
-            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.Physician.Email, whereClauseSyntax);
+            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.Physician.Email, tableData);
 
             if (data.Count > 0)
             {
@@ -395,7 +395,6 @@ namespace HalloDoc.Services.Services
             {
                 viewmodel.AdminNotes = requestNote.AdminNotes;
             }
-
             viewmodel.TransferNotes = (from r in _requestRepository.GetAll()
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                        join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
@@ -411,6 +410,7 @@ namespace HalloDoc.Services.Services
                                            Note = rsl.Notes,
                                            PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
                                        }).ToList();
+
             viewmodel.CancelationNotes = (from r in _requestRepository.GetAll()
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                       
@@ -418,7 +418,6 @@ namespace HalloDoc.Services.Services
                                        orderby rsl.CreatedDate descending
                                        select new TransferNotesViewModel
                                        {
-                                          
                                            Note = rsl.Notes,
                                            
                                        }).ToList();
@@ -428,15 +427,12 @@ namespace HalloDoc.Services.Services
 
         public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id,string AdminID)
         {
-
-
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(id);
 
             if (requestNote != null)
             {
                 requestNote.AdminNotes = additionalNotes;
                 await _requestNotesRepository.UpdateAsync(requestNote);
-                adminNotes = requestNote.AdminNotes;
 
             }
             else
@@ -447,8 +443,6 @@ namespace HalloDoc.Services.Services
                 requestNote1.CreatedDate = DateTime.Now;
                 requestNote1.CreatedBy = AdminID;
                 await _requestNotesRepository.AddAsync(requestNote1);
-                adminNotes = requestNote1.AdminNotes;
-
 
             }
 
@@ -951,6 +945,7 @@ namespace HalloDoc.Services.Services
             admin.Email = model.Email;
             admin.Mobile = model.PhoneNumber;
             admin.ModifiedDate = DateTime.Now;
+    
             await _adminRepository.UpdateAsync(admin);
 
 
@@ -1314,14 +1309,12 @@ namespace HalloDoc.Services.Services
         }
         public ProviderInfoViewModel ProviderInformation(int RegionId, int CurrentPage)
         {
-
-            Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
-
-            whereClauseSyntax = x => true;
+            Expression<Func<Physician, bool>> tableData = PredicateBuilder.New<Physician>();
+            tableData = x => true;
             List<TableProviderInfo> AccountAccessTable = new List<TableProviderInfo>();
             if (RegionId != 0)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.RegionId == RegionId);
+                tableData = tableData.And(e => e.RegionId == RegionId);
             }
             var data = _physicianRepository.GetAllWithPagination(x => new TableProviderInfo
             {
@@ -1332,7 +1325,7 @@ namespace HalloDoc.Services.Services
                 roleName = x.Role.Name,
                 status = x.StatusNavigation.Statusname,
 
-            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true);
+            }, tableData.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true);
 
             foreach (TableProviderInfo requiredData in data)
             {
@@ -1341,7 +1334,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _physicianRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalCount = _physicianRepository.GetTotalCount(tableData.And(x => x.IsDeleted == null));
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -1389,8 +1382,6 @@ namespace HalloDoc.Services.Services
             {
                 _physicianNotificationRepository.AddAsync(newPhysician);
             }
-
-
 
         }
         #endregion
@@ -1584,9 +1575,9 @@ namespace HalloDoc.Services.Services
         public async Task<object> AccountAccessTable(int CurrentPage)
         {
 
-            Expression<Func<Role, bool>> whereClauseSyntax = PredicateBuilder.New<Role>();
+            Expression<Func<Role, bool>> tableData = PredicateBuilder.New<Role>();
 
-            whereClauseSyntax = x => true;
+            tableData = x => true;
             List<TableAccountAccess> AccountAccessTable = new List<TableAccountAccess>();
 
             var data = _roleRepository.GetAllWithPagination(x => new TableAccountAccess
@@ -1595,7 +1586,7 @@ namespace HalloDoc.Services.Services
                 AccountType = x.AccountType == 1 ? "Admin" : "Physician",
                 Name = x.Name,
 
-            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.Name, true);
+            }, tableData.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.Name, true);
 
             foreach (TableAccountAccess requiredData in data)
             {
@@ -1604,7 +1595,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _roleRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalCount = _roleRepository.GetTotalCount(tableData.And(x => x.IsDeleted == null));
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -1747,12 +1738,12 @@ namespace HalloDoc.Services.Services
         {
 
             List<TableUserAccess> userAccessTable = new List<TableUserAccess>();
-            Expression<Func<Admin, bool>> whereClauseSyntax = PredicateBuilder.New<Admin>();
+            Expression<Func<Admin, bool>> tableData = PredicateBuilder.New<Admin>();
 
-            whereClauseSyntax = x => true;
-            Expression<Func<Physician, bool>> whereClauseSyntax2 = PredicateBuilder.New<Physician>();
+            tableData = x => true;
+            Expression<Func<Physician, bool>> tableData2 = PredicateBuilder.New<Physician>();
 
-            whereClauseSyntax2 = x => true;
+            tableData2 = x => true;
 
             if (accountTypeId == 0 || accountTypeId == 2)
             {
@@ -1827,16 +1818,16 @@ namespace HalloDoc.Services.Services
 
         public VendorsViewModel VendorTable(int VendorProfessionTypeId, string VendorName, int CurrentPage)
         {
-            Expression<Func<HealthProfessional, bool>> whereClauseSyntax = PredicateBuilder.New<HealthProfessional>();
+            Expression<Func<HealthProfessional, bool>> tableData = PredicateBuilder.New<HealthProfessional>();
 
-            whereClauseSyntax = x => true;
+            tableData = x => true;
             if (!string.IsNullOrWhiteSpace(VendorName))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.VendorName.ToLower().Contains(VendorName.ToLower()));
+                tableData = tableData.And(e => e.VendorName.ToLower().Contains(VendorName.ToLower()));
             }
             if (VendorProfessionTypeId != 0)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Profession == VendorProfessionTypeId);
+                tableData = tableData.And(e => e.Profession == VendorProfessionTypeId);
             }
             List<TableModelVendor> vendorTable = new List<TableModelVendor>();
 
@@ -1849,7 +1840,7 @@ namespace HalloDoc.Services.Services
                 Email = x.Email,
                 FaxNumber = x.FaxNumber,
                 PhoneNumber = x.PhoneNumber,
-            }, whereClauseSyntax.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.VendorName, true);
+            }, tableData.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.VendorName, true);
 
             foreach (TableModelVendor requiredData in data)
             {
@@ -1858,7 +1849,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _healthProfessionalsRepository.GetTotalCount(whereClauseSyntax.And(x => x.IsDeleted == null));
+            int totalCount = _healthProfessionalsRepository.GetTotalCount(tableData.And(x => x.IsDeleted == null));
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -1971,30 +1962,30 @@ namespace HalloDoc.Services.Services
         {
             if (type == 1)
             {
-                Expression<Func<EmailLog, bool>> whereClauseSyntax = PredicateBuilder.New<EmailLog>();
+                Expression<Func<EmailLog, bool>> tableData = PredicateBuilder.New<EmailLog>();
 
-                whereClauseSyntax = x => true;
+                tableData = x => true;
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
+                    tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.RoleId == RoleID);
+                    tableData = tableData.And(e => e.RoleId == RoleID);
                 }
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.EmailId.ToLower().Contains(email.ToLower()));
+                    tableData = tableData.And(e => e.EmailId.ToLower().Contains(email.ToLower()));
                 }
                 if (createdDate.HasValue)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.CreateDate.Date == createdDate.Value.Date);
+                    tableData = tableData.And(e => e.CreateDate.Date == createdDate.Value.Date);
                 }
 
                 if (sentDate.HasValue)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.SentDate == sentDate.Value.Date);
+                    tableData = tableData.And(e => e.SentDate == sentDate.Value.Date);
                 }
                 List<TableModelLogs> logTable = new List<TableModelLogs>();
 
@@ -2011,7 +2002,7 @@ namespace HalloDoc.Services.Services
                     sentTries = x.SentTries,
                     confirmationNumber = x.ConfirmationNumber
 
-                }, whereClauseSyntax, CurrPage, 5, x => x.SentDate, false);
+                }, tableData, CurrPage, 5, x => x.SentDate, false);
 
                 foreach (TableModelLogs requiredData in data)
                 {
@@ -2019,7 +2010,7 @@ namespace HalloDoc.Services.Services
                 }
                 if (CurrPage == 0) { CurrPage = 1; }
                 int dataSize = 5;
-                int totalCount = _emailLogsRepository.GetTotalCount(whereClauseSyntax);
+                int totalCount = _emailLogsRepository.GetTotalCount(tableData);
                 int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
                 int FirstItemIndex = Math.Min((CurrPage - 1) * dataSize + 1, totalCount);
                 int LastItemIndex = Math.Min(CurrPage * dataSize, totalCount);
@@ -2039,30 +2030,30 @@ namespace HalloDoc.Services.Services
             }
             else
             {
-                Expression<Func<Smslog, bool>> whereClauseSyntax = PredicateBuilder.New<Smslog>();
+                Expression<Func<Smslog, bool>> tableData = PredicateBuilder.New<Smslog>();
 
-                whereClauseSyntax = x => true;
+                tableData = x => true;
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
+                    tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.RoleId == RoleID);
+                    tableData = tableData.And(e => e.RoleId == RoleID);
                 }
                 if (!string.IsNullOrWhiteSpace(phoneNo))
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.MobileNumber.ToLower().Contains(phoneNo.ToLower()));
+                    tableData = tableData.And(e => e.MobileNumber.ToLower().Contains(phoneNo.ToLower()));
                 }
                 if (createdDate.HasValue)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.CreateDate.Date == createdDate.Value.Date);
+                    tableData = tableData.And(e => e.CreateDate.Date == createdDate.Value.Date);
                 }
 
                 if (sentDate.HasValue)
                 {
-                    whereClauseSyntax = whereClauseSyntax.And(e => e.SentDate == sentDate.Value.Date);
+                    tableData = tableData.And(e => e.SentDate == sentDate.Value.Date);
                 }
                 List<TableModelLogs> logTable = new List<TableModelLogs>();
 
@@ -2079,7 +2070,7 @@ namespace HalloDoc.Services.Services
                     sentTries = x.SentTries,
                     confirmationNumber = x.ConfirmationNumber
 
-                }, whereClauseSyntax, CurrPage, 5, x => x.SentDate, false);
+                }, tableData, CurrPage, 5, x => x.SentDate, false);
 
                 foreach (TableModelLogs requiredData in data)
                 {
@@ -2087,7 +2078,7 @@ namespace HalloDoc.Services.Services
                 }
                 if (CurrPage == 0) { CurrPage = 1; }
                 int dataSize = 5;
-                int totalCount = _smmsLogRepository.GetTotalCount(whereClauseSyntax);
+                int totalCount = _smmsLogRepository.GetTotalCount(tableData);
                 int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
                 int FirstItemIndex = Math.Min((CurrPage - 1) * dataSize + 1, totalCount);
                 int LastItemIndex = Math.Min(CurrPage * dataSize, totalCount);
@@ -2112,25 +2103,25 @@ namespace HalloDoc.Services.Services
         #region Patient History
         public PatientHistoryViewModel PatientHistory(string FirstName, string LastName, string Email, string PhoneNumber, int CurrentPage = 1)
         {
-            Expression<Func<User, bool>> whereClauseSyntax = PredicateBuilder.New<User>();
+            Expression<Func<User, bool>> tableData = PredicateBuilder.New<User>();
 
-            whereClauseSyntax = x => true;
+            tableData = x => true;
 
             if (!FirstName.IsNullOrEmpty())
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(FirstName.ToLower()));
+                tableData = tableData.And(e => e.FirstName.ToLower().Contains(FirstName.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(LastName))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.LastName.ToLower().Contains(LastName.ToLower()));
+                tableData = tableData.And(e => e.LastName.ToLower().Contains(LastName.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(Email))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
+                tableData = tableData.And(e => e.Email.ToLower().Contains(Email.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Mobile.Contains(PhoneNumber));
+                tableData = tableData.And(e => e.Mobile.Contains(PhoneNumber));
             }
 
             List<TableModel> data = new List<TableModel>();
@@ -2145,7 +2136,7 @@ namespace HalloDoc.Services.Services
                 //userID = x.Request.RequestCloseds.First(y=>y.RequestId == x.RequestId).RequestId
                 userID = x.UserId,
 
-            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, true); ;
+            }, tableData, CurrentPage, 5, x => x.FirstName, true); ;
 
             foreach (TableModel requestClient in temp)
             {
@@ -2154,7 +2145,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _userRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _userRepository.GetTotalCount(tableData);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -2177,9 +2168,9 @@ namespace HalloDoc.Services.Services
         #region patient Records
         public PatientRecordViewModel PatientRecordTable(int userID, int CurrentPage)
         {
-            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+            Expression<Func<RequestClient, bool>> tableData = PredicateBuilder.New<RequestClient>();
 
-            whereClauseSyntax = x => x.Request.UserId == userID;
+            tableData = x => x.Request.UserId == userID;
             List<RecordTableModel> data = new List<RecordTableModel>();
             var temp = _requestclientRepository.GetAllWithPagination(x => new RecordTableModel
             {
@@ -2193,7 +2184,7 @@ namespace HalloDoc.Services.Services
                 RequestId = x.RequestId,
                 status = x.Request.StatusNavigation.Statusname,
                 userID = (int)x.Request.UserId,
-            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, false);
+            }, tableData, CurrentPage, 5, x => x.FirstName, false);
 
             foreach (RecordTableModel requestClient in temp)
             {
@@ -2202,7 +2193,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _requestclientRepository.GetTotalCount(tableData);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -2225,25 +2216,25 @@ namespace HalloDoc.Services.Services
         public BlockHistoryViewModel BlockHistoryTable(string Name, DateTime? Date, string Email, string PhoneNumber, int CurrentPage)
 
         {
-            Expression<Func<BlockRequest, bool>> whereClauseSyntax = PredicateBuilder.New<BlockRequest>();
+            Expression<Func<BlockRequest, bool>> tableData = PredicateBuilder.New<BlockRequest>();
 
-            whereClauseSyntax = x => true;
+            tableData = x => true;
 
             if (!Name.IsNullOrEmpty())
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.FirstName.ToLower().Contains(Name.ToLower()) || e.Request.LastName.ToLower().Contains(Name.ToLower()));
+                tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(Name.ToLower()) || e.Request.LastName.ToLower().Contains(Name.ToLower()));
             }
             if (Date != null)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.CreatedDate.Value.Date == Date.Value.Date);
+                tableData = tableData.And(e => e.CreatedDate.Value.Date == Date.Value.Date);
             }
             if (!string.IsNullOrWhiteSpace(Email))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
+                tableData = tableData.And(e => e.Email.ToLower().Contains(Email.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
+                tableData = tableData.And(e => e.PhoneNumber.Contains(PhoneNumber));
             }
 
             List<BlockTable> data = new List<BlockTable>();
@@ -2257,7 +2248,7 @@ namespace HalloDoc.Services.Services
                 Note = x.Reason,
                 PatientName = x.Request.FirstName + " " + x.Request.LastName,
 
-            }, whereClauseSyntax, CurrentPage, 5, x => x.RequestId, false);
+            }, tableData, CurrentPage, 5, x => x.RequestId, false);
 
             foreach (BlockTable requestClient in requiredData)
             {
@@ -2266,7 +2257,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _blockRequestRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _blockRequestRepository.GetTotalCount(tableData);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -2298,41 +2289,41 @@ namespace HalloDoc.Services.Services
         #region Search Record
         public SearchRecordViewModel SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrentPage = 1)
         {
-            Expression<Func<RequestClient, bool>> whereClauseSyntax = PredicateBuilder.New<RequestClient>();
+            Expression<Func<RequestClient, bool>> tableData = PredicateBuilder.New<RequestClient>();
 
-            whereClauseSyntax = x => x.Request.IsDeleted == null && x.Request.UserId!=null;
+            tableData = x => x.Request.IsDeleted == null && x.Request.UserId!=null;
 
             if (statusOfRequest != 0)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.Status == statusOfRequest);
+                tableData = tableData.And(e => e.Request.Status == statusOfRequest);
             }
             if (!string.IsNullOrWhiteSpace(Name))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.FirstName.ToLower().Contains(Name.ToLower()) || e.LastName.ToLower().Contains(Name.ToLower()));
+                tableData = tableData.And(e => e.FirstName.ToLower().Contains(Name.ToLower()) || e.LastName.ToLower().Contains(Name.ToLower()));
             }
             if (requestType != 0)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.RequestTypeId == requestType);
+                tableData = tableData.And(e => e.Request.RequestTypeId == requestType);
             }
             if (DateOfService.HasValue)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.CreatedDate.Date >= DateOfService.Value.Date);
+                tableData = tableData.And(e => e.Request.CreatedDate.Date >= DateOfService.Value.Date);
             }
             if (ToDateOfService.HasValue)
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.CreatedDate.Date >= ToDateOfService.Value.Date);
+                tableData = tableData.And(e => e.Request.CreatedDate.Date >= ToDateOfService.Value.Date);
             }
             if (!string.IsNullOrWhiteSpace(physician))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Request.Physician.FirstName.ToLower().Contains(physician.ToLower()) || e.Request.Physician.LastName.ToLower().Contains(physician.ToLower()));
+                tableData = tableData.And(e => e.Request.Physician.FirstName.ToLower().Contains(physician.ToLower()) || e.Request.Physician.LastName.ToLower().Contains(physician.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(Email))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.Email.ToLower().Contains(Email.ToLower()));
+                tableData = tableData.And(e => e.Email.ToLower().Contains(Email.ToLower()));
             }
             if (!string.IsNullOrWhiteSpace(PhoneNumber))
             {
-                whereClauseSyntax = whereClauseSyntax.And(e => e.PhoneNumber.Contains(PhoneNumber));
+                tableData = tableData.And(e => e.PhoneNumber.Contains(PhoneNumber));
             }
 
             List<SearchRecordTable> data = new List<SearchRecordTable>();
@@ -2354,7 +2345,7 @@ namespace HalloDoc.Services.Services
                 PatientNote = x.Notes,
                 PhysicianNote = x.Request.RequestNotes.First(u => u.RequestId == x.RequestId).PhysicianNotes,
 
-            }, whereClauseSyntax, CurrentPage, 5, x => x.FirstName, true);
+            }, tableData, CurrentPage, 5, x => x.FirstName, true);
 
             foreach (SearchRecordTable requestClient in temp)
             {
@@ -2363,7 +2354,7 @@ namespace HalloDoc.Services.Services
 
             if (CurrentPage == 0) { CurrentPage = 1; }
             int dataSize = 5;
-            int totalCount = _requestclientRepository.GetTotalCount(whereClauseSyntax);
+            int totalCount = _requestclientRepository.GetTotalCount(tableData);
             int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
@@ -2470,15 +2461,15 @@ namespace HalloDoc.Services.Services
             List<Resources> resources = new List<Resources>();
             List<Events> events = new List<Events>();
 
-            Expression<Func<Physician, bool>> whereClauseSyntax = PredicateBuilder.New<Physician>();
-            Expression<Func<ShiftDetail, bool>> ShiftDetailswhereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
-            whereClauseSyntax = x => x.IsDeleted == null;
-            ShiftDetailswhereClauseSyntax = x => x.IsDeleted == null;
+            Expression<Func<Physician, bool>> tableData = PredicateBuilder.New<Physician>();
+            Expression<Func<ShiftDetail, bool>> ShiftDetailstableData = PredicateBuilder.New<ShiftDetail>();
+            tableData = x => x.IsDeleted == null;
+            ShiftDetailstableData = x => x.IsDeleted == null;
 
             if (region != 0)
             {
-                whereClauseSyntax = whereClauseSyntax.And(x => x.RegionId == region);
-                ShiftDetailswhereClauseSyntax = ShiftDetailswhereClauseSyntax.And(x => x.RegionId == region);
+                tableData = tableData.And(x => x.RegionId == region);
+                ShiftDetailstableData = ShiftDetailstableData.And(x => x.RegionId == region);
 
             }
             var temp = _physicianRepository.GetAllData(x => new Resources
@@ -2486,7 +2477,7 @@ namespace HalloDoc.Services.Services
                 id = x.PhysicianId.ToString(),
                 title = x.FirstName + " " + x.LastName,
                 avtar = "null"
-            }, whereClauseSyntax);
+            }, tableData);
             foreach (Resources resource in temp)
             {
                 resources.Add(resource);
@@ -2502,7 +2493,7 @@ namespace HalloDoc.Services.Services
 
 
 
-            }, ShiftDetailswhereClauseSyntax);
+            }, ShiftDetailstableData);
             foreach (Events e in temp)
             {
                 events.Add(e);
@@ -2561,7 +2552,7 @@ namespace HalloDoc.Services.Services
 
         public CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId)
         {
-            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
+            Expression<Func<ShiftDetail, bool>> tableData = PredicateBuilder.New<ShiftDetail>();
             ShiftDetail shiftDetail = _shiftDetailsRepository.IncludeEntity(x => x.ShiftDetailId == shiftDetailsId, x => x.Shift);
 
             CreateShiftViewModel model = new CreateShiftViewModel();
@@ -2608,7 +2599,6 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Requested Shift
-
         public RequestedShiftViewModel RequestedShift(int month, int region, int CurrentPage)
         {
             Expression<Func<ShiftDetail, bool>> table = PredicateBuilder.New<ShiftDetail>();
@@ -2658,7 +2648,6 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
         }
-
         public void ApproveShift(List<int> selectedShift)
         {
             foreach (var shift in selectedShift)
@@ -2667,7 +2656,6 @@ namespace HalloDoc.Services.Services
             }
 
         }
-
         #endregion
 
         #region Physician Location
@@ -2680,21 +2668,21 @@ namespace HalloDoc.Services.Services
         #region MD on Call
         public ProvidersOnCallViewModel? GetProvidersOnCall(int regionId)
         {
-            Expression<Func<ShiftDetail, bool>> whereClauseSyntax = PredicateBuilder.New<ShiftDetail>();
-            Expression<Func<Physician, bool>> PhysicianwhereClauseSyntax = PredicateBuilder.New<Physician>();
-            PhysicianwhereClauseSyntax = x => x.IsDeleted == null;
+            Expression<Func<ShiftDetail, bool>> tableData = PredicateBuilder.New<ShiftDetail>();
+            Expression<Func<Physician, bool>> PhysiciantableData = PredicateBuilder.New<Physician>();
+            PhysiciantableData = x => x.IsDeleted == null;
             if (regionId != 0)
             {
-                PhysicianwhereClauseSyntax = PhysicianwhereClauseSyntax.And(x => x.RegionId == regionId);
+                PhysiciantableData = PhysiciantableData.And(x => x.RegionId == regionId);
             }
-            whereClauseSyntax = x => x.IsDeleted == null && x.Status == 1;
-            whereClauseSyntax = whereClauseSyntax.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
-            whereClauseSyntax = whereClauseSyntax.And(x => x.StartTime < TimeOnly.FromDateTime(DateTime.Now));
-            whereClauseSyntax = whereClauseSyntax.And(x => x.EndTime > TimeOnly.FromDateTime(DateTime.Now));
+            tableData = x => x.IsDeleted == null && x.Status == 1;
+            tableData = tableData.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
+            tableData = tableData.And(x => x.StartTime < TimeOnly.FromDateTime(DateTime.Now));
+            tableData = tableData.And(x => x.EndTime > TimeOnly.FromDateTime(DateTime.Now));
 
             List<PhysicianOnCallModal> physicians = new List<PhysicianOnCallModal>();
             List<int> physicianOnCall = new List<int>();
-            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.PhysicianId, whereClauseSyntax);
+            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.PhysicianId, tableData);
             foreach (int item in data)
             {
                 physicianOnCall.Add(item);
@@ -2708,7 +2696,7 @@ namespace HalloDoc.Services.Services
                 physicianId = x.PhysicianId,
                 physicianName = x.FirstName + " " + x.LastName,
                 Photo = Path.Combine("/uploads/physician/image", $"{x.PhysicianId}_Photo.jpg"),
-            }, PhysicianwhereClauseSyntax);
+            }, PhysiciantableData);
             foreach (PhysicianOnCallModal physician in temp)
             {
                 if (physicianOnCall.Contains(physician.physicianId))
