@@ -10,7 +10,11 @@ using Org.BouncyCastle.Ocsp;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Globalization;
+using Twilio.Types;
+using Twilio;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Twilio.Rest.Api.V2010.Account;
+
 namespace HalloDoc.Controllers
 {
     [CustomAuthorize("1")]
@@ -21,6 +25,7 @@ namespace HalloDoc.Controllers
         private IJwtService _jwtService;
         private ICustomService _customService;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+
         public AdminController(ApplicationDbContext context, IAdminService admin, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
             _context = context;
@@ -241,7 +246,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientRequest/" + email;
                 var subject = "Create Request";
                 var body = "Click here " + "<a href=" + link + ">Create New Request</a>" + ".";
-                _customService.SendEmail(email, link, subject, body,0,0,null);
+                _customService.SendEmail(email, link, subject, body, 0, 0, null);
 
                 TempData["success"] = "Email is sent successfully to your email account";
             }
@@ -310,7 +315,7 @@ namespace HalloDoc.Controllers
                 var request = HttpContext.Request;
                 string AdminID = request.Cookies["AspNetIdAdmin"];
 
-                await _admin.AddNotes(additionalNotes, adminNotes, id,AdminID);
+                await _admin.AddNotes(additionalNotes, adminNotes, id, AdminID);
                 return Json("success");
             }
             return View();
@@ -428,7 +433,7 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-              
+
 
                 await _admin.ClearRequest(id);
                 return RedirectToAction("Dashboard");
@@ -460,7 +465,7 @@ namespace HalloDoc.Controllers
             {
                 var result = await _admin.ConfirmCloseCase(id);
                 TempData["success"] = "Request Moved to UnPaid";
-                return Json(new {success = true});
+                return Json(new { success = true });
             }
             return RedirectToAction("Dashboard");
         }
@@ -470,12 +475,12 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(int Id)
         {
-  
+
 
             var request = HttpContext.Request;
             ViewBag.MySession = request.Cookies["UserNameAdmin"];
 
-      
+
             var result = await _customService.ViewDocument(Id);
             return View(result);
         }
@@ -523,7 +528,7 @@ namespace HalloDoc.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteFile(int fileID,int RequstId)
+        public async Task<IActionResult> DeleteFile(int fileID, int RequstId)
         {
             await _admin.DeleteFile(fileID, RequstId);
             TempData["success"] = "Deleted Successfully!";
@@ -591,7 +596,7 @@ namespace HalloDoc.Controllers
             {
                 var request = HttpContext.Request;
                 string AdminID = request.Cookies["AspNetIdAdmin"];
-                
+
 
                 await _admin.SendOrderDetails(viewModel, Id, AdminID);
 
@@ -627,8 +632,8 @@ namespace HalloDoc.Controllers
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string> attachmentFilePaths = null;
-                _customService.SendEmail(viewModel.Email, link, subject, body,viewModel.requestclientID,AdminId, attachmentFilePaths);
-              
+                _customService.SendEmail(viewModel.Email, link, subject, body, viewModel.requestclientID, AdminId, attachmentFilePaths);
+
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
                 return RedirectToAction("Dashboard", "Admin");
@@ -706,7 +711,7 @@ namespace HalloDoc.Controllers
                 var message = "Please Find Attachments";
                 var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                _customService.SendEmail(userEmail, link, subject, message,0,0, attachmentFilePaths);
+                _customService.SendEmail(userEmail, link, subject, message, 0, 0, attachmentFilePaths);
             }
 
             return RedirectToAction("Dashboard");
@@ -739,18 +744,43 @@ namespace HalloDoc.Controllers
 
 
         [HttpPost]
-        public IActionResult ContectProvider2(ContactProviderViewModel model)
+        public IActionResult ContectProvider2(ContactProviderViewModel model, int flexRadioDefault)
         {
-            var result = _admin.ContectProvider(model.physicianId);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            if (flexRadioDefault == 2)
+            {
+               // var result = _admin.ContectProvider(model.physicianId);
 
-            var link = "";
-            var subject = "Admin is trying to connect with you";
-            var body = model.message;
-            List<string> attachmentFilePaths = null;
+                var link = "";
+                var subject = "Admin is trying to connect with you";
+                var body = model.message;
+                List<string> attachmentFilePaths = null;
 
-            _customService.SendEmail(result.Email, link, subject, body,0,0, attachmentFilePaths);
+                _customService.SendEmail(model.email, link, subject, body, 0, AdminID, attachmentFilePaths);
 
-            return Json("success");
+                return Json("success");
+            }
+            else if (flexRadioDefault == 1)
+            {
+                _admin.sendSMS(model, AdminID);
+                return Json("success");
+            }
+            else
+            {
+               // var result = _admin.ContectProvider(model.physicianId);
+
+                var link = "";
+                var subject = "Admin is trying to connect with you";
+                var body = model.message;
+                List<string> attachmentFilePaths = null;
+
+                _customService.SendEmail(model.email, link, subject, body, 0, AdminID, attachmentFilePaths);
+                _admin.sendSMS(model, AdminID);
+
+                return Json("success");
+
+            }
         }
         [HttpPost]
         public IActionResult StopNotificationPhysician(List<int> ids)
@@ -758,6 +788,8 @@ namespace HalloDoc.Controllers
             _admin.StopNotificationPhysician(ids);
             return Json("success");
         }
+
+
         #endregion
 
         #region Create Provider
@@ -792,7 +824,7 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> changeRoleStatus(ProviderViewModel model, int id)
         {
             await _admin.resetRoleStatus(model, id);
-            return Json(new { success = true }); 
+            return Json(new { success = true });
         }
         [HttpPost]
         public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword)
@@ -804,12 +836,12 @@ namespace HalloDoc.Controllers
         {
             var result = _admin.savePhysicianInformation(model, id);
             model.PhysicianId = result.PhysicianId;
-            return Json(new { success = true }) ;
+            return Json(new { success = true });
         }
         public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
             var result = _admin.saveBillingInformation(model, id);
-            return Json(new { success = true }); 
+            return Json(new { success = true });
 
         }
         public IActionResult providerProfile(ProviderViewModel model, int id)
@@ -900,10 +932,10 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> EditAdminAccount(int id)
         {
-          
+
             var result = await _admin.AdminMyProfile(id);
             ViewBag.PageHeader = "Edit Admin Account";
-            return View("AdminMyProfile",result);
+            return View("AdminMyProfile", result);
         }
 
         #endregion
@@ -938,10 +970,10 @@ namespace HalloDoc.Controllers
             var result = _admin.EditVendor(id);
             return View(result);
         }
-        
+
         public IActionResult DeleteVendor(int id)
         {
-           _admin.DeleteVendor(id);
+            _admin.DeleteVendor(id);
 
             return RedirectToAction("VendorsDetails");
         }
@@ -1055,7 +1087,7 @@ namespace HalloDoc.Controllers
             //    Email = viewModel.Email
             //});
             TempData["success"] = "Request Created Successfully.";
-    
+
             return RedirectToAction("Dashboard");
         }
         #endregion
@@ -1180,6 +1212,8 @@ namespace HalloDoc.Controllers
         #endregion
 
         #endregion
-       
+
+
+
     }
 }

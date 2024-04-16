@@ -51,7 +51,8 @@ namespace HalloDoc.Services.IServices
         Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
-       
+        void sendSMS(ContactProviderViewModel model, int adminId);
+        void SendSMS(string toPhoneNumber, string message);
         Task<object> CreateProvider(ProviderViewModel model);
         Task<object> Createprovider();
         Task<object> CreateAdmin();

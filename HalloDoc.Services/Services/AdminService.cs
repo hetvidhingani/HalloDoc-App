@@ -29,6 +29,10 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Security.Policy;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Data.Entity;
+using Twilio.Types;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace HalloDoc.Services.Services
 {
@@ -66,6 +70,9 @@ namespace HalloDoc.Services.Services
         private readonly IShiftDetailsRepository _shiftDetailsRepository;
         private readonly IShiftRepository _shiftRepository;
         private readonly IPhysicianLocationRepository _physicianLocationRepository;
+        private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
+        private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
+        private const string TwilioPhoneNumber = "+12515722513";
         public AdminService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -1352,9 +1359,12 @@ namespace HalloDoc.Services.Services
         }
         public object ContectProviderModel(int id)
         {
+            Physician phy = _physicianRepository.GetById(id);
             ContactProviderViewModel viewModel = new ContactProviderViewModel();
             viewModel.physicianId = id;
-
+            viewModel.phone = phy.Mobile;
+            viewModel.email = phy.Email;
+            viewModel.roleID = (int)phy.RoleId;
             return viewModel;
         }
         public Physician ContectProvider(int id)
@@ -1383,6 +1393,36 @@ namespace HalloDoc.Services.Services
                 _physicianNotificationRepository.AddAsync(newPhysician);
             }
 
+        }
+        
+        public void sendSMS(ContactProviderViewModel model,int adminId)
+        {
+            Physician physician = _physicianRepository.GetById(model.physicianId);
+            var message1 = "Admin wants to contact you : " + model.message;
+            var toPhoneNumber = physician.Mobile;
+            SendSMS(toPhoneNumber, message1);
+            Smslog smslog = new()
+            {
+                Smstemplate = model.message,
+                MobileNumber = model.phone,
+                RoleId = model.roleID,
+                AdminId = adminId,
+                PhysicianId = model.physicianId,
+                CreateDate = DateTime.Now,
+                SentDate = DateTime.Now,
+                IsSmssent = new BitArray(new[] { true })
+            };
+          _smmsLogRepository.AddAsync(smslog);
+        }
+        public void SendSMS(string toPhoneNumber, string message)
+        {
+            TwilioClient.Init(AccountSid, AuthToken);
+            var messageOptions = new CreateMessageOptions(
+            new PhoneNumber(toPhoneNumber));
+            messageOptions.From = new PhoneNumber("+12515722513");
+            messageOptions.Body = message;
+            var messages = MessageResource.Create(messageOptions);
+            Console.WriteLine(messages.Body);
         }
         #endregion
 
