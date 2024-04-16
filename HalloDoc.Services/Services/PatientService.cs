@@ -82,7 +82,15 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region PatientRequest
-        public async Task<object> PatientRequest(int? userId)
+        public async Task<object> PatientRequest()
+        {
+            PatientRequestViewModel viewModel = new PatientRequestViewModel();
+            viewModel.State = _regionRepository.GetAll().ToList();
+             viewModel.DateOfBirth = new DateTime(2024, 1, 1);
+
+            return viewModel;
+        }
+        public async Task<object> submitInfoMe(int? userId)
         {
             PatientRequestViewModel viewModel = new PatientRequestViewModel();
             viewModel.State = _regionRepository.GetAll().ToList();

@@ -65,7 +65,7 @@
     function continueToPage() {
         if (selectedOption == 'me') {
             sessionStorage.setItem("currentId", "me");
-            window.location.href = '@Url.Action("PatientRequest","Custom" )';
+            window.location.href = '@Url.Action("submitInfoMe","Patient" )';
         } else {
             sessionStorage.setItem("currentId", "else");
             window.location.href = '@Url.Action("SubmitInformationSomeoneElse", "Patient")';

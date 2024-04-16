@@ -15,7 +15,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public List<CaseTag>? Case { get; set; }=null;
 
-        [Required(ErrorMessage = "Please Provide your Reason for cancellation !")]
+        //[Required(ErrorMessage = "Please Provide your Reason for cancellation !")]
         public required string AdditionalNotes { get; set; }
 
         public int RequestClientID { get; set; }

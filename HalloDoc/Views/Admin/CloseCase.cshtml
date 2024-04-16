@@ -1,6 +1,10 @@
 ﻿@model HalloDoc.Entities.ViewModels.CloseCaseViewModel;
 
+@{
+    ViewBag.adminDash = "active";
+    ViewData["Title"] = "Close Case";
 
+}
 <div class="mainSection ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -210,6 +214,7 @@
             url: "@(Url.Action("ConfirmCloseCase", "Admin"))",
             success:function(response)
             {
+                toastr.success("done");
                 window.history.back();
                 
             }

@@ -232,7 +232,6 @@ namespace HalloDoc.Controllers
 
                 HttpContext.Session.SetString("UserName", myUser.UserName);
                 HttpContext.Session.SetInt32("UserSession", userID.UserId);
-
                 return RedirectToAction("DashBoard", "Patient");
             }
             else
@@ -277,8 +276,8 @@ namespace HalloDoc.Controllers
         {
             //var request = HttpContext.Request;
             //int? userId = Int32.Parse(request.Cookies["UserID"]);
-            int? userId = HttpContext.Session.GetInt32("UserSession");
-            var result = await _patient.PatientRequest(userId);
+           
+            var result = await _patient.PatientRequest();
             if (result == "")
             {
                 return View("PatientRequest");

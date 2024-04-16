@@ -1,90 +1,147 @@
-﻿@{
+﻿
+@{
+    ViewBag.providerLOC = "active";
     ViewData["Title"] = "Provider Location";
+
 }
-<link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps.css'>
+<link rel="stylesheet" href="~/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/admin/Scheduling.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <style>
-    #marker {
-        background-image: url("https://cdn4.iconfinder.com/data/icons/small-n-flat/24/map-marker-512.png");
-        background-size: cover;
-        width: 30px;
-        height: 30px;
+    .leaflet-bottom {
+        display: none;
+    }
+   
+    
+</style>
+
+<div class="mainSectionMargin  vh-100">
+
+
+    <div class="container d-flex flex-column mt-3 gap-2 p-3 ">
+
+        @*Header of view page*@
+        <div class="container d-flex justify-content-between p-0 my-2">
+            <div>
+                <p class="h4">Provider Location </p>
+            </div>
+            <a asp-controller="Admin" asp-action="AdminDashboard" class="btn btn-outline-info">
+                &lt; Back
+            </a>
+        </div>
+        <div id="map" style=" height: 500px;"></div>
+    </div>
+</div>
+
+
+
+
+
+@*<script>
+
+    var physician = [
+    @foreach (var item in Model)
+    {
+        <text>
+            {
+                "Name": "@item.FirstName",
+                "Address": "@item.Address1"
+            },
+
+        </text>
+    }
+                      ]
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: { lat: 0, lng: 0 } // Default center
+        });
+
+        physician.forEach(function (physician) {
+            var geocoder = new google.maps.Geocoder();
+
+            geocoder.geocode({ 'address': physician.Address1 }, function (result, status) {
+                if (status === "OK") {
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: result[0].geometry.location,
+                        title: physician.FirstName,
+                    });
+                }
+                else {
+                    console.error("GeoCoder was not successfull for following reson:", status);
+                }
+            });
+        });
+
+
     }
 
-    #mapAreash {
-        height: 68vh;
-    }
-</style>
-<div class=" mx-5 " style="margin-top:120px;">
-    <div class="d-flex justify-content-between">
-        <div class="d-flex align-self-center">
-            <h4><strong>Provider Location</strong></h4>
-        </div>
-        <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
-            <button class="back">
-                <i class="bi bi-chevron-left"></i>
-                back
-            </button>
-        </a>
-    </div>
-    <div id="mapAreash" class="mt-3"></div>
-</div>
-<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/maps/maps-web.min.js"></script>
-<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.15.0/services/services-web.min.js"></script>
+
+
+</script>*@
+
+@*<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALnsMNrlY5pmr_MJD79qa5Rec1_sUG3NQ&callback=initMap"></script>*@
 
 <script>
-    const APIKey = "vAGt9S9PBmdnXyrThMamaHFh71MVeya3";
-    var Lagos = { lat: 13.000000, lng: 80.000000 };
-    var map = tt.map({
-        key: APIKey,
-        container: "mapAreash",
-        center: Lagos,
-        zoom: 4
-    });
+   
+    var map = L.map('map').setView([20.5937, 78.9629], 5); // Set initial center and zoom level
 
-    var sourcearray = null;
-    var sites = [];
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
 
-
-
-        @foreach (var location in ViewBag.Locations)
-        {
-            <text>
-                console.log(sites);
-            sites.push({
-                lat: @location.Latitude,
-                lng: @location.Longitude,
-                name: '@location.PhysicianName'
-            });
-            </text>
-        }
-
-            sites.forEach(function (site) {
-                var element = document.createElement("div");
-                element.id = "marker";
-                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);
-                var marker = new tt.Marker({ element: element }).setLngLat([site.lng, site.lat]).addTo(map);
-                var popup = new tt.Popup({ anchor: 'top' }).setHTML("<b style=\"color:red\">" + site.name + "</b>");
-                marker.setPopup(popup).togglePopup();
-            });
-
-        // not usefull for temp value
-        function moveMapTo(newLoc) {
-            map.flyTo({
-                center: newLoc,
-                zoom: 20
-            });
-        }
-        async function fetchshreyansLoc() {
-            const response = await tt.services.fuzzySearch({
-                key: APIKey,
-                query: document.querySelector("#query").value
-            });
-
-            if (response.results) {
-                moveMapTo(response.results[0].position);
-            }
-        }
-
-        $('.admin-tab').removeClass("active");
-        $('#provider-location-tab').addClass("active");
 </script>
+
+
+<script>
+    var physicians = [
+    @foreach (var physician in ViewBag.Locations)
+    {
+        <text>{
+                "Id": "@physician.PhysicianId",
+                "Name": "@physician.PhysicianName " ,
+                "Address": "@physician.Address"
+            }, </text>
+    }
+                    ];
+
+    /*  var iconColors = ['#FF5733', '#3399FF', '#33FF57', '#FF33F2', '#FFC300'];*/ // Array of different marker colors
+
+    var iconCounter = 0; // Counter to track the current marker color
+
+    physicians.forEach(function (physician) {
+        var id = physician.Id;
+        var address = physician.Address;
+        var name = physician.Name;
+
+        fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + address)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var lat = parseFloat(data[0].lat);
+                    var lon = parseFloat(data[0].lon);
+
+                    // Define marker icon with unique color
+                    //var icon = L.divIcon({
+                    //    className: 'custom-marker',
+                    //    html: '<div style="background-color: ' + iconColors[iconCounter] + ';" class="marker-pin"></div>',
+                    //    iconSize: [30, 42],
+                    //    iconAnchor: [15, 42]
+                    //});
+
+                    var marker = L.marker([lat + (0.0003 * iconCounter), lon]).addTo(map);
+                    marker.bindPopup(name); // Bind physician's name to the marker
+                    marker.openPopup();
+                    // Increment counter for next marker color
+                    iconCounter = (iconCounter + 1);
+                }
+            });
+    });
+ 
+</script>
+
+

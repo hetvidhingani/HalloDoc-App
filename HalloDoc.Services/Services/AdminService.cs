@@ -915,7 +915,7 @@ namespace HalloDoc.Services.Services
                 Address1 = admin.Address1,
                 Address2 = admin.Address2,
                 City = admin.City,
-                RegionId = admin.RegionId,
+                RegionId = (int)admin.RegionId,
                 State = regions,
                 Zip = admin.Zip,
                 BillingPhoneNumber = admin.AltPhone,
@@ -1992,7 +1992,7 @@ namespace HalloDoc.Services.Services
                 var data = _emailLogsRepository.GetAllWithPagination(x => new TableModelLogs
                 {
                     EmailLogId = x.EmailLogId,
-                    reciverName = x.Request.FirstName + " " + x.Request.LastName,
+                    reciverName = x.Request.RequestClients.First(u=>u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
                     action = x.SubjectName,
                     roleName = x.Role.Name,
                     email = x.EmailId,
@@ -2132,11 +2132,9 @@ namespace HalloDoc.Services.Services
                 Address = x.Street + "," + x.City + "," + x.State,
                 email = x.Email,
                 phone = x.Mobile,
-                //RequestId = x.Requests.RequestId,
-                //userID = x.Request.RequestCloseds.First(y=>y.RequestId == x.RequestId).RequestId
                 userID = x.UserId,
 
-            }, tableData, CurrentPage, 5, x => x.FirstName, true); ;
+            }, tableData, CurrentPage, 5, x => x.CreatedDate, true); ;
 
             foreach (TableModel requestClient in temp)
             {

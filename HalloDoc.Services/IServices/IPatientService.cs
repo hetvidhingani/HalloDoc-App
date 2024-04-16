@@ -13,13 +13,13 @@ namespace HalloDoc.Services.IServices
     {
         Task<object> RegionList();
         Task<object> RegionListUser(PatientRequestViewModel viewModel);
-        Task<object> PatientRequest(int? userId);
+        Task<object> PatientRequest();
         Task<string> PatientRequest(PatientRequestViewModel viewModel);
         Task<string> FamilyFriendRequest(OtherRequestViewModel viewModel);
         Task<string> BusinessRequest(OtherRequestViewModel viewModel);
         Task<string> ConciergeRequest(OtherRequestViewModel viewModel);
         string? CheckEmail(string email);
- 
+        Task<object> submitInfoMe(int? userId);
         Task<User> GetUser(string email);
        
        

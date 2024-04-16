@@ -460,7 +460,7 @@ namespace HalloDoc.Controllers
             {
                 var result = await _admin.ConfirmCloseCase(id);
                 TempData["success"] = "Request Moved to UnPaid";
-                return RedirectToAction("Dashboard");
+                return Json(new {success = true});
             }
             return RedirectToAction("Dashboard");
         }
@@ -946,8 +946,9 @@ namespace HalloDoc.Controllers
             return RedirectToAction("VendorsDetails");
         }
         #endregion
-        [RoleAuthorize(14)]
+
         #region Email Logs
+        [RoleAuthorize(14)]
         public IActionResult EmailLogs()
         {
             var result = _admin.Logs();
@@ -1156,7 +1157,6 @@ namespace HalloDoc.Controllers
         [RoleAuthorize(5)]
         public IActionResult ProviderLocation()
         {
-
             ViewBag.Locations = _admin.ProviderLocation();
             return View();
         }

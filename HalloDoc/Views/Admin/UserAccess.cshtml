@@ -1,5 +1,9 @@
 ﻿@model HalloDoc.Entities.ViewModels.UserAccessViewModel;
+@{
+    ViewBag.access = "active";
+    ViewData["Title"] = "User Access";
 
+}
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -31,7 +35,7 @@
                     </div>
                 </div>
                
-               <div class="d-flex justify-content-end col-lg-6 col-md-6 col-sm-6">
+               <div class="d-flex justify-content-end align-items-center col-lg-6 col-md-6 col-sm-6">
                     
                         <a class="btn btn-info providerBtn" href="@Url.Action("CreateProvider","Admin") " style="display:none">Create Provider Account</a>
                    

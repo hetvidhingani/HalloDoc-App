@@ -56,17 +56,15 @@ namespace HalloDoc.Entities.ViewModels
         [RegularExpression(@"^\+\d{1,3}\d{10}$", ErrorMessage = "Invalid phone number format. Use country code followed by 10 digits.")]
         public string BillingPhoneNumber { get; set; }
 
-        public int? RegionId { get; set; }
+        public int RegionId { get; set; }
 
         [Required(ErrorMessage = "Enter your Email Here")]
         [EmailAddress(ErrorMessage = "Invalid email address")]
         [Compare("Email", ErrorMessage = "Email do not match.")]
 
         public string ConfirmEmail { get; set; }
-
         public List<int>? notification { get; set; }
         public List<Region>? AdminRegions { get; set; }
-
         public List<Role> roles { get; set; }
         public int? RoleID { get; set; }
         public List<int> AdminRegionID { get; set; }

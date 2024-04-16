@@ -80,6 +80,31 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region create new request
+        [HttpGet]
+        public async Task<IActionResult> submitInfoMe()
+        {
+            var request = HttpContext.Request;
+            int? userId = Int32.Parse(request.Cookies["UserID"]);
+            var result = await _patient.submitInfoMe(userId);
+           
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> submitInfoMe(PatientRequestViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _patient.PatientRequest(viewModel);
+                TempData["success"] = "Form Saved Successfully.";
+
+                return RedirectToAction("Dashboard");
+            }
+            else
+            {
+                TempData["error"] = "Error Saving Data";
+                return View(viewModel);
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> SubmitInformationSomeoneElse(PatientRequestViewModel model)
