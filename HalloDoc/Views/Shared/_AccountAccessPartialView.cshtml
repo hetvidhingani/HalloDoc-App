@@ -1,5 +1,5 @@
 ﻿@model AccountAccessViewModel
-<div class="table-responsive">
+<div class="table-responsive desktopviewTable">
     <table class="table ">
         <thead class="table-secondary">
             <tr>
@@ -38,3 +38,38 @@
     <partial name="_Paging.cshtml" />
 
 </div>
+
+ <div class="adminDashMobile viewMobile mb-5">
+    @foreach (var u in Model.PagingData)
+    {
+        <input type="hidden" asp-for="@u.roleID">
+
+
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block align-items-center">
+                    <div class="d-flex mx-1 align-items-center">
+                    
+                      Name:  @u.Name
+                    </div>
+                    <div>
+                        Account Type: @u.AccountType
+                    </div>
+                </div>
+
+            </button>
+
+            <div class="content">
+                <div class="d-flex justify-content-end align-items-center mt-2">
+                    <a class="btn btn-sm btn-outline-info mx-1 contactProviderc" asp-action="EditAccountAccess" asp-controller="Admin" asp-route-id="@u.roleID">Edit</a>
+                    <a class="btn btn-sm btn-outline-info mx-1" asp-action="deleteAccess" asp-controller="Admin" asp-route-id="@u.roleID">Delete</a>
+
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
+
+

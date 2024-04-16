@@ -79,40 +79,39 @@
 
             </div>
 
-            <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
+           
 
-                @foreach (var r in Model.RequestWiseFiles)
+
+            <div class="adminDashMobile viewMobile mb-5">
+                @foreach (var u in Model.RequestWiseFiles)
                 {
+                    <div class="mobileviewdashboard my-1  p-2 ">
+                        <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                            <div class="d-block align-items-center">
+                                <div class="d-flex mx-1 align-items-center">
 
-                    <div class="mobileviewdashboard my-2 p-3 bg-info" >
-
-                        <button type="button" class="table-btn collapsible">
-                             @r.FileName
+                                    @u.FileName
+                                </div>
+                                <div>
+                                    @u.CreatedDate
+                                </div>
+                            </div>
 
                         </button>
-                        <div class="content mx-2">
-                            <div class="provider d-flex gap-2">
-                                @r.FileName <span></span>
-                            </div>
-                            <div class="provider d-flex gap-2">
 
-                                @r.CreatedDate
-
-                            </div>
-                            <div class="provider d-flex pt-2 gap-2">
-                                <a href="@Url.Action("DownloadFile", "Admin", new { name = r.FileName })" class="btn btn-outline-info download-link">
-                                    <i class="bi bi-cloud-arrow-down"></i>
-                                </a>
+                        <div class="content">
+                            <div class="d-flex justify-content-start align-items-center mt-2">
+                                <div class="provider d-flex pt-2 gap-2">
+                                    <a href="@Url.Action("DownloadFile", "Admin", new { name = u.RequestWiseFileId })" class="btn btn-outline-info download-link">
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr />
-
                 }
 
             </div>
-
-          
             <form asp-controller="Admin" asp-action="EditCloseCase" asp-route-id="@Model.RequestClientID" method="post" enctype="multipart/form-data">
 
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -161,7 +160,7 @@
                 <div class="row ">
 
                     <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
-                        <input type="button" id="edit-button" style=" color: white;width: 90px;height: 50px;" class="btn btn-info  p-2 m-2" value="Edit">
+                        <input type="button" id="edit-button"  class="btn btn-info " value="Edit">
 
 
                         <input type="submit" class="btn btn-info p-2 m-2" style=" color: white;width: 90px;height: 50px;display:none; " value="Save" disabled />

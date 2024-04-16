@@ -1,33 +1,29 @@
 ﻿@model AccountAccessViewModel
 <div class="d-flex flex-wrap mt-4">
-    @if(Model.MenuNames!=null)
+    @if (Model.MenuNames != null)
     {
-        
-    
-    @foreach (var menu in Model.MenuNames)
-    {
-        if (Model.type == 1)
+
+
+        @foreach (var menu in Model.MenuNames)
         {
-            <p class="mx-1">
+            if (Model.type == 1)
+            {
+                <p class="mx-1">
 
-                <input type="checkbox" name="roleid" value="@menu.MenuId" class="mx-1">
+                    <input type="checkbox" name="roleid" value="@menu.MenuId" class="mx-1">
 
-                <span class="me-2">@menu.Name</span>
+                    <span class="me-2">@menu.Name</span>
 
-            </p>
+                </p>
+            }
 
-        }
+            if (Model.type == 2)
+            {
 
-        if (Model.type == 2)
-        {
-
-            <p class="mx-1">
+                <p class="mx-1">
 
                     <input type="checkbox" name="roleid" value="@menu.MenuId" class="mx-1"
-                  @*   @if (Model.rolemenus.Any(rm => rm.MenuId == menu.MenuId))
-                    {
-                        <text>checked</text>
-                    } *@
+                
                     @foreach (var rolemenu in Model.rolemenus)
                     {
                         if (rolemenu.MenuId == menu.MenuId)
@@ -37,14 +33,14 @@
                     }
                     >
 
-                <span class="me-2">@menu.Name</span>
+                    <span class="me-2">@menu.Name</span>
 
-            </p>
+                </p>
+
+            }
+
 
         }
-
-
-    }
     }
 </div>
 <script>

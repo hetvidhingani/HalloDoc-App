@@ -406,7 +406,7 @@ namespace HalloDoc.Services.Services
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                        join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
                                        from p in g.DefaultIfEmpty()
-                                       where r.RequestId == req.RequestId && rsl.Status !=7 && rsl.Status !=3 && rsl.Status !=8
+                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8
                                        orderby rsl.CreatedDate descending
                                        select new TransferNotesViewModel
                                        {
@@ -419,20 +419,20 @@ namespace HalloDoc.Services.Services
                                        }).ToList();
 
             viewmodel.CancelationNotes = (from r in _requestRepository.GetAll()
-                                       join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
-                                      
-                                       where r.RequestId == req.RequestId &&( rsl.Status == 7 || rsl.Status == 3 || rsl.Status == 8)
-                                       orderby rsl.CreatedDate descending
-                                       select new TransferNotesViewModel
-                                       {
-                                           Note = rsl.Notes,
-                                           
-                                       }).ToList();
+                                          join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
+
+                                          where r.RequestId == req.RequestId && (rsl.Status == 7 || rsl.Status == 3 || rsl.Status == 8)
+                                          orderby rsl.CreatedDate descending
+                                          select new TransferNotesViewModel
+                                          {
+                                              Note = rsl.Notes,
+
+                                          }).ToList();
 
             return viewmodel;
         }
 
-        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id,string AdminID)
+        public async Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id, string AdminID)
         {
             RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(id);
 
@@ -952,7 +952,7 @@ namespace HalloDoc.Services.Services
             admin.Email = model.Email;
             admin.Mobile = model.PhoneNumber;
             admin.ModifiedDate = DateTime.Now;
-    
+
             await _adminRepository.UpdateAsync(admin);
 
 
@@ -1052,7 +1052,7 @@ namespace HalloDoc.Services.Services
             encounter.Firstname = model.FirstName;
             encounter.Lastname = model.LastName;
             encounter.Location = model.Location;
-           // encounter.Dateofbirth = model.DateOfBirth;
+            // encounter.Dateofbirth = model.DateOfBirth;
             encounter.Phonenumber = model.PhoneNumber;
             encounter.Medicalreport = model.MedicalReport;
             //   encounter.Date = model.Date.Value;
@@ -1394,8 +1394,8 @@ namespace HalloDoc.Services.Services
             }
 
         }
-        
-        public void sendSMS(ContactProviderViewModel model,int adminId)
+
+        public void sendSMS(ContactProviderViewModel model, int adminId)
         {
             Physician physician = _physicianRepository.GetById(model.physicianId);
             var message1 = "Admin wants to contact you : " + model.message;
@@ -1412,7 +1412,7 @@ namespace HalloDoc.Services.Services
                 SentDate = DateTime.Now,
                 IsSmssent = new BitArray(new[] { true })
             };
-          _smmsLogRepository.AddAsync(smslog);
+            _smmsLogRepository.AddAsync(smslog);
         }
         public void SendSMS(string toPhoneNumber, string message)
         {
@@ -1690,6 +1690,7 @@ namespace HalloDoc.Services.Services
                 rolemenus = rolemenu.Where(u => u.RoleId == id).ToList(),
                 type = typename
             };
+           
             return data;
 
         }
@@ -1746,7 +1747,7 @@ namespace HalloDoc.Services.Services
 
             foreach (var rolemenu in roleMenu)
             {
-                 _roleMenuRepository.Remove(rolemenu);
+                _roleMenuRepository.Remove(rolemenu);
             }
 
 
@@ -2032,7 +2033,7 @@ namespace HalloDoc.Services.Services
                 var data = _emailLogsRepository.GetAllWithPagination(x => new TableModelLogs
                 {
                     EmailLogId = x.EmailLogId,
-                    reciverName = x.Request.RequestClients.First(u=>u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
+                    reciverName = x.Request.RequestClients.First(u => u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
                     action = x.SubjectName,
                     roleName = x.Role.Name,
                     email = x.EmailId,
@@ -2329,7 +2330,7 @@ namespace HalloDoc.Services.Services
         {
             Expression<Func<RequestClient, bool>> tableData = PredicateBuilder.New<RequestClient>();
 
-            tableData = x => x.Request.IsDeleted == null && x.Request.UserId!=null;
+            tableData = x => x.Request.IsDeleted == null && x.Request.UserId != null;
 
             if (statusOfRequest != 0)
             {
