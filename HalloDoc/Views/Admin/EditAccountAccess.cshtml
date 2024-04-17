@@ -90,9 +90,7 @@
     var id;
     function accountType() {
         accountTypeId = $("#accountType").val();
-        console.log($("#roleid"));
         id = $("#roleid").val();
-        console.log(id);
         $.ajax({
             url: url,
             type: "POST",
@@ -110,11 +108,9 @@
     $(document).ready(function () {
         accountTypeId=$("#accountType").val();
         id = $("#roleid").val();
-        console.log(id);
 
         load();
         function load() {
-            console.log($("#roleid"));
             $.ajax({
                 url: "/Admin/MenuName",
                 type: "POST",

@@ -335,7 +335,7 @@
                         </td>
                         <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
                         <td>
-                            <input asp-for="@Model.contractoragreement" type="file" id="file1" hidden />
+                            <input asp-for="@Model.contractoragreement" class="filevalidate" type="file" id="file1" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file1">Upload</label>
                         </td>
                         <td>
@@ -361,7 +361,7 @@
                         </td>
                         <td> <span class="mx-2">Background Check</span> </td>
                         <td>
-                            <input asp-for="@Model.backgroundcheck" type="file" id="file2" hidden />
+                            <input asp-for="@Model.backgroundcheck" class="filevalidate" type="file" id="file2" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file2">Upload</label>
                         </td>
                         <td>
@@ -388,7 +388,7 @@
                         </td>
                         <td> <span class="mx-2">HIPPA Compliance</span> </td>
                         <td>
-                            <input asp-for="@Model.hippa" type="file" id="file3" hidden />
+                            <input asp-for="@Model.hippa" type="file" class="filevalidate" id="file3" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file3">Upload</label>
                         </td>
                         <td>
@@ -415,7 +415,7 @@
                         </td>
                         <td> <span class="mx-2">Non Disclosureagreement</span> </td>
                         <td>
-                            <input asp-for="@Model.nondisclosure" type="file" id="file4" data-val="true" data-val-filetype="Please select a PDF file." data-val-filetype-allowed="application/pdf" hidden />
+                            <input asp-for="@Model.nondisclosure" type="file" class="filevalidate" id="file4" data-val="true" data-val-filetype="Please select a PDF file." data-val-filetype-allowed="application/pdf" hidden />
                             <label type="button" class="btn btn-info text-white mx-2" for="file4">Upload</label>
                         </td>
                         <td>
@@ -921,7 +921,6 @@
 
 
                 if (response = "success") {
-                    console.log("hi");
                     document.getElementsByClassName("passwordvalidate").innerText = "";
                     toastr.success("Password Saved Successfully.");
 
@@ -935,7 +934,24 @@
             }
         });
     });
-
+    const test = document.getElementsByClassName('filevalidate');
+    Array.from(test).forEach(function (input) {
+        input.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const validTypes = ['application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                Swal.fire({
+                    title: "Please select an pdf file.",
+                    icon: "warning",
+                    timer: 2000,
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                })
+                input.value = "";
+                return false;
+            }
+        });
+    });
 
 </script>
 

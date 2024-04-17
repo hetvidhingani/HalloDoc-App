@@ -23,12 +23,10 @@ namespace HalloDoc.Controllers
 
     public class PatientController : Controller
     {
-        private readonly ApplicationDbContext _context;
         public IPatientService _patient;
         public ICustomService _customService;
-        public PatientController(ApplicationDbContext context, IPatientService patient, ICustomService customService)
+        public PatientController( IPatientService patient, ICustomService customService)
         {
-            _context = context;
             _patient = patient;
             _customService = customService;
         }

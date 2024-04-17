@@ -689,15 +689,12 @@
     });
     $('.Assign').click(function () {
         var id = this.id;
-        console.log(id);
         $.ajax({
             type: "POST",
             dataType: "html",
             data: { id },
             url: "@(Url.Action("AssignCase", "Admin"))",
             success: function (data) {
-                console.log("success");
-
                 $("#AssignCase").find('.modal-content').html(data);
             },
             error: function () {

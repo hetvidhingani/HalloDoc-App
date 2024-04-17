@@ -70,7 +70,6 @@
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();
-        console.log("in function");
 
         $.ajax({
             type: "POST",
@@ -78,7 +77,6 @@
             data: data
         })
             .done(function (response) {
-                console.log(response);
                 if (response=="success") {
                     let timerInterval;
                     Swal.fire({

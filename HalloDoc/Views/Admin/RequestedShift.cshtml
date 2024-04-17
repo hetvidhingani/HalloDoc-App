@@ -69,7 +69,6 @@
     var Monthdata;
     function changepage(CurrentPage) {
         page = CurrentPage;
-        console.log(page);
         load();
     }
     $(document).ready(function () {
@@ -78,7 +77,6 @@
     });
     function load() {
 
-        console.log("data:", Monthdata);
         $.ajax({
             url: "/Admin/RequestedShiftTable",
             type: "POST",
