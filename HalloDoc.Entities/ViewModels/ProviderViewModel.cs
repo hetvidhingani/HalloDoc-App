@@ -37,6 +37,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public List<Role> Role { get; set; }
         public int RoleId { get; set; }
+        public List<int>? notification { get; set; }
 
 
         [Required(ErrorMessage = "Enter Address Here")]
@@ -101,6 +102,9 @@ namespace HalloDoc.Entities.ViewModels
         public IFormFile? backgroundcheck { get; set; }
         public IFormFile? hippa { get; set; }
         public IFormFile? nondisclosure { get; set; }
+        public List<RegionViewModel> StateCheckbox { get; set; }
+        public List<PhysicianRegion> physicianRegion { get; set; }
+        public List<int>? physicianRegionids { get; set; }
 
     }
 }

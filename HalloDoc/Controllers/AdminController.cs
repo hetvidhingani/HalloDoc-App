@@ -820,9 +820,9 @@ namespace HalloDoc.Controllers
             await _admin.resetPasswordProvider(physicianId, newPassword);
             return Json("success");
         }
-        public IActionResult savePhysicianInformation(ProviderViewModel model, int id)
+        public IActionResult savePhysicianInformation(ProviderViewModel model, int id, List<int> notification)
         {
-            var result = _admin.savePhysicianInformation(model, id);
+            var result = _admin.savePhysicianInformation(model, id,notification);
             model.PhysicianId = result.PhysicianId;
             return Json(new { success = true });
         }

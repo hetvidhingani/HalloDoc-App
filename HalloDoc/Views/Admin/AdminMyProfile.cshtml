@@ -122,21 +122,18 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center">
-                        @foreach (var cb in Model.AdminRegions)
+                        @foreach (var cb in Model.StateCheckbox)
                         {
 
                             <div class="form-check mx-2">
-                                <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" checked disabled>
+                                <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" @(cb.IsChecked ? "checked" : "") disabled>
                                 <label class="form-check-label" for="notification-@cb.RegionId">
 
                                     @cb.Name
                                 </label>
                             </div>
                         }
-                        @foreach(var z in Model.State)
-                        {
-                            
-                        }
+                      
                     </div>
 
 

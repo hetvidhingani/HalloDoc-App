@@ -140,13 +140,20 @@
 
                         </div>
                     </div>
-                    @*   <div class="col-lg-6 col-md-6 col-sm-12 ">
-                    <div class="form-floating form-group  border">
-                    <input asp-for="SyncEmail" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+                    <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center">
+                        @foreach (var cb in Model.State)
+                        {
 
-                    <span asp-validation-for="SyncEmail" class="text-danger"></span>
+                            <div class="form-check mx-2">
+                                <input class="form-check-input edit" type="checkbox" id="AdminRegionID-@cb.RegionId" name="physicianRegionids" value="@cb.RegionId">
+                                <label class="form-check-label" for="AdminRegionID-@cb.RegionId">
+
+                                    @cb.Name
+                                </label>
+                                <span asp-validation-for="RegionId" class="text-danger"></span>
+                            </div>
+                        }
                     </div>
-                    </div> *@
 
                 </div>
 
@@ -420,27 +427,6 @@
             }
         }
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

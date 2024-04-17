@@ -69,6 +69,12 @@ namespace HalloDoc.Entities.ViewModels
         public int? RoleID { get; set; }
         public List<int> AdminRegionID { get; set; }
 
-
+        public List<RegionViewModel> StateCheckbox { get; set; }
+    }
+    public class RegionViewModel
+    {
+        public int RegionId { get; set; }
+        public string Name { get; set; }
+        public bool IsChecked { get; set; }
     }
 }

@@ -61,7 +61,7 @@ namespace HalloDoc.Services.IServices
         Task<object> EditProvider(int physicianID);
         Physician ContectProvider(int id);
         object ContectProviderModel(int id);
-        Physician savePhysicianInformation(ProviderViewModel model,int id);
+        Physician savePhysicianInformation(ProviderViewModel model,int id, List<int> ids);
         object saveBillingInformation(ProviderViewModel model, int id);
         Task<object> resetPasswordProvider(int id, string password);
         Task<object> resetRoleStatus(ProviderViewModel model, int id);
