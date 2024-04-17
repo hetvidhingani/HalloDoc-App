@@ -89,6 +89,7 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region check
         public AspNetUser checkEmailPassword(string email, string password)
         {
             AspNetUser user = _aspnetuserRepository.GetAll().Where(u => u.Email == email).FirstOrDefault();
@@ -112,6 +113,12 @@ namespace HalloDoc.Services.Services
             }
 
         }
+        public AspNetUser checkIfExist(string email)
+        {
+            AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            return myUser;
+        }
+        #endregion
 
         #region Send Mail
         public string SendEmail(string email, string link, string subject, string body,int id,int AdminId, List<string> attachmentFilePath = null)
@@ -285,12 +292,6 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public AspNetUser checkIfExist(string email)
-        {
-            AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
-            return myUser;
-        }
-
         #region PatientForgotPassword
         public async Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel)
         {
@@ -333,9 +334,6 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        //public void EmailLog(int requestclientID, string Email, string link, string subject, string body, int AdminId)
-        //{
-            
-        //}
+     
     }
 }

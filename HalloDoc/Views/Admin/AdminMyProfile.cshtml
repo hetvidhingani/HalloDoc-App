@@ -56,7 +56,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleID" disabled>
-                               
+
 
                                 @foreach (var role in Model.roles)
                                 {
@@ -76,7 +76,7 @@
             <form asp-action="SaveAdminInfo" asp-controller="Admin" id="form1">
 
                 <h3> Administrator Information</h3>
-                <input  type="hidden" asp-for="AdminID" />
+                <input type="hidden" asp-for="AdminID" />
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
@@ -97,8 +97,8 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input required asp-for="Email"
-                                   id="Email"  type="email" autocomplete="off"
-                                   class="form-control edit" placeholder=" "  readonly>
+                                   id="Email" type="email" autocomplete="off"
+                                   class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Email</label>
                             <span asp-validation-for="Email" class="text-danger email"></span>
 
@@ -107,7 +107,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input required asp-for="ConfirmEmail"
-                                   id="confirmemail"  type="email" onblur="check()" autocomplete="off"
+                                   id="confirmemail" type="email" onblur="check()" autocomplete="off"
                                    class="form-control edit" placeholder=" " readonly>
                             <label for=" ">Confirm Email</label>
                             <span asp-validation-for="ConfirmEmail" class="text-danger confirmemail"></span>
@@ -125,14 +125,18 @@
                         @foreach (var cb in Model.AdminRegions)
                         {
 
-                            <div class="form-check mx-2" >
+                            <div class="form-check mx-2">
                                 <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" checked disabled>
                                 <label class="form-check-label" for="notification-@cb.RegionId">
 
                                     @cb.Name
-                                    </label>
-                                </div>
-                            }
+                                </label>
+                            </div>
+                        }
+                        @foreach(var z in Model.State)
+                        {
+                            
+                        }
                     </div>
 
 
@@ -140,7 +144,7 @@
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button" id="edit-button" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveAdminInfo" style="display:none;" id="save-button1" type="submit" disabled>Save</button>
-                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button1" style="display:none;"  disabled>Cancel</button>
+                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button1" style="display:none;" disabled>Cancel</button>
 
                 </div>
 
@@ -198,7 +202,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input required asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;"  class="edit2" disabled />
+                            <input required asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit2" disabled />
 
                         </div>
                         <span asp-validation-for="BillingPhoneNumber" class="text-danger altphone"></span>
@@ -209,7 +213,7 @@
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-info edit-button" id="edit-button2" type="button">Edit</button>
                     <button class="btn btn-info savebtn SaveBillingInfo" style="display:none;" id="save-button2" type="submit" disabled>Save</button>
-                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button2" style="display:none;"  disabled>Cancel</button>
+                    <button class="btn btn-danger cancelbtn SaveBillingInfo" id="cancel-button2" style="display:none;" disabled>Cancel</button>
 
                 </div>
             </form>
@@ -339,15 +343,15 @@
         cancleButton.style.display = "block";
 
     });
-    
-   
 
-    function check(){
+
+
+    function check() {
         var confirmEmail = $('#confirmemail').val();
         var email = $('#Email').val();
         if (confirmEmail !== email) {
             $('.confirmemail').text('Confirm Email and Email should be same!');
-        } 
+        }
     };
     document.getElementById("save-button1").addEventListener("click", function (event) {
         var firstname = $("#firstname").val();
@@ -417,7 +421,7 @@
         saveFormData(currentForm);
     });
 
-   
+
     document.getElementById("cancel-button1").addEventListener("click", function (event) {
 
         event.preventDefault();
@@ -457,5 +461,5 @@
     }
 
 
-  
+
 </script>

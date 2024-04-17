@@ -364,7 +364,9 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _admin.AssignRequest(viewModel, id);
+                var request = HttpContext.Request;
+                int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+                await _admin.AssignRequest(viewModel, id, AdminID);
 
                 return Json(new { success = true });
             }
@@ -394,7 +396,9 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _admin.BlockCaseRequest(viewModel, id);
+                var request = HttpContext.Request;
+                int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+                await _admin.BlockCaseRequest(viewModel, id,AdminID);
 
                 return Json(new { success = true });
 
@@ -404,7 +408,6 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region Transfer Case
-
 
         public async Task<IActionResult> TransferCase(AssignCaseViewModel viewModel, int id)
         {
@@ -416,7 +419,9 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _admin.TransferRequest(viewModel, id);
+                var request = HttpContext.Request;
+                int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+                await _admin.TransferRequest(viewModel, id,AdminID);
                 return Json(new { success = true });
 
             }
@@ -436,8 +441,6 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-
-
                 await _admin.ClearRequest(id);
                 return RedirectToAction("Dashboard");
             }
@@ -466,7 +469,9 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _admin.ConfirmCloseCase(id);
+                var request = HttpContext.Request;
+                int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+                var result = await _admin.ConfirmCloseCase(id,AdminID);
                 TempData["success"] = "Request Moved to UnPaid";
                 return Json(new { success = true });
             }
@@ -478,12 +483,8 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> ViewUploads(int Id)
         {
-
-
             var request = HttpContext.Request;
             ViewBag.MySession = request.Cookies["UserNameAdmin"];
-
-
             var result = await _customService.ViewDocument(Id);
             return View(result);
         }
@@ -520,11 +521,9 @@ namespace HalloDoc.Controllers
                 byte[] fileBytes = await _customService.DownloadAllByChecked(documentValues);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
-
             }
             else
             {
-
                 byte[] fileBytes = await _customService.DownloadAll(documentValues, ReqID);
                 string zipFileData = Convert.ToBase64String(fileBytes);
                 return Json(new { success = true, zipFileData });
@@ -545,17 +544,13 @@ namespace HalloDoc.Controllers
             {
                 foreach (var items in documentValues)
                 {
-
                     await _admin.DeleteFile(items, requestID);
                 }
             }
             else
             {
                 await _admin.DeleteFile(0, requestID);
-
             }
-
-
             return Json(documentValues);
         }
         #endregion
@@ -660,23 +655,17 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> ResetAdminPassword(AdminMyProfileViewModel model)
         {
-
             await _admin.ResetPasswordAdmin(model);
             TempData["success"] = "Password Updated Successfully.";
             return RedirectToAction("AdminMyProfile");
-
-
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model, List<int> notification)
         {
-
             await _admin.SaveAdminInfo(model, notification);
             return Json(new { success = true });
-
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
-
             await _admin.SaveBillingInfo(model);
             return Json(new { success = true });
 
@@ -720,10 +709,6 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard");
         }
         #endregion
-
-        #endregion
-
-        #region provider
 
         #region provider info
         [HttpGet]

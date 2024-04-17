@@ -504,21 +504,21 @@ namespace HalloDoc.Services.Services
             }
             return viewModel;
         }
-        public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id)
+        public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id ,int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
             if (requestNote1 != null)
             {
                 requestNote1.Status = 2;
-                requestNote1.AdminId = 1;
+                requestNote1.AdminId = adminID;
                 requestNote1.Notes = viewModel.AdditionalNotes;
                 await _requestStatusLogRepository.UpdateAsync(requestNote1);
             }
 
             RequestStatusLog requesStatusLog = new RequestStatusLog();
             requesStatusLog.Status = 2;
-            requesStatusLog.AdminId = 1;
+            requesStatusLog.AdminId = adminID;
             requesStatusLog.RequestId = req.RequestId;
             requesStatusLog.Notes = viewModel.AdditionalNotes;
             requesStatusLog.CreatedDate = DateTime.Now;
@@ -551,7 +551,7 @@ namespace HalloDoc.Services.Services
             return viewModel;
 
         }
-        public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id)
+        public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id,int adminid)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
@@ -559,7 +559,7 @@ namespace HalloDoc.Services.Services
             if (requestNote1 != null)
             {
                 requestNote1.Status = 11;
-                requestNote1.AdminId = 1;
+                requestNote1.AdminId = adminid;
                 requestNote1.Notes = viewModel.AdditionalNotes;
                 await _requestStatusLogRepository.UpdateAsync(requestNote1);
 
@@ -568,7 +568,7 @@ namespace HalloDoc.Services.Services
             {
                 RequestStatusLog requesStatusLog = new RequestStatusLog();
                 requesStatusLog.Status = 11;
-                requesStatusLog.AdminId = 1;
+                requesStatusLog.AdminId = adminid;
                 requesStatusLog.RequestId = req.RequestId;
                 requesStatusLog.Notes = viewModel.AdditionalNotes;
                 requesStatusLog.CreatedDate = DateTime.Now;
@@ -602,14 +602,14 @@ namespace HalloDoc.Services.Services
             viewModel.Physician = await _physicianRepository.GetPhysician();
             return viewModel;
         }
-        public async Task<string> TransferRequest(AssignCaseViewModel viewModel, int id)
+        public async Task<string> TransferRequest(AssignCaseViewModel viewModel, int id,int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
 
             RequestStatusLog requesStatusLog = new RequestStatusLog
             {
                 Status = 2,
-                AdminId = 1,
+                AdminId = adminID,
                 RequestId = req.RequestId,
                 Notes = viewModel.AdditionalNotes,
                 TransToPhysicianId = viewModel.physicianID,
@@ -688,7 +688,7 @@ namespace HalloDoc.Services.Services
             }
             return user.RequestId;
         }
-        public async Task<string> ConfirmCloseCase(int id)
+        public async Task<string> ConfirmCloseCase(int id,int adminid)
         {
             Request req = await _requestRepository.GetByIdAsync(id);
             req.Status = 9;
@@ -697,7 +697,7 @@ namespace HalloDoc.Services.Services
             {
                 RequestId = req.RequestId,
                 Status = (short)req.Status,
-                AdminId = 1,
+                AdminId = adminid,
                 CreatedDate = DateTime.Now,
             };
             await _requestStatusLogRepository.AddAsync(log);
@@ -881,7 +881,6 @@ namespace HalloDoc.Services.Services
             List<AdminRegion> adminRegion = _adminRegionRepository.GetAll().Where(u => u.AdminId == adminId).ToList();
             List<Region> regions = _regionRepository.GetAll().ToList();
 
-            // Create the view model
             AdminMyProfileViewModel model = new AdminMyProfileViewModel()
             {
                 AdminID = admin.AdminId,
@@ -890,7 +889,6 @@ namespace HalloDoc.Services.Services
                 Status = (int)admin.Status,
                 RoleID = admin.RoleId,
                 roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList(),
-
                 FirstName = admin.FirstName,
                 LastName = admin.LastName,
                 Email = admin.Email,
@@ -917,7 +915,6 @@ namespace HalloDoc.Services.Services
             await _aspnetuserRepository.UpdateAsync(user);
             return user;
         }
-
         public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model, List<int> ids)
         {
             Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
@@ -1064,10 +1061,6 @@ namespace HalloDoc.Services.Services
             return encounter;
         }
         #endregion
-
-        #endregion
-
-        #region Provider
 
         #region Create  Provider
 
@@ -2731,7 +2724,6 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #endregion
-
 
     }
 }

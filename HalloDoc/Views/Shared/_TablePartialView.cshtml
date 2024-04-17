@@ -332,7 +332,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+
                                             <i class="bi bi-bag-plus mx-2"></i>
                                             Orders
                                         </a>
@@ -371,7 +372,8 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="Assign" data-bs-toggle="modal" type="button" data-bs-target="#AssignCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+
                                             <i class="bi bi-bag-plus mx-2"></i>
                                             Orders
                                         </a>
