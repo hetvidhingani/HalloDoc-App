@@ -892,7 +892,9 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> CreateAccess(AccountAccessViewModel model)
         {
-            await _admin.CreateAccess(model);
+            var request = HttpContext.Request;
+            string adminid = request.Cookies["AspNetIdAdmin"];
+            await _admin.CreateAccess(model,adminid);
             return RedirectToAction("CreateRole");
 
         }

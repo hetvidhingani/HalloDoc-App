@@ -70,7 +70,7 @@ namespace HalloDoc.Services.IServices
         Task<object> AccountAccessTable(int CurrentPage);
         AccountAccessViewModel MenuName(int accountTypeId, int typename, int id = 0);
         AccountAccessViewModel CreateRole(int AdminId);
-        Task<object> CreateAccess(AccountAccessViewModel viewModel);
+        Task<object> CreateAccess(AccountAccessViewModel viewModel,string aspAdmin);
         AccountAccessViewModel EditAccountAccess(int id, int AdminId);
         Task<object> submitEditAccess(AccountAccessViewModel viewModel);
         Task<object> deleteAccountAccess(int id);

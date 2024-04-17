@@ -1671,7 +1671,7 @@ namespace HalloDoc.Services.Services
             return data;
 
         }
-        public async Task<object> CreateAccess(AccountAccessViewModel viewModel)
+        public async Task<object> CreateAccess(AccountAccessViewModel viewModel,string aspAdmin)
         {
             List<Role> roles = _roleRepository.GetAll().ToList();
             var role = new Role()
@@ -1679,7 +1679,7 @@ namespace HalloDoc.Services.Services
                 Name = viewModel.RoleName,
                 AccountType = (short)viewModel.accountTypeId,
                 CreatedDate = DateTime.Now,
-                CreatedBy = "bda27f31-02b1-442f-9120-bed8f09a4966",
+                CreatedBy = aspAdmin,
             };
             await _roleRepository.AddAsync(role);
 
