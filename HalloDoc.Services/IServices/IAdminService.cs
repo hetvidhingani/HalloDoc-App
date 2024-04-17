@@ -20,13 +20,12 @@ namespace HalloDoc.Services.IServices
         Task<object> AdminMyProfile(int? adminId);
         Task<int> GetCount(int statusId);
         Task<object> ViewCase(int userId);
-        Task<int> GetUserByRequestClientID(int id);
         Task<Admin> GetAdmin(string email);
         Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
         Task<ViewNotesViewModel> ViewNotes(int id);
-        Task<object> AddNotes(string? additionalNotes, string? adminNotes, int id,string AdminID);
+        Task<object> AddNotes(string additionalNotes, int id,string AdminID);
         Task<object> CancelCase(CancelCaseViewModel viewModel, int id);
-        Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id);
+        Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id,int adminid);
         Task<object> AssignCase(AssignCaseViewModel viewModel, int id);
         Task<string> AssignRequest(AssignCaseViewModel viewModel, int id);
         Task<object> BlockCase(CancelCaseViewModel viewModel, int id);

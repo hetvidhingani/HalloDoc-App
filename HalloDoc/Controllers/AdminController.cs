@@ -308,14 +308,14 @@ namespace HalloDoc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ViewNotes(string? additionalNotes, string? adminNotes, int id)
+        public async Task<IActionResult> ViewNotes(string additionalNotes, int id)
         {
             if (ModelState.IsValid)
             {
                 var request = HttpContext.Request;
                 string AdminID = request.Cookies["AspNetIdAdmin"];
 
-                await _admin.AddNotes(additionalNotes, adminNotes, id, AdminID);
+                await _admin.AddNotes(additionalNotes, id, AdminID);
                 return Json("success");
             }
             return View();
@@ -336,7 +336,10 @@ namespace HalloDoc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _admin.ConfirmCancelCase(viewModel, id);
+                var request = HttpContext.Request;
+                int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+
+                await _admin.ConfirmCancelCase(viewModel, id, AdminID);
 
                 return Json(new { success = true });
             }
