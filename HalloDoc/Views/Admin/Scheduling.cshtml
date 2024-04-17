@@ -113,9 +113,9 @@
 
                             </div>
                             <div class="col-6 form-floating form-group">
-                                <input asp-for="endTime" type="time" id="endtimeShift" class="form-control" placeholder=" " disabled>
+                                <input asp-for="endTime" type="time" id="endtimeShift" class="form-control " onblur="checkTime()" placeholder=" " disabled>
                                 <label for=" ">End Time</label>
-                                <span asp-validation-for="endTime" class="text-danger"></span>
+                                <span asp-validation-for="endTime" class="text-danger endtimeShift"></span>
 
                             </div>
                         </div>
@@ -136,8 +136,6 @@
                     <button type="button" class="btn btn-danger" id="dltBtn">
                         Delete
                     </button>
-
-
                 </div>
             </form>
         </div>
@@ -150,7 +148,25 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-
+    window.onpopstate = function () {
+        if (sessionStorage.getItem('pageVisited')) {
+            window.location.reload();
+            sessionStorage.removeItem('pageVisited');
+        }
+    };
+    var done = "";
+   function checkTime() {
+        var startTime = $('#starttimeShift').val();
+        var endTime = $('#endtimeShift').val();
+       if (endTime <= startTime) {
+           $('.endtimeShift').text("Please select a valid time!");
+           $('#endtimeShift').val('');
+           done = "no";
+       }
+       else {
+           done = "";
+       }
+    };
     document.addEventListener('DOMContentLoaded', function () {
         // Function to make the AJAX call
         function loadCalendar(regionId) {
@@ -307,16 +323,16 @@
 
     //create shift pop up
     $('#addShift').click(function () {
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-
-            url: "@(Url.Action("CreateShift", "Admin"))",
-            success: function (data) {
-
-                $("#createshift").find('.modal-content').html(data);
-            }
-        });
+       
+            $.ajax({
+                type: "POST",
+                dataType: "html",
+                url: "@(Url.Action("CreateShift", "Admin"))",
+                success: function (data) {
+                    $("#createshift").find('.modal-content').html(data);
+                }
+            });
+        
     });
 
     //Cascading DropDown
@@ -357,26 +373,30 @@
         var form = $(this);
         var url = form.attr('action');
         var data = form.serialize();
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: data
-        })
-            .done(function (response) {
-                if (response=="success") {
-                    let timerInterval;
-                    Swal.fire({
-                        title: "Shift saved Successfully",
-                        icon: "success",
-                        timer: 1000,
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                    }).then(function () {
-                        window.location.href = '@Url.Action("scheduling", "Admin")';
-                    });
-                }
-            });
+        if (done === "") {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    if (response == "success") {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Shift saved Successfully",
+                            icon: "success",
+                            timer: 1000,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        }).then(function () {
+                            window.location.href = '@Url.Action("scheduling", "Admin")';
+                        });
+                    }
+                });
+        }
+        else {
+            return;
+        }
     });
 </script>
 

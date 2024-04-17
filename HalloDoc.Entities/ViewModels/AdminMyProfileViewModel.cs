@@ -66,10 +66,16 @@ namespace HalloDoc.Entities.ViewModels
         public List<int>? notification { get; set; }
         public List<Region>? AdminRegions { get; set; }
         public List<Role> roles { get; set; }
-        public int? RoleID { get; set; }
+
+        [Required(ErrorMessage ="Please select role.")]
+        public int RoleID { get; set; }
+
+        [Required(ErrorMessage = "Please select atleast one region.")]
         public List<int> AdminRegionID { get; set; }
 
         public List<RegionViewModel> StateCheckbox { get; set; }
+        public int statusId { get; set; }
+        public List<Status>? status { get; set; }
     }
     public class RegionViewModel
     {

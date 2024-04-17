@@ -44,7 +44,7 @@
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <div class="form-floating form-group">
                         <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleID">
-                            <option value="0" selected>Role</option>
+                            <option value="" selected>Role</option>
 
                             @foreach (var role in Model.roles)
                             {
@@ -114,11 +114,10 @@
 
                                     @cb.Name
                                 </label>
-                                <span asp-validation-for="RegionId" class="text-danger"></span>
                             </div>
                         }
+                                <span asp-validation-for="AdminRegionID" class="text-danger"></span>
                     </div>
-
 
                 </div>
                

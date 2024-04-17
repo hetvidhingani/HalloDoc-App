@@ -10,7 +10,6 @@
                 <th scope="col">Email</th>
                 <th scope="col">Phone Number</th>
                 <th scope="col">Address</th>
-
                 <th scope="col">Zip</th>
                 <th scope="col">Request Status</th>
                 <th scope="col">Physician</th>
@@ -18,7 +17,6 @@
                 <th scope="col">Cancelled By Provider Note</th>
                 <th scope="col">Admin Note</th>
                 <th scope="col">Patient Note</th>
-
                 <th>Delete Permanently</th>
             </tr>
         </thead>
@@ -39,7 +37,7 @@
                     <td>
                         @if (@data.DateOfService != null)
                         {
-                            @data.DateOfService
+                            @data.DateOfService.ToShortDateString()
                         }
                         else
                         {
@@ -47,7 +45,7 @@
                         }
                     </td>
                     <td>
-                        @data.CloseCaseDate
+                        @data.CloseCaseDate.ToShortDateString()
                     </td>
                     <td>
                         @data.email
@@ -111,8 +109,6 @@
                     </td>
                 </tr>
             }
-
-
         </tbody>
     </table>
     <partial name="_Paging.cshtml" />

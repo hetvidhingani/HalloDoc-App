@@ -40,19 +40,21 @@
 
                         </div>
                     </div>
-                    @if (Model.Status == 3)
-                    {
-                        var data = "Active";
-
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <div class="form-floating form-group">
-                                <input required asp-for="Status" type="text" class="form-control" placeholder=" " value="@data" readonly>
-                                <label for=" ">Status</label>
-                                <span asp-validation-for="Status" class="text-danger"></span>
 
+                            <select class="form-select form-select-sm  edit" style="height:55px;" aria-label="Default select example" id="statusID" aria-height="5vh" asp-for="statusId" disabled>
+                                <option value=""  disabled>Status</option>
+
+                                @foreach (var status in Model.status)
+                                {
+                                    <option value="@status.Statusid">@status.Statusname</option>
+                                }
+                            </select>
+                            <label for="">Status</label>
                             </div>
                         </div>
-                    }
+                    
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RoleID" disabled>
@@ -456,7 +458,4 @@
 
         formElement.reset(); // reset form
     }
-
-
-
 </script>

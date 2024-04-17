@@ -1170,7 +1170,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult DeleteSelectedShift(List<int> documentValues)
         {
-            _admin.ApproveShift(documentValues);
+            _admin.deleteshifts(documentValues);
             return RedirectToAction("RequestedShift");
         }
         #endregion

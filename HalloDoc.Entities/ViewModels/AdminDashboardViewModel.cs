@@ -45,5 +45,6 @@ namespace HalloDoc.Entities.ViewModels
         public int FirstItemIndex { get; set; }
         public int LastItemIndex {  get; set; }
 
+
     }
 }

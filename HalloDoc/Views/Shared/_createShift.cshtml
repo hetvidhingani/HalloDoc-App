@@ -5,7 +5,7 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <form id="createShiftForm" asp-controller="Admin" asp-action="AddShift" style="margin-top:-25px;margin-bottom:-25px;">
-    <div class="modal-body m-0" >
+    <div class="modal-body m-0">
         <div class=" d-flex justify-content-center flex-column  ">
 
             <select asp-for="regionId" id="regionSelect" class="form-select required">
@@ -39,9 +39,9 @@
 
                 </div>
                 <div class="col-6 form-floating form-group">
-                    <input asp-for="endTime" type="time" class="form-control time" placeholder=" ">
+                    <input asp-for="endTime" type="time" onblur="checkTime()" class="form-control time" placeholder=" ">
                     <label for=" ">End Time</label>
-                    <span asp-validation-for="endTime" class="text-danger"></span>
+                    <span asp-validation-for="endTime" class="text-danger endtimeShift"></span>
 
                 </div>
             </div>
@@ -71,22 +71,22 @@
                 <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="5">
 
                 <label class=" my-2 mx-1" for="checkboxFri">Every Friday</label>
-           
+
                 <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="6">
                 <label class=" my-2 mx-1" for="checkboxSat">Every Saturday</label>
-            <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
-                <div class="form-floating form-group">
-                    <select class="form-select mt-1 h-50"  asp-for="repeatEnd" id="repeatEnd">
-                        <option value="0" selected>0-Time</option>
-                        <option value="1">1-Time</option>
-                        <option value="2">2-Time</option>
-                        <option value="3">3-Time</option>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                    <div class="form-floating form-group">
+                        <select class="form-select mt-1 h-50" asp-for="repeatEnd" id="repeatEnd">
+                            <option value="0" selected>0-Time</option>
+                            <option value="1">1-Time</option>
+                            <option value="2">2-Time</option>
+                            <option value="3">3-Time</option>
 
-                    </select>
-                    <label>Repeat End</label>
-                    <span asp-validation-for="repeatEnd" class="text-danger"></span>
+                        </select>
+                        <label>Repeat End</label>
+                        <span asp-validation-for="repeatEnd" class="text-danger endtimeShift"></span>
+                    </div>
                 </div>
-            </div>
 
             </div>
         </div>
@@ -112,9 +112,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    var done = "";
+
+    function checkTime() {
+        var startTime = $('#starttimeShift').val();
+        var endTime = $('#endtimeShift').val();
+        if (endTime <= startTime) {
+            $('.endtimeShift').text("Please select a valid time!");
+            $('#endtimeShift').val('');
+            done = "no";
+        }
+        else {
+            done = "";
+
+        }
+    };
     //Cascading DropDown
     $(document).ready(function () {
-            $('.time').attr('value', "00");
+        $('.time').attr('value', "00");
 
         $("#regionSelect").change(function () {
             var regionId = $(this).val();
@@ -148,33 +163,37 @@
         }
     })
 
-    //sweet alert
-    // $('#createShiftForm').on('submit', function (e) {
-    //     e.preventDefault();
-    //     var form = $(this);
-    //     var url = form.attr('action');
-    //     var data = form.serialize();
-
-    //     $.ajax({
-    //         type: "POST",
-    //         url: url,
-    //         data: data
-    //     })
-    //         .done(function (response) {
-    //             if (response.success) {
-    //                 let timerInterval;
-    //                 Swal.fire({
-    //                     title: "Shift Created Successfully",
-    //                     icon: "success",
-    //                     timer: 1000,
-    //                     allowOutsideClick: false,
-    //                     showConfirmButton: false,
-    //                 }).then(function () {
-    //                     window.location.href = '@Url.Action("Scheduling", "Admin")';
-    //                 });
-    //             }
-    //         });
-    // });
+    
+    $('#createShiftForm').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+        if (done === "") {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    if (response.success) {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Shift Created Successfully",
+                            icon: "success",
+                            timer: 1000,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        }).then(function () {
+                            window.location.href = '@Url.Action("Scheduling", "Admin")';
+                        });
+                    }
+                });
+        }
+        else {
+            return;
+        }
+    });
 
 </script>
 

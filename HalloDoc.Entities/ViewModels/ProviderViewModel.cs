@@ -86,6 +86,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? AdminNotes { get; set; }
         public string Name { get; set; }
         public string onCallStatus { get; set; }
+        [Required(ErrorMessage = "please select status.")]
         public int statusId { get; set; }
         public List<Status>? status { get; set; }
         public List<ProviderViewModel> Providers { get; set; }

@@ -99,6 +99,7 @@ namespace HalloDoc.Services.IServices
         void EditShiftData(CreateShiftViewModel shiftData);
         object returnShift(int id);
         void deleteShift(int id);
+        void deleteshifts(List<int> selectedShift);
         RequestedShiftViewModel RequestedShift(int month,int region,int CurrentPage = 1);
        void ApproveShift(List<int> selectedShift);
         List<PhysicianLocation> ProviderLocation();

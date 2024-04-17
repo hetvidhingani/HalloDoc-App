@@ -33,6 +33,7 @@ using System.Data.Entity;
 using Twilio.Types;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using System.Xml.Linq;
 
 
 namespace HalloDoc.Services.Services
@@ -930,8 +931,9 @@ namespace HalloDoc.Services.Services
                 AdminID = admin.AdminId,
                 UserName = aspNetUser.UserName,
                 Password = _aspnetuserRepository.DecodeFrom64(aspNetUser.PasswordHash),
-                Status = (int)admin.Status,
-                RoleID = admin.RoleId,
+                status = _statusRepository.GetAll().Where(x=>x.Statusid==4 || x.Statusid==2).ToList(),
+                RoleID = (int)admin.RoleId,
+                statusId= (int)admin.Status,
                 roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList(),
                 FirstName = admin.FirstName,
                 LastName = admin.LastName,
@@ -2683,7 +2685,6 @@ namespace HalloDoc.Services.Services
             else
             {
                 data.Status = 0;
-
             }
             _shiftDetailsRepository.UpdateAsync(data);
             return data;
@@ -2754,6 +2755,13 @@ namespace HalloDoc.Services.Services
             }
 
         }
+        public void deleteshifts(List<int> selectedShift)
+        {
+            foreach (var shift in selectedShift)
+            {
+                deleteShift(shift);
+            }
+        }
         #endregion
 
         #region Physician Location
@@ -2799,8 +2807,6 @@ namespace HalloDoc.Services.Services
             {
                 if (physicianOnCall.Contains(physician.physicianId))
                 {
-
-
                     physician.IsOnCall = true;
 
                 };
@@ -2811,7 +2817,7 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-
+       
         #endregion
 
     }
