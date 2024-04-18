@@ -92,20 +92,43 @@ namespace HalloDoc.Controllers
 
             if (myUser != null)
             {
-                Admin userID = await _admin.GetAdmin(myUser.Email);
-                var jwtToken = _jwtService.GenerateJwtToken(myUser);
+                AspNetUserRole role = _customService.checkIfRoleExist(myUser.Id);
+                if (role.RoleId == "1")
+                {
+                    Admin userID = await _admin.GetAdmin(myUser.Email);
+                    var jwtToken = _jwtService.GenerateJwtToken(myUser);
 
-                Response.Cookies.Append("jwt", jwtToken);
-                Response.Cookies.Append("RoleMenu", userID.RoleId.ToString());
-                Response.Cookies.Append("AdminID", userID.AdminId.ToString());
-                Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
-                Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
+                    Response.Cookies.Append("jwt", jwtToken);
+                    Response.Cookies.Append("RoleMenu", userID.RoleId.ToString());
+                    Response.Cookies.Append("AdminID", userID.AdminId.ToString());
+                    Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
+                    Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
 
-                HttpContext.Session.SetString("UserName", myUser.UserName);
-                HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
-                HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
+                    HttpContext.Session.SetString("UserName", myUser.UserName);
+                    HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
+                    HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
 
-                return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                else if(role.RoleId == "3")
+                {
+                    Admin userID = await _admin.GetAdmin(myUser.Email);
+
+                    var jwtToken = _jwtService.GenerateJwtToken(myUser);
+
+                    Response.Cookies.Append("jwt", jwtToken);
+                    Response.Cookies.Append("RoleMenu", userID.RoleId.ToString());
+                    Response.Cookies.Append("ProviderID", userID.AdminId.ToString());
+                    Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
+                    Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
+
+                    HttpContext.Session.SetString("UserName", myUser.UserName);
+                    HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
+                    HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
+
+                    return RedirectToAction("Dashboard", "Admin");
+                }
+                
             }
             else
             {

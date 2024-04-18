@@ -118,6 +118,12 @@ namespace HalloDoc.Services.Services
             AspNetUser myUser = _aspnetuserRepository.GetAll().Where(x => x.Email == email).FirstOrDefault();
             return myUser;
         }
+
+        public AspNetUserRole checkIfRoleExist(string id)
+        {
+            AspNetUserRole user = _aspNetUserRolesRepository.GetAll().Where(x => x.UserId == id).FirstOrDefault();
+            return user;
+        }
         #endregion
 
         #region Send Mail
@@ -334,6 +340,6 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-     
+        
     }
 }

@@ -24,5 +24,6 @@ namespace HalloDoc.Services.IServices
        // void EmailLog(int requestclientID, string Email,string link,string  subject,string body,int AdminId);
         AspNetUser checkEmailPassword(string data, string password);
         AspNetUser checkIfExist(string email);
+        AspNetUserRole checkIfRoleExist(string id);
     }
 }
