@@ -18,7 +18,10 @@ namespace HalloDoc.Entities.ViewModels
             public string LastName { get; set; }
             public DateTime CreatedDate { get; set; }
             public string PhysicianName { get; set; }
+            public string AdminName { get; set; }
+
             public string Note { get; set; }
+            public string transferByPhy { get; set; }
         }
         [Required(ErrorMessage ="Please Add Notes!")]
         public string? AdditionalNotes { get; set; }

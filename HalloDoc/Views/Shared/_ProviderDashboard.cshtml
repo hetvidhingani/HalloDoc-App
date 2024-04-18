@@ -1,0 +1,342 @@
+﻿@model ProviderDashboardViewModel;
+
+
+@* admin dashboard Desktop *@
+<div class=" table-responsive mt-3  adminDashTable">
+    <table class="table" id="patientTable">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Address</th>
+                @if (Model.stateTab == "Active")
+                {
+                    <th scope="col">Status</th>
+
+                }
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+
+
+        @foreach (var request in Model.PagingData)
+        {
+
+            var bgColor = "";
+
+            switch (request.RequestTypeID)
+            {
+                case 1:
+                    bgColor = "green";
+                    break;
+                case 2:
+                    bgColor = "orange"; //rgb(75, 223, 75)
+                    break;
+                case 3:
+                    bgColor = "blue";
+                    break;
+                case 4:
+                    bgColor = "pink";
+                    break;
+                default:
+                    bgColor = " ";
+                    break;
+            }
+
+            <tbody>
+
+                <tr class="@bgColor" style="color:white;">
+                    <td id="PatientName">@request.PatientName</td>
+
+                    <td>
+                        @{
+                            var requestor = "";
+                            var display = "block";
+                            if (request.RequestTypeID == 2)
+                            {
+                                requestor = "Family/Friend";
+
+
+                            }
+                            else if (request.RequestTypeID == 3)
+                            {
+                                requestor = "Concierge";
+
+                            }
+                            else if (request.RequestTypeID == 1)
+                            {
+                                requestor = "";
+                                display = "none";
+
+                            }
+                            else
+                            {
+                                requestor = "Business";
+
+                            }
+                            if (request.RequestorPhone == null)
+                            {
+                                display = "none";
+                            }
+                        }
+                        <button class="btn btn-light bg-transparent text-white d-flex" style="">
+                            <i class="bi bi-telephone-fill mx-2"></i>
+                            @request.PatientPhone
+                        </button>
+                        (Patient)
+
+                        <div style="display:@display">
+
+
+                            <button class="btn btn-light bg-transparent text-white d-flex">
+                                <i class="bi bi-telephone-fill mx-2"></i>
+                                @request.RequestorPhone
+                            </button>
+                            (@requestor)
+                        </div>
+                    </td>
+                    <td>@request.Address</td>
+                    @if (Model.stateTab == "Active")
+                    {
+                        <td>
+
+                            <p>-</p>
+
+                        </td>
+                    }
+
+                    <td>
+                        <div class="btn-group dropstart ">
+                            <button type="button" class="btn btn-light btn-sm text-white bg-transparent rounded" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu ">
+                                <span class="d-flex flex-column  align-items-center menuDashboard">
+                                    @if (Model.stateTab == "New")
+                                    {
+                                    <li>
+                                        <a onclick="acceptCase(@request.RequstClientId)" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-checklist mx-2"></i>
+                                            Accept
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
+                                            View Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
+                                            View Notes
+                                        </a>
+                                    </li>
+
+                                    }
+                                    @if (Model.stateTab == "Pending")
+                                    {
+                                    <li>
+                                        <a class="SendAgreement" data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-arrow-up mx-2"></i>
+                                            Send Agreement
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
+
+                                            View Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewUploads", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
+                                            View Uploads
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
+                                            View Notes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="Transfer" data-bs-toggle="modal" type="button" data-bs-target="#transferCase" id=@request.RequstClientId style="text-decoration:none;color:black;">
+                                            <i class="bi bi-folder-symlink mx-2"></i>
+                                            Transfer
+                                        </a>
+                                    </li>
+
+
+
+                                    }
+                                    @if (Model.stateTab == "Active")
+                                    {
+                                    <li>
+                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId ,status= @request.stateTab})" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
+                                            View Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewUploads", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
+                                            View Uploads
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
+                                            View Notes
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("SendOrder", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-bag-plus mx-2"></i>
+                                            Orders
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("EncounterForm","Provider",new{RequestId = request.requestID})" id=@request.requestID style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journals mx-2"></i>
+                                            Encounter
+                                        </a>
+                                    </li>
+                                    }
+                                    @if (Model.stateTab == "Conclude")
+                                    {
+                                    <li>
+                                        <a href="#" style="text-decoration:none;color:black;">
+                                            Conclude Care
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-card-text mx-2"></i>
+                                            View Case
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewUploads", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-file-arrow-up mx-2"></i>
+                                            View Uploads
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                            <i class="bi bi-journal-text mx-2"></i>
+                                            View Notes
+                                        </a>
+                                    </li>
+
+
+
+                                    <li>
+                                        <a href="@Url.Action("EncounterForm","Provider")" id=@request.requestID style="text-decoration:none;color:black;">
+                                            Encounter
+                                        </a>
+                                    </li>
+                                    }
+
+                                </span>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+
+            </tbody>
+        }
+    </table>
+    <partial name="_Paging.cshtml" />
+</div>
+
+
+
+<script>
+
+    //////////popup box
+
+    //Accept Case
+    function acceptCase(id) {
+        var providerId = '@Model.PhysicianId';
+        var url = '@Url.Action("AcceptCase", "Provider")';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { id: id, providerId: providerId },
+
+        }) .done(function (response) {
+                let timerInterval;
+                Swal.fire({
+                    title: "Request Accepted Successfully",
+                    icon: "success",
+                    timer: 1500,
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                }).then(function () {
+                    window.location.href = '@Url.Action("Dashboard", "Provider")';
+                });
+            });
+    }
+
+    //Transfer Case
+
+    $('.Transfer').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id },
+            url: "@(Url.Action("TransferCase", "Provider"))",
+            success: function (data) {
+
+                $("#transferCase").find('.modal-content').html(data);
+            }
+        });
+    });
+
+    $('.SendAgreement').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { id },
+            url: "@(Url.Action("SendAgreement", "Provider"))",
+            success: function (data) {
+
+                $("#SendAgreement").find('.modal-content').html(data);
+            }
+        });
+    });
+
+
+
+
+    //mobile view cards
+    var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
+
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+        });
+    }
+
+</script>

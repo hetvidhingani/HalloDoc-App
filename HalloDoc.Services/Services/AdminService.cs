@@ -133,25 +133,13 @@ namespace HalloDoc.Services.Services
             Admin user = await _adminRepository.CheckUserByEmail(email);
             return user;
         }
-        public async Task<int> GetCount(int statusId)
-        {
-            return await _requestRepository.GetCountAsync(r => r.Status == statusId && r.UserId != null && r.IsDeleted == null);
-        }
-        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
-        {
-            return await _requestwisefileRepository.GetFilesSelectedByFileID(selectedFilesIds);
-        }
+        
         
         public async Task<T> GetTempData<T>(string key)
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
         }
-        public async Task<RequestClient> GetRequestClientByID(int id)
-        {
-            RequestClient result = await _requestclientRepository.GetByIdAsync(id);
-            return result;
-        }
-
+       
         public List<Region> getstateDropdown()
         {
             return _regionRepository.GetAll().ToList();
@@ -384,6 +372,7 @@ namespace HalloDoc.Services.Services
             if (requestNote != null)
             {
                 viewmodel.AdminNotes = requestNote.AdminNotes;
+                viewmodel.PhysicianNotes = requestNote.PhysicianNotes;
             }
             viewmodel.TransferNotes = (from r in _requestRepository.GetAll()
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
@@ -398,6 +387,8 @@ namespace HalloDoc.Services.Services
                                            LastName = r.LastName,
                                            CreatedDate = rsl.CreatedDate,
                                            Note = rsl.Notes,
+                                           AdminName = rsl.Admin.FirstName + rsl.Admin.LastName,
+                                           transferByPhy = rsl.Physician.FirstName + rsl.Physician.LastName,
                                            PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
                                        }).ToList();
 
@@ -511,17 +502,17 @@ namespace HalloDoc.Services.Services
         public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id ,int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
-            if (requestNote1 != null)
-            {
-                requestNote1.Status = 2;
-                requestNote1.AdminId = adminID;
-                requestNote1.Notes = viewModel.AdditionalNotes;
-                await _requestStatusLogRepository.UpdateAsync(requestNote1);
-            }
+            //RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
+            //if (requestNote1 != null)
+            //{
+            //    requestNote1.Status = 2;
+            //    requestNote1.AdminId = adminID;
+            //    requestNote1.Notes = viewModel.AdditionalNotes;
+            //    await _requestStatusLogRepository.UpdateAsync(requestNote1);
+            //}
 
             RequestStatusLog requesStatusLog = new RequestStatusLog();
-            requesStatusLog.Status = 2;
+            requesStatusLog.Status = 1;
             requesStatusLog.AdminId = adminID;
             requesStatusLog.RequestId = req.RequestId;
             requesStatusLog.Notes = viewModel.AdditionalNotes;
@@ -531,7 +522,6 @@ namespace HalloDoc.Services.Services
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
 
-            request.Status = 2;
             request.PhysicianId = viewModel.physicianID;
             //   request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
@@ -612,7 +602,7 @@ namespace HalloDoc.Services.Services
 
             RequestStatusLog requesStatusLog = new RequestStatusLog
             {
-                Status = 2,
+                Status = 1,
                 AdminId = adminID,
                 RequestId = req.RequestId,
                 Notes = viewModel.AdditionalNotes,
@@ -809,73 +799,7 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        #region Send Agreement
-        public async Task<object> sendAgreement(int id)
-        {
-            ViewCaseViewModel viewModel = new ViewCaseViewModel();
-            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            viewModel.Email = req.Email;
-            viewModel.PhoneNumber = req.PhoneNumber;
-            viewModel.requestclientID = id;
-            return viewModel;
-        }
-
-        public async Task<object> AcceptAgreement(int id)
-        {
-            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
-            request.Status = 4;
-
-            await _requestRepository.UpdateAsync(request);
-
-            RequestStatusLog log = new RequestStatusLog
-            {
-                RequestId = req.RequestId,
-                Status = 4,
-                Notes = "Accepted By Patient",
-                CreatedDate = DateTime.Now
-
-            };
-            await _requestStatusLogRepository.AddAsync(log);
-
-            Encounter encounter = new Encounter()
-            {
-                Requestid = req.RequestId,
-                Firstname = req.FirstName,
-                Lastname = req.LastName,
-                Phonenumber = req.PhoneNumber,
-                Location = req.State,
-                Email = req.Email,
-            };
-            await _encounterRepository.AddAsync(encounter);
-            return "";
-        }
-
-        public async Task<object> ConfirmCancelAgreement(int id, string note)
-        {
-            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
-            request.Status = 7;
-            await _requestRepository.UpdateAsync(request);
-
-            RequestStatusLog log = new RequestStatusLog
-            {
-                RequestId = req.RequestId,
-                Status = 7,
-                Notes = "Declined By Patient:" + note,
-            };
-            await _requestStatusLogRepository.AddAsync(log);
-            RequestClosed requestClosed = new RequestClosed
-            {
-                RequestId = req.RequestId,
-                RequestStatusLogId = log.RequestStatusLogId,
-                ClientNotes = note
-            };
-            await _requestClosedRepository.AddAsync(requestClosed);
-
-            return "";
-        }
-        #endregion
+     
 
         #region Admin My Profile
         //public async Task<object> AdminMyProfile(int? adminId)

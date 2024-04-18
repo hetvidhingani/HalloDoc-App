@@ -1,6 +1,6 @@
 ﻿@model HalloDoc.Entities.ViewModels.ViewNotesViewModel
 @{
-    ViewBag.adminDash = "active";
+    ViewBag.ProviderDashboard = "active";
     ViewData["Title"] = "View Notes";
 
 }
@@ -20,7 +20,7 @@
         </div>
 
         <div class="p-4 bg-transparent mb-3  h-100 PatientInfo">
-            <form asp-action="ViewNotes" asp-controller="Admin" method="post" enctype="multipart/form-data">
+            <form asp-action="AddNotes" asp-controller="Provider" method="post" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <div class="row justify-content-between">
@@ -33,7 +33,7 @@
                             {
 
                                 <small>
-                                    @if (@z.AdminName != null && z.AdminName == " " && z.AdminName =="")
+                                    @if (@z.AdminName != null)
                                     {
                                         <span>
                                             <b>@z.AdminName </b>
@@ -72,7 +72,6 @@
                                             }
                                         </span>
                                     }
-                                    
                                 </small>
                                 <hr />
                             }
@@ -171,7 +170,7 @@
             type: "POST",
             dataType: "html",
             data: { additionalNotes: additionalNotes, adminNotes: adminNotes, id: id },
-            url: "@(Url.Action("ViewNotes", "Admin"))",
+            url: "@(Url.Action("ViewNotes", "Provider"))",
             success: function (data) {
 
                 location.reload();

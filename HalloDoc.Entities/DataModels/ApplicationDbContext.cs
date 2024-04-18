@@ -199,6 +199,14 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<Encounter>(entity =>
         {
             entity.HasKey(e => e.Encounterid).HasName("encounter_pkey");
+
+            entity.HasOne(d => d.Admin).WithMany(p => p.Encounters).HasConstraintName("AdminID_Fk");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.Encounters).HasConstraintName("PhysicianID_Fk");
+
+            entity.HasOne(d => d.Request).WithMany(p => p.Encounters)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("RequestID_Fk");
         });
 
         modelBuilder.Entity<HealthProfessional>(entity =>

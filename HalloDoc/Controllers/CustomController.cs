@@ -74,7 +74,7 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region Admin Login
+        #region Admin / Provider Login
         public IActionResult AdminLogin()
         {
 
@@ -104,31 +104,25 @@ namespace HalloDoc.Controllers
                     Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
                     Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
 
-                    HttpContext.Session.SetString("UserName", myUser.UserName);
-                    HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
-                    HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
+                    //HttpContext.Session.SetString("UserName", myUser.UserName);
+                    //HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
+                    //HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
 
                     return RedirectToAction("Dashboard", "Admin");
                 }
                 else if(role.RoleId == "3")
                 {
-                    Admin userID = await _admin.GetAdmin(myUser.Email);
+                    Physician userID =  _customService.GetPhysician(myUser.Email);
 
                     var jwtToken = _jwtService.GenerateJwtToken(myUser);
 
                     Response.Cookies.Append("jwt", jwtToken);
                     Response.Cookies.Append("RoleMenu", userID.RoleId.ToString());
-                    Response.Cookies.Append("ProviderID", userID.AdminId.ToString());
-                    Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
-                    Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
-
-                    HttpContext.Session.SetString("UserName", myUser.UserName);
-                    HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
-                    HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
-
-                    return RedirectToAction("Dashboard", "Admin");
+                    Response.Cookies.Append("ProviderID", userID.PhysicianId.ToString());
+                    Response.Cookies.Append("UserNameProvider", userID.FirstName + " " + userID.LastName);
+                    Response.Cookies.Append("AspNetIdProvider", userID.Id.ToString());
+                    return RedirectToAction("Dashboard", "Provider");
                 }
-                
             }
             else
             {
@@ -157,7 +151,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
                 var subject = "Reset Account Password";
                 var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-                _customService.SendEmail(email, link, subject, body,0,0);
+                _customService.SendEmail(email, link, subject, body,0,0,0);
                 TempData["EnterEmailSuccess"] = "Email is successfully Sent to your Registerd Email.";
 
                 return RedirectToAction("ResetPassword");
@@ -177,7 +171,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/AdminResetPassword/" + email;
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-            _customService.SendEmail(email, link, subject, body,0,0);
+            _customService.SendEmail(email, link, subject, body,0,0,0);
 
             return Json(new { success = true, message = "A password reset link has been sent to your email." });
         }
@@ -196,7 +190,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
             var subject = "Create Account";
             var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
-            _customService.SendEmail(req.Email, link, subject, body, 0, 0  );
+            _customService.SendEmail(req.Email, link, subject, body, 0, 0 ,0 );
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
@@ -220,7 +214,7 @@ namespace HalloDoc.Controllers
         //}
         #endregion
 
-        #region Login
+        #region Patient Login
 
         public IActionResult RegisterdPatientLogin()
         {
@@ -408,25 +402,23 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> AcceptAgreement(int id)
         {
 
-            await _admin.AcceptAgreement(id);
+            await _customService.AcceptAgreement(id);
             return Json("success");
         }
 
         [HttpGet]
         public async Task<IActionResult> CancelAgreement(int id)
         {
-            var result = await _admin.GetRequestClientByID(id);
+            var result = await _customService.GetRequestClientByID(id);
             var name = result.FirstName + " " + result.LastName;
             return Json(name);
         }
         [HttpPost]
         public async Task<string> ConfirmCancelAgreement(int id, string note)
         {
-            await _admin.ConfirmCancelAgreement(id, note);
+            await _customService.ConfirmCancelAgreement(id, note);
             return "";
         }
         #endregion
-
-
     }
 }

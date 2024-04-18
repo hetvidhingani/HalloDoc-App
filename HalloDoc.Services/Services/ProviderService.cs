@@ -1,10 +1,15 @@
-﻿using HalloDoc.Repository.IRepository;
+﻿using HalloDoc.Entities.DataModels;
+using HalloDoc.Entities.ViewModels;
+using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
 
 namespace HalloDoc.Services.Services
 {
@@ -96,6 +101,290 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region common methods
+        public List<Region> getstateDropdown()
+        {
+            return _regionRepository.GetAll().ToList();
+        }
+        public async Task<int> GetCount(int statusId, int physicianID)
+        {
+            return await _requestRepository.GetCountAsync(r => r.Status == statusId && r.UserId != null && r.IsDeleted == null && r.PhysicianId == physicianID);
+        }
+        #endregion
 
+        #region Dashboard
+        public List<ProviderDashboardViewModel> ProviderTable(int providerId, string state, List<ProviderDashboardViewModel> list, int status)
+        {
+
+            var tabledashboard = (
+                from r in _requestRepository.GetAll()
+                join rec in _requestclientRepository.GetAll() on r.RequestId equals rec.RequestId
+                where r.Status == status && r.IsDeleted == null && r.UserId != null && r.PhysicianId == providerId
+
+                select new ProviderDashboardViewModel
+                {
+                    PatientName = rec.FirstName + "," + rec.LastName,
+                    PatientPhone = rec.PhoneNumber,
+                    RequestorPhone = r.PhoneNumber,
+                    Address = rec.Street + "," + rec.City + "," + rec.State + "," + rec.ZipCode,
+                    RequestTypeID = r.RequestTypeId,
+                    RequstClientId = rec.RequestClientId,
+                    requestID = rec.RequestId,
+                    StateofTable = rec.State,
+                    stateTab = state,
+
+                }).ToList();
+
+            return tabledashboard.OrderByDescending(x => x.PatientName).ToList();
+        }
+        public ProviderDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, List<ProviderDashboardViewModel> newState)
+        {
+            if (!string.IsNullOrWhiteSpace(PatientName))
+            {
+                newState = newState.Where(a => a.PatientName.ToLower().Contains(PatientName.ToLower())).ToList();
+            }
+            if (ReqType != 0 && ReqType != null)
+            {
+                newState = newState.Where(a => a.RequestTypeID == ReqType).ToList();
+            }
+            if (CurrentPage == 0)
+            {
+                CurrentPage = 1;
+            }
+            int dataSize = 5;
+            int totalCount = newState.Count;
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+            List<ProviderDashboardViewModel> clients = newState
+                .OrderByDescending(u => u.PatientName)
+                .Skip((CurrentPage - 1) * dataSize)
+                .Take(dataSize)
+                .ToList();
+
+            return new ProviderDashboardViewModel
+            {
+                stateTab = state,
+                PagingData = clients,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+            };
+        }
+
+
+        #endregion
+
+        #region View Case
+
+        public async Task<object> ViewCase(int userId)
+        {
+            ViewCaseViewModel viewmodel = new ViewCaseViewModel();
+            RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
+            Request req = await _requestRepository.GetByIdAsync(user.RequestId);
+
+            if (user != null)
+            {
+                viewmodel.Symptoms = user.Notes;
+                viewmodel.LastName = user.LastName;
+                viewmodel.FirstName = user.FirstName;
+                viewmodel.State = user.State;
+                viewmodel.Email = user.Email;
+                viewmodel.PhoneNumber = user.PhoneNumber;
+                viewmodel.Address = user.Street + "," + user.City + "," + user.ZipCode;
+                viewmodel.requestclientID = user.RequestClientId;
+                viewmodel.DateOfBirth = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
+                viewmodel.status = req.Status;
+                viewmodel.street = user.Street;
+                viewmodel.city = user.City;
+                return viewmodel;
+            }
+            return "ViewCase";
+        }
+        public async Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId)
+        {
+            RequestClient user = await _requestclientRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.Email = viewModel.Email;
+                user.PhoneNumber = viewModel.PhoneNumber;
+                await _requestclientRepository.UpdateAsync(user);
+            }
+            return "ViewCase";
+        }
+
+        #endregion
+
+        #region View Notes
+
+        public async Task<ViewNotesViewModel> ViewNotes(int id)
+        {
+            ViewNotesViewModel viewmodel = new ViewNotesViewModel();
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            viewmodel.requestID = req.RequestId;
+
+            RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(req.RequestId);
+            if (requestNote != null)
+            {
+                viewmodel.AdminNotes = requestNote.AdminNotes;
+                viewmodel.PhysicianNotes= requestNote.PhysicianNotes;
+            }
+            viewmodel.TransferNotes = (from r in _requestRepository.GetAll()
+                                       join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
+                                       join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
+                                       from p in g.DefaultIfEmpty()
+                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8
+                                       orderby rsl.CreatedDate descending
+                                       select new TransferNotesViewModel
+                                       {
+                                           RequestId = r.RequestId,
+                                           FirstName = r.FirstName,
+                                           LastName = r.LastName,
+                                           CreatedDate = rsl.CreatedDate,
+                                           Note = rsl.Notes,
+                                           AdminName=rsl.Admin.FirstName + rsl.Admin.LastName,
+                                           transferByPhy = rsl.Physician.FirstName + rsl.Physician.LastName,
+                                           PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
+                                       }).ToList();
+
+            viewmodel.CancelationNotes = (from r in _requestRepository.GetAll()
+                                          join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
+
+                                          where r.RequestId == req.RequestId && (rsl.Status == 7 || rsl.Status == 3 || rsl.Status == 8)
+                                          orderby rsl.CreatedDate descending
+                                          select new TransferNotesViewModel
+                                          {
+                                              Note = rsl.Notes,
+
+                                          }).ToList();
+
+            return viewmodel;
+        }
+
+        public async Task<object> AddNotes(string additionalNotes, int id, string providerId)
+        {
+            RequestNote requestNote = await _requestNotesRepository.CheckByRequestID(id);
+
+            if (requestNote != null)
+            {
+                requestNote.PhysicianNotes = additionalNotes;
+                await _requestNotesRepository.UpdateAsync(requestNote);
+
+            }
+            else
+            {
+                RequestNote requestNote1 = new RequestNote();
+                requestNote1.RequestId = id;
+                requestNote1.PhysicianNotes = additionalNotes;
+                requestNote1.CreatedDate = DateTime.Now;
+                requestNote1.CreatedBy = providerId;
+                await _requestNotesRepository.AddAsync(requestNote1);
+
+            }
+
+            return "ViewNotes";
+        }
+
+        #endregion
+
+        #region Accept Case
+        public async Task AcceptCase(int requestClientId, int providerId)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(requestClientId);
+
+            RequestStatusLog requesStatusLog = new RequestStatusLog();
+            requesStatusLog.Status = 2;
+            requesStatusLog.PhysicianId = providerId;
+            requesStatusLog.RequestId = req.RequestId;
+            requesStatusLog.CreatedDate = DateTime.Now;
+            await _requestStatusLogRepository.AddAsync(requesStatusLog);
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.Status = 2;
+            await _requestRepository.UpdateAsync(request);
+        }
+        #endregion
+
+        #region Transfer Case
+        public async Task TransferCase(int id,int providerId,string note)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            RequestStatusLog findAdmin = _requestStatusLogRepository.GetAll().Where(x=>x.RequestId==req.RequestId && x.AdminId!=null).OrderByDescending(x=>x.CreatedDate).FirstOrDefault();
+            RequestStatusLog requesStatusLog = new RequestStatusLog
+            {
+                Status = 1,
+                RequestId = req.RequestId,
+                Notes =note,
+                PhysicianId= providerId,
+                CreatedDate = DateTime.Now
+            };
+            await _requestStatusLogRepository.AddAsync(requesStatusLog);
+
+
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.PhysicianId = null;
+            request.Status = 1;
+            await _requestRepository.UpdateAsync(request);
+        }
+        #endregion
+
+        #region View Uploads
+
+        public bool IsDeleted(BitArray? isDeleted)
+        {
+            if (isDeleted == null)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < isDeleted.Length; i++)
+            {
+                if (isDeleted[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public async Task<object> DeleteFile(int fileID, int? reqID)
+        {
+            if (fileID == 0)
+            {
+                var filesRow = await _requestwisefileRepository.FindFileByRequestID(reqID).ToListAsync();
+                foreach (var u in filesRow)
+                {
+                    if (IsDeleted(u.IsDeleted))
+                    {
+                        return new { Success = false, Message = "File is already deleted" };
+                    }
+
+                    u.IsDeleted = new BitArray(new bool[] { true });
+                    await _requestwisefileRepository.UpdateAsync(u);
+                }
+
+            }
+            else
+            {
+                RequestWiseFile file = await _requestwisefileRepository.GetByIdAsync(fileID);
+                if (IsDeleted(file.IsDeleted))
+                {
+                    return new { Success = false, Message = "File is already deleted" };
+                }
+
+                file.IsDeleted = new BitArray(new bool[] { true });
+                await _requestwisefileRepository.UpdateAsync(file);
+            }
+
+            return "";
+        }
+
+
+        #endregion
+
+        
     }
 }

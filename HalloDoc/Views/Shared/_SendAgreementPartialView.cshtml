@@ -1,48 +1,96 @@
 ﻿@model HalloDoc.Entities.ViewModels.ViewCaseViewModel
+@inject IHttpContextAccessor HttpContextAccessor
 
 <div class="modal-header">
     <h5 class="modal-title">Send Agreement</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form id="sendagreement" asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
-    <div class="modal-body">
-        <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
+@if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+{
+    <form id="sendagreement" asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
 
-        <div class=" d-flex justify-content-center flex-column  ">
-           <input type="hidden" asp-for="requestclientID"/>
+        <div class="modal-body">
+            <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
 
-          
-            <div class="form-floating form-group">
-                <div class="form-floating form-group  border">
-                    <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
+            <div class=" d-flex justify-content-center flex-column  ">
+                <input type="hidden" asp-for="requestclientID"/>
+
+
+                <div class="form-floating form-group">
+                    <div class="form-floating form-group  border">
+                        <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
+
+                    </div>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
 
                 </div>
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                <div class="form-floating mt-2 form-group">
+                    <input asp-for="Email" type="text" class="form-control" id=" " placeholder=" ">
+                    <label for=" ">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+                </div>
 
             </div>
-     
-            <div class="form-floating mt-2 form-group">
-                <input asp-for="Email" type="text" class="form-control" id=" " placeholder=" ">
-                <label for=" ">Email</label>
-                <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
 
-            </div>
+            <button class="createNewReqBtn submitBtn" type="submit">
+                Confirm
+            </button>
+
+            <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                Cancle
+            </button>
+
 
         </div>
-    </div>
-    <div class="modal-footer d-flex justify-content-end">
+    </form>
+}
+else
+{
+    <form id="sendagreement" asp-controller="Provider" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
 
-        <button class="createNewReqBtn submitBtn" type="submit">
-            Confirm
-        </button>
+        <div class="modal-body">
+            <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
 
-        <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
-            Cancle
-        </button>
+            <div class=" d-flex justify-content-center flex-column  ">
+                <input type="hidden" asp-for="requestclientID" />
 
 
-    </div>
-</form>
+                <div class="form-floating form-group">
+                    <div class="form-floating form-group  border">
+                        <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
+
+                    </div>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                </div>
+
+                <div class="form-floating mt-2 form-group">
+                    <input asp-for="Email" type="text" class="form-control" id=" " placeholder=" ">
+                    <label for=" ">Email</label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+
+            <button class="createNewReqBtn submitBtn" type="submit">
+                Confirm
+            </button>
+
+            <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                Cancle
+            </button>
+
+
+        </div>
+    </form>
+}
 
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js" ></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
@@ -77,13 +125,13 @@
                 let timerInterval;
                 Swal.fire({
                     title: "Done",
-                    text: "Agreement Sent Successfully on Email : @Model.Email.",
+                    text: "Agreement Sent Successfully on given Email.",
                     icon: "success",
                     timer: 3000,
                     allowOutsideClick: false,
                     showConfirmButton: false,
                 }).then(function () {
-                    window.location.href = '@Url.Action("Dashboard", "Admin")';
+                    location.reload();
                 });
             });
             

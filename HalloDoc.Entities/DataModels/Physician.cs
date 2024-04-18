@@ -114,6 +114,9 @@ public partial class Physician
     [InverseProperty("PhysicianCreatedByNavigations")]
     public virtual AspNetUser? CreatedByNavigation { get; set; }
 
+    [InverseProperty("Physician")]
+    public virtual ICollection<Encounter> Encounters { get; set; } = new List<Encounter>();
+
     [ForeignKey("Id")]
     [InverseProperty("PhysicianIdNavigations")]
     public virtual AspNetUser? IdNavigation { get; set; }

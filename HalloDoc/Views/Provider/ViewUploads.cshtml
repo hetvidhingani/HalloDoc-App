@@ -1,0 +1,299 @@
+﻿@model HalloDoc.Entities.ViewModels.DashboardViewModel;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewBag.ProviderDashboard = "active";
+    ViewData["Title"] = "View Uploads";
+
+}
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Documents</h3>
+            <a asp-action="Dashboard" asp-controller="Provider" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <form asp-controller="Provider" asp-action="ViewUploads" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                <div class="row">
+
+                    <h6>Patient Name:</h6>
+
+                    <div class="col-12 fw-bold">
+
+                       @Model.Username
+                        (MD051023TETE0001)
+                    </div>
+                    <div class="col-12">
+                        <p>Check here for any files that you or the doctors of your subsequents requestors have attached for you to review.</p>
+                    </div>
+                </div>
+
+
+                <div class="row ">
+                    <div class="col-12 col-sm-12">
+
+                        <input type="file" name="a" required>
+                        <button type="submit" class="upload-btn">
+                            <i class="bi bi-cloud-arrow-up"></i>
+                            <span class="btntxtupload">&nbsp;Upload</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <form asp-action="DownloadAll" asp-controller="Provider" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="RequstId" id="reqID"/>
+                <div class="row ">
+                    <div class="col-6 d-flex align-items-center">
+                        <h3>Documents</h3>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end align-items-center">
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" value="DownloadAll" onclick="DownloadAll()">Download All</button>
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" onclick="DeleteAll()">Delete All</button>
+
+                        <button type="submit" class="logoutIcon normalbtn mt-2 mb-3 p-2" value="DownloadAll">
+                            <i class="bi bi-cloud-arrow-down"></i>
+                        </button>
+                        <button type="button" class="logoutIcon normalbtn mt-2 mb-3 p-2" onclick="DeleteAll()">
+                            <i class="bi bi-cloud-arrow-down"></i>
+                        </button>
+
+                        <button type="button" class="logouttxt normalbtn mt-2 mb-3 p-2" onclick="sendEmail()">Send Mail</button>
+
+                    </div>
+                </div>
+
+                <div class="dashboardtbl table-responsive">
+                    <table class="table table-hover">
+
+                        <thead style="background-color:#F0F0F0">
+                            <tr>
+                                <th scope="col"> <input type="checkbox" id="selectAllFiles" onclick="toggle(this)"></th>
+                                <th>File</th>
+                                <th scope="col">Upload Date</th>
+                                <th scope="col">Action</th>
+                            </tr>
+
+                        </thead>
+                        @foreach (var r in Model.RequestWiseFiles)
+                        {
+
+                            <tbody>
+                                <tr>
+                                    <td>
+
+                                        <input type="checkbox" value="@r.RequestWiseFileId" class="checkboxForAll" name="selectedFiles">
+                                    </td>
+                                    <td>
+                                        @r.FileName
+                                    </td>
+
+
+                                    <td>@r.CreatedDate.ToShortDateString()</td>
+                                    <td>
+                                        <a href="@Url.Action("DownloadFile", "Provider", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
+                                            <i class="bi bi-cloud-arrow-down"></i>
+                                        </a>
+                                        <a href="@Url.Action("DeleteFile", "Provider", new { fileID = @r.RequestWiseFileId, RequstId =r.RequestId })" class="btn btn-outline-danger download-link" data-filename="@r.FileName">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        }
+                    </table>
+
+                </div>
+
+                <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
+
+                    @foreach (var r in Model.RequestWiseFiles)
+                    {
+
+                        <div class="mobileviewdashboard my-2 p-3" style="background-color:white">
+
+                            <button type="button" class="table-btn collapsible" style="background-color:white">
+                                <input type="checkbox" value="@r.FileName" class="checkboxForAll" name="selectedFiles">  @r.FileName
+
+                            </button>
+                            <div class="content mx-2">
+                                <div class="provider d-flex gap-2">
+                                    @r.FileName <span></span>
+                                </div>
+                                <div class="provider d-flex gap-2">
+
+                                    @r.CreatedDate
+
+                                </div>
+                                <div class="provider d-flex pt-2 gap-2">
+                                    <a href="@Url.Action("DownloadFile", "Provider", new { name = r.FileName })" class="btn btn-outline-info download-link">
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+
+                    }
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //send email with attachment
+    function sendEmail() {
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+        if (checkbox.length === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please select files to send email!',
+            });
+            return;
+        }
+
+        var selectedFilesIds = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+        var userEmail = '@Model.Email';
+
+        // Send the email with AJAX
+        $.ajax({
+            url: '/Provider/SendEmailWithAttachments',
+            type: 'POST',
+            data: {
+                selectedFilesIds: selectedFilesIds,
+                userEmail: userEmail
+            },
+            success: function (response) {
+                $('input.checkboxForAll').prop('checked', false);
+                $('#selectAllFiles').prop('checked', false);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Email sent!',
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong sending the email!',
+                });
+            }
+        });
+    }
+
+
+
+
+
+
+
+    //to collapse table
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "none") {
+                content.style.display = "block";
+            } else {
+                content.style.display = "none";
+            }
+        });
+    }
+
+    // For Download File
+
+    function toggle(source) {
+        checkboxes = document.getElementsByClassName('checkboxForAll');
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+
+
+    function DeleteAll() {
+        var requestid = $("#reqID").val();
+
+        // Show SweetAlert dialog asking the user to confirm deletion
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You want to Delete All the Files!',
+            icon: 'warning',
+            confirmButtonText: 'Yes, delete all!',
+            showCancelButton: true
+        }).then((result) => {
+            if (result.value) {
+                var checkbox = $('input[class="checkboxForAll"]:checked');
+                var documentValues = checkbox.map(function () {
+                    return $(this).val();
+                }).get();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DeleteFileByChecked", "Provider")",
+                    data: { documentValues: documentValues, requestID: requestid },
+                    success: function (response) {
+                        location.reload();
+                    }
+                });
+            }
+        });
+
+        return false;
+    }
+    function DownloadAll() {
+        var checkbox = $('input[class="checkboxForAll"]:checked');
+
+       var requestid = $("#reqID").val();
+        var documentValues = checkbox.map(function () {
+            return $(this).val();
+        }).get();
+
+     
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DownloadAll", "Provider")",
+                data: { documentValues: documentValues,ReqID: requestid},
+                success: function (response) {
+                    if (response.success) {
+                        var link = document.createElement('a');
+                        link.href = 'data:application/zip;base64,' + response.zipFileData;
+                        link.download = 'Documents.zip';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } else {
+                        console.error('Error:', response.error);
+                    }
+                },
+                error: function (response) {
+
+                    console.log("error");
+                }
+            });
+    
+
+        return false; // prevent default form submission behavior
+    }
+</script>

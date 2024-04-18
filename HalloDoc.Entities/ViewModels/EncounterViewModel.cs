@@ -20,7 +20,7 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter First Name Here")]
         public string PhoneNumber { get; set; } = string.Empty;
         public string? MedicalReport { get; set; } = string.Empty;
-        public DateOnly? Date { get; set; }
+        public DateTime? Date { get; set; }
 
         [Required(ErrorMessage = "Enter First Name Here")]
         public string Email { get; set; } = string.Empty;

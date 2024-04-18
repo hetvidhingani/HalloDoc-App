@@ -37,7 +37,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-   <style>
+    <style>
         .bar {
             background: rgb(251, 249, 249);
             backdrop-filter: blur(25px);
@@ -119,15 +119,7 @@
             cursor: pointer;
         }
 
-        /* .menu-btn {
-            position: absolute;
-            color: #696969;
-            font-size: 35px;
-            margin: 25px;
-            cursor: pointer;
-        } */
-
-   </style>
+    </style>
 </head>
 
 <body>
@@ -146,12 +138,12 @@
             toastr.success("@TempData["success"]")
         </script>
     }
-    @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null || @HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+    @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null || @HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null || @HttpContextAccessor?.HttpContext?.Request.Cookies["ProviderID"] != null)
     {
         <div class="header2 bg-white shadow d-flex align-content-center" id="">
 
             <div class="d-flex align-items-center">
-                <a href="javascript:void(0);" class="menu-btn" >
+                <a href="javascript:void(0);" class="menu-btn">
                     <button class="btn mt-2 p-1" style="border:2px solid #00bbe8">
                         <i class="bi bi-list"></i>
                     </button>
@@ -174,6 +166,10 @@
                                     {
                                         @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameAdmin"]
                                     }
+                                    else if (@HttpContextAccessor?.HttpContext?.Request.Cookies["ProviderID"] != null)
+                                    {
+                                        @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameProvider"]
+                                    }
                                     else
                                     {
                                         @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
@@ -187,6 +183,16 @@
                     @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["UserID"] != null)
                     {
                         <a asp-controller="Patient" asp-action="Logout">
+                            <button class="mx-3 logout" type="submit">
+                                <span class="logouttxt"> Logout</span>
+                                <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
+                            </button>
+
+                        </a>
+                    }
+                    else if (@HttpContextAccessor?.HttpContext?.Request.Cookies["ProviderID"] != null)
+                    {
+                        <a asp-controller="Provider" asp-action="Logout">
                             <button class="mx-3 logout" type="submit">
                                 <span class="logouttxt"> Logout</span>
                                 <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
@@ -259,12 +265,12 @@
                         <a id="2" asp-action="Profile" asp-controller="Admin"
                            class=" sub-btn fw-bold  @ViewBag.subHeader" style="color:dimgrey">Profile</a>
                     </div>
-                   
-                   
+
+
                 </div>
             </div>
         }
-        else
+        else if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
         {
             @* dashboard *@
             <div class="col-12 bg-white subHeader shadow" style="z-index:10">
@@ -317,9 +323,9 @@
             @* mobile *@
             <div class="bar " style="z-index:10;">
                 <div class="d-flex">
-                <a asp-action="Dashboard" class="Logo px-3">
-                    <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
-                </a>
+                    <a asp-action="Dashboard" class="Logo px-3">
+                        <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+                    </a>
                     <div class="close-btn">
                         <i class="fas fa-times"></i>
                     </div>
@@ -393,7 +399,69 @@
                 </div>
             </div>
 
-           
+
+        }
+        else if (@HttpContextAccessor?.HttpContext?.Request.Cookies["ProviderID"] != null)
+        {
+            @* dashboard *@
+            <div class="col-12 bg-white subHeader shadow" style="z-index:10">
+                <div class="topnav" id="myTopnav">
+                    <span>
+                        <a id="1" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.ProviderDashboard" style="color:dimgrey">Dashboard</a>
+                        <a id="2" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.Invoice" style="color:dimgrey">Invoicing</a>
+                        <a id="3" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.Schedule" style="color:dimgrey">My Schedule</a>
+                        <a id="4" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.Profile" style="color:dimgrey">My Profile</a>
+                    </span>
+                </div>
+
+            </div>
+            @* mobile *@
+            <div class="bar " style="z-index:10;">
+                <div class="d-flex">
+                    <a asp-action="Dashboard" class="Logo px-3">
+                        <img src="~/images/loginpagelogo.png" class="MainHeaderLogolayout " alt="">
+                    </a>
+                    <div class="close-btn">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="menu">
+                    <div class="item  mx-4">
+                        <h5 class="d-flex">
+                            Welcome,<div class="sub-btn fw-bold mx-2" style="color:rgba(0, 0, 0, 0.584)">
+                                @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameAdmin"]
+                                }
+                                else if (@HttpContextAccessor?.HttpContext?.Request.Cookies["ProviderID"] != null)
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameProvider"]
+                                }
+                                else
+                                {
+                                    @HttpContextAccessor?.HttpContext?.Request.Cookies["UserNameUser"]
+
+                                }
+                            </div>
+                        </h5>
+                    </div>
+                    <div class="item">
+                        <a id="1" asp-action="Dashboard" asp-controller="Provider" class="sub-btn fw-bold
+                   style="color:dimgrey">Dashboard</a>
+                        <a id="1" asp-action="Dashboard" asp-controller="Provider" class="sub-btn fw-bold
+                   style=" color:dimgrey">Invoicing</a>
+                        <a id="1" asp-action="Dashboard" asp-controller="Provider" class="sub-btn fw-bold
+                   style=" color:dimgrey">My Schedule</a>
+                        <a id="1" asp-action="Dashboard" asp-controller="Provider" class="sub-btn fw-bold
+                   style="color:dimgrey">My Profile</a>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
         }
 
     }

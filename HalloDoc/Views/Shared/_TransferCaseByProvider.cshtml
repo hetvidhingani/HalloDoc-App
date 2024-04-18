@@ -1,0 +1,65 @@
+﻿@model ProviderDashboardViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">Transfer Request</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form id="transferForm" asp-controller="Provider" asp-action="TransferRequest" asp-route-id="@Model.requestClientId" style="margin-top:-25px;margin-bottom:-25px;" method="post">
+    <input type="hidden" asp-for="PhysicianId"  />
+    <input type="hidden" asp-for="RequstClientId"  />
+
+    <div class="modal-body m-0">
+        <div class="form-floating form-group ">
+            <textarea class="form-control " asp-for="note" id="Message" style="height: 120px;" rows="8" placeholder=" "></textarea>
+            <label class="form-label" for="textAreaExample2">
+                Message
+
+            </label>
+            <span class="text-danger validate"></span>
+        </div>
+    </div>
+    <div class="modal-footer d-flex justify-content-end">
+        <button class="btn btn-info" type="submit" id="saveShiftBtn">
+            submit
+        </button>
+
+        <button type="button" class="btn btn-outline-info">
+            cancel
+        </button>
+    </div>
+</form>
+<script>
+    $('#transferForm').on('submit', function (e) {
+        e.preventDefault();
+
+        // var note = $('#Message').val();
+        // if (note == null || note == "") {
+        //     document.getElementsByClassName("validate")[0].innerText = "Please enter Message.";
+        //     return;
+        // }
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                if (response.success) {
+                    let timerInterval;
+                    Swal.fire({
+                        title: "Request Transfferd Successfully",
+                        icon: "success",
+                        timer: 1000,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                    }).then(function () {
+                        location.reload();
+                    });
+                }
+            });
+
+    });
+</script>

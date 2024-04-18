@@ -124,10 +124,19 @@ namespace HalloDoc.Services.Services
             AspNetUserRole user = _aspNetUserRolesRepository.GetAll().Where(x => x.UserId == id).FirstOrDefault();
             return user;
         }
+        public Physician GetPhysician(string email)
+        {
+            return _physicianRepository.GetPhysician(email);
+        }
         #endregion
 
         #region Send Mail
-        public string SendEmail(string email, string link, string subject, string body,int id,int AdminId, List<string> attachmentFilePath = null)
+        public async Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds)
+        {
+            return await _requestwisefileRepository.GetFilesSelectedByFileID(selectedFilesIds);
+        }
+
+        public string SendEmail(string email, string link, string subject, string body, int id, int AdminId, int PhysicianId, List<string> attachmentFilePath = null)
         {
             try
             {
@@ -163,26 +172,54 @@ namespace HalloDoc.Services.Services
 
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
-                if(id!=0)
+
+
+                int? requestid = null;
+                DateTime createdate = DateTime.Now;
+                int? roleId = null;
+                int? adminid = null;
+                int? physicianId = null;
+                if (id != 0)
                 {
                     RequestClient req = _requestclientRepository.GetById(id);
                     Request request = _requestRepository.GetById(req.RequestId);
-                    Admin admin = _adminRepository.GetById(AdminId);
+                    if (req != null)
+                    {
+                        requestid = request.RequestId;
+                        createdate = request.CreatedDate;
+                    }
 
-                    EmailLog log = new EmailLog();
-                    log.EmailTemplate = body;
-                    log.SubjectName = subject;
-                    log.EmailId = email;
-                    log.RoleId = admin.RoleId;
-                    log.RequestId = req.RequestId;
-                    log.AdminId = admin.AdminId;
-                    log.SentDate = DateTime.Now;
-                    log.SentTries = 1;
-                    log.CreateDate = request.CreatedDate;
-                    log.IsEmailSent = new BitArray(new bool[] { true });
-
-                    _emailLogsRepository.AddAsync(log);
                 }
+                if (AdminId != 0)
+                {
+
+                    Admin admin = _adminRepository.GetById(AdminId);
+                    roleId = admin.RoleId;
+                    adminid= admin.AdminId;
+                }
+                else if (PhysicianId != 0)
+                {
+                    Physician phy = _physicianRepository.GetById(PhysicianId);
+                    roleId=phy.RoleId;
+                    physicianId= phy.PhysicianId;
+                }
+
+                EmailLog log = new EmailLog();
+                log.EmailTemplate = body;
+                log.SubjectName = subject;
+                log.EmailId = email;
+                log.RoleId = roleId;
+                log.RequestId = requestid;
+                log.AdminId = adminid;
+                log.PhysicianId = physicianId;
+                log.SentDate = DateTime.Now;
+                log.SentTries = 1;
+                log.CreateDate = createdate;
+
+                log.IsEmailSent = new BitArray(new bool[] { true });
+
+                _emailLogsRepository.AddAsync(log);
+
 
                 var abc = "Success";
                 return abc;
@@ -279,7 +316,7 @@ namespace HalloDoc.Services.Services
         }
         public async Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid)
         {
-            var filesRow = _requestwisefileRepository.GetAll().Where(x => x.RequestId == requestid&&x.IsDeleted==null).ToList();
+            var filesRow = _requestwisefileRepository.GetAll().Where(x => x.RequestId == requestid && x.IsDeleted == null).ToList();
             MemoryStream ms = new MemoryStream();
             using (ZipArchive zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
                 filesRow.ForEach(file =>
@@ -340,6 +377,85 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        
+        #region dashboard
+        public async Task<int> GetCount(int statusId)
+        {
+            return await _requestRepository.GetCountAsync(r => r.Status == statusId && r.UserId != null && r.IsDeleted == null);
+        }
+        #endregion
+
+        #region Send Agreement
+        public async Task<RequestClient> GetRequestClientByID(int id)
+        {
+            RequestClient result = await _requestclientRepository.GetByIdAsync(id);
+            return result;
+        }
+
+        public async Task<object> sendAgreement(int id)
+        {
+            ViewCaseViewModel viewModel = new ViewCaseViewModel();
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            viewModel.Email = req.Email;
+            viewModel.PhoneNumber = req.PhoneNumber;
+            viewModel.requestclientID = id;
+            return viewModel;
+        }
+
+        public async Task<object> AcceptAgreement(int id)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.Status = 4;
+
+            await _requestRepository.UpdateAsync(request);
+
+            RequestStatusLog log = new RequestStatusLog
+            {
+                RequestId = req.RequestId,
+                Status = 4,
+                Notes = "Accepted By Patient",
+                CreatedDate = DateTime.Now
+
+            };
+            await _requestStatusLogRepository.AddAsync(log);
+
+            Encounter encounter = new Encounter()
+            {
+                Requestid = req.RequestId,
+                Firstname = req.FirstName,
+                Lastname = req.LastName,
+                Phonenumber = req.PhoneNumber,
+                Location = req.State,
+                Email = req.Email,
+            };
+            await _encounterRepository.AddAsync(encounter);
+            return "";
+        }
+
+        public async Task<object> ConfirmCancelAgreement(int id, string note)
+        {
+            RequestClient req = await _requestclientRepository.GetByIdAsync(id);
+            Request request = await _requestRepository.GetByIdAsync(req.RequestId);
+            request.Status = 7;
+            await _requestRepository.UpdateAsync(request);
+
+            RequestStatusLog log = new RequestStatusLog
+            {
+                RequestId = req.RequestId,
+                Status = 7,
+                Notes = "Declined By Patient:" + note,
+            };
+            await _requestStatusLogRepository.AddAsync(log);
+            RequestClosed requestClosed = new RequestClosed
+            {
+                RequestId = req.RequestId,
+                RequestStatusLogId = log.RequestStatusLogId,
+                ClientNotes = note
+            };
+            await _requestClosedRepository.AddAsync(requestClosed);
+
+            return "";
+        }
+        #endregion
     }
 }

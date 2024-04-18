@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HalloDoc.Repository.Repository
 {
-    public class PhysicianRepository:GenericRepository<Physician>,IPhysicianRepository
+    public class PhysicianRepository : GenericRepository<Physician>, IPhysicianRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -30,5 +30,10 @@ namespace HalloDoc.Repository.Repository
 
             return physicians;
         }
+        public Physician GetPhysician(string email)
+        {
+            return _context.Physicians.Where(x => x.Email == email).FirstOrDefault();
+        }
+
     }
 }

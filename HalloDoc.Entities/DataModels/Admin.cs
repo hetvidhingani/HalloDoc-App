@@ -73,6 +73,9 @@ public partial class Admin
     [InverseProperty("AdminCreatedByNavigations")]
     public virtual AspNetUser CreatedByNavigation { get; set; } = null!;
 
+    [InverseProperty("Admin")]
+    public virtual ICollection<Encounter> Encounters { get; set; } = new List<Encounter>();
+
     [ForeignKey("ModifiedBy")]
     [InverseProperty("AdminModifiedByNavigations")]
     public virtual AspNetUser? ModifiedByNavigation { get; set; }

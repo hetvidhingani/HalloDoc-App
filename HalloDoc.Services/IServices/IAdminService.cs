@@ -14,11 +14,8 @@ namespace HalloDoc.Services.IServices
     public interface IAdminService
     {
         
-        Task<List<RequestWiseFile>> GetFilesSelectedByFileID(List<int> selectedFilesIds);
-        Task<RequestClient> GetRequestClientByID(int id);
         Task<T> GetTempData<T>(string key);
         Task<object> AdminMyProfile(int? adminId);
-        Task<int> GetCount(int statusId);
         Task<object> ViewCase(int userId);
         Task<Admin> GetAdmin(string email);
         Task<string> EditNewRequest(ViewCaseViewModel viewModel, int? userId);
@@ -39,9 +36,7 @@ namespace HalloDoc.Services.IServices
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id,int adminID);
         Task<string> ClearRequest(int? id);
-        Task<object> sendAgreement( int id);
-        Task<object> AcceptAgreement(int id);
-        Task<object> ConfirmCancelAgreement(int id, string note);
+       
         Task<CloseCaseViewModel> CloseCase(int Id);
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id,int adminID);
