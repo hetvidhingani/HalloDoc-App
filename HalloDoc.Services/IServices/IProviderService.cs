@@ -42,5 +42,11 @@ namespace HalloDoc.Services.IServices
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
 
         void FinalizeReport(int RequestID);
+
+        void ConcludeRequest(int id , string? note,string providerid);
+
+        Task<object> resetPasswordProvider(int id, string password);
+
+        Task<object> MyProfile(int physicianID);
     }
 }

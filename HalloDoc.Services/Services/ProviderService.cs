@@ -416,6 +416,40 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region conclude care
+        public void ConcludeRequest(int id, string? note,string providerID)
+        {
+            Request request = _requestRepository.GetById(id);
+            request.ModifiedDate = DateTime.Now;
+            request.Status = 8;
+            _requestRepository.UpdateAsync(request);
+
+            RequestNote reqNote = _requestNotesRepository.GetAll().Where(x => x.RequestId == id).FirstOrDefault();
+            if (reqNote != null)
+            {
+
+                reqNote.PhysicianNotes = note;
+                _requestNotesRepository.UpdateAsync(reqNote);
+            }
+            else
+            {
+                RequestNote requestNote1 = new RequestNote();
+                requestNote1.RequestId = id;
+                requestNote1.PhysicianNotes = note;
+                requestNote1.CreatedDate = DateTime.Now;
+                requestNote1.CreatedBy = providerID;
+                 _requestNotesRepository.AddAsync(requestNote1);
+            }
+
+            RequestStatusLog statusLog = new()
+            {
+                RequestId = id,
+                Status = 8,
+                PhysicianId = request.PhysicianId,
+                CreatedDate = DateTime.Now,
+            };
+            _requestStatusLogRepository.UpdateAsync(statusLog);
+
+        }
 
         #endregion
 
@@ -510,8 +544,8 @@ namespace HalloDoc.Services.Services
         }
         public void FinalizeReport(int RequestID)
         {
-            var enc = _encounterRepository.GetAll().Where(x=>x.Requestid == RequestID).FirstOrDefault();
-            enc.Isfinalized= true;
+            var enc = _encounterRepository.GetAll().Where(x => x.Requestid == RequestID).FirstOrDefault();
+            enc.Isfinalized = true;
             _encounterRepository.UpdateAsync(enc);
             Request req = _requestRepository.GetById(RequestID);
 
@@ -519,6 +553,67 @@ namespace HalloDoc.Services.Services
             _requestRepository.UpdateAsync(req);
         }
 
+        #endregion
+
+        #region my profile
+        public async Task<object> resetPasswordProvider(int id, string password)
+        {
+            Physician phy = await _physicianRepository.GetByIdAsync(id);
+            AspNetUser user = await _aspnetuserRepository.GetByIdAsync(phy.Id);
+            user.PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(password);
+            await _aspnetuserRepository.UpdateAsync(user);
+            return user;
+        }
+        public async Task<object> MyProfile(int physicianID)
+        {
+            List<PhysicianRegion> adminRegion = _physicianRegionRepository.GetAll().Where(u => u.PhysicianId == physicianID).ToList();
+            List<Region> regions = _regionRepository.GetAll().ToList();
+
+            Dictionary<int, bool> checkedRegions = new Dictionary<int, bool>();
+
+            foreach (PhysicianRegion ar in adminRegion)
+            {
+                checkedRegions[ar.RegionId] = true;
+            }
+
+            Physician phy = await _physicianRepository.GetByIdAsync(physicianID);
+            AspNetUser asp = await _aspnetuserRepository.getById(phy.Id);
+            ProviderViewModel model = new ProviderViewModel();
+            model.PhysicianId = physicianID;
+            model.FirstName = phy.FirstName;
+            model.LastName = phy.LastName;
+            model.PhoneNumber = phy.Mobile;
+            model.AdminNotes = phy.AdminNotes;
+            model.Email = phy.Email;
+            model.MedicalLicense = phy.MedicalLicense;
+            model.NPINumber = phy.Npinumber;
+            model.Address1 = phy.Address1;
+            model.Address2 = phy.Address2;
+            model.City = phy.City;
+            model.RegionId = (int)phy.RegionId;
+            model.Regions = await _regionRepository.GetRegions();
+            model.Zip = phy.Zip;
+            model.BillingPhoneNumber = phy.AltPhone;
+            model.BusinessName = phy.BusinessName;
+            model.BusinessWebsite = phy.BusinessWebsite;
+            model.UserName = asp.UserName;
+            model.Password = _aspnetuserRepository.DecodeFrom64(asp.PasswordHash);
+            model.RoleId = (int)phy.RoleId;
+            model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
+            model.statusId = (int)phy.Status;
+            model.status = _statusRepository.GetAll().Where(x => x.Statusid == 4 || x.Statusid == 2).ToList();
+            model.IsAgreementDoc = phy.IsAgreementDoc == null ? false : true;
+            model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
+            model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
+            model.Ishippa = phy.IsTrainingDoc == null ? false : true;
+            model.StateCheckbox = regions.Select(r => new RegionViewModel()
+            {
+                RegionId = r.RegionId,
+                Name = r.Name,
+                IsChecked = checkedRegions.ContainsKey(r.RegionId)
+            }).ToList();
+            return model;
+        }
         #endregion
     }
 }

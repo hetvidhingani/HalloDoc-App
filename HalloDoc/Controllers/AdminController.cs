@@ -34,8 +34,6 @@ namespace HalloDoc.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-
-
         #region Logout
         public IActionResult Logout()
         {
@@ -65,7 +63,7 @@ namespace HalloDoc.Controllers
                 PendingCount = await _customService.GetCount(2),
                 ActiveCount = await _customService.GetCount(4),
                 ConcludeCount = await _customService.GetCount(6),
-                ToCloseCount = await _customService.GetCount(3) + await _customService.GetCount(7),
+                ToCloseCount = await _customService.GetCount(3) + await _customService.GetCount(7) + await _customService.GetCount(8),
                 UnpaidCount = await _customService.GetCount(9),
 
             };
@@ -110,6 +108,8 @@ namespace HalloDoc.Controllers
 
                         var result5 = _admin.Admintbl(state, list, 3);
                         result5.AddRange(_admin.Admintbl(state, list, 7));
+                        result5.AddRange(_admin.Admintbl(state, list, 8));
+
                         var paging5 = _admin.Pagination(state, CurrentPage, PatientName, ReqType, RegionId, result5);
 
                         return PartialView("_TablePartialView", paging5);

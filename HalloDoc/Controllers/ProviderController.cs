@@ -378,8 +378,23 @@ namespace HalloDoc.Controllers
         #endregion
 
         #region conclude care
-
+        public async Task<IActionResult> ConcludeCare(int id)
+        {
+            var request = HttpContext.Request;
+            ViewBag.MySession = request.Cookies["UserNameProvider"];
+            var result = await _customService.ViewDocument(id);
+            return View(result);
+        }
+        public IActionResult ConcludeRequest(int id,string? note)
+        {
+            var request = HttpContext.Request;
+            string ProviderId = request.Cookies["AspNetIdProvider"];
+            _provider.ConcludeRequest(id,note, ProviderId);
+            TempData["success"] = "Request Concluded successfully.";
+            return RedirectToAction("Dashboard", "Provider");
+        }
         #endregion
+
         #region Encounter Form
         public async Task<IActionResult> EncounterForm(int RequestId)
         {
@@ -403,5 +418,24 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region My Profile
+        public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword)
+        {
+            await _provider.resetPasswordProvider(physicianId, newPassword);
+            return Json("success");
+        }
+        public async Task<IActionResult> MyProfile()
+        {
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            var result = await _provider.MyProfile(id);
+            return View(result);
+        }
+        public IActionResult RequestAdminToEditProfile(ProviderViewModel model)
+        {
+            return Json("success");
+
+        }
+        #endregion
     }
 }

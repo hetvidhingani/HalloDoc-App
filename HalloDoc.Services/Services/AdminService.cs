@@ -503,14 +503,14 @@ namespace HalloDoc.Services.Services
         public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id ,int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            //RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
-            //if (requestNote1 != null)
-            //{
-            //    requestNote1.Status = 2;
-            //    requestNote1.AdminId = adminID;
-            //    requestNote1.Notes = viewModel.AdditionalNotes;
-            //    await _requestStatusLogRepository.UpdateAsync(requestNote1);
-            //}
+            RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
+            if (requestNote1 != null)
+            {
+                requestNote1.Status = 1;
+                requestNote1.AdminId = adminID;
+                requestNote1.Notes = viewModel.AdditionalNotes;
+                await _requestStatusLogRepository.UpdateAsync(requestNote1);
+            }
 
             RequestStatusLog requesStatusLog = new RequestStatusLog();
             requesStatusLog.Status = 1;

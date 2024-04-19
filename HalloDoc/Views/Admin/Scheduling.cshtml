@@ -148,12 +148,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    window.onpopstate = function () {
-        if (sessionStorage.getItem('pageVisited')) {
-            window.location.reload();
-            sessionStorage.removeItem('pageVisited');
-        }
-    };
+   
     var done = "";
    function checkTime() {
         var startTime = $('#starttimeShift').val();

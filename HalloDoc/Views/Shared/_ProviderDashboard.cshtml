@@ -221,7 +221,7 @@
                                     <li>
                                         @if(request.isfinalize)
                                             {
-                                            <a href="#" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ConcludeCare", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
                                                 <i class="bi bi-bag-plus mx-2"></i>
                                                 Conclude Care
                                                 </a>

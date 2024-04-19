@@ -1,0 +1,477 @@
+﻿@model HalloDoc.Entities.ViewModels.ProviderViewModel
+@{
+    ViewBag.MyProfile = "active";
+    ViewData["Title"] = "My Profile";
+
+}
+<div class="mainSectionMargin ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
+            <h3>My Profile</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" />
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-outline-info myprofile" data-bs-toggle="modal" type="button" data-bs-target="#myprofile">Request to Admin</button>
+            </div>
+            <h3>Account Information</h3>
+            <form id="form1" asp-action="changeRoleStatus" asp-controller="Provider" asp-route-id="@Model.PhysicianId" method="post" data-form-id="1">
+                <div class="row formrow ">
+                    <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" />
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input data-valmsg-replace="true" asp-for="UserName" type="text" class="form-control " placeholder=" " readonly>
+                            <label for=" ">UserName</label>
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Password" type="text" class="form-control " id="Password" placeholder=" ">
+                            <label for=" ">Password</label>
+                            <span asp-validation-for="Password" class="text-danger passwordvalidate"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-outline-info  mx-1" id="resetpasswordBtnProvider">Reset Password</button>
+                </div>
+
+            </form>
+
+            <h3> Physician Information</h3>
+            <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" id="PhysicianId" />
+            <div class="row formrow ">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="FirstName" type="text" id="firstName" name="FirstName" class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">First Name</label>
+                        <span asp-validation-for="FirstName" class="text-danger checkhere"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="LastName" id="lastname" type="text" class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">Last Name</label>
+                        <span asp-validation-for="LastName" class="text-danger lastname"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="Email"
+                               id="Email" type="email" autocomplete="off"
+                               class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">Email</label>
+                        <span asp-validation-for="Email" class="text-danger email"></span>
+
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 ">
+                    <div class="form-floating form-group  border">
+                        <input data-valmsg-replace="true" asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+
+                        <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 ">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="MedicalLicense"
+                               type="text" autocomplete="off"
+                               class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">MedicalLicense</label>
+                        <span asp-validation-for="MedicalLicense" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 ">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="NPINumber"
+                               onblur="AlertName()" type="number" autocomplete="off"
+                               class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">NPInumber</label>
+                        <span asp-validation-for="NPINumber" class="text-danger"></span>
+
+                    </div>
+                </div>
+              
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center">
+                    @foreach (var cb in Model.StateCheckbox)
+                    {
+
+                        <div class="form-check mx-2">
+                            <input class="form-check-input edit" type="checkbox" id="notification-@cb.RegionId" name="notification" value="@cb.RegionId" @(cb.IsChecked ? "checked" : "") disabled>
+                            <label class="form-check-label" for="notification-@cb.RegionId">
+
+                                @cb.Name
+                            </label>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+
+            <h3> Mailing & Billing Information</h3>
+            <input data-valmsg-replace="true" type="hidden" asp-for="PhysicianId" id="PhysicianId" />
+
+            <div class="row formrow">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="Address1" type="text" class="form-control edit" id="address1" placeholder=" " readonly>
+                        <label for=" ">Address1</label>
+                        <span asp-validation-for="Address1" class="text-danger address1"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="Address2" type="text" id="address2" class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">Address2 </label>
+                        <span asp-validation-for="Address2" class="text-danger address2"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="City" id="city" type="text" class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">City </label>
+                        <span asp-validation-for="City" class="text-danger city"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
+                    <div class="form-floating form-group">
+                        <select class="form-select form-select-sm h-100 edit" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.Regions)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                        <label for="">State</label>
+                        <span asp-validation-for="RegionId" class="text-danger state"></span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="Zip" type="text" id="zip" class="form-control edit" placeholder=" " readonly>
+                        <label for=" ">Zip code</label>
+                        <span asp-validation-for="Zip" class="text-danger zip"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 ">
+                    <div class="form-floating form-group  border">
+                        <input data-valmsg-replace="true" asp-for="BillingPhoneNumber" id="phone2" type="tel" style="border: none;height: 54px;" class="edit" readonly />
+
+                    </div>
+                    <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
+                </div>
+
+
+            </div>
+
+
+            <h3> Provider Profile</h3>
+
+            <div class="row formrow">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="BusinessName" type="text" class="form-control edit" id="businessname" placeholder=" " readonly>
+                        <label for=" ">Business Name</label>
+                        <span asp-validation-for="BusinessName" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <input data-valmsg-replace="true" asp-for="BusinessWebsite" type="text" class="form-control edit" id="businessweb" placeholder=" " readonly>
+                        <label for=" ">Business Website </label>
+                        <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="form-floating form-group">
+                        <div class="form-floating form-group input-group mb-3">
+                            <input asp-for="@Model.Photo" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton" disabled>
+                            <label style="color:black">Select File</label>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12 col-md-12 col-sm-12 dropdownState">
+                    <div class="form-floating form-group ">
+                        <textarea asp-for="AdminNotes" class="form-control edit" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" " disabled></textarea>
+                        <label class="form-label" for="textAreaExample2">
+                            Admin Notes
+
+                        </label>
+                        <span asp-validation-for="AdminNotes" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <hr />
+            <h3> Onboarding</h3>
+
+            <table>
+                @if (Model.IsAgreementDoc == true)
+                {
+                    <tr>
+
+                        <td> <span class="mx-2">Independent Contractor Agreement</span> </td>
+
+                        <td>
+                            @if (Model.IsAgreementDoc == true)
+                            {
+                                var newName = Model.PhysicianId + "_contractoragreement.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-1" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (Model.isbackgroundcheck == true)
+                {
+                    <tr>
+
+                        <td> <span class="mx-2">Background Check</span> </td>
+
+                        <td>
+                            @if (Model.isbackgroundcheck == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_backgroundcheck.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-2" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (Model.Ishippa == true)
+                {
+                    <tr>
+                      
+                        <td> <span class="mx-2">HIPPA Compliance</span> </td>
+                      
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn3">View</a>
+                            @if (Model.Ishippa == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_hippa.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-3" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (Model.IsAgreementDocnondisclosure == true)
+                {
+                    <tr>
+                      
+                        <td> <span class="mx-2">Non Disclosureagreement</span> </td>
+                       
+                        <td>
+                            <a type="button" class="btn btn-info text-decoration-none text-white d-none" id="viewbtn4">View</a>
+                            @if (Model.IsAgreementDocnondisclosure == true)
+                            {
+
+                                var newName = Model.PhysicianId + "_nonDisclosure.pdf";
+                                <a type="button" class="btn btn-info text-decoration-none text-white" id="viewbtn-4" href="/uploads/physician/doc/@newName" target="_blank">View</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+
+            <hr />
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myprofile" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Shift</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editShiftForm" asp-controller="Provider" asp-action="RequestAdminToEditProfile"  method="post">
+                <input type="hidden" asp-for="PhysicianId"  />
+                <div class="modal-body m-0">
+                    <div class="form-floating mt-1 form-group  rounded-3">
+                        <textarea asp-for="description" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <label class="form-label" for="textAreaExample2">
+                            Discription
+                        </label>
+                        <span class="text-black"></span>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-end">
+
+                   
+                    <button class="btn btn-info" type="submit" id="saveShiftBtn" >
+                        Save
+                    </button>
+
+                    <button type="button" class="btn btn-outline-info" id="dltBtn">
+                        cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var requestIdofTypeOFCare = "";
+
+    $(document).on('click', '.myprofile', function () {
+        requestIdofTypeOFCare = this.id;
+
+    });
+    $('#editShiftForm').on('submit', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+      
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: data
+            })
+                .done(function (response) {
+                    if (response == "success") {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Shift saved Successfully",
+                            icon: "success",
+                            timer: 1000,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        }).then(function () {
+                            window.location.href = '@Url.Action("Dashboard", "Provider")';
+                        });
+                    }
+                });
+       
+    });
+ 
+
+
+    //end
+    //dark theme
+    if (localStorage.getItem("Mytheme")) {
+        body.classList.toggle(localStorage.getItem("Mytheme"));
+    }
+
+    //phone number flag
+    const phoneInputField = document.querySelector("#phone");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    const phoneInputField1 = document.querySelector("#phone2");
+    const phoneInput1 = window.intlTelInput(phoneInputField1, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+
+
+    $("#resetpasswordBtnProvider").on("click", function () {
+        event.preventDefault();
+
+        var password = $("#Password").val();
+        var physicianId = $("#PhysicianId").val();
+
+        if (password == "" || password.length < 6 || password == null) {
+            document.getElementsByClassName('password-validation-message')[0].innerText = "Password must be between 8 and 16 characters long.";
+            return;
+        }
+
+
+
+        $.ajax({
+            url: "@Url.Action("ResetPasswordProvider", "Provider")",
+            type: "POST",
+            data: { physicianId: physicianId, newPassword: password },
+
+            success: function (response) {
+
+
+                if (response = "success") {
+                    document.getElementsByClassName("passwordvalidate").innerText = "";
+                    toastr.success("Password Saved Successfully.");
+
+                } else {
+                    toastr.success("Password not Saved .");
+
+                }
+            },
+            error: function () {
+                alert("An error occurred while resetting the password.");
+            }
+        });
+    });
+    const test = document.getElementsByClassName('filevalidate');
+    Array.from(test).forEach(function (input) {
+        input.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const validTypes = ['application/pdf'];
+            if (!validTypes.includes(file.type)) {
+                Swal.fire({
+                    title: "Please select an pdf file.",
+                    icon: "warning",
+                    timer: 2000,
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                })
+                input.value = "";
+                return false;
+            }
+        });
+    });
+
+</script>
+
