@@ -30,7 +30,17 @@ namespace HalloDoc.Services.IServices
         Task AcceptCase(int requestId, int providerId);
 
         Task TransferCase(int id,int providerId,string note);
+
         bool IsDeleted(BitArray? isDeleted);
+
         Task<object> DeleteFile(int fileID, int? reqID);
+
+        void HouseCallOrCounsult(int id , int requestId);
+
+        Task<object> EncounterForm(int RequestId);
+
+        Task<object> EncounterFormSaveChanges(EncounterViewModel model);
+
+        void FinalizeReport(int RequestID);
     }
 }

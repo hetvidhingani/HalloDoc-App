@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ namespace HalloDoc.Entities.ViewModels
     public class ProviderDashboardViewModel
     {
         public string stateTab;
+        public bool isfinalize;
 
         public int NewCount { get; set; }
         public int PendingCount { get; set; }
@@ -32,5 +34,6 @@ namespace HalloDoc.Entities.ViewModels
         public int PhysicianId { get; set; }
         public string note { get; set; }
         public int requestClientId { get; set; }
+        public short? callType {  get; set; }
     }
 }

@@ -1,0 +1,218 @@
+﻿@model HalloDoc.Entities.ViewModels.SendOrderViewModel
+@{
+    ViewBag.ProviderDashboard = "active";
+    ViewData["Title"] = "Send Order";
+
+}
+<div class="mainSectionMargin w-100">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center mb-2">
+            <h3>Send Order</h3>
+            <a asp-action="Dashboard" asp-controller="Provider" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class=" p-4  shadow mb-3  rounded h-100 PatientInfo">
+
+            <form asp-action="SendOrderDetails" asp-controller="Provider" asp-route-id="@Model.RequestID" method="post" id="sendorder" enctype="multipart/form-data">
+         
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <select class="form-select mb-3 " style="height:60px;" aria-label="Default select example" name="professionId" asp-for="professionId" id="professionSelect">
+                            <option value="" selected disabled>Profession</option>
+                            @foreach (var r in Model.Profession)
+                            {
+                                <option value="@r.HealthProfessionalId">
+                                    @r.ProfessionName
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="professionId" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <select class="form-select mb-3  " style="height:60px;" name="BusinessID" asp-for="BusinessID" id="businessSelect">
+                            <option value="" selected disabled>Select Physician</option>
+
+                        </select>
+                        <span asp-validation-for="BusinessID" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="Contact" id="phone" type="tel" class="" style="border: none;height: 54px;" />
+
+                        </div>
+                            <span asp-validation-for="Contact" class="text-danger"></span>
+
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email" type="email" class="form-control" id="Email" placeholder=" ">
+                            <label for=""> Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                            <input asp-for="FaxNumber" type="text" class="form-control" id="FaxNumber" placeholder=" ">
+                            <label for="">FaxNumber</label>
+                            <span asp-validation-for="FaxNumber" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-floating form-group  rounded-3">
+                            <textarea asp-for="OrderDetails" class="form-control" id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                            <label class="form-label" for="textAreaExample2">
+                                Order Details
+                            </label>
+                            <span asp-validation-for="OrderDetails" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-floating form-group">
+                           @*  <input asp-for="Refill" type="text" class="form-control" id="" placeholder=" ">
+                            *@
+                            <select class="form-select mb-3  "  asp-for="Refill" >
+                                <option value="0" selected disabled>No. of Refills</option>
+                                <option value="1" >1</option>
+                                <option value="2" >2</option>
+                                <option value="3" >3</option>
+
+
+                            </select>
+                            <label for="">No. Of Refills</label>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+                       
+
+                        <button type="submit" class="createNewReqBtn submitBtn">Submit</button>
+                        <a asp-action="Dashboard" asp-controller="Provider" class="btn ">
+                            <button type="button" class="createNewReqBtn">
+                                Cancle
+                            </button>
+
+                        </a>
+
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+<script>
+    //phone number
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    $('#phone').attr('value', "+91");
+    //sweet alert
+    $('#sendorder').on('submit', function (e) {
+        event.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data
+        })
+            .done(function (response) {
+                if (response.success) {
+                  
+                        
+                            let timerInterval;
+                            Swal.fire({
+                                title: "Order Sent Successfully",
+                                icon: "success",
+                                timer: 1500,
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                            }).then(function () {
+                                window.location.href = '@Url.Action("Dashboard", "Provider")';
+                            });
+                       
+                       
+                }
+            });
+    });
+   //cascading dropdown
+    $(document).ready(function () {
+
+
+        $("#professionSelect").change(function () {
+            var professionId = $(this).val();
+            var url = "/Provider/GetBusinessByProfession?professionId=" + professionId;
+           
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#businessSelect option").remove();
+                    $("#businessSelect").append('<option value="0">Selecte Business</option>');
+                  
+                    data.map((x) => {
+                    
+                        $("#businessSelect").append('<option value="' + x.vendorId + '">' + x.vendorName + '</option>');
+                    })
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+        $("#businessSelect").change(function () {
+            var businessId = $(this).val();
+
+            var url = "/Provider/GetBusinessDetails?businessId=" + businessId;
+
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    $("#Email").val('');
+                    $("#FaxNumber").val('');
+                    $("#phone").val('');
+                    $("#Email").val(data.email);
+                    $("#phone").val(data.phoneNumber);
+                    $("#FaxNumber").val(data.faxNumber);
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+    });
+</script>

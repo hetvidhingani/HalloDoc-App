@@ -32,5 +32,11 @@ namespace HalloDoc.Services.IServices
         Task<object> AcceptAgreement(int id);
         Task<object> ConfirmCancelAgreement(int id, string note);
         Task<RequestClient> GetRequestClientByID(int id);
+        Task<object> SendOrder(int Id);
+        Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
+
+        Task<HealthProfessional> GetBusinessDetails(object BusinessId);
+
+        Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id, string createdByID);
     }
 }

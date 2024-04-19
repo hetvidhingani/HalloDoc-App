@@ -34,7 +34,7 @@ namespace HalloDoc.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
-        #region admin
+
 
         #region Logout
         public IActionResult Logout()
@@ -556,17 +556,14 @@ namespace HalloDoc.Controllers
         [HttpGet]
         public async Task<IActionResult> SendOrder(int Id)
         {
-
-            var result = await _admin.SendOrder(Id);
+            var result = await _customService.SendOrder(Id);
             return View(result);
-
         }
         [HttpGet]
 
         public async Task<IActionResult> GetBusinessByProfession(int ProfessionID)
         {
-            var physicians = await _admin.GetBusinessByProfession(ProfessionID);
-
+            var physicians = await _customService.GetBusinessByProfession(ProfessionID);
             return Json(physicians);
         }
 
@@ -574,7 +571,7 @@ namespace HalloDoc.Controllers
 
         public async Task<IActionResult> GetBusinessDetails(int BusinessId)
         {
-            var result = await _admin.GetBusinessDetails(BusinessId);
+            var result = await _customService.GetBusinessDetails(BusinessId);
             return Json(result);
         }
 
@@ -592,7 +589,7 @@ namespace HalloDoc.Controllers
                 string AdminID = request.Cookies["AspNetIdAdmin"];
 
 
-                await _admin.SendOrderDetails(viewModel, Id, AdminID);
+                await _customService.SendOrderDetails(viewModel, Id, AdminID);
 
             }
             return Json(new { success = true });
@@ -1191,8 +1188,6 @@ namespace HalloDoc.Controllers
             var result = _admin.GetProvidersOnCall(regionId);
             return PartialView("_MDonCallPartialView", result);
         }
-        #endregion
-
         #endregion
 
     }

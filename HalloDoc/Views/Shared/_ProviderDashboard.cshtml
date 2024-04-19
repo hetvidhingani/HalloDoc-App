@@ -99,8 +99,19 @@
                     @if (Model.stateTab == "Active")
                     {
                         <td>
+                            @if (request.callType == 1)
+                            {
 
-                            <p>-</p>
+                                <a class=" btn p-2 btn-info d-flex align-items-center housecallBtn justify-content-center mb-1 " id="@request.requestID"
+                                   aria-expanded="false" style="width:90px;border-radius: 4px;">
+                                    HouseCall
+                                </a>
+                            }
+                            else
+                            {
+
+                                <p>-</p>
+                            }
 
                         </td>
                     }
@@ -199,7 +210,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("EncounterForm","Provider",new{RequestId = request.requestID})" id=@request.requestID style="text-decoration:none;color:black;">
+                                        <a class="activeEncounter" data-bs-toggle="modal" type="button" data-bs-target="#encounterActive" id="@request.requestID" style="text-decoration:none;color:black;">
                                             <i class="bi bi-journals mx-2"></i>
                                             Encounter
                                         </a>
@@ -208,12 +219,24 @@
                                     @if (Model.stateTab == "Conclude")
                                     {
                                     <li>
-                                        <a href="#" style="text-decoration:none;color:black;">
-                                            Conclude Care
-                                        </a>
+                                        @if(request.isfinalize)
+                                            {
+                                            <a href="#" style="text-decoration:none;color:black;">
+                                                <i class="bi bi-bag-plus mx-2"></i>
+                                                Conclude Care
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                            <a href="#" style="text-decoration:none;color:black;" class="btn disabled border-0">
+                                                <i class="bi bi-bag-plus mx-2"></i>
+                                                Conclude Care
+                                            </a>
+                                            }
+
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId,status= @request.stateTab })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewCase", "Provider", new { Id = @request.RequstClientId,status= @request.stateTab })" class="btn border-0" style="text-decoration:none;color:black;">
                                             <i class="bi bi-card-text mx-2"></i>
                                             View Case
                                         </a>
@@ -234,9 +257,21 @@
 
 
                                     <li>
-                                        <a href="@Url.Action("EncounterForm","Provider")" id=@request.requestID style="text-decoration:none;color:black;">
-                                            Encounter
-                                        </a>
+                                            @if (request.isfinalize)
+                                            {
+                                            <a class="btn border-0 downloadEncounter" data-bs-toggle="modal" type="button" data-bs-target="#DownloadEncounterForm" id="@request.requestID" style="text-decoration:none;color:black;">
+                                                <i class="bi bi-journal-text mx-2"></i>
+                                               Encounter
+                                            </a>
+                                            }
+                                            else
+                                            {
+                                            <a href="@Url.Action("EncounterForm","Provider",new{RequestId =@request.requestID })" style="text-decoration:none;color:black;">
+                                                <i class="bi bi-journals mx-2"></i>
+                                                Encounter
+                                            </a>
+                                            }
+
                                     </li>
                                     }
 
@@ -251,12 +286,153 @@
     </table>
     <partial name="_Paging.cshtml" />
 </div>
+<div class="modal fade" id="encounterActive" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Type Of Care</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
 
 
+                <div class=" d-flex justify-content-center ">
+                    <button type="button" class="createNewReqBtn routeModal" onclick="selectOption('HouseCall')">
+                        HouseCall
+                    </button>
+                    <button type="button" class="createNewReqBtn routeModal mx-3" onclick="selectOption('Consult')">
+                        Consult
+                    </button>
+
+
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-end">
+                <a type="button" class="createNewReqBtn submitBtn" onclick="continueToPage()">
+                    Save
+                </a>
+
+                <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                    Cancle
+                </button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="DownloadEncounterForm" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Encounter Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <small>Encounter form is finalized successfully!</small>
+
+                <div class=" d-flex justify-content-center ">
+                    <button type="button" class="createNewReqBtn routeModal" onclick="DownloadForm()">
+                      Download
+                    </button>
+                    
+
+
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
 
 <script>
+    var selectedOption = "";
+    var requestIdofTypeOFCare = "";
+    $(document).on('click', '.activeEncounter', function () {
+        requestIdofTypeOFCare = this.id;
+
+    });
+    $(document).on('click', '.housecallBtn', function () {
+        requestIdofTypeOFCare = this.id;
+        continueToPage();
+
+    });
+    
+    $(document).on('click', '.downloadEncounter', function () {
+        requestIdofTypeOFCare = this.id;
+
+    });
 
     //////////popup box
+
+    //conclude -> Encounter
+
+
+    //Active -> Encounter
+    function selectOption(option) {
+        selectedOption = option;
+    }
+    function continueToPage() {
+        if (selectedOption == 'HouseCall') {
+            //sessionStorage.setItem("currentId", "me");
+            $.ajax({
+                url: "/Provider/HouseCallOrCounsult",
+                type: "POST",
+                data: { id: 1, requestId: requestIdofTypeOFCare },
+                dataType: "html",
+                success: function (response) {
+                    location.reload();
+
+                },
+                error: function () {
+                    // $("#admindata").html('An error has occurred');
+                    alert("No Projects Found");
+                }
+            });
+        }
+        else if (selectedOption == 'Consult') {
+            $.ajax({
+                url: "/Provider/HouseCallOrCounsult",
+                type: "POST",
+                data: { id: 2, requestId: requestIdofTypeOFCare },
+                dataType: "html",
+                success: function (response) {
+
+                    toastr.success("Patient Consulted and the request is move to conclude state.");
+                    location.reload();
+
+                },
+                error: function () {
+                    // $("#admindata").html('An error has occurred');
+                    alert("No Projects Found");
+                }
+            });
+
+        }
+        else {
+            $.ajax({
+                url: "/Provider/HouseCallOrCounsult",
+                type: "POST",
+                data: { id: 3, requestId: requestIdofTypeOFCare },
+                dataType: "html",
+                success: function (response) {
+                    toastr.success("Patient Consulted and the request is move to conclude state.");
+
+                    location.reload();
+
+                },
+                error: function () {
+                    // $("#admindata").html('An error has occurred');
+                    alert("No Projects Found");
+                }
+            });
+        }
+
+    }
 
     //Accept Case
     function acceptCase(id) {
@@ -268,18 +444,18 @@
             url: url,
             data: { id: id, providerId: providerId },
 
-        }) .done(function (response) {
-                let timerInterval;
-                Swal.fire({
-                    title: "Request Accepted Successfully",
-                    icon: "success",
-                    timer: 1500,
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                }).then(function () {
-                    window.location.href = '@Url.Action("Dashboard", "Provider")';
-                });
+        }).done(function (response) {
+            let timerInterval;
+            Swal.fire({
+                title: "Request Accepted Successfully",
+                icon: "success",
+                timer: 1500,
+                allowOutsideClick: false,
+                showConfirmButton: false,
+            }).then(function () {
+                window.location.href = '@Url.Action("Dashboard", "Provider")';
             });
+        });
     }
 
     //Transfer Case

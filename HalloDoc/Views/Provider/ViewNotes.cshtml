@@ -33,7 +33,7 @@
                             {
 
                                 <small>
-                                    @if (@z.AdminName != null)
+                                    @if (@z.AdminName != null && z.AdminName != " " && z.AdminName != "")
                                     {
                                         <span>
                                             <b>@z.AdminName </b>
@@ -44,7 +44,7 @@
                                                     <b>@z.PhysicianName</b>
                                                 </span>
                                             }
-                                            on @z.CreatedDate:
+                                            on @z.CreatedDate.ToShortDateString():
                                             @if (z.Note != null)
                                             {
                                                 @z.Note
@@ -60,8 +60,20 @@
                                     {
                                         <span>
                                             <b>@z.transferByPhy </b>
-                                            Transferd Back
-                                            on @z.CreatedDate:
+                                            
+                                            @if (z.status == 1)
+                                            {
+                                                <span>
+                                                    Transferd  Back
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    Accepted
+                                                    </span>
+                                            }
+                                            on @z.CreatedDate.ToShortDateString():
                                             @if (z.Note != null)
                                             {
                                                 @z.Note
@@ -72,6 +84,7 @@
                                             }
                                         </span>
                                     }
+
                                 </small>
                                 <hr />
                             }

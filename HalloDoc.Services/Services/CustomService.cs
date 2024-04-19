@@ -425,8 +425,11 @@ namespace HalloDoc.Services.Services
                 Firstname = req.FirstName,
                 Lastname = req.LastName,
                 Phonenumber = req.PhoneNumber,
-                Location = req.State,
+                Location = req.Address,
+                Dateofbirth= new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth), (int)req.IntDate),
                 Email = req.Email,
+                Physicianid=request.PhysicianId,
+                
             };
             await _encounterRepository.AddAsync(encounter);
             return "";
@@ -454,6 +457,41 @@ namespace HalloDoc.Services.Services
             };
             await _requestClosedRepository.AddAsync(requestClosed);
 
+            return "";
+        }
+        #endregion
+
+        #region Send Order
+        public async Task<List<HealthProfessional>> GetBusinessByProfession(int professionId)
+        {
+            return await _healthProfessionalsRepository.GetBusinessByProfession(professionId);
+        }
+        public async Task<HealthProfessional> GetBusinessDetails(object BusinessId)
+        {
+            HealthProfessional business = await _healthProfessionalsRepository.GetByIdAsync(BusinessId);
+            return business;
+        }
+        public async Task<object> SendOrder(int Id)
+        {
+            SendOrderViewModel viewModel = new SendOrderViewModel();
+            viewModel.RequestID = Id;
+            viewModel.Profession = await _healthProfessionalTypeRepository.GetProfession();
+            viewModel.Business = await _healthProfessionalsRepository.GetVendor();
+            return viewModel;
+        }
+        public async Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id, string createdById)
+        {
+            OrderDetail order = new OrderDetail();
+            order.VendorId = viewModel.BusinessID;
+            order.FaxNumber = viewModel.FaxNumber;
+            order.RequestId = id;
+            order.Email = viewModel.Email;
+            order.BusinessContact = viewModel.Contact;
+            order.Prescription = viewModel.OrderDetails;
+            order.NoOfRefill = viewModel.Refill;
+            order.CreatedDate = DateTime.Now;
+            order.CreatedBy = createdById;
+            await _orderDetailsRepository.AddAsync(order);
             return "";
         }
         #endregion

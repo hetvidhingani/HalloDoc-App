@@ -38,7 +38,7 @@ public partial class Encounter
     [StringLength(100)]
     public string? Location { get; set; }
 
-    [Column("dateofbirth")]
+    [Column("dateofbirth", TypeName = "timestamp without time zone")]
     public DateTime? Dateofbirth { get; set; }
 
     [Column("phonenumber")]
@@ -48,7 +48,7 @@ public partial class Encounter
     [Column("medicalreport")]
     public string? Medicalreport { get; set; }
 
-    [Column("date")]
+    [Column("date", TypeName = "timestamp without time zone")]
     public DateTime? Date { get; set; }
 
     [Column("email")]

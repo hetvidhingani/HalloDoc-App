@@ -29,10 +29,7 @@ namespace HalloDoc.Services.IServices
         Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id,int adminid);
         Task<List<Physician>> GetPhysiciansByRegion(int regionId);
         Task<object> DeleteFile(int name,int? reqID);
-        Task<object> SendOrder( int Id);
-        Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
-        Task<HealthProfessional> GetBusinessDetails(object BusinessId);
-        Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id , string adminID);
+      
         Task<object> TransferCase(AssignCaseViewModel viewModel, int id);
         Task<string> TransferRequest(AssignCaseViewModel viewModel, int id,int adminID);
         Task<string> ClearRequest(int? id);

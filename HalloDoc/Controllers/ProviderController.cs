@@ -177,10 +177,10 @@ namespace HalloDoc.Controllers
         {
             ProviderDashboardViewModel model = new ProviderDashboardViewModel();
             model.requestClientId = id;
-            return PartialView("_TransferCaseByProvider",model);
+            return PartialView("_TransferCaseByProvider", model);
         }
         [HttpPost]
-        public async Task<IActionResult> TransferRequest(int id,string note)
+        public async Task<IActionResult> TransferRequest(int id, string note)
         {
             var request = HttpContext.Request;
             int providerId = Int32.Parse(request.Cookies["ProviderID"]);
@@ -279,7 +279,7 @@ namespace HalloDoc.Controllers
                 var message = "Please Find Attachments";
                 var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                _customService.SendEmail(userEmail, link, subject, message, 0, 0,providerId, attachmentFilePaths);
+                _customService.SendEmail(userEmail, link, subject, message, 0, 0, providerId, attachmentFilePaths);
             }
 
             return RedirectToAction("Dashboard");
@@ -310,7 +310,7 @@ namespace HalloDoc.Controllers
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string> attachmentFilePaths = null;
-                _customService.SendEmail(viewModel.Email, link, subject, body, viewModel.requestclientID,0, providerId, attachmentFilePaths);
+                _customService.SendEmail(viewModel.Email, link, subject, body, viewModel.requestclientID, 0, providerId, attachmentFilePaths);
 
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
@@ -320,6 +320,88 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
+        #region Send Order
+
+        [HttpGet]
+        public async Task<IActionResult> SendOrder(int Id)
+        {
+
+            var result = await _customService.SendOrder(Id);
+            return View(result);
+
+        }
+        [HttpGet]
+
+        public async Task<IActionResult> GetBusinessByProfession(int ProfessionID)
+        {
+            var physicians = await _customService.GetBusinessByProfession(ProfessionID);
+
+            return Json(physicians);
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> GetBusinessDetails(int BusinessId)
+        {
+            var result = await _customService.GetBusinessDetails(BusinessId);
+            return Json(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendOrderDetails(SendOrderViewModel viewModel, int Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return Json(new { success = false, errors });
+            }
+            else
+            {
+                var request = HttpContext.Request;
+                string providerID = request.Cookies["AspNetIdProvider"];
+
+
+                await _customService.SendOrderDetails(viewModel, Id, providerID);
+
+            }
+            return Json(new { success = true });
+
+        }
+        #endregion
+
+        #region Type of Care
+        public IActionResult HouseCallOrCounsult(int id, int requestId)
+        {
+            _provider.HouseCallOrCounsult(id, requestId);
+            return Json(new { success = true });
+        }
+        #endregion
+
+        #region conclude care
+
+        #endregion
+        #region Encounter Form
+        public async Task<IActionResult> EncounterForm(int RequestId)
+        {
+            var result = await _provider.EncounterForm(RequestId);
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model)
+        {
+
+            await _provider.EncounterFormSaveChanges(model);
+            TempData["success"] = "Data saved successfully.";
+            return Json(new { success = true });
+
+        }
+        public IActionResult FinalizeReport(int id)
+        {
+            _provider.FinalizeReport(id);
+            TempData["success"] = "Medical Report is Finalized.";
+            return Json(new { success = true });
+        }
+        #endregion
 
     }
 }

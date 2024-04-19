@@ -2,6 +2,8 @@
 using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections;
@@ -131,7 +133,9 @@ namespace HalloDoc.Services.Services
                     RequstClientId = rec.RequestClientId,
                     requestID = rec.RequestId,
                     StateofTable = rec.State,
+                    callType = r.CallType,
                     stateTab = state,
+                    isfinalize = r.CompletedByPhysician == null ? false : true
 
                 }).ToList();
 
@@ -230,7 +234,7 @@ namespace HalloDoc.Services.Services
             if (requestNote != null)
             {
                 viewmodel.AdminNotes = requestNote.AdminNotes;
-                viewmodel.PhysicianNotes= requestNote.PhysicianNotes;
+                viewmodel.PhysicianNotes = requestNote.PhysicianNotes;
             }
             viewmodel.TransferNotes = (from r in _requestRepository.GetAll()
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
@@ -245,11 +249,11 @@ namespace HalloDoc.Services.Services
                                            LastName = r.LastName,
                                            CreatedDate = rsl.CreatedDate,
                                            Note = rsl.Notes,
-                                           AdminName=rsl.Admin.FirstName + rsl.Admin.LastName,
-                                           transferByPhy = rsl.Physician.FirstName + rsl.Physician.LastName,
+                                           status = rsl.Status,
+                                           AdminName = rsl.Admin.FirstName + rsl.Admin.LastName,
+                                           transferByPhy = rsl.Physician.FirstName + " " + rsl.Physician.LastName,
                                            PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
                                        }).ToList();
-
             viewmodel.CancelationNotes = (from r in _requestRepository.GetAll()
                                           join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
 
@@ -309,16 +313,16 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Transfer Case
-        public async Task TransferCase(int id,int providerId,string note)
+        public async Task TransferCase(int id, int providerId, string note)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
-            RequestStatusLog findAdmin = _requestStatusLogRepository.GetAll().Where(x=>x.RequestId==req.RequestId && x.AdminId!=null).OrderByDescending(x=>x.CreatedDate).FirstOrDefault();
+            RequestStatusLog findAdmin = _requestStatusLogRepository.GetAll().Where(x => x.RequestId == req.RequestId && x.AdminId != null).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
             RequestStatusLog requesStatusLog = new RequestStatusLog
             {
                 Status = 1,
                 RequestId = req.RequestId,
-                Notes =note,
-                PhysicianId= providerId,
+                Notes = note,
+                PhysicianId = providerId,
                 CreatedDate = DateTime.Now
             };
             await _requestStatusLogRepository.AddAsync(requesStatusLog);
@@ -385,6 +389,136 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
-        
+        #region Type of Care
+        public void HouseCallOrCounsult(int id, int requestId)
+        {
+            Request request = _requestRepository.GetById(requestId);
+            request.ModifiedDate = DateTime.Now;
+            if (id == 2)
+            {
+                request.Status = 6;
+                request.CallType = 2;
+                _requestRepository.UpdateAsync(request);
+            }
+            else if (id == 1)
+            {
+                request.CallType = 1;
+                request.Status = 5;
+
+                _requestRepository.UpdateAsync(request);
+            }
+            else if (id == 3)
+            {
+                request.Status = 6;
+                _requestRepository.UpdateAsync(request);
+            }
+        }
+        #endregion
+
+        #region conclude care
+
+        #endregion
+
+        #region Encounter Form
+        public async Task<object> EncounterForm(int RequestId)
+        {
+            Request req = await _requestRepository.GetByIdAsync(RequestId);
+            RequestClient client = await _requestclientRepository.CheckUserByClientID(RequestId);
+            Encounter encounter = await _encounterRepository.checkBYRequestID(req.RequestId);
+            DateTime dob = new DateTime((int)client.IntYear, Convert.ToInt32(client.StrMonth), (int)client.IntDate);
+
+
+            EncounterViewModel model = new EncounterViewModel();
+
+            model.RequestID = req.RequestId;
+            model.FirstName = encounter.Firstname;
+            model.LastName = encounter.Lastname;
+            model.Location = encounter.Location;
+            model.DateOfBirth = encounter.Dateofbirth;
+            model.PhoneNumber = encounter.Phonenumber;
+            model.MedicalReport = encounter.Medicalreport;
+            model.Date = encounter.Date;
+            model.Email = encounter.Email;
+            model.HistoryOfPresentIllness = encounter.Historyofpresentillness;
+            model.MedicalHistory = encounter.Medicalhistory;
+            model.Medications = encounter.Medications;
+            model.Temp = encounter.Temp;
+            model.BloodPressureSystolic = encounter.Bloodpressuresystolic;
+            model.BloodPressureDiastolic = encounter.Bloodpressurediastolic;
+            model.Heent = encounter.Heent;
+            model.Chest = encounter.Chest;
+            model.Hr = encounter.Hr;
+            model.Allergies = encounter.Allergies;
+            model.Cv = encounter.Cv;
+            model.ABD = encounter.Abd;
+            model.Extr = encounter.Extr;
+            model.Skin = encounter.Skin;
+            model.Neuro = encounter.Neuro;
+            model.Diagnosis = encounter.Diagnosis;
+            model.MedicationsDispensed = encounter.Medicationsdispensed;
+            model.Followup = encounter.Followup;
+            model.Other = encounter.Other;
+            model.TreatmentPlan = encounter.Treatmentplan;
+            model.Procedures = encounter.Procedures;
+            model.Rr = encounter.Rr;
+            model.Pain = encounter.Pain;
+            model.IsChanged = encounter.Ischanged;
+            model.IsFinalized = encounter.Isfinalized;
+
+            return model;
+        }
+
+        public async Task<object> EncounterFormSaveChanges(EncounterViewModel model)
+        {
+            Encounter encounter = await _encounterRepository.checkBYRequestID(model.RequestID);
+            encounter.Firstname = model.FirstName;
+            encounter.Lastname = model.LastName;
+            encounter.Location = model.Location;
+            encounter.Dateofbirth = model.DateOfBirth;
+            encounter.Phonenumber = model.PhoneNumber;
+            encounter.Medicalreport = model.MedicalReport;
+            encounter.Date = model.Date;
+            encounter.Email = model.Email;
+            encounter.Historyofpresentillness = model.HistoryOfPresentIllness;
+            encounter.Medicalhistory = model.MedicalHistory;
+            encounter.Medications = model.Medications;
+            encounter.Temp = model.Temp;
+            encounter.Bloodpressuresystolic = model.BloodPressureSystolic;
+            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic;
+            encounter.Heent = model.Heent;
+            encounter.Chest = model.Chest;
+            encounter.Hr = model.Hr;
+            encounter.Allergies = model.Allergies;
+            encounter.Cv = model.Cv;
+            encounter.Abd = model.ABD;
+            encounter.Extr = model.Extr;
+            encounter.Skin = model.Skin;
+            encounter.Neuro = model.Neuro;
+            encounter.Diagnosis = model.Diagnosis;
+            encounter.Medicationsdispensed = model.MedicationsDispensed;
+            encounter.Followup = model.Followup;
+            encounter.Other = model.Other;
+            encounter.Treatmentplan = model.TreatmentPlan;
+            encounter.Procedures = model.Procedures;
+            encounter.Rr = model.Rr;
+            encounter.Pain = model.Pain;
+            encounter.Ischanged = model.IsChanged;
+            encounter.Isfinalized = model.IsFinalized;
+            await _encounterRepository.UpdateAsync(encounter);
+
+            return encounter;
+        }
+        public void FinalizeReport(int RequestID)
+        {
+            var enc = _encounterRepository.GetAll().Where(x=>x.Requestid == RequestID).FirstOrDefault();
+            enc.Isfinalized= true;
+            _encounterRepository.UpdateAsync(enc);
+            Request req = _requestRepository.GetById(RequestID);
+
+            req.CompletedByPhysician = new BitArray(new bool[] { true });
+            _requestRepository.UpdateAsync(req);
+        }
+
+        #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter First Name Here")]
         public string LastName { get; set; } = string.Empty;
         public string? Location { get; set; } = string.Empty;
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Enter First Name Here")]
         public string PhoneNumber { get; set; } = string.Empty;
@@ -27,7 +27,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? HistoryOfPresentIllness { get; set; } = string.Empty;
         public string? MedicalHistory { get; set; } = string.Empty;
         public string? Medications { get; set; } = string.Empty;
-        public decimal? Temp { get; set; }
+        public int? Temp { get; set; }
         public int? BloodPressureSystolic { get; set; }
         public int? BloodPressureDiastolic { get; set; }
         public string? Heent { get; set; } = string.Empty;
