@@ -48,5 +48,19 @@ namespace HalloDoc.Services.IServices
         Task<object> resetPasswordProvider(int id, string password);
 
         Task<object> MyProfile(int physicianID);
+
+        SchedulingModel Scheduling(int physician);
+        void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays, string adminId);
+
+        CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId);
+
+        void EditShiftData(CreateShiftViewModel viewModel);
+
+        object returnShift(int id);
+
+        void deleteShift(int id);
+
+        Encounter GetEncounterForm(int id);
+        byte[] Downloadpdf(Encounter rowdata);
     }
 }

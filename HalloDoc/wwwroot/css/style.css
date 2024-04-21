@@ -2,8 +2,12 @@
     white-space: normal !important;
     /*overflow:auto !important;*/
 }
-
-
+.fc-daygrid-day-top {
+    background-color: #ffacf7 !important;
+}
+.fc-timeline-slot-cushion{
+    content:'0/24' !important;
+}
 /*#region  - scheduling*/
 .fc-toolbar-title {
     font-size: 16px !important;

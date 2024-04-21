@@ -434,8 +434,76 @@ namespace HalloDoc.Controllers
         public IActionResult RequestAdminToEditProfile(ProviderViewModel model)
         {
             return Json("success");
-
         }
         #endregion
+
+        #region Scheduling
+        public IActionResult Scheduling()
+        {
+            return View();
+        }
+        public IActionResult getCal()
+        {
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            var result = _provider.Scheduling(id);
+            return Json(result);
+        }
+        #endregion
+
+        #region Create Shift
+        public IActionResult CreateShift()
+        {
+            CreateShiftViewModel model = new CreateShiftViewModel();
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            model.provider = id;
+            return PartialView("_createShift",model);
+        }
+        [HttpPost]
+        public IActionResult AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays)
+        {
+            var request = HttpContext.Request;
+            string ProviderId = request.Cookies["AspNetIdProvider"];
+            _provider.AddShift(model, WeekDays, ProviderId);
+            return RedirectToAction("Scheduling");
+        }
+        #endregion
+
+        #region EditShift
+        [HttpGet]
+        public IActionResult GetShiftDetailsById(int shiftDetailsId)
+        {
+            return Json(new { data = _provider.GetShiftDetailsById(shiftDetailsId) });
+        }
+        [HttpPost]
+        public IActionResult EditShiftData(CreateShiftViewModel shiftData)
+        {
+            _provider.EditShiftData(shiftData);
+            return Json("success");
+        }
+        public IActionResult returnShift(int id)
+        {
+            _provider.returnShift(id);
+
+            return Json("success");
+
+        }
+
+        public IActionResult deleteShift(int id)
+        {
+            _provider.deleteShift(id);
+
+            return Json("success");
+        }
+        #endregion
+        public IActionResult DownloadEncounterForm(int id)
+        {
+            var form = _provider.GetEncounterForm(id);
+
+            var bytes = _provider.Downloadpdf(form);
+
+            return File(bytes, "application/pdf", form.Requestid + "_" + "Encounter_Data.pdf");
+        }
     }
 }

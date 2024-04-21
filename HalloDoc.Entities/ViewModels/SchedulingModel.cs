@@ -56,6 +56,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public List<Region>? regions { get; set; }
         public int ShiftDetailId { get; set; }
-        public int repeatEnd { get; set; } = 0;
+        public int? repeatEnd { get; set; } = 0;
+        public int provider {  get; set; }
     }
 }

@@ -4,6 +4,8 @@
     <h5 class="modal-title">Create Shift</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
+@if (Model.provider == 0){
+
 <form id="createShiftForm" asp-controller="Admin" asp-action="AddShift" style="margin-top:-25px;margin-bottom:-25px;">
     <div class="modal-body m-0">
         <div class=" d-flex justify-content-center flex-column  ">
@@ -38,12 +40,12 @@
                     <span asp-validation-for="startTime" class="text-danger time"></span>
 
                 </div>
-                <div class="col-6 form-floating form-group">
-                    <input asp-for="endTime" type="time" onblur="checkTime()" class="form-control time" placeholder=" ">
-                    <label for=" ">End Time</label>
-                    <span asp-validation-for="endTime" class="text-danger endtimeShift"></span>
+                    <div class="col-6 form-floating form-group">
+                        <input asp-for="endTime" type="time" id="endTime" class="form-control endshift time" placeholder=" ">
+                        <label for=" ">End Time</label>
+                        <span asp-validation-for="endTime" class="text-danger endtimeShift"></span>
 
-                </div>
+                    </div>
             </div>
             <div class="d-flex mt-2">
                 <div class="form-check form-switch">
@@ -104,29 +106,151 @@
 
     </div>
 </form>
+}
+else
+{
+    <form id="createShiftForm" asp-controller="Provider" asp-action="AddShift" style="margin-top:-25px;margin-bottom:-25px;">
+        <div class="modal-body m-0">
+            <div class=" d-flex justify-content-center flex-column  ">
+                <input type="hidden" asp-for="provider" />
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                    <div class="form-floating form-group">
+                        <input asp-for="ShiftDate" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" ">
+                        <label for=" ">Shift Date</label>
+                        <span asp-validation-for="ShiftDate" class="text-danger"></span>
+
+                    </div>
+
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-1 d-flex justify-content-between">
+                    <div class="col-6 form-floating form-group">
+                        <input asp-for="startTime" type="time" id="startTime" class="form-control time" placeholder=" ">
+                        <label for=" ">Start Time</label>
+                        <span asp-validation-for="startTime" class="text-danger time"></span>
+
+                    </div>
+                    <div class="col-6 form-floating form-group">
+                        <input asp-for="endTime" type="time" id="endTime" class="form-control endshift time" placeholder=" ">
+                        <label for=" ">End Time</label>
+                        <span asp-validation-for="endTime" class="text-danger endtimeShift"></span>
+
+                    </div>
+                </div>
+                <div class="d-flex mt-2">
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">Repeat</label>
+                        <input class="form-check-input" type="checkbox" role="switch" asp-for="toggle" id="toggleBtn">
+                    </div>
+                </div>
+                <div id="toggleDiv" style="display:none;">
+                    <div class="text-muted mt-1">
+                        Repeat Days
+                    </div>
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="0">
+                    <label class=" my-2 mx-1" for="checkboxSun">Every Sunday</label>
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="1">
+                    <label class=" my-2 mx-1" for="checkboxMon">Every Monday</label>
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="2">
+                    <label class=" my-2 mx-1" for="checkboxTue">Every Tuesday</label>
+                    <br />
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="3">
+                    <label class=" my-2 mx-1" for="checkboxWed">Every Wednesday</label>
+
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="4">
+                    <label class=" my-2 mx-1" for="checkboxThu">Every Thursday</label>
+                    <br />
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="5">
+
+                    <label class=" my-2 mx-1" for="checkboxFri">Every Friday</label>
+
+                    <input class=" my-2 mx-1" type="checkbox" name="WeekDays" value="6">
+                    <label class=" my-2 mx-1" for="checkboxSat">Every Saturday</label>
+                    <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+                        <div class="form-floating form-group">
+                            <select class="form-select mt-1 h-50" asp-for="repeatEnd" id="repeatEnd">
+                                <option value="0" selected>0-Time</option>
+                                <option value="1">1-Time</option>
+                                <option value="2">2-Time</option>
+                                <option value="3">3-Time</option>
+
+                            </select>
+                            <label>Repeat End</label>
+                            <span asp-validation-for="repeatEnd" class="text-danger endtimeShift"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-end">
+
+            <button class="createNewReqBtn submitBtn" type="submit">
+                Save
+            </button>
+
+            <button type="button" class="createNewReqBtn" data-bs-dismiss="modal">
+                Cancle
+            </button>
+
+
+        </div>
+    </form>
+}
+
 <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var done = "";
-
+    // Function to check if end time is after start time
     function checkTime() {
-        var startTime = $('#starttimeShift').val();
-        var endTime = $('#endtimeShift').val();
-        if (endTime <= startTime) {
-            $('.endtimeShift').text("Please select a valid time!");
-            $('#endtimeShift').val('');
-            done = "no";
-        }
-        else {
-            done = "";
+        var startTime = document.getElementById("startTime").value;
+        var endTime = document.getElementById("endTime").value;
 
+        // Splitting hours and minutes
+        var startParts = startTime.split(':');
+        var endParts = endTime.split(':');
+
+        // Parsing hours and minutes as integers
+        var startHours = parseInt(startParts[0]);
+        var startMinutes = parseInt(startParts[1]);
+        var endHours = parseInt(endParts[0]);
+        var endMinutes = parseInt(endParts[1]);
+
+        // Comparing hours
+        if (endHours > startHours || (endHours === startHours && endMinutes > startMinutes)) {
+            // End time is after start time
+            done = "";
+            return true;
+        } else {
+            // End time is not after start time
+            done = "no";
+            return false;
         }
-    };
+    }
+
+    // Event listener for the blur event of the end time input field
+    document.getElementById("endTime").addEventListener("blur", function () {
+        console.log("in");
+        if (!checkTime()) {
+            // If end time is not after start time, display error message
+            document.querySelector('.endtimeShift').innerText = "Please select a valid time!";
+            document.getElementById("endtimeShift").value = ''; // Clear end time field
+            done = "no";
+        } else {
+            // Clear error message
+            document.querySelector('.endtimeShift').innerText = "";
+            done = "";
+        }
+    });
+
+
+
+// Bind the checkTime function to the blur event of the end time input field
+
+
     //Cascading DropDown
     $(document).ready(function () {
         $('.time').attr('value', "00");
@@ -170,13 +294,14 @@
         var url = form.attr('action');
         var data = form.serialize();
         if (done === "") {
+
             $.ajax({
                 type: "POST",
                 url: url,
                 data: data
             })
                 .done(function (response) {
-                    if (response.success) {
+                   
                         let timerInterval;
                         Swal.fire({
                             title: "Shift Created Successfully",
@@ -185,13 +310,11 @@
                             allowOutsideClick: false,
                             showConfirmButton: false,
                         }).then(function () {
-                            window.location.href = '@Url.Action("Scheduling", "Admin")';
+                            location.reload();
                         });
-                    }
+                  
                 });
-        }
-        else {
-            return;
+       
         }
     });
 

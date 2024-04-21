@@ -2,6 +2,9 @@
 using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using HalloDoc.Services.IServices;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using LinqKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +12,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
@@ -416,7 +420,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region conclude care
-        public void ConcludeRequest(int id, string? note,string providerID)
+        public void ConcludeRequest(int id, string? note, string providerID)
         {
             Request request = _requestRepository.GetById(id);
             request.ModifiedDate = DateTime.Now;
@@ -437,7 +441,7 @@ namespace HalloDoc.Services.Services
                 requestNote1.PhysicianNotes = note;
                 requestNote1.CreatedDate = DateTime.Now;
                 requestNote1.CreatedBy = providerID;
-                 _requestNotesRepository.AddAsync(requestNote1);
+                _requestNotesRepository.AddAsync(requestNote1);
             }
 
             RequestStatusLog statusLog = new()
@@ -615,5 +619,188 @@ namespace HalloDoc.Services.Services
             return model;
         }
         #endregion
+
+        #region Schaduling
+        public SchedulingModel Scheduling(int physician)
+        {
+            SchedulingModel schedulingModel = new SchedulingModel();
+
+            List<Resources> resources = new List<Resources>();
+            List<Events> events = new List<Events>();
+
+            Expression<Func<Physician, bool>> tableData = PredicateBuilder.New<Physician>();
+            Expression<Func<ShiftDetail, bool>> ShiftDetailstableData = PredicateBuilder.New<ShiftDetail>();
+            tableData = x => x.IsDeleted == null && x.PhysicianId == physician;
+            ShiftDetailstableData = x => x.IsDeleted == null && x.Shift.PhysicianId == physician;
+
+            var temp = _physicianRepository.GetAllData(x => new Resources
+            {
+                id = x.PhysicianId.ToString(),
+                title = x.FirstName + " " + x.LastName,
+                avtar = "null"
+            }, tableData);
+            foreach (Resources resource in temp)
+            {
+                resources.Add(resource);
+            }
+            temp = _shiftDetailsRepository.GetAllData(x => new Events
+            {
+                id = x.ShiftDetailId.ToString(),
+                resourceId = x.Shift.PhysicianId.ToString(),
+                start = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.StartTime.Hour).AddMinutes(x.StartTime.Minute).ToUniversalTime().ToString("O"),
+                end = Convert.ToDateTime(x.ShiftDate.Year + "/" + x.ShiftDate.Month + "/" + x.ShiftDate.Day).AddHours(x.EndTime.Hour).AddMinutes(x.EndTime.Minute).ToUniversalTime().ToString("O"),
+                title = x.StartTime.ToString() + "-" + x.EndTime + "\n" + x.Shift.Physician.FirstName,
+                color = x.Status == 1 ? "lightgreen" : "pink",
+
+
+
+            }, ShiftDetailstableData);
+            foreach (Events e in temp)
+            {
+                events.Add(e);
+            }
+            schedulingModel.events = events;
+            schedulingModel.resources = resources;
+            return schedulingModel;
+        }
+        #endregion
+        #region Create Shift
+        public void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays, string providerId)
+        {
+            Physician phy = _physicianRepository.GetById(model.provider);
+
+            Shift shift = new()
+            {
+                PhysicianId = model.provider,
+                StartDate = model.ShiftDate,
+                IsRepeat = new BitArray(1, model.toggle),
+                WeekDays = WeekDays.ToString(),
+                RepeatUpto = model.repeatEnd,
+                CreatedBy = providerId.ToString(),
+            };
+            _shiftRepository.AddAsync(shift);
+
+            ShiftDetail shiftDetail = new()
+            {
+                ShiftId = shift.ShiftId,
+                ShiftDate = shift.StartDate,
+                StartTime = model.startTime,
+                EndTime = model.endTime,
+                RegionId = phy.RegionId,
+            };
+            _shiftDetailsRepository.AddAsync(shiftDetail);
+
+
+            for (int i = 0; i < model.repeatEnd; i++)
+            {
+                DateOnly nextDay = model.ShiftDate.AddDays(7 * i);
+                foreach (DayOfWeek day in WeekDays)
+                {
+                    ShiftDetail nextShift = new ShiftDetail
+                    {
+                        ShiftId = shift.ShiftId,
+                        ShiftDate = day - nextDay.DayOfWeek > 0 ? nextDay.AddDays(day - nextDay.DayOfWeek) : nextDay.AddDays(7 + day - nextDay.DayOfWeek),
+                        StartTime = model.startTime,
+                        EndTime = model.endTime,
+                        RegionId = phy.RegionId,
+                    };
+                    _shiftDetailsRepository.AddAsync(nextShift);
+                }
+            }
+        }
+        #endregion
+
+        #region Edit Shift
+
+        public CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId)
+        {
+            Expression<Func<ShiftDetail, bool>> tableData = PredicateBuilder.New<ShiftDetail>();
+            ShiftDetail shiftDetail = _shiftDetailsRepository.IncludeEntity(x => x.ShiftDetailId == shiftDetailsId, x => x.Shift);
+
+            CreateShiftViewModel model = new CreateShiftViewModel();
+            model.ShiftDetailId = shiftDetailsId;
+            model.physicianID = shiftDetail.Shift.PhysicianId;
+            model.regionId = (int)shiftDetail.RegionId;
+            model.ShiftDate = shiftDetail.ShiftDate;
+            model.startTime = shiftDetail.StartTime;
+            model.endTime = shiftDetail.EndTime;
+
+            return model;
+        }
+        public void EditShiftData(CreateShiftViewModel viewModel)
+        {
+            ShiftDetail shiftDetail = _shiftDetailsRepository.GetById(viewModel.ShiftDetailId);
+            shiftDetail.StartTime = viewModel.startTime;
+            shiftDetail.EndTime = viewModel.endTime;
+            shiftDetail.ShiftDate = viewModel.ShiftDate;
+            _shiftDetailsRepository.UpdateAsync(shiftDetail);
+
+
+        }
+        public object returnShift(int id)
+        {
+            ShiftDetail data = _shiftDetailsRepository.GetById(id);
+            if (data.Status == 0)
+            {
+                data.Status = 1;
+            }
+            else
+            {
+                data.Status = 0;
+            }
+            _shiftDetailsRepository.UpdateAsync(data);
+            return data;
+        }
+        public void deleteShift(int id)
+        {
+            ShiftDetail data = _shiftDetailsRepository.GetById(id);
+            data.IsDeleted = new BitArray(1);
+            _shiftDetailsRepository.UpdateAsync(data);
+        }
+        #endregion
+
+        public Encounter GetEncounterForm(int id)
+        {
+            Encounter request = _encounterRepository.GetAll().Where(x=>x.Requestid==id).FirstOrDefault();
+
+            return request;
+        }
+
+        public byte[] Downloadpdf(Encounter rowdata)
+        {
+            Document document = new Document();
+            MemoryStream ms = new MemoryStream();
+            PdfWriter.GetInstance(document, ms);
+            document.Open();
+
+            PdfPTable dataTable = new PdfPTable(2);
+            dataTable.WidthPercentage = 100;
+
+            PdfPCell headerCell = new PdfPCell(new Phrase("Encounter Data : " + rowdata.Firstname + " , " + rowdata.Lastname));
+            headerCell.Colspan = 2;
+            headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            headerCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+            dataTable.AddCell(headerCell);
+
+            foreach (var property in rowdata.GetType().GetProperties())
+            {
+                PdfPCell nameCell = new PdfPCell(new Phrase(property.Name));
+                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                dataTable.AddCell(nameCell);
+
+                PdfPCell valueCell = new PdfPCell(new Phrase(property.GetValue(rowdata)?.ToString()));
+                dataTable.AddCell(valueCell);
+            }
+
+            document.Add(dataTable);
+            document.Close();
+
+            // Convert MemoryStream to byte array
+            byte[] bytes = ms.ToArray();
+            ms.Close();
+
+            return bytes;
+        }
+
     }
 }

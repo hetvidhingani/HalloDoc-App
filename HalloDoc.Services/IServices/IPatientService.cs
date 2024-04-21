@@ -30,9 +30,8 @@ namespace HalloDoc.Services.IServices
         Task<string> CreateAccountRequest(CreateAccountViewModel createAccountViewModel);
         Task<object> Profile(int userId);
         Task<User> EditUser(UserMyProfileViewModel patientRequestViewModel);
-   
 
-
+       
 
     }
 }

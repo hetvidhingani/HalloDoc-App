@@ -336,9 +336,9 @@
                 <small>Encounter form is finalized successfully!</small>
 
                 <div class=" d-flex justify-content-center ">
-                    <button type="button" class="createNewReqBtn routeModal" onclick="DownloadForm()">
+                    <a type="button" class="createNewReqBtn dwnload btn btn-info mt-3" >
                       Download
-                    </button>
+                    </a>
                     
 
 
@@ -365,6 +365,51 @@
     $(document).on('click', '.downloadEncounter', function () {
         requestIdofTypeOFCare = this.id;
 
+    });
+    $('.dwnload').click(function () {
+        var id = requestIdofTypeOFCare;
+        $.ajax({
+            type: "POST",
+            data: { id },
+            url: "@(Url.Action("DownloadEncounterForm", "Provider"))",
+            xhrFields: {
+                responseType: 'blob' // Set the response type to blob
+            },
+            success: function (response, status, xhr) {
+                var filename = ''; // Initialize filename
+                var disposition = xhr.getResponseHeader('Content-Disposition');
+                if (disposition && disposition.indexOf('attachment') !== -1) {
+                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                    var matches = filenameRegex.exec(disposition);
+                    if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+                }
+                var blob = new Blob([response], { type: 'application/pdf' });
+
+                // Create a URL for the blob
+                var url = window.URL.createObjectURL(blob);
+
+                // Create a hidden anchor element
+                var a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename || 'Encounter_Data.pdf'; // Set the filename for the downloaded file
+
+                // Append the anchor element to the body
+                document.body.appendChild(a);
+
+                // Trigger a click event on the anchor element to initiate the download
+                a.click();
+
+                // Remove the anchor element from the body
+                document.body.removeChild(a);
+
+                // Revoke the URL to release the blob's resources
+                window.URL.revokeObjectURL(url);
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
     });
 
     //////////popup box

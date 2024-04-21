@@ -14,6 +14,8 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Enter First Name Here")]
         public string LastName { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Enter First Name Here")]
+
         public string? Location { get; set; } = string.Empty;
         public DateTime? DateOfBirth { get; set; }
 
@@ -24,6 +26,8 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Enter First Name Here")]
         public string Email { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Enter First Name Here")]
+
         public string? HistoryOfPresentIllness { get; set; } = string.Empty;
         public string? MedicalHistory { get; set; } = string.Empty;
         public string? Medications { get; set; } = string.Empty;
@@ -44,6 +48,8 @@ namespace HalloDoc.Entities.ViewModels
         public string? Neuro { get; set; } = string.Empty;
         public string? Diagnosis { get; set; } = string.Empty;
         public string? MedicationsDispensed { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Enter First Name Here")]
+
         public string? Followup { get; set; } = string.Empty;
         public string? Other { get; set; } = string.Empty;
         public string? TreatmentPlan { get; set; } = string.Empty;
