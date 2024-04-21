@@ -163,7 +163,7 @@
                 <div class="row formrow">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Address1" type="text" class="form-control edit2" placeholder=" ">
+                            <input asp-for="Address1" type="text" class="form-control edit2" id="Address1" placeholder=" ">
                             <label for=" ">Address1</label>
                             <span asp-validation-for="Address1" class="text-danger"></span>
 
@@ -171,7 +171,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Address2" type="text" class="form-control edit2" placeholder=" ">
+                            <input asp-for="Address2" type="text" class="form-control edit2" id="Address2" placeholder=" ">
                             <label for=" ">Address2 </label>
                             <span asp-validation-for="Address2" class="text-danger"></span>
 
@@ -179,7 +179,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="City" type="text" class="form-control edit2" placeholder=" ">
+                            <input asp-for="City" type="text" class="form-control edit2" id="city" placeholder=" ">
                             <label for=" ">City </label>
                             <span asp-validation-for="City" class="text-danger"></span>
 
@@ -201,7 +201,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Zip" type="text" class="form-control edit2" placeholder=" ">
+                            <input asp-for="Zip" type="text" class="form-control edit2" id="zip" placeholder=" ">
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="Zip" class="text-danger"></span>
 
@@ -214,6 +214,8 @@
                         </div>
                         <span asp-validation-for="BillingPhoneNumber" class="text-danger"></span>
                     </div>
+                    <input type="hidden" id="latitude"  asp-for="latitude"/>
+                    <input type="hidden" id="longitude" asp-for="longitude"/>
 
 
                 </div>
@@ -342,11 +344,16 @@
 
             </form>
         </div>
-
     </div>
 </div>
 
+
 <script>
+
+   
+
+
+
 
     $('input[type = "file"]').change(function () {
         var files = this.files;

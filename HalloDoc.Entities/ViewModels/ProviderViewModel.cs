@@ -107,5 +107,8 @@ namespace HalloDoc.Entities.ViewModels
         public List<PhysicianRegion> physicianRegion { get; set; }
         public List<int>? physicianRegionids { get; set; }
 
+        public string longitude {  get; set; }
+        public string latitude { get; set; }
+
     }
 }
