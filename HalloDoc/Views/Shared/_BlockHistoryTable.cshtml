@@ -54,3 +54,87 @@
     <partial name="_Paging.cshtml" />
 
 </div>
+
+@* mobile view *@
+<div class="adminDashMobile viewMobile mb-5">
+    @foreach (var u in Model.pagingData)
+    {
+        <input type="hidden" asp-for="@u.BlockId">
+
+
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block align-items-center">
+
+                    <div>
+
+                        @u.PatientName
+                    </div>
+                </div>
+
+            </button>
+
+            <div class="content" style="display:none">
+                <hr />
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Email:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.Email</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Phone Number:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.PhoneNumber</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Phone Number:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.PhoneNumber</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Created date:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.CreatedDate</div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center mt-2">
+                    <a class="btn btn-sm btn-outline-info" asp-action="UnblockRequest" asp-controller="Admin" asp-route-id="@u.BlockId"> Unblock</a>
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+        });
+    }
+</script>
+

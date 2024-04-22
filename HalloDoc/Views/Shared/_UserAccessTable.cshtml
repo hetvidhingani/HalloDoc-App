@@ -1,6 +1,6 @@
 ﻿@model UserAccessViewModel
 
-<div class="table-responsive">
+<div class="table-responsive desktopviewTable">
     <table class="table ">
         <thead class="table-secondary">
             <tr>
@@ -52,3 +52,97 @@
     <partial name="_Paging.cshtml" />
 
 </div>
+
+
+<div class="adminDashMobile viewMobile mb-5">
+    @foreach (var u in Model.PagingData)
+    {
+        <input type="hidden" asp-for="@u.PhysicianID">
+
+
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block align-items-center">
+                    <div class="d-flex mx-1 align-items-center">
+                       
+                        @u.AccountType
+                    </div>
+                    <div>
+
+                         @u.AccountPOC
+                    </div>
+                </div>
+
+            </button>
+
+            <div class="content" style="display:none">
+                <hr />
+
+
+
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Phone:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.Phone</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Status:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.Status</div>
+                </div>
+                <div class="d-flex mb-2">
+                    @if (u.PhysicianID != 0)
+                    {
+
+                        <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-info mx-1" asp-action="EditAdminAccount" asp-controller="Admin" asp-route-id="@u.AdminID">Edit</a>
+
+                    }
+                    </div>
+               
+
+                <div class="d-flex justify-content-end align-items-center mt-2">
+
+                    <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianID">Contact</button>
+                    <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
+
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
+
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+        });
+    }
+</script>
+

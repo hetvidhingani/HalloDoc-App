@@ -480,7 +480,9 @@
         </header>
     }
 
-
+    <div id="loader-wrapper">
+        <div id="loader"></div>
+    </div>
 
     @RenderBody()
 
@@ -493,6 +495,15 @@
     </footer>
 
     <script>
+        // Function to show loader
+        function showLoader() {
+            document.getElementById('loader-wrapper').style.display = 'block';
+        }
+
+        // Function to hide loader
+        function hideLoader() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+        }
         // $(document).ready(function () {
         //     // Check if there's a saved state in local storage
         //     var activeLink = localStorage.getItem("activeLink");

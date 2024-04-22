@@ -1,5 +1,5 @@
 ﻿@model HalloDoc.Entities.ViewModels.SearchRecordViewModel
-<div class="table-responsive">
+<div class="table-responsive desktopviewTable">
     <table class="table ">
         <thead class="table-secondary">
             <tr>
@@ -21,11 +21,8 @@
             </tr>
         </thead>
         <tbody class="table-group-divider">
-
             @foreach (var data in Model.PagingData)
-
             {
-
                 <tr>
                     <input type="hidden" asp-for="@data.RequestClientId">
                     <td>
@@ -73,7 +70,7 @@
                     <td>
                         @if (@data.PhysicianNote != null)
                         {
-                            
+
                             @data.PhysicianNote
                         }
                         else
@@ -114,4 +111,157 @@
     <partial name="_Paging.cshtml" />
 
 </div>
+@* mobile view *@
+<div class="adminDashMobile viewMobile mb-5">
+    @foreach (var u in Model.PagingData)
+    {
+        <input type="hidden" asp-for="@u.RequestClientId">
 
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block align-items-center">
+
+                    <div>
+                        <p>@u.PatientName </p>
+                    </div>
+                </div>
+
+            </button>
+
+            <div class="content" style="display:none">
+                <hr />
+
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        @if (@u.DateOfService != null)
+                        {
+                            @u.DateOfService.ToShortDateString()
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </div>
+                    <div style="margin-left:8px;font-weight:500"> 
+                        @u.CloseCaseDate.ToShortDateString() 
+                        </div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Email:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.email</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Phone Number:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.phone</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        address:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.address</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        zip:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.zip</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Request Status:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @u.requestStatus</div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Physician Note:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">
+                        @if (@u.PhysicianNote != null)
+                        {
+
+                            @u.PhysicianNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        CancelByProvider Note:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">
+                        @if (@u.CancelByProviderNote != null)
+                        {
+                            @u.CancelByProviderNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Admin Note:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">
+                        @if (@u.AdminNote != null)
+                        {
+
+                            @u.AdminNote
+                        }
+                        else
+                        {
+                            <p>-</p>
+                        }
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center mt-2">
+                    <a class="btn btn-outline-info btn-sm" asp-action="DeleteRequest" asp-controller="Admin" asp-route-id="@u.RequestClientId">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var maintb = document.getElementsByClassName("mobileviewdashboard");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content && content.tagName.toLowerCase() === "div") {
+                if (content.style.display === "none") {
+                    content.style.display = "block";
+                } else {
+                    content.style.display = "none";
+                }
+            }
+        });
+        maintb[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+
+        });
+    }
+</script>

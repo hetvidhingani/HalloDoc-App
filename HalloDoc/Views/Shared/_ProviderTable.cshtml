@@ -59,8 +59,7 @@
 
 </div>
 
-@* mobile view *@
-@* <div class="adminDashMobile viewMobile mb-5">
+<div class="adminDashMobile viewMobile mb-5">
     @foreach (var u in Model.PagingData)
     {
         <input type="hidden" asp-for="@u.PhysicianID">
@@ -108,20 +107,20 @@
              
                 
                 <div class="d-flex justify-content-end align-items-center mt-2">
-                   
-                    <button class="mx-1 bg-transparent btn btn-sm btn-outline-info">Contact</button>
-                    <button class="bg-transparent btn btn-sm btn-outline-info">Edit</button>
+
+                    <button class="btn btn-outline-info mx-1 contactProviderc" data-bs-toggle="modal" data-bs-target="#contactProviderMODEL" id="@u.PhysicianID">Contact</button>
+                    <a class="btn btn-outline-info mx-1" asp-action="EditProvider" asp-controller="Admin" asp-route-id="@u.PhysicianID">Edit</a>
+
                 </div>
             </div>
         </div>
     }
     <partial name="_Paging.cshtml" />
 
-</div> *@
+</div>
 
 
 
-@* model *@
 
 <script>
     var coll = document.getElementsByClassName("collapsible");
