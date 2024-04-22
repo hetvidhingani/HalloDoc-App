@@ -106,6 +106,27 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+
+        public IActionResult sendLink()
+        {
+            ViewBag.site = "Provider";
+            return PartialView("_SendLink");
+        }
+        [HttpPost]
+        public IActionResult SendLinkPatient(string email)
+        {
+            if (email != null)
+            {
+                var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientRequest/" + email;
+                var subject = "Create Request";
+                var body = "Click here " + "<a href=" + link + ">Create New Request</a>" + ".";
+                _customService.SendEmail(email, link, subject, body, 0, 0, 0, null);
+
+                TempData["success"] = "Email is sent successfully to your email account";
+            }
+
+            return RedirectToAction("Dashboard");
+        }
         #endregion
 
         #region View Case
@@ -410,11 +431,19 @@ namespace HalloDoc.Controllers
             return Json(new { success = true });
 
         }
-        public IActionResult FinalizeReport(int id)
+        public async Task<IActionResult> FinalizeReport(int id)
         {
-            _provider.FinalizeReport(id);
+            await _provider.FinalizeReport(id);
             TempData["success"] = "Medical Report is Finalized.";
             return Json(new { success = true });
+        }
+        public IActionResult DownloadEncounterForm(int id)
+        {
+            var form = _provider.GetEncounterForm(id);
+
+            var bytes = _provider.Downloadpdf(form);
+
+            return File(bytes, "application/pdf", form.Requestid + "_" + "Encounter_Data.pdf");
         }
         #endregion
 
@@ -497,13 +526,28 @@ namespace HalloDoc.Controllers
             return Json("success");
         }
         #endregion
-        public IActionResult DownloadEncounterForm(int id)
+
+        #region Create Request Provider
+        public IActionResult CreateRequestByProvider()
         {
-            var form = _provider.GetEncounterForm(id);
-
-            var bytes = _provider.Downloadpdf(form);
-
-            return File(bytes, "application/pdf", form.Requestid + "_" + "Encounter_Data.pdf");
+            PatientRequestViewModel model = new PatientRequestViewModel();
+            model.State = _provider.getstateDropdown();
+            return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> CreateRequest(PatientRequestViewModel model)
+        {
+            var request = HttpContext.Request;
+            int ProviderId = Int32.Parse(request.Cookies["ProviderID"]);
+            await _provider.CreateRequestByProvider(model, (int)ProviderId);
+            //await LinkToCreateAccount(new CreateAccountViewModel
+            //{
+            //    Email = viewModel.Email
+            //});
+            TempData["success"] = "Request Created Successfully.";
+
+            return RedirectToAction("Dashboard");
+        }
+        #endregion
     }
 }

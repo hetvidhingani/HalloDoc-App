@@ -1,10 +1,16 @@
 ﻿@model HalloDoc.Entities.ViewModels.SendLinkViewModel
-
+@{
+    var data = "";
+}
+@if( @ViewBag.site != null)
+{
+     data = ViewBag.site;
+}
 <div class="modal-header">
     <h5 class="modal-title">Send Link</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
-<form id="sendLink" asp-controller="Admin" asp-action="SendLinkPatient">
+<form id="sendLink" asp-controller="@data" asp-action="SendLinkPatient">
     <div class="modal-body">
         <small>To Send Agreement please make sure you are updating the correct contact information below for the responsible party.</small>
 

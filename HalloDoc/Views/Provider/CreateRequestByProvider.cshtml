@@ -1,0 +1,181 @@
+﻿@model HalloDoc.Entities.ViewModels.PatientRequestViewModel
+@using Microsoft.AspNetCore.Http;
+@{
+    ViewBag.adminDash = "active";
+    ViewData["Title"] = "Create Request";
+
+}
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo">
+
+            <h3>Create Request</h3>
+            <a asp-action="Dashboard" asp-controller="Provider" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+
+        </div>
+
+        <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
+            <form method="post" asp-action="CreateRequest" asp-controller="Provider" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <h3>Patient</h3>
+
+
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder=" ">
+                            <label for=" ">First Name</label>
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder=" ">
+                            <label for=" ">Last Name</label>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <div class="form-floating form-group  border">
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
+
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Email"
+                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
+                                   class="form-control" placeholder=" " required>
+                            <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" ">
+                            <label for=" ">Date Of Birth</label>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <h3> Location</h3>
+
+                <div class="row ">
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="Street" type="text" class="form-control" placeholder=" ">
+                            <label for=" ">Street</label>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="City" type="text" class="form-control" placeholder=" ">
+                            <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select form-select-sm " style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                            <option value="0" selected disabled>State</option>
+
+                            @foreach (var region in Model.State)
+                            {
+                                <option value="@region.RegionId">@region.Name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input asp-for="ZipCode" type="number" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code">
+                            <label for=" ">Zip code</label>
+                            <span asp-validation-for="ZipCode" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <input type="text" class="form-control" placeholder=" ">
+                            <label for=" ">Room # / Suite (Optional)</label>
+                        </div>
+                    </div>
+
+                </div>
+                <h3>Notes</h3>
+
+
+                <div class="row ">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-floating form-group  ">
+                            <textarea asp-for="Symptoms" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                            <label class="form-label" for="textAreaExample2">
+                                Admin Notes
+
+                            </label>
+                            <span asp-validation-for="Symptoms" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+                        <input type="submit" class="createNewReqBtn submitBtn" value="Submit" onclick="continueToPage()" />
+
+                        <a asp-action="PatientSubmitRequest" asp-controller="Custom" class="btn ">
+                            <button type="button" class="createNewReqBtn">
+                                Cancle
+                            </button>
+                        </a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const phoneInputField = document.querySelector("#phone");
+
+    const phoneInput = window.intlTelInput(phoneInputField, {
+        autoInsertDialCode: true,
+        fixDropdownWidth: true,
+        formatOnDisplay: false,
+        defaultToFirstCountry: true,
+        initialCountry: "in",
+        nationalMode: false,
+        useFullscreenPopup: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+
+    });
+    $('#phone').attr('value', "+91");
+
+
+
+</script>

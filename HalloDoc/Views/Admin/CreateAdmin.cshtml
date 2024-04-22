@@ -26,7 +26,7 @@
                 <div class="row ">
                     <div class="col-lg-4 col-md-4 col-sm-12">
                         <div class="form-floating form-group">
-                            <input required asp-for="UserName" type="text" class="form-control" placeholder=" "  >
+                            <input required asp-for="UserName" type="text" id="username" class="form-control" placeholder=" " disabled>
                             <label for=" ">UserName</label>
                             <span asp-validation-for="UserName" class="text-danger"></span>
 
@@ -63,7 +63,7 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input required asp-for="FirstName" type="text" class="form-control edit" placeholder=" "  >
+                            <input required asp-for="FirstName" type="text" id="FirstName" class="form-control edit" placeholder=" ">
                             <label for=" ">First Name</label>
                             <span asp-validation-for="FirstName" class="text-danger"></span>
 
@@ -71,7 +71,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input required asp-for="LastName" type="text" class="form-control edit" placeholder=" "  >
+                            <input required asp-for="LastName" type="text" id="LastName" class="form-control edit" placeholder=" ">
                             <label for=" ">Last Name</label>
                             <span asp-validation-for="LastName" class="text-danger"></span>
 
@@ -194,6 +194,19 @@
 
 
 <script>
+    // Append first name and last name to the username field
+    $('#LastName').on('blur', function () {
+        var firstName = $('#FirstName').val().trim();
+        var lastName = $('#LastName').val().trim();
+        if (firstName && lastName) {
+            $('#username').val(firstName + '.' + lastName).prop('disabled', true);
+            var check = $('#username').val().trim();
+            console.log(check);
+
+        } else {
+            $('#username').val('').prop('disabled', true);
+        }
+    });
 
     //dark theme
     if (localStorage.getItem("Mytheme")) {

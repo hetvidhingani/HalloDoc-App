@@ -41,7 +41,7 @@ namespace HalloDoc.Services.IServices
 
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
 
-        void FinalizeReport(int RequestID);
+        Task FinalizeReport(int RequestID);
 
         void ConcludeRequest(int id , string? note,string providerid);
 
@@ -62,5 +62,7 @@ namespace HalloDoc.Services.IServices
 
         Encounter GetEncounterForm(int id);
         byte[] Downloadpdf(Encounter rowdata);
+
+        Task CreateRequestByProvider(PatientRequestViewModel viewModel, int provider);
     }
 }

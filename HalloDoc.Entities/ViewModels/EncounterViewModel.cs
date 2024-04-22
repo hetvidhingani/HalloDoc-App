@@ -12,21 +12,21 @@ namespace HalloDoc.Entities.ViewModels
         [Required(ErrorMessage = "Enter First Name Here")]
         public string FirstName { get; set; }=string.Empty;
 
-        [Required(ErrorMessage = "Enter First Name Here")]
+        [Required(ErrorMessage = "Enter Last Name Here")]
         public string LastName { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Enter First Name Here")]
+        [Required(ErrorMessage = "Enter Location Here")]
 
         public string? Location { get; set; } = string.Empty;
         public DateTime? DateOfBirth { get; set; }
 
-        [Required(ErrorMessage = "Enter First Name Here")]
+        [Required(ErrorMessage = "Enter number Here")]
         public string PhoneNumber { get; set; } = string.Empty;
         public string? MedicalReport { get; set; } = string.Empty;
         public DateTime? Date { get; set; }
 
-        [Required(ErrorMessage = "Enter First Name Here")]
+        [Required(ErrorMessage = "Enter email Here")]
         public string Email { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Enter First Name Here")]
+        [Required(ErrorMessage = "Enter illness Here")]
 
         public string? HistoryOfPresentIllness { get; set; } = string.Empty;
         public string? MedicalHistory { get; set; } = string.Empty;
@@ -48,8 +48,7 @@ namespace HalloDoc.Entities.ViewModels
         public string? Neuro { get; set; } = string.Empty;
         public string? Diagnosis { get; set; } = string.Empty;
         public string? MedicationsDispensed { get; set; } = string.Empty;
-        [Required(ErrorMessage = "Enter First Name Here")]
-
+       
         public string? Followup { get; set; } = string.Empty;
         public string? Other { get; set; } = string.Empty;
         public string? TreatmentPlan { get; set; } = string.Empty;

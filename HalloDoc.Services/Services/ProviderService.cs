@@ -139,7 +139,8 @@ namespace HalloDoc.Services.Services
                     StateofTable = rec.State,
                     callType = r.CallType,
                     stateTab = state,
-                    isfinalize = r.CompletedByPhysician == null ? false : true
+                    isfinalize = r.CompletedByPhysician == null ? false : true,
+                    PhysicianId=providerId,
 
                 }).ToList();
 
@@ -546,7 +547,8 @@ namespace HalloDoc.Services.Services
 
             return encounter;
         }
-        public void FinalizeReport(int RequestID)
+
+        public async Task FinalizeReport(int RequestID)
         {
             var enc = _encounterRepository.GetAll().Where(x => x.Requestid == RequestID).FirstOrDefault();
             enc.Isfinalized = true;
@@ -555,6 +557,49 @@ namespace HalloDoc.Services.Services
 
             req.CompletedByPhysician = new BitArray(new bool[] { true });
             _requestRepository.UpdateAsync(req);
+        }
+
+        public Encounter GetEncounterForm(int id)
+        {
+            Encounter request = _encounterRepository.GetAll().Where(x => x.Requestid == id).FirstOrDefault();
+
+            return request;
+        }
+
+        public byte[] Downloadpdf(Encounter rowdata)
+        {
+            Document document = new Document();
+            MemoryStream ms = new MemoryStream();
+            PdfWriter.GetInstance(document, ms);
+            document.Open();
+
+            PdfPTable dataTable = new PdfPTable(2);
+            dataTable.WidthPercentage = 100;
+
+            PdfPCell headerCell = new PdfPCell(new Phrase("Encounter Data : " + rowdata.Firstname + " , " + rowdata.Lastname));
+            headerCell.Colspan = 2;
+            headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
+            headerCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+            dataTable.AddCell(headerCell);
+
+            foreach (var property in rowdata.GetType().GetProperties())
+            {
+                PdfPCell nameCell = new PdfPCell(new Phrase(property.Name));
+                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                dataTable.AddCell(nameCell);
+
+                PdfPCell valueCell = new PdfPCell(new Phrase(property.GetValue(rowdata)?.ToString()));
+                dataTable.AddCell(valueCell);
+            }
+
+            document.Add(dataTable);
+            document.Close();
+
+            // Convert MemoryStream to byte array
+            byte[] bytes = ms.ToArray();
+            ms.Close();
+
+            return bytes;
         }
 
         #endregion
@@ -610,6 +655,7 @@ namespace HalloDoc.Services.Services
             model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
             model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
             model.Ishippa = phy.IsTrainingDoc == null ? false : true;
+            
             model.StateCheckbox = regions.Select(r => new RegionViewModel()
             {
                 RegionId = r.RegionId,
@@ -664,6 +710,7 @@ namespace HalloDoc.Services.Services
             return schedulingModel;
         }
         #endregion
+
         #region Create Shift
         public void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays, string providerId)
         {
@@ -759,48 +806,98 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public Encounter GetEncounterForm(int id)
+        #region Create Request By Admin
+        public async Task CreateRequestByProvider(PatientRequestViewModel viewModel, int provider)
         {
-            Encounter request = _encounterRepository.GetAll().Where(x=>x.Requestid==id).FirstOrDefault();
-
-            return request;
-        }
-
-        public byte[] Downloadpdf(Encounter rowdata)
-        {
-            Document document = new Document();
-            MemoryStream ms = new MemoryStream();
-            PdfWriter.GetInstance(document, ms);
-            document.Open();
-
-            PdfPTable dataTable = new PdfPTable(2);
-            dataTable.WidthPercentage = 100;
-
-            PdfPCell headerCell = new PdfPCell(new Phrase("Encounter Data : " + rowdata.Firstname + " , " + rowdata.Lastname));
-            headerCell.Colspan = 2;
-            headerCell.HorizontalAlignment = Element.ALIGN_CENTER;
-            headerCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-            dataTable.AddCell(headerCell);
-
-            foreach (var property in rowdata.GetType().GetProperties())
+            var data = _physicianRepository.GetById(provider);
+            Request request = new Request
             {
-                PdfPCell nameCell = new PdfPCell(new Phrase(property.Name));
-                nameCell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                dataTable.AddCell(nameCell);
+                RequestTypeId = 2,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                PhoneNumber = data.Mobile,
+                Email = data.Email,
+                CreatedDate = DateTime.Now,
+                Status = 2,
+                PhysicianId =provider,
 
-                PdfPCell valueCell = new PdfPCell(new Phrase(property.GetValue(rowdata)?.ToString()));
-                dataTable.AddCell(valueCell);
+            };
+            await _requestRepository.AddAsync(request);
+
+            RequestClient requestClient = new RequestClient
+            {
+                RequestId = request.RequestId,
+                FirstName = viewModel.FirstName,
+                LastName = viewModel.LastName,
+                PhoneNumber = viewModel.PhoneNumber,
+                RegionId = viewModel.RegionId,
+                Street = viewModel.Street,
+                City = viewModel.City,
+                State = await _regionRepository.FindState(viewModel.RegionId),
+                ZipCode = viewModel.ZipCode,
+                Notes = viewModel.Symptoms,
+                Email = viewModel.Email,
+                IntDate = viewModel.DateOfBirth.Day,
+                IntYear = viewModel.DateOfBirth.Year,
+                StrMonth = viewModel.DateOfBirth.Month.ToString(),
+                Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode,
+
+
+            };
+            await _requestclientRepository.AddAsync(requestClient);
+
+            User user = await _userRepository.CheckUserByEmail(viewModel.Email);
+            if (user != null)
+            {
+                request.UserId = user.UserId;
+                await _requestRepository.UpdateAsync(request);
+
             }
+            else
+            {
+                AspNetUser newaspNetUSer = new AspNetUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = viewModel.FirstName,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    Email = viewModel.Email,
+                    CreatedDate = DateTime.Now
+                };
 
-            document.Add(dataTable);
-            document.Close();
+                await _aspnetuserRepository.AddAsync(newaspNetUSer);
+                AspNetUserRole userRole = new AspNetUserRole
+                {
+                    UserId = newaspNetUSer.Id,
+                    RoleId = "2"
+                };
+                await _userRolesRepository.AddAsync(userRole);
+                User user1 = new User
+                {
+                    Id = newaspNetUSer.Id,
+                    FirstName = requestClient.FirstName,
+                    LastName = requestClient.LastName,
+                    Email = requestClient.Email,
+                    Mobile = requestClient.PhoneNumber,
+                    Street = requestClient.Street,
+                    City = requestClient.City,
+                    State = requestClient.State,
+                    ZipCode = requestClient.ZipCode,
 
-            // Convert MemoryStream to byte array
-            byte[] bytes = ms.ToArray();
-            ms.Close();
+                    IntDate = requestClient.IntDate,
+                    IntYear = requestClient.IntYear,
+                    StrMonth = requestClient.StrMonth,
+                    CreatedBy = data.Id,
+                    CreatedDate = DateTime.Now,
+                    RegionId = viewModel.RegionId
+                };
+                await _userRepository.AddAsync(user1);
 
-            return bytes;
+                request.UserId = user1.UserId;
+                await _requestRepository.UpdateAsync(request);
+            }
         }
+        #endregion
+
 
     }
 }

@@ -232,6 +232,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult sendLink()
         {
+            ViewBag.site = "Admin";
             return PartialView("_SendLink");
         }
         [HttpPost]
@@ -244,7 +245,7 @@ namespace HalloDoc.Controllers
                 var body = "Click here " + "<a href=" + link + ">Create New Request</a>" + ".";
                 _customService.SendEmail(email, link, subject, body, 0, 0,0, null);
 
-                TempData["success"] = "Email is sent successfully to your email account";
+                TempData["success"] = "Email is sent successfully to given email account";
             }
 
             return RedirectToAction("Dashboard");
