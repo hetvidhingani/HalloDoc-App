@@ -1220,7 +1220,8 @@ namespace HalloDoc.Services.Services
             model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
             model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
             model.Ishippa = phy.IsTrainingDoc == null ? false : true;
-            //model.filename =  $"{phy.PhysicianId}_Photo.jpg";
+            model.filename = phy.PhysicianId + "_Signature.png";
+            model.IsSignature = phy.Signature == null ? false : true;
             model.StateCheckbox = regions.Select(r => new RegionViewModel()
             {
                 RegionId = r.RegionId,
@@ -1420,35 +1421,28 @@ namespace HalloDoc.Services.Services
             physician.BusinessName = model.BusinessName;
             physician.BusinessWebsite = model.BusinessWebsite;
             physician.AdminNotes = model.AdminNotes;
-        
-       
-            if (model.Photo.FileName != null)
+            if (model.Photo != null)
             {
-
                 var newName = $"{physician.PhysicianId}_Photo.jpg";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/image", newName);
-
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
                 }
                 using var stream = System.IO.File.Create(filePath);
-                model.contractoragreement.CopyTo(stream);
-
+                model.Photo.CopyTo(stream);
                 physician.Photo = model.Photo.FileName;
             }
-            if (model.Signature.FileName != null)
+            if (model.Signature != null)
             {
-
-                var newName = $"{physician.PhysicianId}_Signature.jpg";
+                var newName = $"{physician.PhysicianId}_Signature.png";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/image", newName);
-
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
                 }
                 using var stream = System.IO.File.Create(filePath);
-                model.contractoragreement.CopyTo(stream);
+                model.Signature.CopyTo(stream);
 
                 physician.Signature = model.Signature.FileName;
             }
@@ -1577,6 +1571,25 @@ namespace HalloDoc.Services.Services
             _physicianRepository.UpdateAsync(physician);
 
             return physician;
+        }
+
+        public void addSignature(ProviderViewModel model, int id)
+        {
+            Physician physician = _physicianRepository.GetById(id);
+            if (model.Signature.FileName != null)
+            {
+                var newName = $"{physician.PhysicianId}_Signature.png";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/image", newName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.Signature.CopyTo(stream);
+
+                physician.Signature = model.Signature.FileName;
+            }
+            _physicianRepository.UpdateAsync(physician);
         }
         #endregion
 

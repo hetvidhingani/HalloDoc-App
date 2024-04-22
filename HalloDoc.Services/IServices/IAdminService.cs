@@ -101,5 +101,6 @@ namespace HalloDoc.Services.IServices
         List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status);
         AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
         string UnscheduledPhysicians (string message);
+        void addSignature(ProviderViewModel model, int id);
     }
 }

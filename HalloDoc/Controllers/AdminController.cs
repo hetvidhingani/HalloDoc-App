@@ -831,6 +831,12 @@ namespace HalloDoc.Controllers
             return Json(new { success = true });
 
         }
+
+        public IActionResult addSignature(ProviderViewModel model, int physicianid)
+        {
+            _admin.addSignature(model, physicianid);
+            return Json(new { success = true });
+        }
         #endregion
 
         #region Account Access

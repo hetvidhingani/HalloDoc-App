@@ -97,7 +97,7 @@ namespace HalloDoc.Entities.ViewModels
         public bool isbackgroundcheck { get; set; }
         public bool Ishippa { get; set; }
         public bool IsAgreementDocnondisclosure { get; set; }
-
+        public bool IsSignature {  get; set; }
         public IFormFile? Photo { get; set; }
         public IFormFile? contractoragreement { get; set; }
         public IFormFile? backgroundcheck { get; set; }
