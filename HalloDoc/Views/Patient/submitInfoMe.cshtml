@@ -7,15 +7,12 @@
 
 
         <div class="PatientInfo">
-
-          
                 <a asp-action="Dashboard" asp-controller="Patient" style="display: flex; justify-content: flex-end; right: 0px; text-decoration: none; ">
                     <button class="back">
                         <i class="bi bi-chevron-left"></i>
                         back
                     </button>
                 </a>
-           
         </div>
 
         <div class="p-4  mb-3 rounded formshadow h-100 PatientInfo">
@@ -23,23 +20,20 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                 <h3>Patient Information</h3>
-
                 <div class="form-floating form-group ">
                     <textarea asp-for="Symptoms" class="form-control " id="textAreaExample2" style="height: 120px;" rows="8" placeholder=" "></textarea>
                     <label class="form-label" for="textAreaExample2">
                         Symptoms
-
                     </label>
                     <span asp-validation-for="Symptoms" class="text-danger"></span>
-
                 </div>
+
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="FirstName" type="text" class="form-control" placeholder=" ">
                             <label for=" ">First Name</label>
                             <span asp-validation-for="FirstName" class="text-danger"></span>
-
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -47,15 +41,13 @@
                             <input asp-for="LastName" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Last Name</label>
                             <span asp-validation-for="LastName" class="text-danger"></span>
-
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" ">
+                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" " readonly>
                             <label for=" ">Date Of Birth</label>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-
                         </div>
                     </div>
 
@@ -67,7 +59,7 @@
                         <div class="form-floating form-group">
                             <input asp-for="Email"
                                    id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
-                                   class="form-control" placeholder=" " required>
+                                   class="form-control" placeholder=" " readonly>
                             <label for=" ">Email</label>
                             <span asp-validation-for="Email" class="text-danger"></span>
 
@@ -77,31 +69,12 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12 ">
                         <div class="form-floating form-group  border">
-                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" required />
+                            <input asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" readonly />
 
                         </div>
                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
-                    @if (@HttpContextAccessor?.HttpContext?.Session.GetString("UserSession") == null)
-                    {
-
-                        <div class="col-lg-6 col-md-6 col-sm-12" id="hide1">
-                            <div class="form-floating form-group">
-                                <input asp-for="Password" type="password" class="form-control" id="passwordFields1" placeholder="Password">
-                                <label for=" " id="passwordFieldslable1">Password</label>
-                                <span asp-validation-for="Password" class="text-danger"></span>
-
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12" id="hide2">
-                            <div class="form-floating form-group">
-                                <input asp-for="ConfirmPassword" type="password" class="form-control" id="passwordFields2" placeholder="Password">
-                                <label for=" " id="passwordFieldslable2"> ConfirmPassword</label>
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-
-                            </div>
-                        </div>
-                    }
+                   
                 </div>
 
                 <h3>Patient Location</h3>
@@ -109,7 +82,7 @@
                 <div class="row ">
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="Street" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="Street" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">Street</label>
                             <span asp-validation-for="Street" class="text-danger"></span>
 
@@ -117,14 +90,14 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="City" type="text" class="form-control" placeholder=" ">
+                            <input asp-for="City" type="text" class="form-control" placeholder=" " readonly>
                             <label for=" ">City </label>
                             <span asp-validation-for="City" class="text-danger"></span>
 
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm " style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm " style="height:60px" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -138,7 +111,7 @@
 
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="ZipCode" type="number" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code">
+                            <input asp-for="ZipCode" type="number" class="form-control" placeholder=" " pattern="\d{6}" title="Please enter a 6-digit ZIP code" readonly>
                             <label for=" ">Zip code</label>
                             <span asp-validation-for="ZipCode" class="text-danger"></span>
 
@@ -200,22 +173,18 @@
                     label1.style.display = 'none';
                     label2.style.display = 'none';
 
-                    // Disable password and confirm password fields
                     patientPassword.disabled = true;
                     patientConfirmPassword.disabled = true;
 
-                    // Remove required attribute from password fields
                     patientPassword.removeAttribute('required');
                     patientConfirmPassword.removeAttribute('required');
                 } else {
                     label1.style.display = 'block';
                     label2.style.display = 'block';
 
-                    // Enable password and confirm password fields
                     patientPassword.disabled = false;
                     patientConfirmPassword.disabled = false;
 
-                    // Add required attribute to password fields
                     patientPassword.setAttribute('required', 'required');
                     patientConfirmPassword.setAttribute('required', 'required');
                 }

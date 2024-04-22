@@ -147,7 +147,6 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
-
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
         {
@@ -2727,7 +2726,6 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-       
        
 
     }

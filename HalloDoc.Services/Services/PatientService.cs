@@ -86,7 +86,7 @@ namespace HalloDoc.Services.Services
         {
             PatientRequestViewModel viewModel = new PatientRequestViewModel();
             viewModel.State = _regionRepository.GetAll().ToList();
-             viewModel.DateOfBirth = new DateTime(2024, 1, 1);
+            viewModel.DateOfBirth = new DateTime(2024, 1, 1);
 
             return viewModel;
         }
@@ -117,7 +117,6 @@ namespace HalloDoc.Services.Services
             else
             {
                 viewModel.DateOfBirth = new DateTime(2024, 1, 1);
-
             }
 
             return viewModel;
@@ -132,7 +131,9 @@ namespace HalloDoc.Services.Services
                 PhoneNumber = viewModel.PhoneNumber,
                 Email = viewModel.Email,
                 CreatedDate = DateTime.Now,
-                Status = 1
+                Status = 1,
+                 
+                                
             };
             await _requestRepository.AddAsync(request);
 
@@ -153,7 +154,6 @@ namespace HalloDoc.Services.Services
                 IntYear = viewModel.DateOfBirth.Year,
                 StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
-
             };
             await _requestclientRepository.AddAsync(requestClient);
 
@@ -213,17 +213,19 @@ namespace HalloDoc.Services.Services
                     City = requestClient.City,
                     State = requestClient.State,
                     ZipCode = requestClient.ZipCode,
-
                     IntDate = requestClient.IntDate,
                     IntYear = requestClient.IntYear,
                     StrMonth = requestClient.StrMonth,
-                    CreatedBy = "Admin",
+                    CreatedBy = newaspNetUSer.Id,
                     CreatedDate = DateTime.Now,
                     RegionId = viewModel.RegionId
                 };
                 await _userRepository.AddAsync(user1);
 
                 request.UserId = user1.UserId;
+                request.ConfirmationNumber = (requestClient.State.Substring(0, Math.Min(requestClient.State.Length, 3)) + DateTime.Now.ToString("MMddyy")
+                                + viewModel.LastName.Substring(0, Math.Min(viewModel.LastName.Length, 2))
+                                + viewModel.FirstName.Substring(0, Math.Min(viewModel.FirstName.Length, 2)));
                 await _requestRepository.UpdateAsync(request);
 
             }
@@ -291,14 +293,11 @@ namespace HalloDoc.Services.Services
                 }
             }
 
-
-
             User user = await _userRepository.CheckUserByEmail(viewModel.Email);
             if (user != null)
             {
                 request.UserId = user.UserId;
                 await _requestRepository.UpdateAsync(request);
-
             }
 
             AspNetUser userExist = await _aspnetuserRepository.CheckUserByEmail(viewModel.Email);
@@ -335,7 +334,6 @@ namespace HalloDoc.Services.Services
         {
             Request request = new Request
             {
-
                 RequestTypeId = 4,
                 FirstName = viewModel.ClientFirstName,
                 LastName = viewModel.ClientLastName,
@@ -375,8 +373,6 @@ namespace HalloDoc.Services.Services
                 IntYear = viewModel.DateOfBirth.Year,
                 StrMonth = viewModel.DateOfBirth.Month.ToString(),
                 Address = viewModel.Street + "," + viewModel.City + "," + viewModel.ZipCode
-
-
             };
             await _requestclientRepository.AddAsync(requestClient);
 
@@ -386,8 +382,6 @@ namespace HalloDoc.Services.Services
                 using (var stream = System.IO.File.Create(filePath))
                 {
                     viewModel.File.CopyTo(stream);
-
-
                     RequestWiseFile newFile = new RequestWiseFile
                     {
                         RequestId = request.RequestId,
@@ -425,11 +419,9 @@ namespace HalloDoc.Services.Services
                 {
                     UserId = newaspNetUSer.Id,
                     RoleId = "2"
-
                 };
                 await _userRolesRepository.AddAsync(userRole);
                 return "";
-
             }
             return "RegisterdPatientLogin";
         }
@@ -732,7 +724,7 @@ namespace HalloDoc.Services.Services
                         IntDate = requestClient.IntDate,
                         IntYear = requestClient.IntYear,
                         StrMonth = requestClient.StrMonth,
-                        CreatedBy = "Admin",
+                        CreatedBy = aspNetuser.Id,
                         CreatedDate = DateTime.Now,
                         RegionId = requestClient.RegionId,
                     };
@@ -740,6 +732,9 @@ namespace HalloDoc.Services.Services
 
                     Request req = await _requestRepository.GetByIdAsync(requestClient.RequestId);
                     req.UserId = user.UserId;
+                    req.ConfirmationNumber = (requestClient.State.Substring(0, Math.Min(requestClient.State.Length, 3)) + DateTime.Now.ToString("MMddyy")
+                + requestClient.LastName.Substring(0, Math.Min(requestClient.LastName.Length, 2))
+                + requestClient.FirstName.Substring(0, Math.Min(requestClient.FirstName.Length, 2)));
                     await _requestRepository.UpdateAsync(req);
 
 

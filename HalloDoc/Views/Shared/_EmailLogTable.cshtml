@@ -32,13 +32,30 @@
                     <tr>
                         <input type="hidden" asp-for="@data.EmailLogId">
                         <td>
-                            <p>@data.reciverName </p>
+                            <p>
+                                @if (@data.reciverName != null && @data.reciverName != " " && @data.reciverName!="")
+                                {
+                                    @data.reciverName
+                                }
+                                else
+                                {
+                                    <p>user</p>
+                                }
+                            </p>
                         </td>
                         <td>
                             @data.action
                         </td>
                         <td>
-                            @data.roleName
+                            @if (@data.roleName != null && @data.roleName != " " && @data.roleName != "")
+                            {
+                                @data.roleName
+                            }
+                            else
+                            {
+                                <p>Patient</p>
+                            }
+                           
                         </td>
                         <td>
                             @data.email

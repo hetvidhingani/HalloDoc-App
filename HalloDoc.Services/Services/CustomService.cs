@@ -162,7 +162,6 @@ namespace HalloDoc.Services.Services
 
                 if (attachmentFilePath != null && attachmentFilePath.Count > 0)
                 {
-
                     foreach (var attachmentFilePaths in attachmentFilePath)
                     {
                         Attachment attachment = new Attachment(attachmentFilePaths);
@@ -172,7 +171,6 @@ namespace HalloDoc.Services.Services
 
                 mailMessage.To.Add(email);
                 smtpClient.Send(mailMessage);
-
 
                 int? requestid = null;
                 DateTime createdate = DateTime.Now;
@@ -188,11 +186,9 @@ namespace HalloDoc.Services.Services
                         requestid = request.RequestId;
                         createdate = request.CreatedDate;
                     }
-
                 }
                 if (AdminId != 0)
                 {
-
                     Admin admin = _adminRepository.GetById(AdminId);
                     roleId = admin.RoleId;
                     adminid= admin.AdminId;
@@ -215,11 +211,8 @@ namespace HalloDoc.Services.Services
                 log.SentDate = DateTime.Now;
                 log.SentTries = 1;
                 log.CreateDate = createdate;
-
                 log.IsEmailSent = new BitArray(new bool[] { true });
-
                 _emailLogsRepository.AddAsync(log);
-
 
                 var abc = "Success";
                 return abc;

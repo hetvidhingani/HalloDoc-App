@@ -122,7 +122,7 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                ViewBag.Message = "Login Failed!";
+                TempData["error"] = "Invalid UserName or Password";
             }
             return View("~/Views/Admin/AdminLogin.cshtml");
         }
@@ -249,7 +249,7 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                TempData["LoginFail"] = "Invalid User Name or Password";
+                TempData["error"] = "Invalid User Name or Password";
             }
 
             return View();

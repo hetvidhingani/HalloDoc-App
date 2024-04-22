@@ -320,7 +320,7 @@
                 <h5 class="modal-title">Request to admin</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editShiftForm" asp-controller="Provider" asp-action="RequestAdminToEditProfile" asp-route-id="@Model.PhysicianId"  method="post">
+            <form id="myprofilemodal" asp-controller="Provider" asp-action="RequestAdminToEditProfile" asp-route-id="@Model.PhysicianId"  method="post">
                 <input type="hidden" asp-for="PhysicianId"  />
                 <div class="modal-body m-0">
                     <div class="form-floating mt-1 form-group  rounded-3">
@@ -354,7 +354,7 @@
         requestIdofTypeOFCare = this.id;
 
     });
-    $('#editShiftForm').on('submit', function (e) {
+    $('#myprofilemodal').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
         var url = form.attr('action');
@@ -369,13 +369,13 @@
                     if (response == "success") {
                         let timerInterval;
                         Swal.fire({
-                            title: "Shift saved Successfully",
+                            title: "Email Sent to Admin Successfully",
                             icon: "success",
                             timer: 1000,
                             allowOutsideClick: false,
                             showConfirmButton: false,
                         }).then(function () {
-                            window.location.href = '@Url.Action("Dashboard", "Provider")';
+                            window.location.href = '@Url.Action("MyProfile", "Provider")';
                         });
                     }
                 });

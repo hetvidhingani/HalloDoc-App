@@ -486,8 +486,7 @@ namespace HalloDoc.Controllers
             var link = "" ;
             var subject = "Edit Provider Account Request";
             var body = "I need to change following things in my profile: "+ note;
-            _customService.SendEmail(data.Email, link, subject, body, 0, 0, 0);
-            TempData["success"] = "Email is successfully Sent.";
+            _customService.SendEmail(data.Email, link, subject, body, 0, providerId, 0);
             return Json("success");
         }
         #endregion
