@@ -403,14 +403,23 @@ namespace HalloDoc.Controllers
         {
             var request = HttpContext.Request;
             ViewBag.MySession = request.Cookies["UserNameProvider"];
-            var result = await _customService.ViewDocument(id);
-            return View(result);
+           var model =  _provider.ConcludeCare(id);
+           
+
+            return View(model);
         }
-        public IActionResult ConcludeRequest(int id,string? note)
+        public IActionResult DownloadPDFEncounter(string fileName)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", fileName);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
+
+        }
+        public IActionResult ConcludeRequest(int id, string? note)
         {
             var request = HttpContext.Request;
             string ProviderId = request.Cookies["AspNetIdProvider"];
-            _provider.ConcludeRequest(id,note, ProviderId);
+            _provider.ConcludeRequest(id, note, ProviderId);
             TempData["success"] = "Request Concluded successfully.";
             return RedirectToAction("Dashboard", "Provider");
         }
@@ -434,6 +443,13 @@ namespace HalloDoc.Controllers
         public async Task<IActionResult> FinalizeReport(int id)
         {
             await _provider.FinalizeReport(id);
+            var form = _provider.GetEncounterForm(id);
+
+            var bytes = _provider.Downloadpdf(form);
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads");
+            var filePath = Path.Combine(uploadsFolder, form.Requestid + "_" + "Encounter_Data.pdf");
+            System.IO.File.WriteAllBytes(filePath, bytes);
             TempData["success"] = "Medical Report is Finalized.";
             return Json(new { success = true });
         }
@@ -442,6 +458,7 @@ namespace HalloDoc.Controllers
             var form = _provider.GetEncounterForm(id);
 
             var bytes = _provider.Downloadpdf(form);
+
 
             return File(bytes, "application/pdf", form.Requestid + "_" + "Encounter_Data.pdf");
         }
@@ -460,8 +477,17 @@ namespace HalloDoc.Controllers
             var result = await _provider.MyProfile(id);
             return View(result);
         }
-        public IActionResult RequestAdminToEditProfile(ProviderViewModel model)
+        public IActionResult RequestAdminToEditProfile(int id,string note)
         {
+            var request = HttpContext.Request;
+            int providerId = Int32.Parse(request.Cookies["ProviderID"]);
+           var data =  _provider.getproviderEmail(providerId);
+
+            var link = "" ;
+            var subject = "Edit Provider Account Request";
+            var body = "I need to change following things in my profile: "+ note;
+            _customService.SendEmail(data.Email, link, subject, body, 0, 0, 0);
+            TempData["success"] = "Email is successfully Sent.";
             return Json("success");
         }
         #endregion
@@ -487,7 +513,7 @@ namespace HalloDoc.Controllers
             var request = HttpContext.Request;
             int id = Int32.Parse(request.Cookies["ProviderID"]);
             model.provider = id;
-            return PartialView("_createShift",model);
+            return PartialView("_createShift", model);
         }
         [HttpPost]
         public IActionResult AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays)

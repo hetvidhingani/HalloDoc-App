@@ -324,7 +324,7 @@
             type: "POST",
             dataType: "html",
 
-            url: "@(Url.Action("sendLink", "Admin"))",
+            url: "@(Url.Action("sendLink", "Provider"))",
             success: function (data) {
 
                 $("#sendLinkToPatient").find('.modal-content').html(data);

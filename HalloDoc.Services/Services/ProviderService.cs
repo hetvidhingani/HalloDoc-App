@@ -245,7 +245,7 @@ namespace HalloDoc.Services.Services
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                        join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
                                        from p in g.DefaultIfEmpty()
-                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8
+                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8 && rsl.Status != 4
                                        orderby rsl.CreatedDate descending
                                        select new TransferNotesViewModel
                                        {
@@ -421,6 +421,16 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region conclude care
+        public ConcludeCareViewModel ConcludeCare(int id)
+        {
+            RequestClient req = _requestclientRepository.GetAll().Where(x=>x.RequestId == id).FirstOrDefault();
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", id + "_" + "Encounter_Data.pdf");
+            ConcludeCareViewModel model = new ConcludeCareViewModel();
+            model.filePath = id + "_" + "Encounter_Data.pdf";
+            model.requestId = id;
+            model.username = req.FirstName+" "+req.LastName;
+            return model;
+        }
         public void ConcludeRequest(int id, string? note, string providerID)
         {
             Request request = _requestRepository.GetById(id);
@@ -898,6 +908,9 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-
+        public Physician getproviderEmail(int id)
+        {
+            return _physicianRepository.GetById(id);
+        }
     }
 }

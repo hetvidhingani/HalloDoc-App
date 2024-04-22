@@ -1,6 +1,6 @@
 ﻿@model SchedulingModel
 @{
-    ViewBag.providers = "active";
+    ViewBag.Schedule = "active";
     ViewData["Title"] = "Scheduling";
 
 }
@@ -64,7 +64,7 @@
 
                         <div class="col-lg-12 col-md-12 col-sm-12 mt-1">
                             <div class="form-floating form-group">
-                                <input asp-for="ShiftDate" type="date" class="form-control" placeholder=" " id="shiftDate" disabled>
+                                <input asp-for="ShiftDate" type="date" class="form-control" placeholder=" " min="@DateTime.Now.ToString("yyyy-MM-dd")" id="shiftDate" disabled>
                                 <label for=" ">Shift Date</label>
                                 <span asp-validation-for="ShiftDate" class="text-danger"></span>
 

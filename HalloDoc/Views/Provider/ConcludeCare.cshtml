@@ -1,4 +1,4 @@
-﻿@model HalloDoc.Entities.ViewModels.DashboardViewModel;
+﻿@model HalloDoc.Entities.ViewModels.ConcludeCareViewModel;
 @inject IHttpContextAccessor HttpContextAccessor
 @{
     ViewBag.ProviderDashboard = "active";
@@ -28,18 +28,17 @@
 
                     <div class="col-12 fw-bold text-info fs-3">
 
-                        @Model.Username
+                        @Model.username
                       
                     </div>
                   
                 </div>
 
-            <form asp-action="ConcludeRequest" asp-controller="Provider" asp-route-id="@Model.RequstId" method="post" enctype="multipart/form-data">
-                <input type="hidden" asp-for="RequstId" id="reqID" />
+            <form asp-action="ConcludeRequest" asp-controller="Provider" asp-route-id="@Model.requestId" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="requestId" id="reqID" />
                 <div class="row ">
                     <div class="col-12 mt-3 d-flex align-items-center justify-content-between">
                         <h3>Encounter Forms</h3>
-                        <button class="btn btn-outline-info"> Upload</button>
                     </div>
                    
                 </div>
@@ -54,26 +53,21 @@
                             </tr>
 
                         </thead>
-                        @foreach (var r in Model.RequestWiseFiles)
-                        {
-
-                            <tbody>
-                                <tr>
-                                   
-                                    <td>
-                                        @r.FileName
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("DownloadFile", "Provider", new { fileId = @r.RequestWiseFileId })" class="btn btn-outline-info download-link" data-filename="@r.FileName">
-                                            <i class="bi bi-cloud-arrow-down"></i>
-                                        </a>
-                                       
-                                    </td>
-
-                                </tr>
+                    
+                            <tr>
+                                <td>
+                         @Model.filePath
+                                </td>
+                                <td>
+                                <a href="@Url.Action("DownloadPDFEncounter", "Provider", new { fileName =  @Model.filePath })" class="btn btn-outline-info download-link">
+                                        <i class="bi bi-cloud-arrow-down"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                           
 
                             </tbody>
-                        }
+                      
                     </table>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 mx-auto" >
@@ -93,33 +87,6 @@
                         <button class="btn btn-info text-white">Conclude Care</button>
                     </div>
                 </div>
-
-                <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  " style="background-color:white">
-
-                    @foreach (var r in Model.RequestWiseFiles)
-                    {
-
-                        <div class="mobileviewdashboard my-2 p-3" style="background-color:white">
-
-                         
-                            <div class="content mx-2">
-                                <div class="provider d-flex gap-2">
-                                    @r.FileName <span></span>
-                                </div>
-                              
-                                <div class="provider d-flex pt-2 gap-2">
-                                    <a href="@Url.Action("DownloadFile", "Provider", new { name = r.FileName })" class="btn btn-outline-info download-link">
-                                        <i class="bi bi-cloud-arrow-down"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-
-                    }
-
-                </div>
-
 
             </form>
 

@@ -64,5 +64,9 @@ namespace HalloDoc.Services.IServices
         byte[] Downloadpdf(Encounter rowdata);
 
         Task CreateRequestByProvider(PatientRequestViewModel viewModel, int provider);
+
+        ConcludeCareViewModel ConcludeCare(int id);
+
+        Physician getproviderEmail(int id);
     }
 }

@@ -273,9 +273,16 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <div class="form-floating form-group input-group mb-3">
-                                <input asp-for="@Model.Photo" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton" disabled >
+                                <input asp-for="@Model.Photo" style="border-radius:10px" name="filename" type="file" class="form-control edit" id="UploadButton" disabled >
                                 <label style="color:black" >Select File</label>
-
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <div class="form-floating form-group">
+                            <div class="form-floating form-group input-group mb-3">
+                                <input asp-for="@Model.Signature" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton" disabled>
+                                <label style="color:black">Upload Signature</label>
                             </div>
                         </div>
                     </div>

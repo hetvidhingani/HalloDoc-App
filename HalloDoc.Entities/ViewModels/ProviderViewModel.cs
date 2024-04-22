@@ -106,9 +106,10 @@ namespace HalloDoc.Entities.ViewModels
         public List<RegionViewModel> StateCheckbox { get; set; }
         public List<PhysicianRegion> physicianRegion { get; set; }
         public List<int>? physicianRegionids { get; set; }
-
+        public string? filename { get; set; }
         public string longitude {  get; set; }
         public string latitude { get; set; }
 
     }
+
 }

@@ -104,10 +104,6 @@ namespace HalloDoc.Controllers
                     Response.Cookies.Append("UserNameAdmin", userID.FirstName + " " + userID.LastName);
                     Response.Cookies.Append("AspNetIdAdmin", userID.AspNetUserId.ToString());
 
-                    //HttpContext.Session.SetString("UserName", myUser.UserName);
-                    //HttpContext.Session.SetString("AdminAspNetID", myUser.Id);
-                    //HttpContext.Session.SetInt32("AdminSession", userID.AdminId);
-
                     return RedirectToAction("Dashboard", "Admin");
                 }
                 else if(role.RoleId == "3")
@@ -172,8 +168,8 @@ namespace HalloDoc.Controllers
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
             _customService.SendEmail(email, link, subject, body,0,0,0);
-
-            return Json(new { success = true, message = "A password reset link has been sent to your email." });
+            TempData["success"] = "Link is successfully sent to your Registed Email Account";
+            return RedirectToAction("AdminForgotPassword");
         }
 
         [HttpPost]

@@ -671,13 +671,11 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model)
         {
-            if (ModelState.IsValid)
-            {
+        
                 var result = await _admin.EncounterFormSaveChanges(model);
                 TempData["success"] = "Data Saved Successfully.";
-                return RedirectToAction("EncounterForm", result);
-            }
-            return View(model);
+            return Json(new { success = true });
+
         }
         #endregion
 

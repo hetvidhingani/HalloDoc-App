@@ -147,7 +147,6 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
-        #region Admin
 
         #region Dashboard
         public List<AdminDashboardViewModel> Admintbl(string state, List<AdminDashboardViewModel> list, int status)
@@ -378,7 +377,7 @@ namespace HalloDoc.Services.Services
                                        join rsl in _requestStatusLogRepository.GetAll() on r.RequestId equals rsl.RequestId
                                        join p in _physicianRepository.GetAll() on rsl.TransToPhysicianId equals p.PhysicianId into g
                                        from p in g.DefaultIfEmpty()
-                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8
+                                       where r.RequestId == req.RequestId && rsl.Status != 7 && rsl.Status != 3 && rsl.Status != 8 && rsl.Status != 4
                                        orderby rsl.CreatedDate descending
                                        select new TransferNotesViewModel
                                        {
@@ -917,45 +916,43 @@ namespace HalloDoc.Services.Services
             DateTime dob = new DateTime((int)client.IntYear, Convert.ToInt32(client.StrMonth), (int)client.IntDate);
 
 
-            EncounterViewModel model = new EncounterViewModel()
-            {
-                RequestID = req.RequestId,
-                FirstName = encounter.Firstname,
-                LastName = encounter.Lastname,
-                Location = encounter.Location,
-                DateOfBirth = dob,
-                PhoneNumber = encounter.Phonenumber,
-                MedicalReport = encounter.Medicalreport,
-                Date = encounter.Date,
-                Email = encounter.Email,
-                HistoryOfPresentIllness = encounter.Historyofpresentillness,
-                MedicalHistory = encounter.Medicalhistory,
-                Medications = encounter.Medications,
-                Temp = encounter.Temp,
-                BloodPressureSystolic = encounter.Bloodpressuresystolic,
-                BloodPressureDiastolic = encounter.Bloodpressurediastolic,
-                Heent = encounter.Heent,
-                Chest = encounter.Chest,
-                Hr = encounter.Hr,
-                Allergies = encounter.Allergies,
-                Cv = encounter.Cv,
+            EncounterViewModel model = new EncounterViewModel();
 
-                ABD = encounter.Abd,
-                Extr = encounter.Extr,
-                Skin = encounter.Skin,
-                Neuro = encounter.Neuro,
-                Diagnosis = encounter.Diagnosis,
-                MedicationsDispensed = encounter.Medicationsdispensed,
-                Followup = encounter.Followup,
-                Other = encounter.Other,
-                TreatmentPlan = encounter.Treatmentplan,
-                Procedures = encounter.Procedures,
-                Rr = encounter.Rr,
-                Pain = encounter.Pain,
-                IsChanged = encounter.Ischanged,
-                IsFinalized = encounter.Isfinalized
+            model.RequestID = req.RequestId;
+            model.FirstName = encounter.Firstname;
+            model.LastName = encounter.Lastname;
+            model.Location = encounter.Location;
+            model.DateOfBirth = encounter.Dateofbirth;
+            model.PhoneNumber = encounter.Phonenumber;
+            model.MedicalReport = encounter.Medicalreport;
+            model.Date = encounter.Date;
+            model.Email = encounter.Email;
+            model.HistoryOfPresentIllness = encounter.Historyofpresentillness;
+            model.MedicalHistory = encounter.Medicalhistory;
+            model.Medications = encounter.Medications;
+            model.Temp = encounter.Temp;
+            model.BloodPressureSystolic = encounter.Bloodpressuresystolic;
+            model.BloodPressureDiastolic = encounter.Bloodpressurediastolic;
+            model.Heent = encounter.Heent;
+            model.Chest = encounter.Chest;
+            model.Hr = encounter.Hr;
+            model.Allergies = encounter.Allergies;
+            model.Cv = encounter.Cv;
+            model.ABD = encounter.Abd;
+            model.Extr = encounter.Extr;
+            model.Skin = encounter.Skin;
+            model.Neuro = encounter.Neuro;
+            model.Diagnosis = encounter.Diagnosis;
+            model.MedicationsDispensed = encounter.Medicationsdispensed;
+            model.Followup = encounter.Followup;
+            model.Other = encounter.Other;
+            model.TreatmentPlan = encounter.Treatmentplan;
+            model.Procedures = encounter.Procedures;
+            model.Rr = encounter.Rr;
+            model.Pain = encounter.Pain;
+            model.IsChanged = encounter.Ischanged;
+            model.IsFinalized = encounter.Isfinalized;
 
-            };
             return model;
         }
 
@@ -965,20 +962,20 @@ namespace HalloDoc.Services.Services
             encounter.Firstname = model.FirstName;
             encounter.Lastname = model.LastName;
             encounter.Location = model.Location;
-            // encounter.Dateofbirth = model.DateOfBirth;
+            encounter.Dateofbirth = model.DateOfBirth;
             encounter.Phonenumber = model.PhoneNumber;
             encounter.Medicalreport = model.MedicalReport;
-            //   encounter.Date = model.Date.Value;
+            encounter.Date = model.Date;
             encounter.Email = model.Email;
             encounter.Historyofpresentillness = model.HistoryOfPresentIllness;
             encounter.Medicalhistory = model.MedicalHistory;
             encounter.Medications = model.Medications;
-            //encounter.Temp = model.Temp.Value;
-            // encounter.Bloodpressuresystolic = model.BloodPressureSystolic.Value;
-            // encounter.Bloodpressurediastolic = model.BloodPressureDiastolic.Value;
+            encounter.Temp = model.Temp;
+            encounter.Bloodpressuresystolic = model.BloodPressureSystolic;
+            encounter.Bloodpressurediastolic = model.BloodPressureDiastolic;
             encounter.Heent = model.Heent;
             encounter.Chest = model.Chest;
-            //encounter.Hr = model.Hr.Value;
+            encounter.Hr = model.Hr;
             encounter.Allergies = model.Allergies;
             encounter.Cv = model.Cv;
             encounter.Abd = model.ABD;
@@ -991,10 +988,10 @@ namespace HalloDoc.Services.Services
             encounter.Other = model.Other;
             encounter.Treatmentplan = model.TreatmentPlan;
             encounter.Procedures = model.Procedures;
-            //encounter.Rr = model.Rr.Value;
-            //encounter.Pain = model.Pain.Value;
-            //encounter.Ischanged = model.IsChanged.Value;
-            //encounter.Isfinalized = model.IsFinalized.Value;
+            encounter.Rr = model.Rr;
+            encounter.Pain = model.Pain;
+            encounter.Ischanged = model.IsChanged;
+            encounter.Isfinalized = model.IsFinalized;
             await _encounterRepository.UpdateAsync(encounter);
 
             return encounter;
@@ -1072,6 +1069,7 @@ namespace HalloDoc.Services.Services
                 using var stream = System.IO.File.Create(filePath);
                 model.Photo.CopyTo(stream);
             }
+           
             if (model.IsAgreementDoc == true && model.contractoragreement != null)
             {
 
@@ -1193,7 +1191,6 @@ namespace HalloDoc.Services.Services
             {
                 checkedRegions[ar.RegionId] = true;
             }
-
             Physician phy = await _physicianRepository.GetByIdAsync(physicianID);
             AspNetUser asp = await _aspnetuserRepository.getById(phy.Id);
             ProviderViewModel model = new ProviderViewModel();
@@ -1224,6 +1221,7 @@ namespace HalloDoc.Services.Services
             model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
             model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
             model.Ishippa = phy.IsTrainingDoc == null ? false : true;
+            //model.filename =  $"{phy.PhysicianId}_Photo.jpg";
             model.StateCheckbox = regions.Select(r => new RegionViewModel()
             {
                 RegionId = r.RegionId,
@@ -1423,13 +1421,38 @@ namespace HalloDoc.Services.Services
             physician.BusinessName = model.BusinessName;
             physician.BusinessWebsite = model.BusinessWebsite;
             physician.AdminNotes = model.AdminNotes;
-            if (model.Signature != null || model.File != null)
+        
+       
+            if (model.Photo.FileName != null)
             {
 
-                physician.Signature = model.Signature.FileName;
-                physician.Photo = model.File.FileName;
-            }
+                var newName = $"{physician.PhysicianId}_Photo.jpg";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/image", newName);
 
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.contractoragreement.CopyTo(stream);
+
+                physician.Photo = model.Photo.FileName;
+            }
+            if (model.Signature.FileName != null)
+            {
+
+                var newName = $"{physician.PhysicianId}_Signature.jpg";
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/physician/image", newName);
+
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+                using var stream = System.IO.File.Create(filePath);
+                model.contractoragreement.CopyTo(stream);
+
+                physician.Signature = model.Signature.FileName;
+            }
             _physicianRepository.UpdateAsync(physician);
 
             return physician;
@@ -2705,7 +2728,7 @@ namespace HalloDoc.Services.Services
 
         #endregion
        
-        #endregion
+       
 
     }
 }

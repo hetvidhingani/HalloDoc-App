@@ -1,6 +1,6 @@
 ﻿@model HalloDoc.Entities.ViewModels.ProviderViewModel
 @{
-    ViewBag.MyProfile = "active";
+    ViewBag.Profile = "active";
     ViewData["Title"] = "My Profile";
 
 }
@@ -317,14 +317,14 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Edit Shift</h5>
+                <h5 class="modal-title">Request to admin</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editShiftForm" asp-controller="Provider" asp-action="RequestAdminToEditProfile"  method="post">
+            <form id="editShiftForm" asp-controller="Provider" asp-action="RequestAdminToEditProfile" asp-route-id="@Model.PhysicianId"  method="post">
                 <input type="hidden" asp-for="PhysicianId"  />
                 <div class="modal-body m-0">
                     <div class="form-floating mt-1 form-group  rounded-3">
-                        <textarea asp-for="description" class="form-control" id="additionalNotes" style="height: 120px;" rows="8" placeholder=" "></textarea>
+                        <textarea asp-for="description" class="form-control" id="additionalNotes" name="note" style="height: 120px;" rows="8" placeholder=" "></textarea>
                         <label class="form-label" for="textAreaExample2">
                             Discription
                         </label>
