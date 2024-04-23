@@ -41,7 +41,7 @@ namespace HalloDoc.Entities.ViewModels
 
         public string onCallStatus { get; set; } = string.Empty;
 
-        public string status { get; set; } = string.Empty;
+        public int status { get; set; } 
 
         public int PhysicianID { get; set; }
 

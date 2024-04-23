@@ -25,7 +25,7 @@ namespace HalloDoc.Repository.Repository
         public async Task<List<Physician>> GetPhysiciansByRegion(int regionId)
         {
             var physicians = await _context.Physicians
-                .Where(p => p.RegionId == regionId)
+                .Where(p => p.RegionId == regionId && p.IsDeleted ==null)
                 .ToListAsync();
 
             return physicians;

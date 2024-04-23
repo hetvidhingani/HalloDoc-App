@@ -35,7 +35,14 @@
                     </td>
                     <td>@u.onCallStatus</td>
                     <td>
-                       @u.status
+                        @if(u.status==2)
+                        {
+                            <p>Pending</p>
+                        }
+                        else
+                        {
+                            <p>Active</p>
+                        }
                     </td>
                     <td>
                         <div class="d-flex">

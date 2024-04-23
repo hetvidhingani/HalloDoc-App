@@ -91,8 +91,16 @@
                     <tr>
                         <input type="hidden" asp-for="@data.SMSLogId">
                         <td>
-                            <p>@data.reciverName </p>
-                        </td>
+                            <p>@if (@data.reciverName.Length >0)
+                                {
+                                    @data.reciverName
+                                }
+                                else
+                                {
+                                    <p>user user</p>
+                                }
+                            </p>
+                    </td>
                         <td>
                            -
                         </td>

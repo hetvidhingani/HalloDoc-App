@@ -816,9 +816,9 @@ namespace HalloDoc.Services.Services
             await _aspnetuserRepository.UpdateAsync(user);
             return user;
         }
-        public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model, List<int> ids)
+        public async Task<object> SaveAdminInfo(AdminMyProfileViewModel model, List<int> ids, int adminId)
         {
-            Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+            Admin admin = await _adminRepository.GetByIdAsync(adminId);
 
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
 
@@ -852,9 +852,9 @@ namespace HalloDoc.Services.Services
             }
             return user;
         }
-        public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model)
+        public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model,int adminid)
         {
-            Admin admin = await _adminRepository.GetByIdAsync(model.AdminID);
+            Admin admin = await _adminRepository.GetByIdAsync(adminid);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
             admin.Address1 = model.Address1;
             admin.Address2 = model.Address2;
@@ -862,7 +862,7 @@ namespace HalloDoc.Services.Services
             admin.AltPhone = model.BillingPhoneNumber;
             admin.City = model.City;
             admin.RegionId = model.RegionId;
-
+          
             await _adminRepository.UpdateAsync(admin);
             return user;
         }
@@ -996,6 +996,8 @@ namespace HalloDoc.Services.Services
                 LastName = model.LastName,
                 Email = model.Email,
                 MedicalLicense = model.MedicalLicense,
+                Npinumber=model.NPINumber,
+                SyncEmailAddress=model.SyncEmail,
                 Mobile = model.PhoneNumber,
                 AdminNotes = model.AdminNotes,
                 Address1 = model.Address1,
@@ -1013,15 +1015,19 @@ namespace HalloDoc.Services.Services
             };
 
             await _physicianRepository.AddAsync(physician);
-            foreach (var u in model.physicianRegionids)
+            if(model.physicianRegionids !=null)
             {
-                PhysicianRegion adminRegion = new PhysicianRegion()
+                foreach (var u in model.physicianRegionids)
                 {
-                    PhysicianId = physician.PhysicianId,
-                    RegionId = u,
-                };
-                await _physicianRegionRepository.AddAsync(adminRegion);
+                    PhysicianRegion adminRegion = new PhysicianRegion()
+                    {
+                        PhysicianId = physician.PhysicianId,
+                        RegionId = u,
+                    };
+                    await _physicianRegionRepository.AddAsync(adminRegion);
+                }
             }
+           
             if (model.Photo.FileName != null)
             {
 
@@ -1223,7 +1229,7 @@ namespace HalloDoc.Services.Services
                 ProviderName = x.FirstName + " " + x.LastName,
                 stopNotification = x.PhysicianNotifications.First(u => u.PhysicianId == x.PhysicianId) == null ? null : "1",
                 roleName = x.Role.Name,
-                status = x.StatusNavigation.Statusname,
+                status = (int)x.Status,
 
             }, tableData.And(x => x.IsDeleted == null), CurrentPage, 5, x => x.FirstName, true);
 
@@ -2397,7 +2403,7 @@ namespace HalloDoc.Services.Services
                 City = viewModel.City,
                 State = await _regionRepository.FindState(viewModel.RegionId),
                 ZipCode = viewModel.ZipCode,
-                Notes = viewModel.Symptoms,
+                Notes = viewModel.Note,
                 Email = viewModel.Email,
                 IntDate = viewModel.DateOfBirth.Day,
                 IntYear = viewModel.DateOfBirth.Year,

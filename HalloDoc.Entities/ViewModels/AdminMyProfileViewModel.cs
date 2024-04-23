@@ -13,7 +13,7 @@ namespace HalloDoc.Entities.ViewModels
         public string UserName { get; set; }=string.Empty;
         public int Status { get; set; }
 
-        [Required( ErrorMessage = "Password must be at least 6 characters long.")]
+        [Required( ErrorMessage = "Password can not be empty!")]
         [StringLength(100, ErrorMessage = "Password must be at least 6 characters long.", MinimumLength = 6)]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,}$", ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, and one special character.")]
         public string Password { get; set; }
@@ -72,7 +72,7 @@ namespace HalloDoc.Entities.ViewModels
 
         [Required(ErrorMessage = "Please select atleast one region.")]
         public List<int> AdminRegionID { get; set; }
-
+        [Required(ErrorMessage = " select atlest one checkbox.")]
         public List<RegionViewModel> StateCheckbox { get; set; }
         public int statusId { get; set; }
         public List<Status>? status { get; set; }

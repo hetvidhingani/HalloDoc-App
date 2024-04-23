@@ -791,8 +791,6 @@ namespace HalloDoc.Services.Services
             shiftDetail.EndTime = viewModel.endTime;
             shiftDetail.ShiftDate = viewModel.ShiftDate;
             _shiftDetailsRepository.UpdateAsync(shiftDetail);
-
-
         }
         public object returnShift(int id)
         {

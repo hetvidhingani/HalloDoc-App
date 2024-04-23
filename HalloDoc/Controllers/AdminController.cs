@@ -651,12 +651,16 @@ namespace HalloDoc.Controllers
         }
         public async Task<IActionResult> SaveAdminInfo(AdminMyProfileViewModel model, List<int> notification)
         {
-            await _admin.SaveAdminInfo(model, notification);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            await _admin.SaveAdminInfo(model, notification,AdminID);
             return Json(new { success = true });
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
-            await _admin.SaveBillingInfo(model);
+            var request = HttpContext.Request;
+            int AdminID = Int32.Parse(request.Cookies["AdminID"]);
+            await _admin.SaveBillingInfo(model,AdminID);
             return Json(new { success = true });
 
         }

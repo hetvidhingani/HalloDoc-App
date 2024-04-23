@@ -38,8 +38,8 @@ namespace HalloDoc.Services.IServices
         Task<object> EditClose(CloseCaseViewModel viewModel, int Id);
         Task<string> ConfirmCloseCase(int id,int adminID);
         Task<object> ResetPasswordAdmin(AdminMyProfileViewModel model);
-        Task<object> SaveAdminInfo(AdminMyProfileViewModel model,List<int> ids);
-        Task<object> SaveBillingInfo(AdminMyProfileViewModel model);
+        Task<object> SaveAdminInfo(AdminMyProfileViewModel model,List<int> ids,int adminId);
+        Task<object> SaveBillingInfo(AdminMyProfileViewModel model,int adminId);
         Task<object> EncounterForm(int RequestId);
         Task<object> EncounterFormSaveChanges(EncounterViewModel model);
         void sendSMS(ContactProviderViewModel model, int adminId);

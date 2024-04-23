@@ -5,6 +5,9 @@
     <h5 class="modal-title">Send Agreement</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
+<div id="loader-wrapper">
+    <div id="loader"></div>
+</div>
 @if (@HttpContextAccessor?.HttpContext?.Request.Cookies["AdminID"] != null)
 {
     <form id="sendagreement" asp-controller="Admin" asp-action="SendAgreementLink" asp-route-id="@Model.requestclientID">
@@ -96,6 +99,17 @@ else
 <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
+   
+
+    // Function to show loader
+    function showLoader() {
+        document.getElementById('loader-wrapper').style.display = 'block';
+    }
+
+    // Function to hide loader
+    function hideLoader() {
+        document.getElementById('loader-wrapper').style.display = 'none';
+    }
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {
@@ -111,6 +125,7 @@ else
     });
     $('#phone').attr('value', "+91");
     $('#sendagreement').on('submit', function (e) {
+        showLoader();
         e.preventDefault();
         var form = $(this);
         var url = form.attr('action');
@@ -122,6 +137,8 @@ else
             data: data
         })
             .done(function (response) {
+
+                hideLoader();
                 let timerInterval;
                 Swal.fire({
                     title: "Done",

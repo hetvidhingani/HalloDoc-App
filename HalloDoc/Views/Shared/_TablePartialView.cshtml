@@ -730,6 +730,7 @@
         });
     });
     $('.SendAgreement').click(function () {
+  
         var id = this.id;
         $.ajax({
             type: "POST",
@@ -737,11 +738,14 @@
             data: { id },
             url: "@(Url.Action("SendAgreement", "Admin"))",
             success: function (data) {
+             
+                
 
                 $("#SendAgreement").find('.modal-content').html(data);
             }
         });
     });
 
+   
 
 </script>

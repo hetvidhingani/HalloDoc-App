@@ -316,16 +316,7 @@
     </div>
 </main>
 <script>
-    // Function to show loader
-    function showLoader() {
-        document.getElementById('loader-wrapper').style.display = 'block';
-    }
-
-    // Function to hide loader
-    function hideLoader() {
-        document.getElementById('loader-wrapper').style.display = 'none';
-    }
-
+   
     // Function to handle form submission
    
 
@@ -368,17 +359,15 @@
 
     function AjaxAll() {
 
-        // var activeCard = $('.cards.active');
-
-        // var state = activeCard.attr('id');
-        showLoader();
+       
+      
         $.ajax({
             url: '@Url.Action("GetTable", "Admin")',
             type: "POST",
             data: { state: state, CurrentPage: page, PatientName: PatientName, ReqType: requestType, RegionId: regionId },
             dataType: "html",
             success: function (data) {
-                hideLoader();
+              
                 $("#admindata").html(data);
                 localStorage.setItem("state", state);
             },
@@ -543,14 +532,14 @@
     }
 
     $('.sendLink').click(function () {
-        showLoader();
+        
         $.ajax({
             type: "POST",
             dataType: "html",
           
             url: "@(Url.Action("sendLink", "Admin"))",
             success: function (data) {
-                hideLoader();
+               
                 $("#sendLinkToPatient").find('.modal-content').html(data);
             }
         });

@@ -120,8 +120,8 @@
                         <div class="form-floating form-group  border">
                             <input required asp-for="PhoneNumber" id="phone" type="tel" style="border: none;height: 54px;" class="edit" disabled />
 
-                            <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
                         </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger phone"></span>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 d-flex align-items-center">
                         @foreach (var cb in Model.StateCheckbox)
@@ -133,9 +133,10 @@
 
                                     @cb.Name
                                 </label>
+                        <span asp-validation-for="StateCheckbox" class="text-danger phone"></span>
                             </div>
                         }
-                      
+
                     </div>
 
 
@@ -179,7 +180,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                        <select class="form-select form-select-sm h-100 edit2" style="height:60px;" aria-label="Default select example" id="state" aria-height="5vh" asp-for="RegionId" disabled>
+                        <select class="form-select form-select-sm edit2" style="height:60px;" aria-label="Default select example" id="state" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
