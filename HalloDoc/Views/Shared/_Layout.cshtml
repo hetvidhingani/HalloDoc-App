@@ -207,11 +207,8 @@
                                 <span class="logouttxt"> Logout</span>
                                 <span class="logoutIcon"><i class="bi bi-box-arrow-right"></i></span>
                             </button>
-
                         </a>
                     }
-
-
                     <div class="moon-icon" style="d-flex justify-content-center align-items-center">
                         <img src="~/images/moon_icon.svg" alt="moon_icon" onclick="changeTheme()" />
                     </div>
@@ -261,7 +258,6 @@
                            style="color:dimgrey">Dashboard</a>
                     </div>
                     <div class="item">
-
                         <a id="2" asp-action="Profile" asp-controller="Admin"
                            class=" sub-btn fw-bold  @ViewBag.subHeader" style="color:dimgrey">Profile</a>
                     </div>
@@ -307,7 +303,6 @@
                             <a class="nav-link py-2 @ViewBag.records" href="#" role="button" data-bs-toggle="dropdown" style="color:dimgrey" aria-expanded="false">
                                 Records
                             </a>
-
                             <ul class="dropdown-menu layoutTab">
                                 <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="SearchRecord" asp-controller="Admin">Search Records</a></li>
                                 <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="EmailLogs" asp-controller="Admin">Email Logs</a></li>
@@ -375,6 +370,16 @@
                         <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="sub-btn fw-bold item"
                            style="color:dimgrey">Partners</a>
                     </div>
+
+                    <div class=" item" id="4 ">
+                        <a class="sub-btn fw-bold">Access<i class="fas fa-angle-right dropdown"></i></a>
+                        <div class="sub-menu">
+                            <a class=" " style="color:dimgrey" asp-action="AccountAccess"
+                               asp-controller="Admin">Account Access</a>
+                            <a class="" style="color:dimgrey" asp-action="UserAccess" asp-controller="Admin">User Access</a>
+                        </div>
+                    </div>
+
                     <div class="item" id="4 ">
                         <a class="sub-btn fw-bold"> Records<i class="fas fa-angle-right dropdown"></i></a>
                         <div class="sub-menu">

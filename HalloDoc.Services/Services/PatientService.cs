@@ -132,8 +132,8 @@ namespace HalloDoc.Services.Services
                 Email = viewModel.Email,
                 CreatedDate = DateTime.Now,
                 Status = 1,
-                 
-                                
+
+
             };
             await _requestRepository.AddAsync(request);
 
@@ -350,7 +350,6 @@ namespace HalloDoc.Services.Services
                 RegionId = viewModel.RegionId,
                 PhoneNumber = viewModel.ClientPhoneNumber,
                 CreatedDate = DateTime.Now,
-                CreatedBy = "Admin",
                 Address1 = viewModel.ClientProperty,
                 Status = 1
             };
@@ -590,7 +589,7 @@ namespace HalloDoc.Services.Services
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
             List<DashboardData> clients = tabledashboard
-                
+
                 .Skip((CurrentPage - 1) * dataSize)
                 .Take(dataSize)
                 .ToList();
@@ -606,12 +605,12 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
 
-            
+
         }
         #endregion
 
         #region create new request(someoneElse)
-        public async Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel ,int userId)
+        public async Task<string> SubmitInformationSomeoneElse(PatientRequestViewModel viewModel, int userId)
         {
             User userExist = await _userRepository.GetByIdAsync(userId);
             Request request = new Request
@@ -766,18 +765,18 @@ namespace HalloDoc.Services.Services
             UserMyProfileViewModel requestViewModel = new UserMyProfileViewModel();
             User user = await _userRepository.GetByIdAsync(userId);
             DateTime dob = new DateTime((int)user.IntYear, Convert.ToInt32(user.StrMonth), (int)user.IntDate);
-                requestViewModel.userid = user.UserId;
-                requestViewModel.FirstName = user.FirstName;
-                requestViewModel.LastName = user.LastName;
-                requestViewModel.City = user.City;
-                requestViewModel.RegionId = (int)user.RegionId;
-                requestViewModel.State =  _regionRepository.GetAll().ToList();
-                requestViewModel.Street = user.Street;
-                requestViewModel.Email = user.Email;
-                requestViewModel.PhoneNumber = user.Mobile;
-                requestViewModel.ZipCode = user.ZipCode;
-                requestViewModel.DateOfBirth = dob;
-                return requestViewModel;
+            requestViewModel.userid = user.UserId;
+            requestViewModel.FirstName = user.FirstName;
+            requestViewModel.LastName = user.LastName;
+            requestViewModel.City = user.City;
+            requestViewModel.RegionId = (int)user.RegionId;
+            requestViewModel.State = _regionRepository.GetAll().ToList();
+            requestViewModel.Street = user.Street;
+            requestViewModel.Email = user.Email;
+            requestViewModel.PhoneNumber = user.Mobile;
+            requestViewModel.ZipCode = user.ZipCode;
+            requestViewModel.DateOfBirth = dob;
+            return requestViewModel;
         }
 
         public async Task<User> EditUser(UserMyProfileViewModel patientRequestViewModel)
@@ -800,10 +799,15 @@ namespace HalloDoc.Services.Services
                 user.ModifiedDate = DateTime.Now;
 
                 await _userRepository.UpdateAsync(user);
+
+                AspNetUser aspnetuser = await _aspnetuserRepository.GetByIdAsync(user.Id);
+                aspnetuser.Email = patientRequestViewModel.Email;
+                aspnetuser.PhoneNumber = patientRequestViewModel.PhoneNumber;
+                aspnetuser.ModifiedDate = DateTime.Now;
+                await _aspnetuserRepository.UpdateAsync(aspnetuser);
             }
             return user;
         }
-
         #endregion
 
         #region comon added

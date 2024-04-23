@@ -412,7 +412,13 @@
                         </div>
                         <div style="margin-left:8px;font-weight:500">  @request.PatientPhone</div>
                     </div>
-             
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Address :
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">@request.Address</div>
+                </div>
           
             
                 @if (Model.stateTab == "Active")
@@ -426,20 +432,14 @@
                     </div>
                 }
                 <div class=" row  justify-content-between mx-auto  mt-3">
-                    @if (Model.stateTab == "New" || Model.stateTab == "Pending" || Model.stateTab == "Active" || Model.stateTab == "Conclude" || Model.stateTab == "Toclose" || Model.stateTab == "Unpaid")
-                    {
+                 
                         <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Notes</a>
-                    }
 
-                    @if (Model.stateTab == "Active" || Model.stateTab == "Conclude" || Model.stateTab == "Toclose")
-                    {
-                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                    }
-                    @if (Model.stateTab == "Unpaid" || Model.stateTab == "Pending" || Model.stateTab == "Active" || Model.stateTab == "Conclude" || Model.stateTab == "Toclose")
-                    {
+                  
+                   
                         <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Uploads</a>
-                    }
-                    @if (Model.stateTab == "Active" || Model.stateTab == "Conclude" || Model.stateTab == "Toclose")
+                    
+                    @if (Model.stateTab == "Active" || Model.stateTab == "Conclude")
                     {
                         <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">Encounter</a>
                     }
@@ -458,26 +458,16 @@
 
                         <button data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId class="Block col-5 mobileDashBtn bg-danger">Block Patient</button>
                     }
-                    @*    @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
-                {
-                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                } *@
+                   
                     @if (Model.stateTab == "Pending")
                     {
                         <button data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId class="SendAgreement col-5 mobileDashBtn adminDashBtn3">Send Agreement</button>
 
                         <button data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId class="Transfer col-5 mobileDashBtn bg-info">Transfer</button>
                     }
-                    @if (Model.stateTab == "Pending" || Model.stateTab == "Toclose")
-                    {
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID class="Clear col-5 mobileDashBtn adminDashBtn3">Clear Case</button>
-                    }
+             
 
-                    @if (Model.stateTab == "Toclose")
-                    {
-                        <a href="@Url.Action("CloseCase", "Admin", new { Id = @request.requestID })" style="text-align:center;text-decoration:none;" class="col-5 mobileDashBtn bg-danger">Close Case</a>
-
-                    }
+                  
 
 
 
@@ -502,10 +492,10 @@
     //mobile view cards
     var coll = document.getElementsByClassName("collapsible");
     var maintb = document.getElementsByClassName("mobileviewdashboard");
+    var selectedOption = "";
+    var requestIdofTypeOFCare = "";
 
-    var i;
-
-    for (i = 0; i < coll.length; i++) {
+    for (var i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
             var content = this.nextElementSibling;
@@ -517,8 +507,9 @@
                 }
             }
         });
+    }
+
     var selectedOption = "";
-    var requestIdofTypeOFCare = "";
     $(document).on('click', '.activeEncounter', function () {
         requestIdofTypeOFCare = this.id;
 
@@ -528,11 +519,12 @@
         continueToPage();
 
     });
-    
+
     $(document).on('click', '.downloadEncounter', function () {
         requestIdofTypeOFCare = this.id;
 
     });
+
     $('.dwnload').click(function () {
         var id = requestIdofTypeOFCare;
         $.ajax({
@@ -578,7 +570,6 @@
             }
         });
     });
-
     //////////popup box
 
     //conclude -> Encounter

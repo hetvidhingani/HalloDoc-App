@@ -139,7 +139,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm " style="height:60px;" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -209,14 +209,44 @@
                             </div>
                         </div>
 
+                        <div class="col-12 d-flex " style="justify-content:flex-end;align-items:center">
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
 
+                                    <div class="modal-content">
+                                        <div class="d-flex justify-content-center mb-4 mt-4">
+                                            <img src="~/images/warning.png" alt="" width="80px">
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4 class="text-center">Information</h4>
+                                            <p class="mt-3 text-center">
+                                                When submitting a request, you must provide the correct contact
+                                                information for the patient or the responsibility party. Failure to provide
+                                                the correct email
+                                                and phone number will delay service or be declined.
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer d-flex justify-content-center">
+                                            <button type="button" class="btn btn-info text-white"
+                                                    data-bs-dismiss="modal">
+                                                Ok
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+                        </div>
                         <button type="submit" class="createNewReqBtn submitBtn" >Submit</button>
-                            <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
-                                <button type="button" class="createNewReqBtn">
-                                    Cancle
-                                </button>
-
-                            </a>
+                        <button type="reset" class="createNewReqBtn mx-1">
+                            Cancle
+                        </button>
 
                        
                     </div>
@@ -255,5 +285,7 @@
             "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     });
     $('#phone2').attr('value', "+91");
-
+    $(document).ready(function () {
+        $('#exampleModal').modal('show');
+    });
 </script>

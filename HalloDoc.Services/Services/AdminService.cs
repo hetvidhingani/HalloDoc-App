@@ -555,7 +555,6 @@ namespace HalloDoc.Services.Services
                 requestNote1.AdminId = adminid;
                 requestNote1.Notes = viewModel.AdditionalNotes;
                 await _requestStatusLogRepository.UpdateAsync(requestNote1);
-
             }
             else
             {
@@ -570,7 +569,6 @@ namespace HalloDoc.Services.Services
 
             Request request = await _requestRepository.GetByIdAsync(req.RequestId);
             request.Status = 11;
-            //request.CaseTag = viewModel.CaseTagID;
             await _requestRepository.UpdateAsync(request);
 
             BlockRequest blockRequest = new BlockRequest();
@@ -582,7 +580,6 @@ namespace HalloDoc.Services.Services
             await _blockRequestRepository.AddAsync(blockRequest);
 
             return "Dashboard";
-
         }
         #endregion
 
@@ -763,39 +760,6 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Admin My Profile
-        //public async Task<object> AdminMyProfile(int? adminId)
-        //{
-        //    Admin admin = await _adminRepository.GetByIdAsync(adminId);
-        //    AspNetUser aspNetUser = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
-        //    List<AdminRegion> adminRegion = _adminRegionRepository.GetAll().Where(u => u.AdminId == adminId).ToList();
-        //    List<Region> regions = _regionRepository.GetAll().ToList();
-
-        //    AdminMyProfileViewModel model = new AdminMyProfileViewModel()
-        //    {
-        //        AdminID = admin.AdminId,
-        //        UserName = aspNetUser.UserName,
-        //        Password = _aspnetuserRepository.DecodeFrom64(aspNetUser.PasswordHash),
-        //        Status = (int)admin.Status,
-        //        RoleID = admin.RoleId,
-        //        roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList(),
-        //        FirstName = admin.FirstName,
-        //        LastName = admin.LastName,
-        //        Email = admin.Email,
-        //        ConfirmEmail = admin.Email,
-        //        PhoneNumber = admin.Mobile,
-        //        Address1 = admin.Address1,
-        //        Address2 = admin.Address2,
-        //        City = admin.City,
-        //        RegionId = (int)admin.RegionId,
-        //        State = regions,
-        //        Zip = admin.Zip,
-        //        BillingPhoneNumber = admin.AltPhone,
-        //        AdminRegions = adminRegion.Select(r => r.Region).ToList(),
-        //    };
-        //    return model;
-
-        //}
-       
 
         public async Task<object> AdminMyProfile(int? adminId)
         {
@@ -866,7 +830,6 @@ namespace HalloDoc.Services.Services
 
             await _adminRepository.UpdateAsync(admin);
 
-
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
             user.ModifiedDate = DateTime.Now;
@@ -887,7 +850,6 @@ namespace HalloDoc.Services.Services
             {
                 _adminRegionRepository.AddAsync(newPhysician);
             }
-
             return user;
         }
         public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model)
@@ -1386,11 +1348,16 @@ namespace HalloDoc.Services.Services
             physician.SyncEmailAddress = model.SyncEmail;
             _physicianRepository.UpdateAsync(physician);
 
+            AspNetUser user = _aspnetuserRepository.GetAll().Where(x=>x.Id == physician.Id).FirstOrDefault();
+            user.Email = model.Email;
+            _aspnetuserRepository.UpdateAsync(user);
+
             List<PhysicianRegion> region = _physicianRegionRepository.GetAll().Where(u => u.PhysicianId == model.PhysicianId).ToList();
             foreach (var adminregion in region)
             {
                 _physicianRegionRepository.Remove(adminregion);
             }
+
             var adminregion1 = ids.Select(id => new PhysicianRegion
             {
                 PhysicianId = model.PhysicianId,
@@ -2241,7 +2208,6 @@ namespace HalloDoc.Services.Services
             Expression<Func<BlockRequest, bool>> tableData = PredicateBuilder.New<BlockRequest>();
 
             tableData = x => true;
-
             if (!Name.IsNullOrEmpty())
             {
                 tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(Name.ToLower()) || e.Request.LastName.ToLower().Contains(Name.ToLower()));
@@ -2258,7 +2224,6 @@ namespace HalloDoc.Services.Services
             {
                 tableData = tableData.And(e => e.PhoneNumber.Contains(PhoneNumber));
             }
-
             List<BlockTable> data = new List<BlockTable>();
             var requiredData = _blockRequestRepository.GetAllWithPagination(x => new BlockTable
             {
@@ -2268,8 +2233,7 @@ namespace HalloDoc.Services.Services
                 IsActive = x.IsActive == null ? "Yes" : "No",
                 PhoneNumber = x.PhoneNumber,
                 Note = x.Reason,
-                PatientName = x.Request.FirstName + " " + x.Request.LastName,
-
+                PatientName = x.Request.RequestClients.First(u=>u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
             }, tableData, CurrentPage, 5, x => x.RequestId, false);
 
             foreach (BlockTable requestClient in requiredData)

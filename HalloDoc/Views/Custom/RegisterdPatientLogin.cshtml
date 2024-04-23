@@ -9,16 +9,11 @@
     }
     
 }
- 
-
-
 <div class="backkButton">
-
     <a asp-controller="Custom" asp-action="PatientSite" class="SiteColor">
         <i class="bi bi-chevron-left SiteColor"></i>
         Back
     </a>
-
 </div>
 <div class="text-center ">
 
@@ -34,22 +29,17 @@
 
         <div class=" form-floating form-group">
             <i class="bi bi-person-circle loginIconfrom"></i>
-            <input asp-for="Email" type="email" id="email" class="form-control " placeholder=" " value="user1@gmail.com1" />
+            <input asp-for="Email" type="email" id="email" class="form-control " placeholder=" " value="unnatimalhan@gmail.com" />
             <label for="email">Email</label>
             <span asp-validation-for="Email" class="text-danger"></span>
 
         </div>
 
-
         <div class=" form-floating form-group">
             <i class="bi bi-eye loginIconfrom" id="disp" onclick="myFunction()"></i>
-
             <input asp-for="PasswordHash" type="password" class="form-control  " value="Hkd@953" id="pwd" placeholder=" " >
             <label for="pwd">Password</label>
             <span asp-validation-for="PasswordHash" class="text-danger"></span>
-
-           
-
         </div>
         <div class="input-group d-flex justify-content-between">
                 <input type="submit" class="SiteButton  px-4 py-2 w-100 " style="text-decoration:none;color:white;border:none" value="Login"/>

@@ -21,6 +21,7 @@ namespace HalloDoc.Repository.Repository
 
             return user;
         }
+
         public async Task<AspNetUser> Login(string email,string password)
         {
             AspNetUser user1 = await CheckUserByEmail(email);

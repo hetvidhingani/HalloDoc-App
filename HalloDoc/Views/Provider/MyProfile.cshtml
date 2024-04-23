@@ -155,7 +155,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
                     <div class="form-floating form-group">
-                        <select class="form-select form-select-sm h-100 edit" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
+                        <select class="form-select form-select-sm edit" style="height:60px;" aria-label="Default select example" aria-height="5vh" asp-for="RegionId" disabled>
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.Regions)

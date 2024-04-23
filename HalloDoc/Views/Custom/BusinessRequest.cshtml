@@ -143,7 +143,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select form-select-sm h-100" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
+                        <select class="form-select form-select-sm "   style="height:60px;" aria-label="Default select example" aria-height="5vh" asp-for="RegionId">
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.State)
@@ -207,12 +207,9 @@
 
 
                         <input type="submit" class="createNewReqBtn submitBtn" value="submit"/>
-                        <a asp-action="PatientSubmitRequest" asp-controller="Patient" class="btn ">
-                            <button type="button" class="createNewReqBtn">
-                                Cancle
-                            </button>
-
-                        </a>
+                        <button type="reset" class="createNewReqBtn mx-1">
+                            Cancle
+                        </button>
 
 
                     </div>

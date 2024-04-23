@@ -106,9 +106,9 @@ namespace HalloDoc.Controllers
 
                     return RedirectToAction("Dashboard", "Admin");
                 }
-                else if(role.RoleId == "3")
+                else if (role.RoleId == "3")
                 {
-                    Physician userID =  _customService.GetPhysician(myUser.Email);
+                    Physician userID = _customService.GetPhysician(myUser.Email);
 
                     var jwtToken = _jwtService.GenerateJwtToken(myUser);
 
@@ -147,7 +147,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientForgotPassword/" + email;
                 var subject = "Reset Account Password";
                 var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-                _customService.SendEmail(email, link, subject, body,0,0,0);
+                _customService.SendEmail(email, link, subject, body, 0, 0, 0);
                 TempData["EnterEmailSuccess"] = "Email is successfully Sent to your Registerd Email.";
 
                 return RedirectToAction("ResetPassword");
@@ -167,7 +167,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/AdminResetPassword/" + email;
             var subject = "Reset Account Password";
             var body = "Click here " + "<a href=" + link + ">Reset Password</a>" + " to Update your password";
-            _customService.SendEmail(email, link, subject, body,0,0,0);
+            _customService.SendEmail(email, link, subject, body, 0, 0, 0);
             TempData["success"] = "Link is successfully sent to your Registed Email Account";
             return RedirectToAction("AdminForgotPassword");
         }
@@ -186,7 +186,7 @@ namespace HalloDoc.Controllers
             var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + req.Email;
             var subject = "Create Account";
             var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
-            _customService.SendEmail(req.Email, link, subject, body, 0, 0 ,0 );
+            _customService.SendEmail(req.Email, link, subject, body, 0, 0, 0);
 
             TempData["emailsend"] = "Email is sent successfully to your email account";
             return RedirectToAction("PatientSite", "Custom");
@@ -234,22 +234,25 @@ namespace HalloDoc.Controllers
             {
 
                 User userID = await _patient.GetUser(myUser.Email);
-                var jwtToken = _jwtService.GenerateJwtToken(myUser);
-                Response.Cookies.Append("jwt", jwtToken);
-
-
-                Response.Cookies.Append("UserID", userID.UserId.ToString());
-                Response.Cookies.Append("UserNameUser", userID.FirstName + " " + userID.LastName);
-                Response.Cookies.Append("AspNetIdUser", userID.Id.ToString());
-
-
-                HttpContext.Session.SetString("UserName", myUser.UserName);
-                HttpContext.Session.SetInt32("UserSession", userID.UserId);
+                if (userID == null)
+                {
+                    ViewBag.Message = "Please enter Valid Email";
+                }
+                else
+                {
+                    var jwtToken = _jwtService.GenerateJwtToken(myUser);
+                    Response.Cookies.Append("jwt", jwtToken);
+                    Response.Cookies.Append("UserID", userID.UserId.ToString());
+                    Response.Cookies.Append("UserNameUser", userID.FirstName + " " + userID.LastName);
+                    Response.Cookies.Append("AspNetIdUser", userID.Id.ToString());
+                    HttpContext.Session.SetString("UserName", myUser.UserName);
+                    HttpContext.Session.SetInt32("UserSession", userID.UserId);
+                }
                 return RedirectToAction("DashBoard", "Patient");
             }
             else
             {
-                TempData["error"] = "Invalid User Name or Password";
+                ViewBag.Message = "Invalid User Name or Password";
             }
 
             return View();
@@ -289,7 +292,7 @@ namespace HalloDoc.Controllers
         {
             //var request = HttpContext.Request;
             //int? userId = Int32.Parse(request.Cookies["UserID"]);
-           
+
             var result = await _patient.PatientRequest();
             if (result == "")
             {

@@ -7,66 +7,78 @@
             <span class="logoutIcon"> <i class="bi bi-plus-lg"></i></span>
         </a>
     </div>
-<div class="table-responsive">
-    <table class="table dashboardtbl mt-2" id="responsive-table">
-        <thead class="table-secondary">
-            <tr>
-                <th>Created Date</th>
-                <th>Status</th>
-                <th>File Name</th>
-            </tr>
-        </thead>
-        <tbody >
-            @{
-                string status = "";
-                foreach (var r in Model.DashboardData)
-                {
-                        <tr >
-                            <td > @r.CreatedDate</td>
-                        @switch (@r.Status)
-                        {
-                            case 1:
-                                status = "New";
-                                break;
-                            case 2:
-                                status = "Pending";
-                                break;
-                            case 4:
-                                status = "Active";
-                                break;
-                            case 6:
-                                status = "Conclude";
-                                break;
-                            case 3:
-                                status = "To Close";
-                                break;
-                            case 9:
-                                status = "Unpaid";
-                                break;
-                            default:
-                                status = " ";
-                                break;
-                        }
-                            <td >@status </td>
-                        <td>
-                            @if (@r.FileName != null)
+    <div class="table-responsive">
+        <table class="table dashboardtbl mt-2" id="responsive-table">
+            <thead class="table-secondary">
+                <tr>
+                    <th>Created Date</th>
+                    <th>Status</th>
+                    <th>File Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    string status = "";
+                    foreach (var r in Model.DashboardData)
+                    {
+                        <tr>
+                            <td> @r.CreatedDate</td>
+                            @switch (@r.Status)
                             {
-                                <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
-                                    <button class="btn btn-sm btn-outline-info">Download (@r.FileCount)</button>
-                                </a>
+                                case 1:
+                                    status = "New";
+                                    break;
+                                case 2:
+                                    status = "Pending";
+                                    break;
+                                case 3:
+                                    status = "Closed";
+                                    break;
+                                case 4:
+                                    status = "Active";
+                                    break;
+                                case 6:
+                                    status = "Conclude";
+                                    break;
+                                case 7:
+                                    status = "Caceled By You";
+                                    break;
+                                case 8:
+                                    status = "Closed";
+                                    break;
+                                case 9:
+                                    status = "Unpaid";
+                                    break;
+                                case 10:
+                                    status = "Clear";
+                                    break;
+                                case 11:
+                                    status = "Clear";
+                                    break;
+                                default:
+                                    status = " ";
+                                    break;
                             }
-                        </td>
+                            <td>@status </td>
+                            <td>
+                                @if (@r.FileName != null)
+                                {
+                                    <a href="@Url.Action("ViewDocument", "Patient", new { Id = @r.RequstId })">
+                                        <button class="btn btn-sm btn-outline-info">Download (@r.FileCount)</button>
+                                    </a>
+                                }
+                            </td>
 
-                    </tr>
+                        </tr>
+                    }
                 }
-            }
-        </tbody>
-    </table>
-   
+            </tbody>
+        </table>
 
-    <partial name="_Paging.cshtml" />
 
-</div>
+        <partial name="_Paging.cshtml" />
+
+    </div>
 </div>
 <div class="mbltbl  mt-3  shadow mb-3  rounded h-100  ">
     <div class="d-flex justify-content-end">

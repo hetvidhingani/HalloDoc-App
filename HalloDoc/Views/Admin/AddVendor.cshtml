@@ -95,7 +95,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 dropdownState">
 
-                        <select class="form-select form-select-sm h-100 edit2" aria-label="Default select example" aria-height="5vh" asp-for="RegionID" >
+                        <select class="form-select form-select-sm edit2" style="height:60px;" aria-label="Default select example" aria-height="5vh" asp-for="RegionID">
                             <option value="0" selected disabled>State</option>
 
                             @foreach (var region in Model.regions)
@@ -140,6 +140,7 @@
 
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     //phone number
     const phoneInputField = document.querySelector("#phone");

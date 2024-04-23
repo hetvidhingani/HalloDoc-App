@@ -802,29 +802,34 @@ namespace HalloDoc.Controllers
             await _admin.resetRoleStatus(model, id);
             return Json(new { success = true });
         }
+
         [HttpPost]
         public async Task<IActionResult> ResetPasswordProvider(int physicianId, string newPassword)
         {
             await _admin.resetPasswordProvider(physicianId, newPassword);
             return Json("success");
         }
+
         public IActionResult savePhysicianInformation(ProviderViewModel model, int id, List<int> notification)
         {
             var result = _admin.savePhysicianInformation(model, id, notification);
             model.PhysicianId = result.PhysicianId;
             return Json(new { success = true });
         }
+
         public IActionResult saveBillingInformation(ProviderViewModel model, int id)
         {
             var result = _admin.saveBillingInformation(model, id);
             return Json(new { success = true });
 
         }
+
         public IActionResult providerProfile(ProviderViewModel model, int id)
         {
             var result = _admin.providerProfile(model, id);
             return Json(new { success = true });
         }
+
         public IActionResult documentsProvider(ProviderViewModel model)
         {
             var result = _admin.documentsProvider(model);
