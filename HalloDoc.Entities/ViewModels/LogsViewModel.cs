@@ -38,9 +38,9 @@ namespace HalloDoc.Entities.ViewModels
 
         public string reciverName { get; set; } = string.Empty;
 
-        public DateTime? CreatedDate { get; set; } 
+        public DateTime CreatedDate { get; set; } 
 
-        public DateTime? SentDate { get; set; }
+        public DateTime SentDate { get; set; }
 
         public BitArray? sent { get; set; }
         public int? sentTries { get; set; } 

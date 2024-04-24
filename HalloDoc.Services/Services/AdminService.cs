@@ -1308,6 +1308,7 @@ namespace HalloDoc.Services.Services
                 PhysicianId = model.physicianId,
                 CreateDate = DateTime.Now,
                 SentDate = DateTime.Now,
+                
                 IsSmssent = new BitArray(new[] { true })
             };
             _smmsLogRepository.AddAsync(smslog);
@@ -1994,12 +1995,12 @@ namespace HalloDoc.Services.Services
                     roleName = x.Role.Name,
                     email = x.EmailId,
                     CreatedDate = x.CreateDate,
-                    SentDate = x.SentDate,
+                    SentDate = (DateTime)x.SentDate,
                     sent = x.IsEmailSent,
                     sentTries = x.SentTries,
                     confirmationNumber = x.ConfirmationNumber
 
-                }, tableData, CurrPage, 5, x => x.SentDate, false);
+                }, tableData, CurrPage, 5, x => x.SentDate, true);
 
                 foreach (TableModelLogs requiredData in data)
                 {
@@ -2062,7 +2063,7 @@ namespace HalloDoc.Services.Services
                     roleName = x.Role.Name,
                     PhoneNumber = x.MobileNumber,
                     CreatedDate = x.CreateDate,
-                    SentDate = x.SentDate,
+                    SentDate = (DateTime)x.SentDate,
                     sent = x.IsSmssent,
                     sentTries = x.SentTries,
                     confirmationNumber = x.ConfirmationNumber

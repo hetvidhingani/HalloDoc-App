@@ -60,10 +60,10 @@
                             @data.email
                         </td>
                         <td>
-                            @data.CreatedDate
+                            @data.CreatedDate.ToShortDateString()
                         </td>
                         <td>
-                            @data.SentDate
+                            @data.SentDate.ToShortDateString()
                         </td>
                         <td>
                             @if(@data.sent!=null)

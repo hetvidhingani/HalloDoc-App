@@ -730,7 +730,6 @@ namespace HalloDoc.Controllers
             int AdminID = Int32.Parse(request.Cookies["AdminID"]);
             if (flexRadioDefault == 2)
             {
-                // var result = _admin.ContectProvider(model.physicianId);
 
                 var link = "";
                 var subject = "Admin is trying to connect with you";
@@ -748,7 +747,6 @@ namespace HalloDoc.Controllers
             }
             else
             {
-                // var result = _admin.ContectProvider(model.physicianId);
 
                 var link = "";
                 var subject = "Admin is trying to connect with you";
