@@ -34,7 +34,7 @@ using Twilio.Types;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Xml.Linq;
-
+using Newtonsoft.Json;
 
 namespace HalloDoc.Services.Services
 {
@@ -981,30 +981,31 @@ namespace HalloDoc.Services.Services
 
             };
             await _userRolesRepository.AddAsync(userRole);
-            Physician physician = new Physician
-            {
-                Id = user.Id,
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                MedicalLicense = model.MedicalLicense,
-                Npinumber = model.NPINumber,
-                SyncEmailAddress = model.SyncEmail,
-                Mobile = model.PhoneNumber,
-                AdminNotes = model.AdminNotes,
-                Address1 = model.Address1,
-                Address2 = model.Address2,
-                Zip = model.Zip,
-                City = model.City,
-                RegionId = model.RegionId,
-                RoleId = model.RoleId,
-                CreatedDate = DateTime.Now,
-                Status = 3,
-                CreatedBy = user.Id,
-                BusinessName = model.BusinessName,
-                BusinessWebsite = model.BusinessWebsite,
-                Photo = model.Photo.FileName,
-            };
+
+            Physician physician = new Physician();
+
+            physician.Id = user.Id;
+            physician.FirstName = model.FirstName;
+            physician.LastName = model.LastName;
+            physician.Email = model.Email;
+            physician.MedicalLicense = model.MedicalLicense;
+            physician.Npinumber = model.NPINumber;
+            physician.SyncEmailAddress = model.SyncEmail;
+            physician.Mobile = model.PhoneNumber;
+            physician.AdminNotes = model.AdminNotes;
+            physician.Address1 = model.Address1;
+            physician.Address2 = model.Address2;
+            physician.Zip = model.Zip;
+            physician.City = model.City;
+            physician.RegionId = model.RegionId;
+            physician.RoleId = model.RoleId;
+            physician.CreatedDate = DateTime.Now;
+            physician.Status = 3;
+            physician.CreatedBy = user.Id;
+            physician.BusinessName = model.BusinessName;
+            physician.BusinessWebsite = model.BusinessWebsite;
+            physician.Photo = model.Photo.FileName;
+
 
             await _physicianRepository.AddAsync(physician);
             if (model.physicianRegionids != null)
@@ -1020,7 +1021,7 @@ namespace HalloDoc.Services.Services
                 }
             }
 
-            if (model.Photo.FileName != null)
+            if (model.Photo != null)
             {
 
                 var fileName = $"{physician.PhysicianId}_Photo.jpg";
@@ -1069,6 +1070,8 @@ namespace HalloDoc.Services.Services
             }
 
             await _physicianRepository.UpdateAsync(physician);
+
+           
 
             return "ProviderInformation";
         }
@@ -1958,8 +1961,8 @@ namespace HalloDoc.Services.Services
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    tableData = tableData.And(e => e.Request.RequestClients.First(u=>u.RequestId == e.RequestId).FirstName.ToLower().Contains(ReciverName.ToLower()) ||
-                    e.Request.RequestClients.First(u => u.RequestId == e.RequestId).LastName.ToLower().Contains(ReciverName.ToLower()) );
+                    tableData = tableData.And(e => e.Request.RequestClients.First(u => u.RequestId == e.RequestId).FirstName.ToLower().Contains(ReciverName.ToLower()) ||
+                    e.Request.RequestClients.First(u => u.RequestId == e.RequestId).LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {

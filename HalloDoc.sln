@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HalloDoc.Entities", "HalloD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HalloDoc.Repository", "HalloDoc.Repository\HalloDoc.Repository.csproj", "{68CFCE80-1F1A-436A-AD68-1392AE03AD89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HalloDoc.Services", "HalloDoc.Services\HalloDoc.Services.csproj", "{9367A499-0521-4410-A793-F4A0451D6FD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HalloDoc.Services", "HalloDoc.Services\HalloDoc.Services.csproj", "{9367A499-0521-4410-A793-F4A0451D6FD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assignment", "Assignment", "{16865481-38E2-4004-9A56-6BD415EB589F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
