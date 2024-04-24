@@ -1,0 +1,93 @@
+﻿@model Assignment.Entities.ViewModels.PatientDashboardViewModel
+<div class="table-responsive">
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th>Patient ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>Phone Number</th>
+                <th>Gender</th>
+                <th>Diesease</th>
+                <th>Doctor</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tbody class="table-group-divider">
+                @foreach (var u in Model.PagingData)
+                {
+                <tr>
+                    <input type="hidden" asp-for="@u.PatientId">
+                    <td>
+                            @u.PatientId
+                    </td>
+                    <td>
+                            @u.FirstName
+                    </td>
+                    <td>
+                            @u.LastName
+                    </td>
+                    <td>
+                            @u.Email
+                    </td>
+                    <td>
+                            @u.Age
+                    </td>
+                    <td>
+                            @u.PhoneNumber
+                    </td>
+                    <td>
+                            @if (u.Gender == 1)
+                            {
+                                <span>Male</span>
+                            }
+                            else if (u.Gender == 2)
+                            {
+                            <span>Female</span>
+
+                            }
+                            else
+                            {
+                            <span>Other</span>
+
+                            }
+                    </td>
+                    <td>
+                            @u.Disease
+                    </td>
+                    <td>
+                            @u.Doctor
+                    </td>
+                    <td>
+                        <div class="d-flex">
+                            <a class="btn btn-outline-info mx-1 EditPatientData" data-bs-toggle="modal" type="button" data-bs-target="#EditPatientModal" id="@u.PatientId">Edit</a>
+                            <a class="btn btn-outline-info mx-1" asp-action="DeletePatient" asp-controller="Home" asp-route-id="@u.PatientId">Delete</a>
+
+                        </div>
+                    </td>
+
+                </tr>
+                }
+
+
+        </tbody>
+    </table>
+</div>
+<partial name="_Paging.cshtml" />
+<script>
+    $('.EditPatientData').click(function () {
+        var id = this.id;
+        $.ajax({
+            type: "POST",
+            data:{id},
+            dataType: "html",
+            url: "@(Url.Action("EditPatient", "Home"))",
+            success: function (data) {
+                $("#EditPatientModal").find('.modal-content').html(data);
+            }
+        });
+    });
+</script>

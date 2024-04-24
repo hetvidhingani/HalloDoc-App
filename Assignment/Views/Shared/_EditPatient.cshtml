@@ -1,0 +1,127 @@
+﻿@model Assignment.Entities.ViewModels.PatientDataViewModel
+
+<div class="modal-header" style="background-color:#5e94d7;color:white;">
+    <h5 class="modal-title">Patient Form</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<form id="EditData" asp-controller="Home" asp-action="EditPatientDetails">
+    <input asp-for="PatientId" type="hidden" />
+    <div class="modal-body">
+        <div class=" d-flex justify-content-center flex-column ">
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-floating mt-2 form-group">
+                        <input asp-for="FirstName" type="text" class="form-control" placeholder=" ">
+                        <label for="FirstName">First Name</label>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="  form-floating mt-2 form-group">
+                        <input asp-for="LastName" type="text" class="form-control" placeholder=" ">
+                        <label for="LastName">Last Name</label>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="  form-floating mt-2 form-group">
+                        <input asp-for="Email" type="email" class="form-control" placeholder=" ">
+                        <label for="email">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="  form-floating mt-2 form-group">
+                        <input asp-for="Age" type="number" class="form-control" placeholder=" ">
+                        <label for="Age">Age</label>
+                        <span asp-validation-for="Age" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-sm-6 ">
+                    <span class="d-flex ">
+
+                        Gender:
+                        <div class="form-check mx-1">
+                            <input class="form-check-input" type="radio" name="Gender" value="1" id="flexRadioDefault1">
+                            <label class="form-check-label" for="Gender">
+                                Male
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Gender" value="2" id="flexRadioDefault2">
+                            <label class="form-check-label" for="Gender">
+                                Female
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="Gender" value="2" id="flexRadioDefault2">
+                            <label class="form-check-label" for="Gender">
+                                Others
+                            </label>
+                        </div>
+                    </span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="  form-floating mt-2 form-group">
+                        <input asp-for="PhoneNumber" type="number" class="form-control" placeholder=" ">
+                        <label for="email">Phone Number</label>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-6 col-md-6 col-sm-6 align-items-center">
+                    <select asp-for="Disease" id="regionSelect" class="form-select required" style="height:60px;">
+                        <option value="0">Disease</option>
+                        <option value="Heart Diease">Heart Diease</option>
+                        <option value="Infaction">Infaction</option>
+                        <option value="Facture">Facture</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="  form-floating mt-2 form-group">
+                        <input asp-for="Doctor" type="text" class="form-control" placeholder=" ">
+                        <label for="Doctor">Specialist</label>
+                        <span asp-validation-for="Doctor" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <a class="btn btn-light w-50">
+                Cancel
+            </a>
+            <button class="btn w-50" type="submit" style=" background-color:#5e94d7">
+                Save
+            </button>
+        </div>
+    </div>
+</form>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    var data='@Model.Gender';
+    $(document).ready(function () {
+        if (data == "1") {
+            $('#flexRadioDefault1').attr('checked', 'checked');
+        }
+        else if (data == "2") {
+            $('#flexRadioDefault2').attr('checked', 'checked');
+        }
+        else {
+            $('#flexRadioDefault3').attr('checked', 'checked');
+
+        }
+    });
+</script>

@@ -1,8 +1,98 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<div class="col-12  subHeader shadow" style="z-index:10;background-color:#AACDF8;position:absolute;top:58px;">
+    <div class="d-flex justify-content-end align-items-center mx-5" style="height:50px;">
+        <div class="">
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <a id="AddPatientData" data-bs-toggle="modal" type="button" data-bs-target="#AddPatientModal" class="btn btn-sm btn-light text-black">Add Patient</a>
+        </div>
+    </div>
 </div>
+<div class="container-fluid w-75 mt-5">
+
+    <main class="mt-5">
+        <form>
+            <div class="mb-3 " style="margin-top:110px">
+                <input type="email" class="form-control" id="search-input" aria-describedby="emailHelp" placeholder="Search">
+            </div>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+            </div>
+        </form>
+
+    </main>
+    <div class="modal fade" id="AddPatientModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="EditPatientModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#AddPatientData').click(function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: "@(Url.Action("AddPatient", "Home"))",
+            success: function (data) {
+                $("#AddPatientModal").find('.modal-content').html(data);
+            }
+        });
+    });
+</script>
+<script>
+
+    var patient;
+    var page;
+    var length=5;
+    $("#search-input").on('input', function () {
+        patient = $(this).val();
+        load();
+    });
+
+    $(document).ready(function () {
+        load();
+    });
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        load();
+    }
+
+    function load() {
+        $.ajax({
+            url: "/Home/PatientDetails",
+            type: "POST",
+            data: { PatientName: patient, CurrentPage: page ,Length:length},
+            dataType: "html",
+            success: function (data) {
+                $("#admindata").html(data);
+                url = "/Admin/PatientDetails";
+            },
+            error: function () {
+                alert("No Projects Found");
+                $("#admindata").html('An error has occurred');
+            }
+        });
+    }
+    function check() {
+        var length = this.value;
+        changeLength(length);
+    }
+    function changeLength(lengthofData) {
+        length = lengthofData;
+        console.log(length);
+        load();
+    }
+</script>
+

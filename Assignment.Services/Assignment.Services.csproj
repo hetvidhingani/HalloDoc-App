@@ -7,6 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LinqKit" Version="1.2.5" />
+    <PackageReference Include="LinqKit.Core" Version="1.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.15">
       <PrivateAssets>all</PrivateAssets>
@@ -22,11 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Assignment.Repository\Assignment.Repository.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IServices\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
