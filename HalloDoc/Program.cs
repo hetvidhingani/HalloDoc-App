@@ -80,8 +80,8 @@ app.UseSession();
 app.MapControllerRoute(
     name: "default",
      
-  // pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
-pattern: "{controller=Custom}/{action=AdminLogin}/{id?}");
+   pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
+//pattern: "{controller=Custom}/{action=AdminLogin}/{id?}");
 
 
 app.Run();

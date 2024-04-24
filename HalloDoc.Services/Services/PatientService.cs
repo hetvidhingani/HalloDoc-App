@@ -589,7 +589,7 @@ namespace HalloDoc.Services.Services
             int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
             int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
             List<DashboardData> clients = tabledashboard
-
+                .OrderByDescending(x => x.CreatedDate)
                 .Skip((CurrentPage - 1) * dataSize)
                 .Take(dataSize)
                 .ToList();

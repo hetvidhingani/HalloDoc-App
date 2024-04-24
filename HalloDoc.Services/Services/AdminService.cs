@@ -133,13 +133,13 @@ namespace HalloDoc.Services.Services
             Admin user = await _adminRepository.CheckUserByEmail(email);
             return user;
         }
-        
-        
+
+
         public async Task<T> GetTempData<T>(string key)
         {
             return await Task.FromResult(_aspnetuserRepository.GetTempData<T>(key));
         }
-       
+
         public List<Region> getstateDropdown()
         {
             return _regionRepository.GetAll().ToList();
@@ -268,17 +268,9 @@ namespace HalloDoc.Services.Services
 
         public string UnscheduledPhysicians(string message)
         {
-            Expression<Func<ShiftDetail, bool>> tableData = PredicateBuilder.New<ShiftDetail>();
 
-            tableData = x => x.IsDeleted == null && x.Status == 0;
-            tableData = tableData.And(x => x.ShiftDate == DateOnly.FromDateTime(DateTime.Now));
-            tableData = tableData.And(x => x.StartTime >= TimeOnly.FromDateTime(DateTime.Now));
-            tableData = tableData.And(x => x.EndTime >= TimeOnly.FromDateTime(DateTime.Now));
-
-            List<string> emailList = new List<string>();
-            var data = _shiftDetailsRepository.GetAllData(x => x.Shift.Physician.Email, tableData);
-
-            if (data.Count > 0)
+            var physiciansNotInShift = _physicianRepository.GetAll().Where(p => _shiftRepository.GetAll().Any(s => s.PhysicianId == p.PhysicianId)).Select(p => p.Email).ToList();
+            if (physiciansNotInShift.Count > 0)
             {
                 var senderMail = "tatva.dotnet.hetvidhingani@outlook.com";
                 var senderPassword = "Hkd$9503";
@@ -299,7 +291,7 @@ namespace HalloDoc.Services.Services
                     IsBodyHtml = true,
                     Body = message,
                 };
-                foreach (string item in data)
+                foreach (string item in physiciansNotInShift)
                 {
                     mailMessage.To.Add(item);
                 }
@@ -385,9 +377,9 @@ namespace HalloDoc.Services.Services
                                            LastName = r.LastName,
                                            CreatedDate = rsl.CreatedDate,
                                            Note = rsl.Notes,
-                                           status= rsl.Status,
+                                           status = rsl.Status,
                                            AdminName = rsl.Admin.FirstName + rsl.Admin.LastName,
-                                           transferByPhy = rsl.Physician.FirstName +" "+ rsl.Physician.LastName,
+                                           transferByPhy = rsl.Physician.FirstName + " " + rsl.Physician.LastName,
                                            PhysicianName = p != null ? p.FirstName + " " + p.LastName : null
                                        }).ToList();
 
@@ -443,7 +435,7 @@ namespace HalloDoc.Services.Services
             return viewModel;
 
         }
-        public async Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id,int adminid)
+        public async Task<string> ConfirmCancelCase(CancelCaseViewModel viewModel, int id, int adminid)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
@@ -498,7 +490,7 @@ namespace HalloDoc.Services.Services
             }
             return viewModel;
         }
-        public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id ,int adminID)
+        public async Task<string> AssignRequest(AssignCaseViewModel viewModel, int id, int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
@@ -544,7 +536,7 @@ namespace HalloDoc.Services.Services
             return viewModel;
 
         }
-        public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id,int adminid)
+        public async Task<string> BlockCaseRequest(CancelCaseViewModel viewModel, int id, int adminid)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
             RequestStatusLog requestNote1 = await _requestStatusLogRepository.CheckByRequestID(req.RequestId);
@@ -592,7 +584,7 @@ namespace HalloDoc.Services.Services
             viewModel.Physician = await _physicianRepository.GetPhysician();
             return viewModel;
         }
-        public async Task<string> TransferRequest(AssignCaseViewModel viewModel, int id,int adminID)
+        public async Task<string> TransferRequest(AssignCaseViewModel viewModel, int id, int adminID)
         {
             RequestClient req = await _requestclientRepository.GetByIdAsync(id);
 
@@ -678,7 +670,7 @@ namespace HalloDoc.Services.Services
             }
             return user.RequestId;
         }
-        public async Task<string> ConfirmCloseCase(int id,int adminid)
+        public async Task<string> ConfirmCloseCase(int id, int adminid)
         {
             Request req = await _requestRepository.GetByIdAsync(id);
             req.Status = 9;
@@ -780,9 +772,9 @@ namespace HalloDoc.Services.Services
                 AdminID = admin.AdminId,
                 UserName = aspNetUser.UserName,
                 Password = _aspnetuserRepository.DecodeFrom64(aspNetUser.PasswordHash),
-                status = _statusRepository.GetAll().Where(x=>x.Statusid==4 || x.Statusid==2).ToList(),
+                status = _statusRepository.GetAll().Where(x => x.Statusid == 4 || x.Statusid == 2).ToList(),
                 RoleID = (int)admin.RoleId,
-                statusId= (int)admin.Status,
+                statusId = (int)admin.Status,
                 roles = _roleRepository.GetAll().Where(u => u.AccountType == 1).ToList(),
                 FirstName = admin.FirstName,
                 LastName = admin.LastName,
@@ -852,7 +844,7 @@ namespace HalloDoc.Services.Services
             }
             return user;
         }
-        public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model,int adminid)
+        public async Task<object> SaveBillingInfo(AdminMyProfileViewModel model, int adminid)
         {
             Admin admin = await _adminRepository.GetByIdAsync(adminid);
             AspNetUser user = await _aspnetuserRepository.GetByIdAsync(admin.AspNetUserId);
@@ -862,7 +854,7 @@ namespace HalloDoc.Services.Services
             admin.AltPhone = model.BillingPhoneNumber;
             admin.City = model.City;
             admin.RegionId = model.RegionId;
-          
+
             await _adminRepository.UpdateAsync(admin);
             return user;
         }
@@ -996,8 +988,8 @@ namespace HalloDoc.Services.Services
                 LastName = model.LastName,
                 Email = model.Email,
                 MedicalLicense = model.MedicalLicense,
-                Npinumber=model.NPINumber,
-                SyncEmailAddress=model.SyncEmail,
+                Npinumber = model.NPINumber,
+                SyncEmailAddress = model.SyncEmail,
                 Mobile = model.PhoneNumber,
                 AdminNotes = model.AdminNotes,
                 Address1 = model.Address1,
@@ -1015,7 +1007,7 @@ namespace HalloDoc.Services.Services
             };
 
             await _physicianRepository.AddAsync(physician);
-            if(model.physicianRegionids !=null)
+            if (model.physicianRegionids != null)
             {
                 foreach (var u in model.physicianRegionids)
                 {
@@ -1027,7 +1019,7 @@ namespace HalloDoc.Services.Services
                     await _physicianRegionRepository.AddAsync(adminRegion);
                 }
             }
-           
+
             if (model.Photo.FileName != null)
             {
 
@@ -1036,7 +1028,7 @@ namespace HalloDoc.Services.Services
                 using var stream = System.IO.File.Create(filePath);
                 model.Photo.CopyTo(stream);
             }
-           
+
             if (model.IsAgreementDoc == true && model.contractoragreement != null)
             {
 
@@ -1183,7 +1175,7 @@ namespace HalloDoc.Services.Services
             model.RoleId = (int)phy.RoleId;
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();
             model.statusId = (int)phy.Status;
-            model.status = _statusRepository.GetAll().Where(x=>x.Statusid==4 || x.Statusid == 2).ToList();
+            model.status = _statusRepository.GetAll().Where(x => x.Statusid == 4 || x.Statusid == 2).ToList();
             model.IsAgreementDoc = phy.IsAgreementDoc == null ? false : true;
             model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
             model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
@@ -1308,7 +1300,7 @@ namespace HalloDoc.Services.Services
                 PhysicianId = model.physicianId,
                 CreateDate = DateTime.Now,
                 SentDate = DateTime.Now,
-                
+
                 IsSmssent = new BitArray(new[] { true })
             };
             _smmsLogRepository.AddAsync(smslog);
@@ -1355,7 +1347,7 @@ namespace HalloDoc.Services.Services
             physician.SyncEmailAddress = model.SyncEmail;
             _physicianRepository.UpdateAsync(physician);
 
-            AspNetUser user = _aspnetuserRepository.GetAll().Where(x=>x.Id == physician.Id).FirstOrDefault();
+            AspNetUser user = _aspnetuserRepository.GetAll().Where(x => x.Id == physician.Id).FirstOrDefault();
             user.Email = model.Email;
             _aspnetuserRepository.UpdateAsync(user);
 
@@ -1647,11 +1639,11 @@ namespace HalloDoc.Services.Services
                 rolemenus = rolemenu.Where(u => u.RoleId == id).ToList(),
                 type = typename
             };
-           
+
             return data;
 
         }
-        public async Task<object> CreateAccess(AccountAccessViewModel viewModel,string aspAdmin)
+        public async Task<object> CreateAccess(AccountAccessViewModel viewModel, string aspAdmin)
         {
             List<Role> roles = _roleRepository.GetAll().ToList();
             var role = new Role()
@@ -1966,7 +1958,8 @@ namespace HalloDoc.Services.Services
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
+                    tableData = tableData.And(e => e.Request.RequestClients.First(u=>u.RequestId == e.RequestId).FirstName.ToLower().Contains(ReciverName.ToLower()) ||
+                    e.Request.RequestClients.First(u => u.RequestId == e.RequestId).LastName.ToLower().Contains(ReciverName.ToLower()) );
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
@@ -1983,7 +1976,7 @@ namespace HalloDoc.Services.Services
 
                 if (sentDate.HasValue)
                 {
-                    tableData = tableData.And(e => e.SentDate == sentDate.Value.Date);
+                    tableData = tableData.And(e => e.SentDate.Date == sentDate.Value.Date);
                 }
                 List<TableModelLogs> logTable = new List<TableModelLogs>();
 
@@ -2034,7 +2027,8 @@ namespace HalloDoc.Services.Services
 
                 if (!string.IsNullOrWhiteSpace(ReciverName))
                 {
-                    tableData = tableData.And(e => e.Request.FirstName.ToLower().Contains(ReciverName.ToLower()) || e.Request.LastName.ToLower().Contains(ReciverName.ToLower()));
+                    tableData = tableData.And(e => e.Request.RequestClients.First(u => u.RequestId == e.RequestId).FirstName.ToLower().Contains(ReciverName.ToLower()) ||
+                     e.Request.RequestClients.First(u => u.RequestId == e.RequestId).LastName.ToLower().Contains(ReciverName.ToLower()));
                 }
                 if (RoleID != 0 && RoleID != null)
                 {
@@ -2240,7 +2234,7 @@ namespace HalloDoc.Services.Services
                 IsActive = x.IsActive == null ? "Yes" : "No",
                 PhoneNumber = x.PhoneNumber,
                 Note = x.Reason,
-                PatientName = x.Request.RequestClients.First(u=>u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
+                PatientName = x.Request.RequestClients.First(u => u.RequestId == x.RequestId).FirstName + " " + x.Request.RequestClients.First(u => u.RequestId == x.RequestId).LastName,
             }, tableData, CurrentPage, 5, x => x.RequestId, false);
 
             foreach (BlockTable requestClient in requiredData)
@@ -2508,6 +2502,7 @@ namespace HalloDoc.Services.Services
                 WeekDays = WeekDays.ToString(),
                 RepeatUpto = model.repeatEnd,
                 CreatedBy = adminId.ToString(),
+                CreatedDate = DateTime.Now,
             };
             _shiftRepository.AddAsync(shift);
 
@@ -2710,7 +2705,7 @@ namespace HalloDoc.Services.Services
         }
 
         #endregion
-       
+
 
     }
 }

@@ -217,7 +217,7 @@ namespace HalloDoc.Controllers
         public IActionResult sendMailToAllPhysicians(string notess)
         {
             var result = _admin.UnscheduledPhysicians(notess);
-            if (result == null)
+            if (result != null)
             {
                 TempData["success"] = "Email is sent successfully to Unscheduled Physicians";
             }
@@ -230,11 +230,13 @@ namespace HalloDoc.Controllers
 
 
         }
+
         public IActionResult sendLink()
         {
             ViewBag.site = "Admin";
             return PartialView("_SendLink");
         }
+
         [HttpPost]
         public IActionResult SendLinkPatient(string email)
         {
@@ -1073,10 +1075,11 @@ namespace HalloDoc.Controllers
             var request = HttpContext.Request;
             int AdminId = Int32.Parse(request.Cookies["AdminID"]);
             await _admin.CreateRequestByAdmin(model, (int)AdminId);
-            //await LinkToCreateAccount(new CreateAccountViewModel
-            //{
-            //    Email = viewModel.Email
-            //});
+            var link = Request.Scheme + "://" + Request.Host + "/Custom/CreateAccountPatient/" + model.Email;
+            var subject = "Create Account";
+            var body = "Click here " + "<a href=" + link + ">Create Account</a>" + " to Create Account At HALLODOC Plateform!";
+            _customService.SendEmail(model.Email, link, subject, body, 0, 0, 0);
+
             TempData["success"] = "Request Created Successfully.";
 
             return RedirectToAction("Dashboard");
