@@ -113,6 +113,9 @@
 
 
 <script>
+    var input = $("#specialistDoctor");
+    
+
     function checkIfDoctorExist() {
 
         var doctor = ('#specialistDoctor').val();
@@ -121,8 +124,11 @@
             data: { doctor },
             dataType: "html",
             url: "@(Url.Action("checkIfExist", "Home"))",
-
+            success: function (data) {
+                input.val(data);
+            }
         });
     });
         }
+   
 </script>

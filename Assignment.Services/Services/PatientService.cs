@@ -149,16 +149,11 @@ namespace Assignment.Services.Services
             _patientRepository.Remove(patient);
         }
 
-        public Doctor checkIfExist(string data)
+        public string checkIfExist(string data)
         {
             Doctor doctor = _doctorRepository.GetAll().Where(x => x.Specialist == data).FirstOrDefault();
-            if(doctor == null)
-            {
-                Doctor addDoctor = new Doctor();
-                addDoctor.Specialist = data;
-                _doctorRepository.Add(addDoctor);
-            }
-            return doctor;
+          
+            return doctor.Specialist;
 
         }
     }

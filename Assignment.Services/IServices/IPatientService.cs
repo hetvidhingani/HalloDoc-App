@@ -16,6 +16,6 @@ namespace Assignment.Services.IServices
 
         Patient EditPatientDetails(PatientDataViewModel model);
         void DeletePatient(int id);
-        Doctor checkIfExist(string data);
+        string checkIfExist(string data);
     }
 }
