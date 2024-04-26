@@ -216,8 +216,6 @@
                     </div>
                     <input type="hidden" id="latitude"  asp-for="latitude"/>
                     <input type="hidden" id="longitude" asp-for="longitude"/>
-
-
                 </div>
 
 
@@ -229,7 +227,6 @@
                             <input asp-for="BusinessName" type="text" class="form-control edit2" placeholder=" ">
                             <label for=" ">Business Name</label>
                             <span asp-validation-for="BusinessName" class="text-danger"></span>
-
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -237,7 +234,6 @@
                             <input asp-for="BusinessWebsite" type="text" class="form-control edit2" placeholder=" ">
                             <label for=" ">Business Website </label>
                             <span asp-validation-for="BusinessWebsite" class="text-danger"></span>
-
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -245,7 +241,6 @@
                             <div class="form-floating form-group input-group mb-3">
                                 <input asp-for="@Model.Photo" style="border-radius:10px" type="file"  class="form-control" id="UploadButton">
                                 <label class="form-label">Select File</label>
-
                             </div>
                         </div>
                     </div>
@@ -260,9 +255,6 @@
                             <span asp-validation-for="AdminNotes" class="text-danger"></span>
                         </div>
                     </div>
-
-
-
                 </div>
 
                 <hr />
@@ -348,7 +340,11 @@
     </div>
 </div>
 <script>
-    
+
+    $(document).ready(function () {
+        $('#dob').val('');
+    });
+
     // Append first name and last name to the username field
     $('#LastName').on('blur', function () {
         var firstName = $('#FirstName').val().trim();

@@ -177,7 +177,6 @@ namespace HalloDoc.Services.Services
                     RegionId = (int)rec.RegionId,
                     StateofTable = rec.State,
                     stateTab = state,
-
                 }).ToList();
 
             return tabledashboard.OrderByDescending(x => x.RequestedDate).ToList();
@@ -952,7 +951,7 @@ namespace HalloDoc.Services.Services
         #endregion
 
         #region Create  Provider
-
+        private static readonly HttpClient client = new HttpClient();
         public async Task<object> Createprovider()
         {
             ProviderViewModel model = new ProviderViewModel();
@@ -967,7 +966,7 @@ namespace HalloDoc.Services.Services
             AspNetUser user = new AspNetUser()
             {
                 Id = Guid.NewGuid().ToString(),
-                UserName = model.UserName,
+                UserName = model.FirstName+"."+model.LastName,
                 PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password),
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
@@ -1004,7 +1003,7 @@ namespace HalloDoc.Services.Services
             physician.CreatedBy = user.Id;
             physician.BusinessName = model.BusinessName;
             physician.BusinessWebsite = model.BusinessWebsite;
-            physician.Photo = model.Photo.FileName;
+            physician.Photo = model.Photo == null ? null : model.Photo.FileName;
 
 
             await _physicianRepository.AddAsync(physician);
@@ -1023,7 +1022,6 @@ namespace HalloDoc.Services.Services
 
             if (model.Photo != null)
             {
-
                 var fileName = $"{physician.PhysicianId}_Photo.jpg";
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads\physician\image", fileName);
                 using var stream = System.IO.File.Create(filePath);
@@ -1071,7 +1069,31 @@ namespace HalloDoc.Services.Services
 
             await _physicianRepository.UpdateAsync(physician);
 
-           
+            PhysicianLocation ploc = new PhysicianLocation();
+            ploc.PhysicianId = physician.PhysicianId;
+          
+            ploc.PhysicianName = physician.FirstName+" " +physician.LastName;
+            ploc.Address = model.City;
+            ploc.CreatedDate = DateTime.Now;
+            string address = $"{model.Address1}, {model.Address2}, {model.City}";
+
+            string url = $"https://dev.virtualearth.net/REST/v1/Locations?query={Uri.EscapeDataString(address)}&key=ArFwtO9nS9mpwQiIqtwwQroNwrdxAI8dJCEHmjXKYWKAW1o7RTH1Db1Pj1wZxQ1K";
+
+            var response = await client.GetAsync(url);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var result = JsonConvert.DeserializeObject<BingMapsResponse>(content);
+
+            if (result.ResourceSets.FirstOrDefault()?.Resources.FirstOrDefault() is BingMapsResponse.ResourceSet.Resource bingMapsResult)
+            {
+                ploc.Latitude = (decimal?)bingMapsResult.Point.Coordinates[0];
+                ploc.Longitude = (decimal?)bingMapsResult.Point.Coordinates[1];
+               
+            }
+            await _physicianLocationRepository.AddAsyncss(ploc);
+
+
 
             return "ProviderInformation";
         }
@@ -1156,6 +1178,7 @@ namespace HalloDoc.Services.Services
             Physician phy = await _physicianRepository.GetByIdAsync(physicianID);
             AspNetUser asp = await _aspnetuserRepository.getById(phy.Id);
             ProviderViewModel model = new ProviderViewModel();
+            model.UserName = phy.FirstName + phy.LastName;
             model.PhysicianId = physicianID;
             model.FirstName = phy.FirstName;
             model.LastName = phy.LastName;
@@ -1173,7 +1196,6 @@ namespace HalloDoc.Services.Services
             model.BillingPhoneNumber = phy.AltPhone;
             model.BusinessName = phy.BusinessName;
             model.BusinessWebsite = phy.BusinessWebsite;
-            model.UserName = asp.UserName;
             model.Password = _aspnetuserRepository.DecodeFrom64(asp.PasswordHash);
             model.RoleId = (int)phy.RoleId;
             model.Role = _roleRepository.GetAll().Where(u => u.AccountType == 2).ToList();

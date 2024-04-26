@@ -2,6 +2,11 @@
 @using Microsoft.AspNetCore.Http;
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+  
+    ViewData["Title"] = "Patient Request";
+}
+
 <div class="mainContent2 mx-auto ">
     <div class="d-flex flex-column align-items-center justify-content-center ">
 
@@ -62,7 +67,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" placeholder=" ">
+                            <input asp-for="DateOfBirth" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="dob" placeholder=" ">
                             <label for=" ">Date Of Birth</label>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 
@@ -195,6 +200,10 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $('#dob').val('');
+    });
+
     function AlertName() {
         var email = document.getElementById("patientEmail").value;
 

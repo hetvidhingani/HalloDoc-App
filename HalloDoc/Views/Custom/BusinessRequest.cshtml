@@ -1,4 +1,8 @@
-﻿
+﻿@{
+
+    ViewData["Title"] = "Business Request";
+}
+
 @model HalloDoc.Entities.ViewModels.OtherRequestViewModel
 
 <div class="mainContent2 mx-auto">
@@ -94,7 +98,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
-                            <input asp-for="DateOfBirth" type="date" class="form-control" id=" " placeholder=" ">
+                            <input asp-for="DateOfBirth" type="date" class="form-control" id="dob" placeholder=" ">
                             <label for=" ">Date Of Birth</label>
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
 
@@ -221,6 +225,9 @@
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        $('#dob').val('');
+    });
     const phoneInputField = document.querySelector("#phone");
 
     const phoneInput = window.intlTelInput(phoneInputField, {

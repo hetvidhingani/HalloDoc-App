@@ -1,6 +1,9 @@
 ﻿@model HalloDoc.Entities.ViewModels.CreateAccountViewModel;
 @{
     Layout = "~/Views/Shared/_RegisterdPatientLoginLayout.cshtml";
+  
+    ViewData["Title"] = "Create Account";
+
 }
 @{
     if ( @TempData["errormsg"] != null)
@@ -21,7 +24,6 @@
 
 
     <div class="login">
-        
         <h3 class="mainHeading">
             Create Account
         </h3>
@@ -29,7 +31,6 @@
 
     <form asp-controller="Custom" asp-action="CreateAccountRequest" method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @* <input type="hidden" id="requestID" value="@TempData["id"]" asp-for="RequestID"/> *@
         <div class=" form-floating form-group">
             <i class="bi bi-person-circle loginIconfrom"></i>
             <input asp-for="Email" type="text" id="email" class="form-control " placeholder=" " />

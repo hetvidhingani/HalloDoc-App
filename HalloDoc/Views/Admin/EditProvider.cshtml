@@ -25,7 +25,7 @@
             <div class="row formrow ">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                     <div class="form-floating form-group">
-                        <input data-valmsg-replace="true" asp-for="UserName" type="text" class="form-control " placeholder=" " readonly>
+                        <input  asp-for="UserName" type="text" class="form-control" id="username" placeholder=" " readonly>
                         <label for=" ">UserName</label>
                         <span asp-validation-for="UserName" class="text-danger"></span>
 
@@ -296,7 +296,7 @@
                     {
                         <div class="col-lg-12 col-md-12 col-sm-12 d-flex justify-content-center">
 
-                            <img src="~/uploads/physician/image/@Model.filename" class="img-fluid " id="signatureprivew" style="width:105px;max-height:100px;" />
+                            <img src="~/uploads/physician/image/@Model.filename" alt="" class="img-fluid " id="signatureprivew" style="width:105px;max-height:100px;" />
 
                         </div>
                     }
@@ -327,7 +327,6 @@
             <hr />
             <h3> Onboarding</h3>
             <form asp-action="documentsProvider" asp-controller="Admin" method="post" id="form5" enctype="multipart/form-data">
-
                 <input type="hidden" asp-for="PhysicianId" />
                 <table>
                     <tr>
@@ -484,6 +483,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
 <script>
+   
     var phy = "";
     $('#createbtn').click(function () {
         phy = button.getAttribute('value');
@@ -918,7 +918,6 @@
         formElement.reset(); // reset form
     }
 
-
     //end
     //dark theme
     if (localStorage.getItem("Mytheme")) {
@@ -1050,19 +1049,14 @@
         $('#submit-sign').click(function () {
             showLoader();
 
-            // Convert canvas to image
             html2canvas(canvas).then(function (canvasImg) {
-                // Display image somewhere
                 $('#created-sign').html(canvasImg);
-                // Close modal
 
                 var dataURL = canvas.toDataURL();
                 var blob = dataURLToBlob(dataURL);
                 var formData = new FormData();
 
                 formData.append('signature', blob, 'signature.png');
-               
-
                 formData.append('physicianId', @Model.PhysicianId);
                 $.ajax({
                     type: 'POST',
@@ -1078,7 +1072,6 @@
 
                     },
                     error: function (xhr, textStatus, errorThrown) {
-                        // handle the error
                         console.log(xhr, textStatus, errorThrown);
                     }
                 });

@@ -375,6 +375,7 @@ namespace HalloDoc.Services.Services
         {
             return await _requestRepository.GetCountAsync(r => r.Status == statusId && r.UserId != null && r.IsDeleted == null);
         }
+
         #endregion
 
         #region Send Agreement

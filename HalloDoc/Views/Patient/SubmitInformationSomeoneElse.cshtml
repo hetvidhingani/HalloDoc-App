@@ -62,9 +62,10 @@
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="Email"
-                                   id="patientEmail" onblur="AlertName()" type="email" autocomplete="off"
+                                   id="patientEmail"  type="email" autocomplete="off"
                                    class="form-control" placeholder=" ">
                             <label for=" ">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
 
                         </div>
                     </div>
@@ -87,12 +88,16 @@
                         <div class="form-floating form-group">
                             <input asp-for="Street" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Street</label>
+                            <span asp-validation-for="Street" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="City" type="text" class="form-control" placeholder=" ">
                             <label for=" ">City </label>
+                            <span asp-validation-for="City" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -104,11 +109,15 @@
                                 <option value="@region.RegionId">@region.Name</option>
                             }
                         </select>
+                        <span asp-validation-for="RegionId" class="text-danger"></span>
+
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
                         <div class="form-floating form-group">
                             <input asp-for="ZipCode" type="text" class="form-control" placeholder=" ">
                             <label for=" ">Zip code</label>
+                            <span asp-validation-for="ZipCode" class="text-danger"></span>
+
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -165,7 +174,9 @@
 
 
 <script>
-
+    $(document).ready(function () {
+        $('#dob').val('');
+    });
 
     const phoneInputField = document.querySelector("#phone");
 

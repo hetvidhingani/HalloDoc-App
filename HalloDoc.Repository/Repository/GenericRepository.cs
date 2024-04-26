@@ -21,39 +21,8 @@ namespace HalloDoc.Repository.Repository
             _context = context;
             _genericContext = _context.Set<T>();
         }
-        //public async Task AddAsync(T entity)
-        //{
-        //    if (_context == null)
-        //    {
-        //        throw new InvalidOperationException("The context has been disposed.");
-        //    }
-        //    try
-        //    {
-        //        _context.Add(entity);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return;
-        //    }
-        //}
+        
 
-        //public void AddAsyncs(T entity)
-        //{
-        //    if (_context == null)
-        //    {
-        //        throw new InvalidOperationException("The context has been disposed.");
-        //    }
-        //    try
-        //    {
-        //        _context.Add(entity);
-        //        _context.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
         public async Task AddAsync(T entity)
         {
             try
@@ -66,12 +35,24 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
-        //public async Task UpdateAsync(T entity)
-        //{
-        //    _context.Update(entity);
-        //     await _context.SaveChangesAsync();
 
-        //}
+        public async Task AddAsyncss(T entity)
+        {
+            try
+            {
+                using (var context = new ApplicationDbContext())
+                {
+                    context.AddAsync(entity);
+                   await  context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        
+
         public async Task UpdateAsync(T entity)
         {
             try
@@ -91,14 +72,19 @@ namespace HalloDoc.Repository.Repository
         {
             return await _context.Set<T>().FindAsync(id);
         }
+
+
         public T GetById(object id)
         {
             return _context.Set<T>().Find(id);
         }
+
+
         public void SetTempData(string key, object value)
         {
             _tempData[key] = value;
         }
+
 
         public T GetTempData<T>(string key)
         {
@@ -111,12 +97,13 @@ namespace HalloDoc.Repository.Repository
                 return default(T);
             }
         }
+
         public IQueryable<T> GetAll()
         {
             return _context.Set<T>();
         }
 
-        public  void Remove(T entity)
+        public void Remove(T entity)
         {
             try
             {
@@ -129,6 +116,7 @@ namespace HalloDoc.Repository.Repository
 
             }
         }
+
         public string EncodePasswordToBase64(string password)
         {
             try
@@ -143,7 +131,8 @@ namespace HalloDoc.Repository.Repository
                 throw new Exception("Error in base64Encode" + ex.Message);
             }
         }
-        //this function Convert to Decord your Password
+
+
         public string DecodeFrom64(string encodedData)
         {
             System.Text.UTF8Encoding encoder = new System.Text.UTF8Encoding();
@@ -155,6 +144,7 @@ namespace HalloDoc.Repository.Repository
             string result = new String(decoded_char);
             return result;
         }
+
 
         public dynamic GetAllWithPagination(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int PageIndex, int PageSize, Expression<Func<T, object>> orderBy, bool IsAcc)
         {
@@ -179,10 +169,7 @@ namespace HalloDoc.Repository.Repository
             return _genericContext.Where(expression).Include(Include).FirstOrDefault();
         }
 
-        //public List<T> getstateDropdown()
-        //{
-        //    return _regionRepository.GetAll().ToList();
-        //}
+      
     }
 
 

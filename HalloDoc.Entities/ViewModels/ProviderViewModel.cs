@@ -11,7 +11,7 @@ namespace HalloDoc.Entities.ViewModels
 {
     public class ProviderViewModel
     {
-        public string? UserName { get; set; } = string.Empty;
+        public string? UserName { get; set; }
         public int Status { get; set; }
 
         [Required(ErrorMessage = "Password must be at least 6 characters long.")]

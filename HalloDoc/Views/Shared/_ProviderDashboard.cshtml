@@ -221,7 +221,7 @@
                                     <li>
                                         @if(request.isfinalize)
                                             {
-                                            <a href="@Url.Action("ConcludeCare", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("ConcludeCare", "Provider", new { Id = @request.requestID })" class="btn border-0" style="text-decoration:none;color:black;">
                                                 <i class="bi bi-bag-plus mx-2"></i>
                                                 Conclude Care
                                                 </a>
@@ -242,13 +242,13 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("ViewUploads", "Provider", new { Id = @request.requestID })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewUploads", "Provider", new { Id = @request.requestID })" class="btn border-0" style="text-decoration:none;color:black;">
                                             <i class="bi bi-file-arrow-up mx-2"></i>
                                             View Uploads
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" style="text-decoration:none;color:black;">
+                                        <a href="@Url.Action("ViewNotes", "Provider", new { Id = @request.RequstClientId })" class="btn border-0" style="text-decoration:none;color:black;">
                                             <i class="bi bi-journal-text mx-2"></i>
                                             View Notes
                                         </a>
@@ -266,7 +266,7 @@
                                             }
                                             else
                                             {
-                                            <a href="@Url.Action("EncounterForm","Provider",new{RequestId =@request.requestID })" style="text-decoration:none;color:black;">
+                                            <a href="@Url.Action("EncounterForm","Provider",new{RequestId =@request.requestID })" class="btn border-0" style="text-decoration:none;color:black;">
                                                 <i class="bi bi-journals mx-2"></i>
                                                 Encounter
                                             </a>

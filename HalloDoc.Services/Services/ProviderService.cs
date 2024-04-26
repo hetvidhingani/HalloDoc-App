@@ -183,8 +183,6 @@ namespace HalloDoc.Services.Services
                 LastItemIndex = LastItemIndex,
             };
         }
-
-
         #endregion
 
         #region View Case
@@ -674,6 +672,11 @@ namespace HalloDoc.Services.Services
             }).ToList();
             return model;
         }
+
+        public Physician getproviderEmail(int id)
+        {
+            return _physicianRepository.GetById(id);
+        }
         #endregion
 
         #region Schaduling
@@ -906,9 +909,5 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
-        public Physician getproviderEmail(int id)
-        {
-            return _physicianRepository.GetById(id);
-        }
     }
 }

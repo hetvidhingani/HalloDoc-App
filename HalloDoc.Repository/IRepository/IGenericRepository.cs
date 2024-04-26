@@ -11,6 +11,7 @@ namespace HalloDoc.Repository.IRepository
     {
         IQueryable<T> GetAll();
         Task AddAsync(T entity);
+        Task AddAsyncss(T entity);
 
         // void AddAsyncs(T entity);
         Task UpdateAsync(T entity);

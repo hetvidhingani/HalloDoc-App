@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
     <Folder Include="wwwroot\uploads\physician\image\" />
     <Folder Include="wwwroot\uploads\physician\doc\" />
   </ItemGroup>

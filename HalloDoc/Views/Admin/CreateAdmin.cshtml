@@ -194,6 +194,10 @@
 
 
 <script>
+
+    $(document).ready(function () {
+        $('#dob').val('');
+    });
     // Append first name and last name to the username field
     $('#LastName').on('blur', function () {
         var firstName = $('#FirstName').val().trim();
