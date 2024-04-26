@@ -574,5 +574,12 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Dashboard");
         }
         #endregion
+
+        #region Invoicing
+        public IActionResult Invoicing()
+        {
+            return View();
+        }
+        #endregion
     }
 }

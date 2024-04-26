@@ -34,6 +34,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/css/toastr.css" rel="stylesheet" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.1/js/toastr.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <style>
         .bar {
             background: rgb(251, 249, 249);
@@ -281,7 +285,7 @@
                             <ul class="dropdown-menu layoutTab">
                                 <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="ProviderInformation" asp-controller="Admin">Provider</a></li>
                                 <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="Scheduling" asp-controller="Admin">Scheduling</a></li>
-                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" href="#">Invocing</a></li>
+                                <li><a class="px-3 py-2 fw-bold" style="color:dimgrey" asp-action="Invoicing" asp-controller="Admin">Invocing</a></li>
                             </ul>
                         </div>
                         <a id="5" asp-action="VendorsDetails" asp-controller="Admin" class="nav-link py-2 @ViewBag.partner" style="color:dimgrey">Partners</a>
@@ -410,7 +414,7 @@
                 <div class="topnav" id="myTopnav">
                     <span>
                         <a id="1" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.ProviderDashboard" style="color:dimgrey">Dashboard</a>
-                        <a id="2" asp-action="Dashboard" asp-controller="Provider" class="nav-link py-2 @ViewBag.Invoice" style="color:dimgrey">Invoicing</a>
+                        <a id="2" asp-action="Invoicing" asp-controller="Provider" class="nav-link py-2 @ViewBag.Invoice" style="color:dimgrey">Invoicing</a>
                         <a id="3" asp-action="Scheduling" asp-controller="Provider" class="nav-link py-2 @ViewBag.Schedule" style="color:dimgrey">My Schedule</a>
                         <a id="4" asp-action="MyProfile" asp-controller="Provider" class="nav-link py-2 @ViewBag.Profile" style="color:dimgrey">My Profile</a>
                     </span>
@@ -492,7 +496,6 @@
         <div class="d-flex justify-content-end align-items-center footlink">
             <a href="#" style="color:white">Terms and Conditions  </a> |
             <a href="#" style="color:white;">Privacy Policy</a>
-
         </div>
     </footer>
 

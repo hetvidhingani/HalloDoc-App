@@ -1,0 +1,80 @@
+﻿@model VendorsViewModel;
+@{
+    ViewBag.Invoicing = "active";
+    ViewData["Title"] = "Invoicing";
+
+}
+@{
+    var dateRanges = new List<Tuple<DateTime, DateTime>>();
+
+    // Get the current month and year
+    for (int i = 0; i <= 12; i++)
+    {
+        int currentMonth = DateTime.Now.AddMonths(i).Month;
+        int currentYear = DateTime.Now.Year;
+
+        // Define date ranges
+
+        // Populate date ranges based on month and year
+        if (currentMonth == 2 && DateTime.IsLeapYear(currentYear)) // February with 29 days
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 1), new DateTime(currentYear, 1, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 16), new DateTime(currentYear, 1, 31)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 1), new DateTime(currentYear, 2, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 16), new DateTime(currentYear, 2, 29)));
+        }
+        else // Other months
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 1), new DateTime(currentYear, currentMonth, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 16), new DateTime(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth))));
+        }
+    }
+}
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Invoicing</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+            <div class="row d-flex justify-content-between align-items-baseline">
+                <div class="col-lg-3 col-md-3 col-sm-6 ">
+                    <div class="form-floating ">
+
+                        <select class="form-select " id="dateRange" onchange="datelist()" style="width: 250px;height: 35px;">
+                            @foreach (var r in dateRanges)
+                            {
+                                <option value="@r.Item1.Date.ToString("dd/MM/yyyy") - @r.Item2.Date.ToString("dd/MM/yyyy")">
+                                    @r.Item1.Date.ToString("dd-MM-yyyy") - @r.Item2.Date.ToString("dd-MM-yyyy")
+                                </option>
+
+                            }
+
+                        </select>
+                            <label>Select by time period</label>
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
+                    <a class="btn btn-outline-info" href="@Url.Action("AddVendor","Admin") ">Finalize Timesheet</a>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('input[name="dates"]').daterangepicker();
+</script>
