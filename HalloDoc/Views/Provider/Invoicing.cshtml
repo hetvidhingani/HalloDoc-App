@@ -49,13 +49,12 @@
                 <div class="col-lg-3 col-md-3 col-sm-6 ">
                     <div class="form-floating ">
 
-                        <select class="form-select " id="dateRange" onchange="datelist()" style="width: 250px;height: 35px;">
+                        <select class="form-select " id="dateRange"  style="width: 250px;height: 35px;">
                             @foreach (var r in dateRanges)
                             {
                                 <option value="@r.Item1.Date.ToString("dd/MM/yyyy") - @r.Item2.Date.ToString("dd/MM/yyyy")">
                                     @r.Item1.Date.ToString("dd-MM-yyyy") - @r.Item2.Date.ToString("dd-MM-yyyy")
                                 </option>
-
                             }
 
                         </select>
@@ -64,17 +63,64 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 d-flex justify-content-end align-items-center">
-                    <a class="btn btn-outline-info" href="@Url.Action("AddVendor","Admin") ">Finalize Timesheet</a>
+                    <a class="btn btn-outline-info openTimeSheet" >Finalize Timesheet</a>
                 </div>
             </div>
             <div class="row mt-2">
                 <div id="admindata" class="mb-5"></div>
-
             </div>
+                <div id="norecords" class="mt-2 mx-auto fw-bold d-none">No Records Found</div>
         </div>
     </div>
 </div>
 
 <script>
     $('input[name="dates"]').daterangepicker();
+    $('.openTimeSheet').on('click', function () {
+        $("#norecords").addClass('d-none');
+        var date = $('#dateRange').val();
+        var splitString = date.split(" - ");
+
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { startrange: splitString[0], endrange: splitString[1] },
+            url: "@(Url.Action("TimeSheet", "Provider"))",
+            dataType: "html",
+            success: function (data) {
+                console.log(data);
+                $("#admindata").removeClass('d-none');
+
+                $("#admindata").html(data);
+            },
+            error: function () {
+                $("#admindata").innerText="No records found";
+            }
+        });
+    }); 
+    $('#dateRange').on('change', function () {
+        var date = $('#dateRange').val();
+        var splitString = date.split(" - ");
+
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            data: { startrange: splitString[0]},
+            url: "@(Url.Action("checkIfTimeSheet", "Provider"))",
+            dataType: "html",
+            success: function (response) {
+                if (response.success) {
+                    console.log("hi");
+                }
+                else {
+                    $("#norecords").removeClass('d-none');
+                    $("#admindata").addClass('d-none');
+
+                }
+            },
+            error: function () {
+               
+            }
+        });
+    });
 </script>

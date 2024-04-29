@@ -2001,7 +2001,7 @@ namespace HalloDoc.Services.Services
 
                 if (sentDate.HasValue)
                 {
-                    tableData = tableData.And(e => e.SentDate.Date == sentDate.Value.Date);
+                    tableData = tableData.And(e => e.SentDate == sentDate.Value.Date);
                 }
                 List<TableModelLogs> logTable = new List<TableModelLogs>();
 

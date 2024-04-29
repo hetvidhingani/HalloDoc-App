@@ -580,6 +580,29 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+        public IActionResult checkIfTimeSheet(string? startrange)
+        {
+            var result = _provider.checkIfTimeSheet(startrange);
+            if(result == null)
+            {
+                return Json(new { success = false });
+            }
+            else
+            {
+                return Json(new {success = true});
+            }
+        }
+        public IActionResult TimeSheet(string? startrange, string? endrange)
+        {
+            var result = _provider.TimeSheet(startrange, endrange);
+           
+            return PartialView("_TimeSheet",result);
+        }
+        public IActionResult SaveTimeSheet(TimeSheetViewModel model)
+        {
+             _provider.SaveTimeSheet(model);
+            return View(model);
+        }
         #endregion
     }
 }

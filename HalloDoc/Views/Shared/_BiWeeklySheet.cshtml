@@ -1,0 +1,54 @@
+﻿@model HalloDoc.Entities.ViewModels.TimeSheetViewModel
+<div class="table-responsive desktopviewTable">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Date</th>
+                <th>Shift</th>
+                <th>NightShift Weekend</th>
+                <th scope="col"> Housecall </th>
+                <th scope="col"> Housecall Nights Weekend</th>
+                <th scope="col"> Phone consults</th>
+                <th scope="col"> Phone consult Night Weekend</th>
+                <th scope="col">Batch Testing</th>
+                
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @for (DateOnly i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
+            {
+
+                <tr>
+                    <td>
+                        @i
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                    <td>
+                        0
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>
+

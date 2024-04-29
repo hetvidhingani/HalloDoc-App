@@ -16,6 +16,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using static HalloDoc.Entities.ViewModels.ViewNotesViewModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HalloDoc.Services.Services
 {
@@ -54,6 +55,8 @@ namespace HalloDoc.Services.Services
         private readonly IShiftRepository _shiftRepository;
         private readonly IPhysicianRegionRepository _physicianRegionRepository;
         private readonly IPhysicianLocationRepository _physicianLocationRepository;
+        private readonly ITimeDetailsRepository _timeDetailsRepository;
+        private readonly IQuaterSheetRepository _quaterSheetRepository;
         private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
         private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
         private const string TwilioPhoneNumber = "+12515722513";
@@ -70,7 +73,8 @@ namespace HalloDoc.Services.Services
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
                                ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
-                               IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository)
+                               IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository,
+                               ITimeDetailsRepository timeDetailsRepository, IQuaterSheetRepository quaterSheetRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -104,6 +108,8 @@ namespace HalloDoc.Services.Services
             _shiftRepository = shiftRepository;
             _physicianLocationRepository = physicianLocationRepository;
             _physicianRegionRepository = physicianRegionRepository;
+            _timeDetailsRepository = timeDetailsRepository;
+            _quaterSheetRepository = quaterSheetRepository;
         }
         #endregion
 
@@ -140,7 +146,7 @@ namespace HalloDoc.Services.Services
                     callType = r.CallType,
                     stateTab = state,
                     isfinalize = r.CompletedByPhysician == null ? false : true,
-                    PhysicianId=providerId,
+                    PhysicianId = providerId,
 
                 }).ToList();
 
@@ -421,12 +427,12 @@ namespace HalloDoc.Services.Services
         #region conclude care
         public ConcludeCareViewModel ConcludeCare(int id)
         {
-            RequestClient req = _requestclientRepository.GetAll().Where(x=>x.RequestId == id).FirstOrDefault();
+            RequestClient req = _requestclientRepository.GetAll().Where(x => x.RequestId == id).FirstOrDefault();
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\uploads", id + "_" + "Encounter_Data.pdf");
             ConcludeCareViewModel model = new ConcludeCareViewModel();
             model.filePath = id + "_" + "Encounter_Data.pdf";
             model.requestId = id;
-            model.username = req.FirstName+" "+req.LastName;
+            model.username = req.FirstName + " " + req.LastName;
             return model;
         }
         public void ConcludeRequest(int id, string? note, string providerID)
@@ -663,7 +669,7 @@ namespace HalloDoc.Services.Services
             model.isbackgroundcheck = phy.IsBackgroundDoc == null ? false : true;
             model.IsAgreementDocnondisclosure = phy.IsNonDisclosureDoc == null ? false : true;
             model.Ishippa = phy.IsTrainingDoc == null ? false : true;
-            
+
             model.StateCheckbox = regions.Select(r => new RegionViewModel()
             {
                 RegionId = r.RegionId,
@@ -830,7 +836,7 @@ namespace HalloDoc.Services.Services
                 Email = data.Email,
                 CreatedDate = DateTime.Now,
                 Status = 2,
-                PhysicianId =provider,
+                PhysicianId = provider,
 
             };
             await _requestRepository.AddAsync(request);
@@ -909,7 +915,111 @@ namespace HalloDoc.Services.Services
         }
         #endregion
 
+        #region Invoicing
+        public QuarterSheet checkIfTimeSheet(string? startrange)
+        {
+            QuarterSheet check = _quaterSheetRepository.check(startrange);
+            if (check == null)
+            {
+                return null;
+            }
+            else
+            {
+                return check;
+            }
+        }
+        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange)
+        {
+            DateOnly startdate = DateOnly.Parse(startrange);
+            DateOnly enddate = DateOnly.Parse(endrange);
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == startdate).FirstOrDefault();
+            TimeSheetViewModel model = new TimeSheetViewModel();
+            if (check != null)
+            {
+               
+                List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
+                Expression<Func<TimeSheetDetail, bool>> expression = PredicateBuilder.New<TimeSheetDetail>();
+                expression = x => x.TimeSheetId == check.TimeSheetId;
 
+                var result = _timeDetailsRepository.GetAllData(x => new TimeSheetViewModel
+                {
+                    totalHr = (int)x.TotalHours,
+                    Housecalls = (int)x.HouseCall,
+                    phoneConsult = (int)x.PhoneConsult,
+                    holiday = x.NightShiftWeekend == 0 ? false : true,
+                }, expression);
+                foreach (var item in result)
+                {
+                    list.Add(item);
+                }
+                 model.TimeSheets = list;
+               
+            }
+            model.startDate = startdate;
+            model.endDate = enddate;
+
+            return model;
+        }
+        public void SaveTimeSheet(TimeSheetViewModel model)
+        {
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == model.startDate).FirstOrDefault();
+
+            if (check == null)
+            {
+                QuarterSheet sheet = new QuarterSheet();
+                sheet.StartDate = model.startDate;
+                sheet.EndDate = model.endDate;
+                sheet.CreatedDate = DateOnly.MaxValue;
+                _quaterSheetRepository.AddAsync(sheet);
+
+                foreach (var item in model.TimeSheets)
+                {
+                    TimeSheetDetail table = new TimeSheetDetail();
+                    table.Date = model.startDate;
+                    if (model.holiday == true)
+                    {
+                        table.NightShiftWeekend = model.totalHr;
+                        table.HouseCallNightWeekend = model.Housecalls;
+                        table.PhoneNightWeekend = model.phoneConsult;
+                    }
+                    else
+                    {
+                        table.OnCallHours = model.totalHr;
+                        table.HouseCall = model.Housecalls;
+                        table.PhoneConsult = model.phoneConsult;
+                    }
+                    _timeDetailsRepository.AddAsync(table);
+                }
+
+            }
+            else
+            {
+                check.StartDate = model.startDate;
+                check.EndDate = model.endDate;
+                check.CreatedDate = DateOnly.MaxValue;
+                _quaterSheetRepository.UpdateAsync(check);
+
+                foreach (var item in model.TimeSheets)
+                {
+                    TimeSheetDetail table = new TimeSheetDetail();
+                    table.Date = model.startDate;
+                    if (model.holiday == true)
+                    {
+                        table.NightShiftWeekend = model.totalHr;
+                        table.HouseCallNightWeekend = model.Housecalls;
+                        table.PhoneNightWeekend = model.phoneConsult;
+                    }
+                    else
+                    {
+                        table.OnCallHours = model.totalHr;
+                        table.HouseCall = model.Housecalls;
+                        table.PhoneConsult = model.phoneConsult;
+                    }
+                    _timeDetailsRepository.UpdateAsync(table);
+                }
+            }
+        }
+        #endregion
 
     }
 }

@@ -68,5 +68,10 @@ namespace HalloDoc.Services.IServices
         ConcludeCareViewModel ConcludeCare(int id);
 
         Physician getproviderEmail(int id);
+
+        QuarterSheet checkIfTimeSheet(string? startrange );
+        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange);
+
+        void SaveTimeSheet(TimeSheetViewModel model);
     }
 }

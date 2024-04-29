@@ -46,7 +46,8 @@ builder.Services.AddScoped<IShiftDetailsRepository, ShiftDetailsRepository>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IPhysicianLocationRepository, PhysicianLocationRepository>();
 builder.Services.AddScoped<IPhysicianRegionRepository, PhysicianRegionRepository>();
-
+builder.Services.AddScoped<IQuaterSheetRepository , QuaterSheetRepository>();
+builder.Services.AddScoped<ITimeDetailsRepository, TimeDetailsRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();    

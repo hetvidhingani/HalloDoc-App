@@ -55,6 +55,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<PhysicianRegion> PhysicianRegions { get; set; }
 
+    public virtual DbSet<QuarterSheet> QuarterSheets { get; set; }
+
     public virtual DbSet<Region> Regions { get; set; }
 
     public virtual DbSet<Request> Requests { get; set; }
@@ -88,6 +90,8 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<Smslog> Smslogs { get; set; }
 
     public virtual DbSet<Status> Statuses { get; set; }
+
+    public virtual DbSet<TimeSheetDetail> TimeSheetDetails { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
 
@@ -271,6 +275,15 @@ public partial class ApplicationDbContext : DbContext
             entity.HasOne(d => d.Region).WithMany(p => p.PhysicianRegions)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("PhysicianRegion_RegionId_fkey");
+        });
+
+        modelBuilder.Entity<QuarterSheet>(entity =>
+        {
+            entity.HasKey(e => e.TimeSheetId).HasName("QuarterSheet_pkey");
+
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("now()");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.QuarterSheets).HasConstraintName("PhysicanId_FK");
         });
 
         modelBuilder.Entity<Region>(entity =>
@@ -462,6 +475,13 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.Statusid).HasName("status_pkey");
 
             entity.Property(e => e.Statusid).ValueGeneratedNever();
+        });
+
+        modelBuilder.Entity<TimeSheetDetail>(entity =>
+        {
+            entity.HasKey(e => e.TimeDetailsId).HasName("TimeSheetDetails_pkey");
+
+            entity.HasOne(d => d.TimeSheet).WithMany(p => p.TimeSheetDetails).HasConstraintName("QuarterSheetId_Fk");
         });
 
         modelBuilder.Entity<User>(entity =>

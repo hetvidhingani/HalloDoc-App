@@ -1,1 +1,69 @@
-﻿
+﻿@model HalloDoc.Entities.ViewModels.TimeSheetViewModel
+<form asp-controller="Provider" asp-action="SaveTimeSheet" method="post">
+    <div class="table-responsive desktopviewTable">
+        <table class="table ">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">On Call Hours</th>
+                    <th scope="col">Total Hours</th>
+                    <th scope="col">Weekend / Holidays</th>
+                    <th scope="col">Number of Housecalls </th>
+                    <th scope="col">Number of Phone consults</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                @{
+                    int u = 0;
+                }
+                @for (DateOnly i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
+                {
+                    <tr>
+                        <input type="hidden" asp-for="TimeSheets[u].startDate" value="@i" >
+                        <input type="hidden" asp-for="endDate" value="@Model.endDate">
+
+                        <td>
+                            @i
+                        </td>
+                        <td>
+                            0
+                        </td>
+                        <td>
+                            <div class="form-floating form-group">
+                                <input type="number" asp-for="TimeSheets[u].totalHr"  placeholder="0">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-floating form-group">
+                                <input type="checkbox" asp-for="TimeSheets[u].holiday">
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="form-floating form-group" >
+                                <input type="number" asp-for="TimeSheets[u].Housecalls">
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="form-floating form-group">
+                                <input type="number" asp-for="TimeSheets[u].phoneConsult">
+                            </div>
+
+                        </td>
+                    </tr>
+                    u++;
+                }
+          
+              
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-info" >submit</button>
+        </div>
+
+
+    </div>
+
+
+</form>

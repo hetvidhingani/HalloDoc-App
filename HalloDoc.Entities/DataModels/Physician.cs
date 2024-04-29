@@ -132,6 +132,9 @@ public partial class Physician
     public virtual ICollection<PhysicianRegion> PhysicianRegions { get; set; } = new List<PhysicianRegion>();
 
     [InverseProperty("Physician")]
+    public virtual ICollection<QuarterSheet> QuarterSheets { get; set; } = new List<QuarterSheet>();
+
+    [InverseProperty("Physician")]
     public virtual ICollection<RequestStatusLog> RequestStatusLogPhysicians { get; set; } = new List<RequestStatusLog>();
 
     [InverseProperty("TransToPhysician")]
