@@ -403,8 +403,8 @@ namespace HalloDoc.Controllers
         {
             var request = HttpContext.Request;
             ViewBag.MySession = request.Cookies["UserNameProvider"];
-           var model =  _provider.ConcludeCare(id);
-           
+            var model = _provider.ConcludeCare(id);
+
 
             return View(model);
         }
@@ -477,15 +477,15 @@ namespace HalloDoc.Controllers
             var result = await _provider.MyProfile(id);
             return View(result);
         }
-        public IActionResult RequestAdminToEditProfile(int id,string note)
+        public IActionResult RequestAdminToEditProfile(int id, string note)
         {
             var request = HttpContext.Request;
             int providerId = Int32.Parse(request.Cookies["ProviderID"]);
-           var data =  _provider.getproviderEmail(providerId);
+            var data = _provider.getproviderEmail(providerId);
 
-            var link = "" ;
+            var link = "";
             var subject = "Edit Provider Account Request";
-            var body = "I need to change following things in my profile: "+ note;
+            var body = "I need to change following things in my profile: " + note;
             _customService.SendEmail(data.Email, link, subject, body, 0, providerId, 0);
             return Json("success");
         }
@@ -580,28 +580,40 @@ namespace HalloDoc.Controllers
         {
             return View();
         }
+
         public IActionResult checkIfTimeSheet(string? startrange)
         {
             var result = _provider.checkIfTimeSheet(startrange);
-            if(result == null)
+            if (result == null)
             {
                 return Json(new { success = false });
             }
             else
             {
-                return Json(new {success = true});
+                return Json(new { success = true,isFinalize = result.IsFinalized });
             }
+        }
+
+        public IActionResult Sheet(TimeSheetViewModel model)
+        {
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            var result = _provider.Sheet(model,id);
+
+            return View(result);
         }
         public IActionResult TimeSheet(string? startrange, string? endrange)
         {
-            var result = _provider.TimeSheet(startrange, endrange);
-           
-            return PartialView("_TimeSheet",result);
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            var result = _provider.TimeSheet(startrange, endrange,id);
+
+            return PartialView("_TimeSheet", result);
         }
         public IActionResult SaveTimeSheet(TimeSheetViewModel model)
         {
-             _provider.SaveTimeSheet(model);
-            return View(model);
+            _provider.SaveTimeSheet(model);
+            return RedirectToAction("Invoicing", model);
         }
         #endregion
     }

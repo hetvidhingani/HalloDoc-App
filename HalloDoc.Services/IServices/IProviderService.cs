@@ -70,7 +70,8 @@ namespace HalloDoc.Services.IServices
         Physician getproviderEmail(int id);
 
         QuarterSheet checkIfTimeSheet(string? startrange );
-        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange);
+        TimeSheetViewModel Sheet(TimeSheetViewModel model,int id);
+        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange,int id);
 
         void SaveTimeSheet(TimeSheetViewModel model);
     }

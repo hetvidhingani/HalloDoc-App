@@ -281,8 +281,6 @@ public partial class ApplicationDbContext : DbContext
         {
             entity.HasKey(e => e.TimeSheetId).HasName("QuarterSheet_pkey");
 
-            entity.Property(e => e.CreatedDate).HasDefaultValueSql("now()");
-
             entity.HasOne(d => d.Physician).WithMany(p => p.QuarterSheets).HasConstraintName("PhysicanId_FK");
         });
 

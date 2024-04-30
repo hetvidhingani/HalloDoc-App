@@ -5,11 +5,14 @@
             <thead class="table-secondary">
                 <tr>
                     <th scope="col">Date</th>
-                    <th scope="col">On Call Hours</th>
-                    <th scope="col">Total Hours</th>
-                    <th scope="col">Weekend / Holidays</th>
-                    <th scope="col">Number of Housecalls </th>
-                    <th scope="col">Number of Phone consults</th>
+                    <th>Shift</th>
+                    <th>NightShift Weekend</th>
+                    <th scope="col"> Housecall </th>
+                    <th scope="col"> Housecall Nights Weekend</th>
+                    <th scope="col"> Phone consults</th>
+                    <th scope="col"> Phone consult Night Weekend</th>
+                    <th scope="col">Batch Testing</th>
+
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -21,35 +24,80 @@
                     <tr>
                         <input type="hidden" asp-for="TimeSheets[u].startDate" value="@i" >
                         <input type="hidden" asp-for="endDate" value="@Model.endDate">
+                        <input type="hidden" asp-for="startDate" value="@Model.startDate">
 
                         <td>
                             @i
                         </td>
                         <td>
-                            0
-                        </td>
-                        <td>
-                            <div class="form-floating form-group">
-                                <input type="number" asp-for="TimeSheets[u].totalHr"  placeholder="0">
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-floating form-group">
-                                <input type="checkbox" asp-for="TimeSheets[u].holiday">
-                            </div>
 
+                            @if (@Model.TimeSheets![u].shiftCount == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets![u].shiftCount
+                            }
                         </td>
                         <td>
-                            <div class="form-floating form-group" >
-                                <input type="number" asp-for="TimeSheets[u].Housecalls">
-                            </div>
-
+                            @if (@Model.TimeSheets[u].NightShiftWeekend == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets[u].NightShiftWeekend
+                            }
+                            
                         </td>
                         <td>
-                            <div class="form-floating form-group">
-                                <input type="number" asp-for="TimeSheets[u].phoneConsult">
-                            </div>
+                           
+                            @if (@Model.TimeSheets[u].Housecalls == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets[u].Housecalls
+                            }
+                        </td>
+                        <td>
 
+                            @if (@Model.TimeSheets[u].HousecallNightsWeekend == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets[u].HousecallNightsWeekend
+                            }
+                        
+                        </td>
+                        <td>
+                           
+                            @if (@Model.TimeSheets[u].phoneConsult == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets[u].phoneConsult
+                            }
+                        </td>
+                        <td>
+                            @if (@Model.TimeSheets[u].PhoneconsultNightWeekend == null)
+                            {
+                                <p>0</p>
+                            }
+                            else
+                            {
+                                @Model.TimeSheets[u].PhoneconsultNightWeekend
+                            }
+                          
+                        </td>
+                        <td>
+                          0
                         </td>
                     </tr>
                     u++;
@@ -58,10 +106,7 @@
               
             </tbody>
         </table>
-        <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-info" >submit</button>
-        </div>
-
+       
 
     </div>
 

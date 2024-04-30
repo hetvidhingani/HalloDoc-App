@@ -17,7 +17,8 @@ public partial class QuarterSheet
 
     public DateOnly EndDate { get; set; }
 
-    public DateOnly CreatedDate { get; set; }
+    [Column(TypeName = "timestamp without time zone")]
+    public DateTime CreatedDate { get; set; }
 
     public int? Status { get; set; }
 

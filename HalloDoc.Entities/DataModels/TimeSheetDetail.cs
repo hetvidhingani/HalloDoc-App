@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -29,9 +30,6 @@ public partial class TimeSheetDetail
 
     public int? PhoneNightWeekend { get; set; }
 
-    [Column(TypeName = "character varying(100)[]")]
-    public string[]? Item { get; set; }
-
     public int? Amount { get; set; }
 
     public int? Batchtest { get; set; }
@@ -42,8 +40,17 @@ public partial class TimeSheetDetail
 
     public int? TimeSheetId { get; set; }
 
-    [Column(TypeName = "character varying(100)[]")]
-    public string[]? Bill { get; set; }
+    [Column("holiday", TypeName = "bit(1)")]
+    public BitArray? Holiday { get; set; }
+
+    [StringLength(100)]
+    public string? Item { get; set; }
+
+    [StringLength(100)]
+    public string? Bill { get; set; }
+
+    [Column("isReceipt", TypeName = "bit(1)")]
+    public BitArray? IsReceipt { get; set; }
 
     [ForeignKey("TimeSheetId")]
     [InverseProperty("TimeSheetDetails")]
