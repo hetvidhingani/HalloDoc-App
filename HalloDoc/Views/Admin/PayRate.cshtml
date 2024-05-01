@@ -1,0 +1,194 @@
+﻿@model TimeSheetViewModel
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+
+        <div class="PatientInfo d-flex justify-content-between align-items-center">
+            <h3>Payrate</h3>
+            <a href="##" onClick="history.go(-1); return false;" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+
+        <div class="p-5 shadow mb-3  rounded h-100 PatientInfo">
+
+
+            <form asp-action="EditPayrate" asp-controller="Provider" asp-route-id="@Model.physicianID">
+
+
+                <div class="row mt-2">
+                    <div class="table-responsive desktopviewTable">
+                        <table class="table ">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Payrate</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                @foreach (var rate in Model.payRates)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            NightShift_Weekend
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="@rate" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="1">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    @* <tr>
+                                        <td>
+                                            Shift
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate2" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="2">Edit</a>
+
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            HouseCall_Night_Weekend
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate3" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="3">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Phone_Consults
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate4" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="4">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Phone_Consults_NightWeekend
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate5" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="5">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Batch_Testing
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate6" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="6">Edit</a>
+
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            HouseCalls
+                                        </td>
+                                        <td>
+                                            <div class="form-floating form-group">
+                                                <input asp-for="payrate7" type="text" id="payrate" class="form-control edit">
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="d-flex">
+                                                <a class="btn btn-outline-info editBTN mx-1" type="submit" id="7">Edit</a>
+                                            </div>
+                                        </td>
+
+                                    </tr> *@
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </form>
+
+
+        </div>
+    </div>
+</div>
+<script>
+    $('.editBTN').click(function () {
+        var id = this.id;
+        var value = $(this).closest("tr").find("input[type='text']").val();
+        console.log(value);
+        var physician = '@Model.physicianID';
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("EditPayrate","Admin" )",
+            data: { physician, id, value },
+            success: function (data) {
+                console.log("done");
+            },
+            error: function () {
+
+            }
+        });
+    });
+</script>

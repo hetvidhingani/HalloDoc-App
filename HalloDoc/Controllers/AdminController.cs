@@ -245,7 +245,7 @@ namespace HalloDoc.Controllers
                 var link = Request.Scheme + "://" + Request.Host + "/Custom/PatientRequest/" + email;
                 var subject = "Create Request";
                 var body = "Click here " + "<a href=" + link + ">Create New Request</a>" + ".";
-                _customService.SendEmail(email, link, subject, body, 0, 0,0, null);
+                _customService.SendEmail(email, link, subject, body, 0, 0, 0, null);
 
                 TempData["success"] = "Email is sent successfully to given email account";
             }
@@ -624,7 +624,7 @@ namespace HalloDoc.Controllers
                 var subject = "Review Agreement";
                 var body = "Click here " + "<a href=" + link + ">Agreement</a>" + " to Review Agreement!!!";
                 List<string> attachmentFilePaths = null;
-                _customService.SendEmail(viewModel.Email, link, subject, body, viewModel.requestclientID, AdminId,0, attachmentFilePaths);
+                _customService.SendEmail(viewModel.Email, link, subject, body, viewModel.requestclientID, AdminId, 0, attachmentFilePaths);
 
 
                 TempData["emailsend"] = "Email is sent successfully to your email account";
@@ -655,14 +655,14 @@ namespace HalloDoc.Controllers
         {
             var request = HttpContext.Request;
             int AdminID = Int32.Parse(request.Cookies["AdminID"]);
-            await _admin.SaveAdminInfo(model, notification,AdminID);
+            await _admin.SaveAdminInfo(model, notification, AdminID);
             return Json(new { success = true });
         }
         public async Task<IActionResult> SaveBillingInfo(AdminMyProfileViewModel model)
         {
             var request = HttpContext.Request;
             int AdminID = Int32.Parse(request.Cookies["AdminID"]);
-            await _admin.SaveBillingInfo(model,AdminID);
+            await _admin.SaveBillingInfo(model, AdminID);
             return Json(new { success = true });
 
         }
@@ -677,9 +677,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> EncounterFormSaveChanges(EncounterViewModel model)
         {
-        
-                var result = await _admin.EncounterFormSaveChanges(model);
-                TempData["success"] = "Data Saved Successfully.";
+
+            var result = await _admin.EncounterFormSaveChanges(model);
+            TempData["success"] = "Data Saved Successfully.";
             return Json(new { success = true });
 
         }
@@ -697,7 +697,7 @@ namespace HalloDoc.Controllers
                 var message = "Please Find Attachments";
                 var link = "";
                 var attachmentFilePaths = selectedFiles.Select(file => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", file.FileName)).ToList();
-                _customService.SendEmail(userEmail, link, subject, message, 0, 0,0, attachmentFilePaths);
+                _customService.SendEmail(userEmail, link, subject, message, 0, 0, 0, attachmentFilePaths);
             }
 
             return RedirectToAction("Dashboard");
@@ -738,7 +738,7 @@ namespace HalloDoc.Controllers
                 var body = model.message;
                 List<string> attachmentFilePaths = null;
 
-                _customService.SendEmail(model.email, link, subject, body, 0, AdminID,0, attachmentFilePaths);
+                _customService.SendEmail(model.email, link, subject, body, 0, AdminID, 0, attachmentFilePaths);
 
                 return Json("success");
             }
@@ -755,7 +755,7 @@ namespace HalloDoc.Controllers
                 var body = model.message;
                 List<string> attachmentFilePaths = null;
 
-                _customService.SendEmail(model.email, link, subject, body, 0, AdminID,0, attachmentFilePaths);
+                _customService.SendEmail(model.email, link, subject, body, 0, AdminID, 0, attachmentFilePaths);
                 _admin.sendSMS(model, AdminID);
 
                 return Json("success");
@@ -1202,6 +1202,25 @@ namespace HalloDoc.Controllers
         {
             var result = _admin.GetProvidersOnCall(regionId);
             return PartialView("_MDonCallPartialView", result);
+        }
+        #endregion
+
+        #region Invoicing
+        public IActionResult PayRate(int id)
+        {
+            var result = _admin.payrate(id);
+         
+                return View(result);
+            
+        }
+        public IActionResult EditPayrate(int physician, int value, int id)
+        {
+            _admin.EditPayrate(physician, value, id);
+            return RedirectToAction("PayRate", new { id = physician });
+        }
+        public IActionResult Invoicing()
+        {
+            return View();
         }
         #endregion
 

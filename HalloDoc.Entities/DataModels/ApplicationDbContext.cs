@@ -47,6 +47,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
+    public virtual DbSet<PayRate> PayRates { get; set; }
+
     public virtual DbSet<Physician> Physicians { get; set; }
 
     public virtual DbSet<PhysicianLocation> PhysicianLocations { get; set; }
@@ -233,6 +235,13 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<OrderDetail>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("OrderDetails_pkey");
+        });
+
+        modelBuilder.Entity<PayRate>(entity =>
+        {
+            entity.HasKey(e => e.PayRateId).HasName("PayRate_pkey");
+
+            entity.HasOne(d => d.Physician).WithMany(p => p.PayRates).HasConstraintName("PhysicianId_Fk");
         });
 
         modelBuilder.Entity<Physician>(entity =>

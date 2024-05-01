@@ -161,13 +161,19 @@
 
                                     </td>
                                     <td>
-                                        @if (Model.billname != null)
-                                        {
-                                            @if (@Model.TimeSheets![v].billname != null)
-                                            {
 
+                                        @if (@Model.TimeSheets != null)
+                                        {
+                                            @if (Model.TimeSheets![v].billname != null)
+                                            {
                                                 <div class="form-floating form-group hide">
                                                     @Model.TimeSheets![v].billname
+                                                </div>
+                                                <div class="form-floating form-group  show d-none">
+                                                    <div class="form-floating form-group input-group mb-3">
+                                                        <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                        <label style="color:black">Select File</label>
+                                                    </div>
                                                 </div>
                                             }
                                             else
@@ -183,6 +189,7 @@
                                         }
                                         else
                                         {
+
                                             <div class="form-floating form-group ">
                                                 <div class="form-floating form-group input-group mb-3">
                                                     <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
@@ -191,10 +198,9 @@
                                             </div>
                                         }
 
-
                                     </td>
                                     <td>
-                                        @if (Model.billname != null)
+                                        @if (Model.TimeSheets != null)
                                         {
                                             @if (@Model.TimeSheets![v].billname != null)
                                             {
@@ -203,8 +209,11 @@
                                                     <button class="btn btn-info show d-none" type="submit">Save</button>
                                                     <a class="btn btn-danger show d-none" onclick="hideBtns()">Cancel</a>
 
-                                                    <a class="btn btn-outline-info hide">Delete</a>
-                                                    <a class="btn btn-outline-info hide">View</a>
+                                                    <a class="btn btn-outline-info hide" href="@Url.Action("DeleteBill","Provider",new{date = @i})"  >Delete</a>
+                                                    @{
+                                                        var bill = Model.physicianID + "_" + @i + "_bill.pdf";
+                                                    }
+                                                    <a class="btn btn-outline-info hide" href="~/uploads/Bill/@bill" target="_blank">View</a>
 
                                                 </div>
                                             }

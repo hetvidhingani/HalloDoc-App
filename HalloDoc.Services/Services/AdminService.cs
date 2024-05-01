@@ -35,6 +35,8 @@ using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 using System.Xml.Linq;
 using Newtonsoft.Json;
+using HalloDoc.Repository.Repository;
+using iTextSharp.text;
 
 namespace HalloDoc.Services.Services
 {
@@ -73,6 +75,8 @@ namespace HalloDoc.Services.Services
         private readonly IShiftRepository _shiftRepository;
         private readonly IPhysicianRegionRepository _physicianRegionRepository;
         private readonly IPhysicianLocationRepository _physicianLocationRepository;
+        private readonly IPayRateRepository _payRateRepository;
+
         private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
         private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
         private const string TwilioPhoneNumber = "+12515722513";
@@ -89,7 +93,8 @@ namespace HalloDoc.Services.Services
                                IPhysicianNotificationRepository physicianNotificationRepository, IStatusRepository statusRepository,
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
                                ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
-                               IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository)
+                               IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository,
+                               IPayRateRepository payRateRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -123,6 +128,7 @@ namespace HalloDoc.Services.Services
             _shiftRepository = shiftRepository;
             _physicianLocationRepository = physicianLocationRepository;
             _physicianRegionRepository = physicianRegionRepository;
+            _payRateRepository = payRateRepository;
         }
         #endregion
 
@@ -966,7 +972,7 @@ namespace HalloDoc.Services.Services
             AspNetUser user = new AspNetUser()
             {
                 Id = Guid.NewGuid().ToString(),
-                UserName = model.FirstName+"."+model.LastName,
+                UserName = model.FirstName + "." + model.LastName,
                 PasswordHash = _aspnetuserRepository.EncodePasswordToBase64(model.Password),
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
@@ -1071,8 +1077,8 @@ namespace HalloDoc.Services.Services
 
             PhysicianLocation ploc = new PhysicianLocation();
             ploc.PhysicianId = physician.PhysicianId;
-          
-            ploc.PhysicianName = physician.FirstName+" " +physician.LastName;
+
+            ploc.PhysicianName = physician.FirstName + " " + physician.LastName;
             ploc.Address = model.City;
             ploc.CreatedDate = DateTime.Now;
             string address = $"{model.Address1}, {model.Address2}, {model.City}";
@@ -1089,7 +1095,7 @@ namespace HalloDoc.Services.Services
             {
                 ploc.Latitude = (decimal?)bingMapsResult.Point.Coordinates[0];
                 ploc.Longitude = (decimal?)bingMapsResult.Point.Coordinates[1];
-               
+
             }
             await _physicianLocationRepository.AddAsyncss(ploc);
 
@@ -2729,6 +2735,52 @@ namespace HalloDoc.Services.Services
             return providersOnCallViewModel;
         }
 
+        #endregion
+
+        #region Invoicing
+        public TimeSheetViewModel payrate(int id)
+        {
+          
+            List<PayRate> rate = _payRateRepository.GetAll().Where(x => x.PhysicianId == id).ToList();
+            TimeSheetViewModel model = new TimeSheetViewModel();
+            model.physicianID = id;
+
+            // Create a list to store pay rates
+            model.payRates = new List<int?>();
+
+            foreach (var data in rate)
+            {
+                // Add each pay rate to the list
+                model.payRates.Add(data.CatagoryId == 1 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 2 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 3 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 4 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 5 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 6 ? (int)data.Rate : null);
+                model.payRates.Add(data.CatagoryId == 7 ? (int)data.Rate : null);
+            }
+            return model;
+        }
+
+        public void EditPayrate(int physician, int rates, int category)
+        {
+            PayRate rate = _payRateRepository.GetAll().Where(x => x.PhysicianId == physician && x.CatagoryId == category).FirstOrDefault()!;
+            if (rate == null)
+            {
+                rate = new()
+                {
+                    CatagoryId = category,
+                    PhysicianId = physician,
+                    Rate = rates
+                };
+                _payRateRepository.AddAsync(rate);
+            }
+            else
+            {
+                rate.Rate = rates;
+                _payRateRepository.UpdateAsync(rate);
+            }
+        }
         #endregion
 
     }

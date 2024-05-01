@@ -439,6 +439,8 @@
 
                 <hr />
                 <div class="d-flex justify-content-end">
+                    <button class="btn btn-info mx-1" asp-action="PayRate" asp-controller="Admin" asp-route-id="@Model.PhysicianId" > Enter PayRate</button>
+
                     <button class="btn btn-info save-button5" id="@Model.PhysicianId">Save</button>
 
                     <a href="@Url.Action("DeleteProvider","Admin",new{id = Model.PhysicianId})" class="btn btn-danger">Delete Account</a>

@@ -38,8 +38,10 @@
                     </td>
                     <td>
                         <div>
-
-                            <button class="btn btn-outline-info">View</button>
+                                @{
+                                    var bill = Model.physicianID + "_" + @v.startDate + "_bill.pdf";
+                                }
+                                <a class="btn btn-outline-info hide" href="~/uploads/Bill/@bill" target="_blank">View</a>
 
                         </div>
                     </td>

@@ -32,6 +32,17 @@ namespace HalloDoc.Entities.ViewModels
         public int FirstItemIndex { get; set; }
         public int LastItemIndex { get; set; }
         public string? billname { get; set; }
+        public int payrate { get; set; }
+        public int? payrate1 { get; set; }
+        public int? payrate2 { get; set; }
+        public int? payrate3 { get; set; }
+        public int? payrate4 { get; set; }
+        public int? payrate5 { get; set; }
+        public int? payrate6 { get; set; }
+        public int? payrate7 { get; set; }
+
+        public int category {  get; set; }
+        public List<int?> payRates { get; set; }
     }
     public class sheets
     {

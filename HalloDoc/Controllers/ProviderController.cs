@@ -614,8 +614,9 @@ namespace HalloDoc.Controllers
 
         public IActionResult ReimbursementSheet(string? startrange, string? endrange,int CurrentPage=1)
         {
-          
-            var result = _provider.ReimbursementSheet(startrange, endrange, CurrentPage);
+            var request = HttpContext.Request;
+            int id = Int32.Parse(request.Cookies["ProviderID"]);
+            var result = _provider.ReimbursementSheet(startrange, endrange, id,CurrentPage);
 
             return PartialView("_ReimbursmentSheet", result);
         }
@@ -629,6 +630,12 @@ namespace HalloDoc.Controllers
         public IActionResult FinalizeSheet(DateOnly date)
         {
             _provider.FinalizeSheet(date);
+            return RedirectToAction("Invoicing");
+        }
+
+        public IActionResult DeleteBill(DateOnly date)
+        {
+            _provider.DeleteBill(date);
             return RedirectToAction("Invoicing");
         }
         #endregion

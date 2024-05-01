@@ -102,5 +102,9 @@ namespace HalloDoc.Services.IServices
         AdminDashboardViewModel Pagination(string state, int CurrentPage, string? PatientName, int? ReqType, int? RegionId, List<AdminDashboardViewModel> newState);
         string UnscheduledPhysicians (string message);
         void addSignature(ProviderViewModel model, int id);
+        public void EditPayrate(int physician, int value, int categoty);
+        public TimeSheetViewModel payrate(int id);
+
+
     }
 }

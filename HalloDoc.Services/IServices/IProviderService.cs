@@ -77,10 +77,12 @@ namespace HalloDoc.Services.IServices
 
         public TimeSheetViewModel TimeSheet(string? startrange, string? endrange,int id);
 
-        TimeSheetViewModel ReimbursementSheet(string? startrange, string? endrange, int id);
+        TimeSheetViewModel ReimbursementSheet(string? startrange, string? endrange, int id,int currpage);
 
         void SaveTimeSheet(TimeSheetViewModel model);
 
         void FinalizeSheet(DateOnly date);
+
+        void DeleteBill(DateOnly date);
     }
 }
