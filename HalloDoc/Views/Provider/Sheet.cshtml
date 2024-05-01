@@ -112,11 +112,7 @@
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn btn-info">submit</button>
                     </div>
-
-
                 </div>
-
-
             </div>
             <div class="w-75 d-flex justify-content-start align-items-center mb-3">
                 <a class="btn btn-info text-white receipt" type="button">Add Receipts</a>
@@ -140,6 +136,8 @@
                             }
                             @for (DateOnly i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
                             {
+
+
                                 <tr>
                                     <input type="hidden" asp-for="TimeSheets[v].startDate" value="@i">
                                     <input type="hidden" asp-for="endDate" value="@Model.endDate">
@@ -163,39 +161,98 @@
 
                                     </td>
                                     <td>
+                                        @if (Model.billname != null)
+                                        {
+                                            @if (@Model.TimeSheets![v].billname != null)
+                                            {
 
-                                        <div class="form-floating form-group">
-                                            <div class="form-floating form-group input-group mb-3">
-                                                <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
-                                                <label style="color:black">Select File</label>
+                                                <div class="form-floating form-group hide">
+                                                    @Model.TimeSheets![v].billname
+                                                </div>
+                                            }
+                                            else
+                                            {
+
+                                                <div class="form-floating form-group ">
+                                                    <div class="form-floating form-group input-group mb-3">
+                                                        <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                        <label style="color:black">Select File</label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="form-floating form-group ">
+                                                <div class="form-floating form-group input-group mb-3">
+                                                    <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                    <label style="color:black">Select File</label>
+                                                </div>
                                             </div>
-                                        </div>
+                                        }
+
 
                                     </td>
                                     <td>
-                                        <div>
-                                            <button class="btn btn-outline-info">Edit</button>
-                                            <button class="btn btn-outline-info">Delete</button>
-                                            <button class="btn btn-outline-info">View</button>
+                                        @if (Model.billname != null)
+                                        {
+                                            @if (@Model.TimeSheets![v].billname != null)
+                                            {
+                                                <div>
+                                                    <a class="btn btn-outline-info hide" onclick="showBtns()">Edit</a>
+                                                    <button class="btn btn-info show d-none" type="submit">Save</button>
+                                                    <a class="btn btn-danger show d-none" onclick="hideBtns()">Cancel</a>
 
-                                        </div>
+                                                    <a class="btn btn-outline-info hide">Delete</a>
+                                                    <a class="btn btn-outline-info hide">View</a>
+
+                                                </div>
+                                            }
+                                        }
                                     </td>
                                 </tr>
+
+
+
                                 v++;
                             }
+
                         </tbody>
                     </table>
 
                 </div>
 
             </div>
+            <div class="d-flex justify-content-end align-items-center mb-3">
+                <a class="btn btn-info" href="@Url.Action("FinalizeSheet","Provider",new{date = Model.startDate})">Finalize</a>
+            </div>
         </form>
+
     </div>
 </div>
 
 <script>
+    //edit-save
+    function showBtns() {
+        $('.show').removeClass('d-none');
+        $('.hide').addClass('d-none');
+    }
+    function hideBtns() {
+        $('.hide').removeClass('d-none');
+        $('.show').addClass('d-none');
+    }
+
+
+    //toggle btn
     $('.receipt').on('click', function () {
-        $('.sheetReceipt').removeClass('d-none');
+        if ($('.sheetReceipt').hasClass('d-none')) {
+
+            $('.sheetReceipt').removeClass('d-none');
+        }
+        else {
+            $('.sheetReceipt').addClass('d-none');
+
+        }
     });
 
 </script>

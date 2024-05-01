@@ -25,6 +25,13 @@ namespace HalloDoc.Entities.ViewModels
         public string? item { get; set; }
         public IFormFile? bill { get; set; }
         public int physicianID { get; set; }
+        public int TotalCount { get; set; }
+        public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int FirstItemIndex { get; set; }
+        public int LastItemIndex { get; set; }
+        public string? billname { get; set; }
     }
     public class sheets
     {

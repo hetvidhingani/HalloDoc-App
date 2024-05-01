@@ -1,0 +1,57 @@
+﻿@model TimeSheetViewModel
+
+@if(Model.TimeSheets.Any())
+{
+    
+<div class="table-responsive desktopviewTable">
+    <table class="table ">
+        <thead class="table-secondary">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Item</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Bill</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @foreach (var v in Model.TimeSheets)
+            {
+                <tr>
+
+
+                    <td>
+                        @v.startDate
+                    </td>
+                    <td>
+                        @v.item
+
+                    </td>
+                    <td>
+                        @v.amount
+
+                    </td>
+                    <td>
+                        @v.billname
+
+                    </td>
+                    <td>
+                        <div>
+
+                            <button class="btn btn-outline-info">View</button>
+
+                        </div>
+                    </td>
+                </tr>
+               
+            }
+        </tbody>
+    </table>
+
+    </div>
+}
+else
+{
+    <span class="p-5 ">No record(s) found</span>
+}

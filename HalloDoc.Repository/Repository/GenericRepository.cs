@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace HalloDoc.Repository.Repository
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
@@ -168,8 +169,18 @@ namespace HalloDoc.Repository.Repository
         {
             return _genericContext.Where(expression).Include(Include).FirstOrDefault();
         }
+        public int GetCount(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
+        {
+            try
+            {
+                return _genericContext.Where(where).Select(select).Count();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-      
     }
 
 

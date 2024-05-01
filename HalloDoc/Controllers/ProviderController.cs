@@ -602,6 +602,7 @@ namespace HalloDoc.Controllers
 
             return View(result);
         }
+
         public IActionResult TimeSheet(string? startrange, string? endrange)
         {
             var request = HttpContext.Request;
@@ -610,10 +611,25 @@ namespace HalloDoc.Controllers
 
             return PartialView("_TimeSheet", result);
         }
+
+        public IActionResult ReimbursementSheet(string? startrange, string? endrange,int CurrentPage=1)
+        {
+          
+            var result = _provider.ReimbursementSheet(startrange, endrange, CurrentPage);
+
+            return PartialView("_ReimbursmentSheet", result);
+        }
+
         public IActionResult SaveTimeSheet(TimeSheetViewModel model)
         {
             _provider.SaveTimeSheet(model);
             return RedirectToAction("Invoicing", model);
+        }
+
+        public IActionResult FinalizeSheet(DateOnly date)
+        {
+            _provider.FinalizeSheet(date);
+            return RedirectToAction("Invoicing");
         }
         #endregion
     }

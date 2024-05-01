@@ -50,6 +50,7 @@ namespace HalloDoc.Services.IServices
         Task<object> MyProfile(int physicianID);
 
         SchedulingModel Scheduling(int physician);
+
         void AddShift(CreateShiftViewModel model, List<DayOfWeek> WeekDays, string adminId);
 
         CreateShiftViewModel GetShiftDetailsById(int shiftDetailsId);
@@ -61,6 +62,7 @@ namespace HalloDoc.Services.IServices
         void deleteShift(int id);
 
         Encounter GetEncounterForm(int id);
+
         byte[] Downloadpdf(Encounter rowdata);
 
         Task CreateRequestByProvider(PatientRequestViewModel viewModel, int provider);
@@ -70,9 +72,15 @@ namespace HalloDoc.Services.IServices
         Physician getproviderEmail(int id);
 
         QuarterSheet checkIfTimeSheet(string? startrange );
+
         TimeSheetViewModel Sheet(TimeSheetViewModel model,int id);
+
         public TimeSheetViewModel TimeSheet(string? startrange, string? endrange,int id);
 
+        TimeSheetViewModel ReimbursementSheet(string? startrange, string? endrange, int id);
+
         void SaveTimeSheet(TimeSheetViewModel model);
+
+        void FinalizeSheet(DateOnly date);
     }
 }
