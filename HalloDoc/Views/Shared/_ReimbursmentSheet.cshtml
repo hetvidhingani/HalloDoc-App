@@ -16,30 +16,29 @@
         </thead>
         <tbody class="table-group-divider">
 
-            @foreach (var v in Model.TimeSheets)
+          @for(var  i=0; i<Model.TimeSheets.Count();i++)
             {
                 <tr>
 
 
                     <td>
-                        @v.startDate
+                        
+                        @Model.TimeSheets[i].startDate
                     </td>
                     <td>
-                        @v.item
+                      @Model.TimeSheets[i].item
 
                     </td>
                     <td>
-                        @v.amount
-
+                        @Model.TimeSheets[i].amount
                     </td>
                     <td>
-                        @v.billname
-
+                        @Model.TimeSheets[i].billname
                     </td>
                     <td>
                         <div>
                                 @{
-                                    var bill = Model.physicianID + "_" + @v.startDate + "_bill.pdf";
+                                    var bill = Model.physicianID + "_" + Model.TimeSheets[i].startDate + "_bill.pdf";
                                 }
                                 <a class="btn btn-outline-info hide" href="~/uploads/Bill/@bill" target="_blank">View</a>
 

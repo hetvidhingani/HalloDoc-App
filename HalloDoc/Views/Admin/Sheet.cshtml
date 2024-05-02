@@ -1,0 +1,285 @@
+﻿@model HalloDoc.Entities.ViewModels.TimeSheetViewModel
+
+@{
+    ViewBag.Invoicing = "active";
+    ViewData["Title"] = "Invoicing";
+
+}
+@{
+    var dateRanges = new List<Tuple<DateTime, DateTime>>();
+
+    // Get the current month and year
+    for (int i = 0; i <= 12; i++)
+    {
+        int currentMonth = DateTime.Now.AddMonths(i).Month;
+        int currentYear = DateTime.Now.Year;
+
+        // Define date ranges
+
+        // Populate date ranges based on month and year
+        if (currentMonth == 2 && DateTime.IsLeapYear(currentYear)) // February with 29 days
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 1), new DateTime(currentYear, 1, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 16), new DateTime(currentYear, 1, 31)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 1), new DateTime(currentYear, 2, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 16), new DateTime(currentYear, 2, 29)));
+        }
+        else // Other months
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 1), new DateTime(currentYear, currentMonth, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 16), new DateTime(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth))));
+        }
+    }
+}
+
+
+
+
+<div class=" mx-5 " style="margin-top:120px;">
+    <div class="d-flex flex-column align-items-center justify-content-center " style="margin-bottom:90px">
+
+        <div class="w-50 d-flex justify-content-end align-items-center mb-2">
+            <a asp-action="Invoicing" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <form asp-controller="Admin" asp-action="SaveTimeSheet" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="physicianID" />
+            <div class="p-5 shadow mb-3  rounded h-100 ">
+
+                <div class="table-responsive desktopviewTable">
+                    <table class="table ">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">On Call Hours</th>
+                                <th scope="col">Total Hours</th>
+                                <th scope="col">Weekend / Holidays</th>
+                                <th scope="col">Number of Housecalls </th>
+                                <th scope="col">Number of Phone consults</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @{
+                                int u = 0;
+                            }
+                            @for (DateOnly i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
+                            {
+                                <tr>
+                                    <input type="hidden" asp-for="TimeSheets[u].startDate" value="@i">
+                                    <input type="hidden" asp-for="endDate" value="@Model.endDate">
+                                    <input type="hidden" asp-for="startDate" value="@Model.startDate">
+
+                                    <td>
+                                        @i
+                                    </td>
+                                    <td>
+                                        0
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+                                            <input type="number" asp-for="TimeSheets![u].totalHr" placeholder="0">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+                                            <input type="checkbox" asp-for="TimeSheets![u].holiday" />
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+                                            <input type="number" asp-for="TimeSheets![u].Housecalls">
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+                                            <input type="number" asp-for="TimeSheets![u].phoneConsult">
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                u++;
+                            }
+
+
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-info">submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="w-75 d-flex justify-content-start align-items-center mb-3">
+                <a class="btn btn-info text-white receipt" type="button">Add Receipts</a>
+            </div>
+            <div class="p-5 shadow mb-3  rounded h-100  d-none sheetReceipt">
+
+                <div class="table-responsive desktopviewTable">
+                    <table class="table ">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">Item</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Bill</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @{
+                                int v = 0;
+                            }
+                            @for (DateOnly i = Model.startDate; i <= Model.endDate; i = i.AddDays(1))
+                            {
+
+
+                                <tr>
+                                    <input type="hidden" asp-for="TimeSheets[v].startDate" value="@i">
+                                    <input type="hidden" asp-for="endDate" value="@Model.endDate">
+                                    <input type="hidden" asp-for="startDate" value="@Model.startDate">
+
+                                    <td>
+                                        @i
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+
+                                            <input type="text" asp-for="TimeSheets![v].item" />
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        <div class="form-floating form-group">
+
+                                            <input type="text" asp-for="TimeSheets![v].amount" placeholder="0" />
+                                        </div>
+
+                                    </td>
+                                    <td>
+
+                                        @if (@Model.TimeSheets != null)
+                                        {
+                                            @if (Model.TimeSheets![v].billname != null)
+                                            {
+                                                <div class="form-floating form-group hide">
+                                                    @Model.TimeSheets![v].billname
+                                                </div>
+                                                <div class="form-floating form-group  show d-none">
+                                                    <div class="form-floating form-group input-group mb-3">
+                                                        <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                        <label style="color:black">Select File</label>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+
+                                                <div class="form-floating form-group ">
+                                                    <div class="form-floating form-group input-group mb-3">
+                                                        <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                        <label style="color:black">Select File</label>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+
+                                            <div class="form-floating form-group ">
+                                                <div class="form-floating form-group input-group mb-3">
+                                                    <input asp-for="TimeSheets![v].bill" style="border-radius:10px" type="file" class="form-control edit" id="UploadButton">
+                                                    <label style="color:black">Select File</label>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (Model.TimeSheets != null)
+                                        {
+                                            @if (@Model.TimeSheets![v].billname != null)
+                                            {
+                                                <div>
+                                                    <a class="btn btn-outline-info hide" onclick="showBtns()">Edit</a>
+                                                    <button class="btn btn-info show d-none" type="submit">Save</button>
+                                                    <a class="btn btn-danger show d-none" onclick="hideBtns()">Cancel</a>
+
+                                                    <a class="btn btn-outline-info hide" href="@Url.Action("DeleteBill","Admin",new{date = @i})"  >Delete</a>
+                                                    @{
+                                                        var bill = Model.physicianID + "_" + @i + "_bill.pdf";
+                                                    }
+                                                    <a class="btn btn-outline-info hide" href="~/uploads/Bill/@bill" target="_blank">View</a>
+
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+
+
+
+                                v++;
+                            }
+
+                        </tbody>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>PayRate</td>
+                            <td>
+                                <input type="text" asp-for="totalHr" disabled />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="NightShiftWeekend" disabled />
+
+                            </td>
+                            <td>
+                                <input type="text" asp-for="Housecalls" disabled />
+                            </td>
+                            <td>
+                                <input type="text" asp-for="phoneConsult" disabled />
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+            <div class="d-flex justify-content-end align-items-center mb-3">
+                <a class="btn btn-info" href="@Url.Action("FinalizeSheet","Admin",new{date = Model.startDate})">Finalize</a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<script>
+    //edit-save
+    function showBtns() {
+        $('.show').removeClass('d-none');
+        $('.hide').addClass('d-none');
+    }
+    function hideBtns() {
+        $('.hide').removeClass('d-none');
+        $('.show').addClass('d-none');
+    }
+
+
+    //toggle btn
+    $('.receipt').on('click', function () {
+        if ($('.sheetReceipt').hasClass('d-none')) {
+
+            $('.sheetReceipt').removeClass('d-none');
+        }
+        else {
+            $('.sheetReceipt').addClass('d-none');
+
+        }
+    });
+
+</script>

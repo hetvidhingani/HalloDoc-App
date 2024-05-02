@@ -23,7 +23,7 @@ namespace HalloDoc.Repository.Repository
             _genericContext = _context.Set<T>();
         }
         
-
+        public T? getFirstOrDefault(Expression<Func<T, bool>> filter) => _genericContext.FirstOrDefault(filter);
         public async Task AddAsync(T entity)
         {
             try

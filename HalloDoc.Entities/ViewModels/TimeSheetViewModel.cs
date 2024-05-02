@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using HalloDoc.Entities.DataModels;
+using Microsoft.AspNetCore.Http;
 using Org.BouncyCastle.Asn1.Mozilla;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,8 @@ namespace HalloDoc.Entities.ViewModels
         public int? categoryId { get; set; }
         public int? rate { get; set; }
         public int? cid { get; set; }
+        public List<Physician> physicians { get; set; }
+        public string status { get; set; }
     }
     public class sheets
     {

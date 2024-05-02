@@ -9,6 +9,7 @@ namespace HalloDoc.Repository.IRepository
 {
     public interface IGenericRepository<T> where T : class
     {
+        public T? getFirstOrDefault(Expression<Func<T, bool>> filter);
         IQueryable<T> GetAll();
         Task AddAsync(T entity);
         Task AddAsyncss(T entity);

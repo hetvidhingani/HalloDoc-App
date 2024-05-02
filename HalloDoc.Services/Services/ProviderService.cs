@@ -989,7 +989,6 @@ namespace HalloDoc.Services.Services
                     totalHr = x.TotalHours,
                     Housecalls = x.HouseCall,
                     phoneConsult = x.PhoneConsult,
-
                     HousecallNightsWeekend = x.HouseCallNightWeekend,
                     NightShiftWeekend = x.NightShiftWeekend,
                     PhoneconsultNightWeekend = x.PhoneNightWeekend,

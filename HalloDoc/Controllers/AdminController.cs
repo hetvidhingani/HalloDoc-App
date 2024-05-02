@@ -14,6 +14,7 @@ using Twilio.Types;
 using Twilio;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Twilio.Rest.Api.V2010.Account;
+using Microsoft.DotNet.Scaffolding.Shared;
 
 namespace HalloDoc.Controllers
 {
@@ -1205,25 +1206,100 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region Invoicing
+        #region Pay Rate
         public IActionResult PayRate(int id)
         {
             var result = _admin.payrate(id);
 
             return View(result);
-            
+
         }
         [HttpPost]
         public IActionResult EditPayrate(TimeSheetViewModel model)
         {
-             var result = _admin.EditPayrate(model);
-            return RedirectToAction("PayRate",new { id = result});
+            var result = _admin.EditPayrate(model);
+            return RedirectToAction("PayRate", new { id = result });
         }
-        public IActionResult Invoicing()
-        {
-            return View();
-        }
+
         #endregion
 
+        #region Invoicing
+        public IActionResult Invoicing()
+        {
+            TimeSheetViewModel model = new TimeSheetViewModel();
+            model.physicians = _admin.getPhysicianList();
+            return View(model);
+        }
+
+        public IActionResult checkIfTimeSheet(string? startrange , int physicianId)
+        {
+            var result = _admin.checkIfTimeSheet(startrange,physicianId);
+            if (result == null)
+            {
+                return Json(new { success = false });
+            }
+            else
+            {
+                return Json(new { success = true, isFinalize = result.IsFinalized ,status = result.Status });
+            }
+        }
+        [HttpPost]
+        public IActionResult UnApprovedSheet(string? startrange, string? endrange, int physicianId)
+        {
+            DateOnly startdate = DateOnly.Parse(startrange);
+            DateOnly enddate = DateOnly.Parse(endrange);
+            TimeSheetViewModel model = new()
+            {
+                startDate = startdate,
+                endDate = enddate,
+                status = "Pending",
+                physicianID = physicianId
+            };
+
+            return PartialView("_UnApprovedSheet", model);
+        }
+
+        public IActionResult Sheet(TimeSheetViewModel model,int id)
+        {
+            
+            var result = _admin.Sheet(model, id);
+
+            return View(result);
+        }
+        public IActionResult ReimbursementSheet(string? startrange, string? endrange, int id, int CurrentPage = 1)
+        {
+         
+            var result = _admin.ReimbursementSheet(startrange, endrange, id, CurrentPage);
+
+            return PartialView("_ReimbursmentSheet", result);
+        }
+
+        public IActionResult SaveTimeSheet(TimeSheetViewModel model)
+        {
+            _admin.SaveTimeSheet(model);
+            return RedirectToAction("Invoicing", model);
+        }
+        public IActionResult ApprovedSheet(string? startrange, string? endrange,int id)
+        {
+ 
+            var result = _admin.TimeSheet(startrange, endrange, id);
+
+            return PartialView("_TimeSheet", result);
+        }
+      
+
+
+        public IActionResult FinalizeSheet(DateOnly date)
+        {
+            _admin.FinalizeSheet(date);
+            return RedirectToAction("Invoicing");
+        }
+
+        public IActionResult DeleteBill(DateOnly date)
+        {
+            _admin.DeleteBill(date);
+            return RedirectToAction("Invoicing");
+        }
+        #endregion
     }
 }

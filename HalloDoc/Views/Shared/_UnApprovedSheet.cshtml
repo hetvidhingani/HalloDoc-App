@@ -1,0 +1,38 @@
+﻿@model HalloDoc.Entities.ViewModels.TimeSheetViewModel
+<form asp-action="Sheet" asp-controller="Admin" asp-route-id="@Model.physicianID">
+    <div class="table-responsive desktopviewTable">
+        <table class="table ">
+            <thead class="table-secondary">
+                <tr>
+                    <th scope="col">Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th scope="col"> Action </th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <input type="hidden" asp-for="@Model.startDate" />
+                <input type="hidden" asp-for="@Model.endDate" />
+
+                <tr>
+                    <td>
+                        @Model.startDate
+                    </td>
+                    <td>
+                        @Model.endDate
+                    </td>
+                    <td>
+                        pending
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info"  type="submit"> Approve </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+</form>

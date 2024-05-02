@@ -1,0 +1,202 @@
+﻿@model TimeSheetViewModel;
+@{
+    ViewBag.Invoicing = "active";
+    ViewData["Title"] = "Invoicing";
+
+}
+@{
+    var dateRanges = new List<Tuple<DateTime, DateTime>>();
+
+    // Get the current month and year
+    for (int i = 0; i <= 12; i++)
+    {
+        int currentMonth = DateTime.Now.AddMonths(i).Month;
+        int currentYear = DateTime.Now.Year;
+
+        // Define date ranges
+
+        // Populate date ranges based on month and year
+        if (currentMonth == 2 && DateTime.IsLeapYear(currentYear)) // February with 29 days
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 1), new DateTime(currentYear, 1, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 1, 16), new DateTime(currentYear, 1, 31)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 1), new DateTime(currentYear, 2, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, 2, 16), new DateTime(currentYear, 2, 29)));
+        }
+        else // Other months
+        {
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 1), new DateTime(currentYear, currentMonth, 15)));
+            dateRanges.Add(new Tuple<DateTime, DateTime>(new DateTime(currentYear, currentMonth, 16), new DateTime(currentYear, currentMonth, DateTime.DaysInMonth(currentYear, currentMonth))));
+        }
+    }
+}
+
+<div class="mainContent2 mx-auto ">
+    <div class="d-flex flex-column align-items-center justify-content-center ">
+
+        <div class="w-75 d-flex justify-content-between align-items-center">
+            <h3>Timesheets</h3>
+            <a asp-action="Dashboard" asp-controller="Admin" style=" right: 0px; text-decoration: none; ">
+                <button class="back">
+                    <i class="bi bi-chevron-left"></i>
+                    back
+                </button>
+            </a>
+        </div>
+        <div class="shadow mb-3 w-75 rounded h-100 ">
+    
+                <div class=" px-5 py-2 row d-flex justify-content-between align-items-baseline">
+                    <div class="col-lg-8 col-md-8 col-sm-8 d-flex ">
+                        <div class="form-floating ">
+
+                            <select asp-for="physicianID" id="phy" class="form-select required">
+                                <option value="">Select physician</option>
+                                @foreach (var i in Model.physicians)
+                                {
+                                    <option value="@i.PhysicianId">@i.FirstName @i.LastName </option>
+                                }
+                            </select>
+                            <label>Physician</label>
+
+                        </div>
+                        <div class="form-floating ">
+
+                            <select class="form-select " id="dateRange" asp-for="range" onchange="datechange()" style="width: 250px;height: 35px;">
+                                @foreach (var r in dateRanges)
+                                {
+                                    <option value="@r.Item1.Date.ToString("dd/MM/yyyy") - @r.Item2.Date.ToString("dd/MM/yyyy")">
+                                        @r.Item1.Date.ToString("dd-MM-yyyy") - @r.Item2.Date.ToString("dd-MM-yyyy")
+                                    </option>
+                                }
+
+                            </select>
+                            <label>Select by time period</label>
+
+                        </div>
+
+                    </div>
+                   
+                </div>
+           
+            <div class="row mt-2">
+                <div id="admindata" class="mb-5"></div>
+            </div>
+            @*  <div id="norecords" class="mt-2 mx-auto fw-bold d-none p-5">@Model.physicianID has not finalized yet.</div> *@
+        </div>
+
+        <div class="shadow mb-3 w-75 rounded h-100 timesheetRe d-none">
+            <div class="row mt-2 p-5">
+                <span class="fs-5 fw-bold">Timesheet Reimbursment</span>
+            </div>
+            <div class="row mt-2">
+                <div id="receiptData" class="mb-5"></div>
+            </div>
+            <div id="norecordsReciept" class="mt-2 mx-auto fw-bold p-5 d-none">No Records Found</div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    var page;
+    function changepage(CurrentPage) {
+        page = CurrentPage;
+        datechange();
+    }
+
+    $('input[name="dates"]').daterangepicker();
+
+
+    function datechange() {
+        var date = $('#dateRange').val();
+        var splitString = date.split(" - ");
+        var physician = $('#phy').val();
+        $.ajax({
+            type: "POST",
+            data: { startrange: splitString[0], physicianId: physician },
+            url: "@(Url.Action("checkIfTimeSheet", "Admin"))",
+
+            success: function (response) {
+
+                if (response.success) {
+                    if (response.isFinalize) {
+                        if (response.status != 1) {
+                            console.log("in");
+                            $("#norecords").addClass('d-none');
+                            $("#admindata").removeClass('d-none');
+                            $("#receiptData").addClass('d-none');
+                            $("#norecordsReciept").addClass('d-none');
+                            $.ajax({
+                                type: "POST",
+                                dataType: "html",
+                                data: { startrange: splitString[0], endrange: splitString[1], physicianId: physician },
+                                url: "@(Url.Action("UnApprovedSheet", "Admin"))",
+                                dataType: "html",
+                                success: function (data) {
+
+                                    $("#admindata").html(data);
+                                },
+                                error: function () {
+
+                                    $("#admindata").innerText = "No records found";
+                                }
+                            });
+                        }
+                        else if (response.status == 1) {
+                            $("#norecords").addClass('d-none');
+                            $("#admindata").removeClass('d-none');
+                            $("#receiptData").removeClass('d-none');
+                            $("#norecordsReciept").addClass('d-none');
+                            $(".timesheetRe").removeClass('d-none');
+                            $.ajax({
+                                type: "POST",
+                                dataType: "html",
+                                data: { startrange: splitString[0], endrange: splitString[1], id: physician },
+                                url: "@(Url.Action("ApprovedSheet", "Admin"))",
+                                dataType: "html",
+                                success: function (data) {
+
+                                    $("#admindata").html(data);
+                                },
+                                error: function () {
+
+                                    $("#admindata").innerText = "No records found";
+                                }
+                            });
+                            $.ajax({
+                                type: "POST",
+                                dataType: "html",
+                                data: { startrange: splitString[0], endrange: splitString[1], id: physician ,CurrentPage: page },
+                                url: "@(Url.Action("ReimbursementSheet", "Admin"))",
+                                dataType: "html",
+                                success: function (data) {
+
+                                    $("#receiptData").html(data);
+                                },
+                                error: function () {
+
+                                    $("#receiptData").innerText = "No records found";
+                                }
+                            });
+                        }
+
+                    }
+
+
+                }
+                else {
+                    $("#norecords").removeClass('d-none');
+                    $("#norecordsReciept").removeClass('d-none');
+                    $('.openTimeSheet').removeClass('d-none');
+                    $("#admindata").addClass('d-none');
+                    $("#receiptData").addClass('d-none');
+
+
+                }
+            },
+            error: function () {
+
+            }
+        });
+    }
+</script>

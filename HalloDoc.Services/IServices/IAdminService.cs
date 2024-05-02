@@ -83,6 +83,7 @@ namespace HalloDoc.Services.IServices
         void UnblockRequest(int id);
         SearchRecordViewModel SearchRecordTable(int statusOfRequest, string Name, int requestType, DateTime? DateOfService, DateTime? ToDateOfService, string physician, string Email, string PhoneNumber, int CurrPage = 1);
         void DeleteRequest(int id);
+        public List<Physician> getPhysicianList();
         List<Region> getstateDropdown();
         Task CreateRequestByAdmin(PatientRequestViewModel viewModel, int adminId);
         SchedulingModel Scheduling(int regionId);
@@ -106,7 +107,15 @@ namespace HalloDoc.Services.IServices
 
         public TimeSheetViewModel payrate(int id);
 
+        public QuarterSheet checkIfTimeSheet(string? startrange, int physicianId);
 
+        public TimeSheetViewModel Sheet(TimeSheetViewModel viewmodel, int id);
+        public void SaveTimeSheet(TimeSheetViewModel model);
+        public TimeSheetViewModel ReimbursementSheet(string? startrange, string? endrange, int id, int CurrentPage);
+        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange, int id);
+        public void FinalizeSheet(DateOnly date);
+
+        public void DeleteBill(DateOnly date);
 
     }
 }

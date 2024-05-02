@@ -78,7 +78,8 @@ namespace HalloDoc.Services.Services
         private readonly IPhysicianLocationRepository _physicianLocationRepository;
         private readonly IPayRateRepository _payRateRepository;
         private readonly ICategoryRepository _categoryRepository;
-
+        private readonly IQuaterSheetRepository _quaterSheetRepository;
+        private readonly ITimeDetailsRepository _timedetailsRepository;
         private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
         private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
         private const string TwilioPhoneNumber = "+12515722513";
@@ -96,7 +97,7 @@ namespace HalloDoc.Services.Services
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
                                ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
                                IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository,
-                               IPayRateRepository payRateRepository, ICategoryRepository categoryRepository)
+                               IPayRateRepository payRateRepository, ICategoryRepository categoryRepository, IQuaterSheetRepository quaterSheetRepository, ITimeDetailsRepository timedetailsRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -132,6 +133,8 @@ namespace HalloDoc.Services.Services
             _physicianRegionRepository = physicianRegionRepository;
             _payRateRepository = payRateRepository;
             _categoryRepository = categoryRepository;
+            _quaterSheetRepository = quaterSheetRepository;
+            _timedetailsRepository = timedetailsRepository;
         }
         #endregion
 
@@ -153,7 +156,10 @@ namespace HalloDoc.Services.Services
         {
             return _regionRepository.GetAll().ToList();
         }
-
+        public List<Physician> getPhysicianList()
+        {
+            return _physicianRepository.GetAll().Where(x => x.IsDeleted == null).ToList();
+        }
         #endregion
 
         #region Dashboard
@@ -2740,7 +2746,7 @@ namespace HalloDoc.Services.Services
 
         #endregion
 
-        #region Invoicing
+        #region Pay Rate
         public TimeSheetViewModel payrate(int id)
         {
             List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
@@ -2753,7 +2759,7 @@ namespace HalloDoc.Services.Services
                                       payrateId = r != null ? r.PayRateId : 0,
                                       physicianID = (int)(r != null ? r.PhysicianId : 0),
                                       categoryId = r != null ? r.CatagoryId : 0,
-                                      rate = r != null ? r.Rate : 0,
+                                      rate = r != null ? r.Rate : null,
                                       category = rc.Category1,
                                       cid = rc.CategoryId
                                   }).ToList();
@@ -2766,7 +2772,7 @@ namespace HalloDoc.Services.Services
                     {
                         dash.physicianID = (int)r.physicianID;
                         dash.payrate = r.payrateId;
-                        dash.rate = r.rate;
+                        dash.rate = r.rate == null ? null : r.rate;
                     }
                     dash.physicianID = id;
                     dash.category = r.category;
@@ -2792,6 +2798,7 @@ namespace HalloDoc.Services.Services
             return new TimeSheetViewModel
             {
                 TimeSheets = list,
+                physicianID = id,
             };
         }
 
@@ -2826,6 +2833,294 @@ namespace HalloDoc.Services.Services
                 }
             }
             return id;
+        }
+        #endregion
+
+        #region Invoicing
+        public QuarterSheet checkIfTimeSheet(string? startrange, int physicianId)
+        {
+            DateOnly date = DateOnly.Parse(startrange!);
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == date && x.PhysicianId == physicianId).FirstOrDefault()!;
+            if (check == null)
+            {
+                return null;
+            }
+            else
+            {
+                return check;
+            }
+        }
+
+        public TimeSheetViewModel Sheet(TimeSheetViewModel viewmodel, int id)
+        {
+
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == viewmodel.startDate).FirstOrDefault();
+            TimeSheetViewModel model = new TimeSheetViewModel();
+            model.physicianID = id;
+
+            if (check != null)
+            {
+                List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
+                Expression<Func<TimeSheetDetail, bool>> expression = PredicateBuilder.New<TimeSheetDetail>();
+                expression = x => x.TimeSheetId == check.TimeSheetId;
+                Expression<Func<PayRate, bool>> clause = PredicateBuilder.New<PayRate>();
+                clause = x => x.PhysicianId == id;
+                var result = _timedetailsRepository.GetAllWithPagination(x => new TimeSheetViewModel
+                {
+                    totalHr = x.TotalHours == null ? x.NightShiftWeekend : x.TotalHours,
+                    Housecalls = x.HouseCall == null ? x.HouseCallNightWeekend : x.HouseCall,
+                    phoneConsult = x.PhoneConsult == null ? x.PhoneNightWeekend : x.PhoneConsult,
+                    holiday = x.Holiday == null ? false : true,
+                    item = x.Item,
+                    amount = x.Amount,
+                    billname = x.Bill == null ? null : x.Bill,
+
+                }, expression, 1, 20, x => x.Date, true);
+
+                PayRate y = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                model.totalHr = y.Rate == null? null : y.Rate;
+
+                var z = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                model.NightShiftWeekend = z.Rate == null ? null : z.Rate;
+
+                var a = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                model.Housecalls = a.Rate;
+
+                var b = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                model.phoneConsult = b.Rate;
+
+                foreach (var item in result)
+                {
+                    list.Add(item);
+                }
+                model.TimeSheets = list;
+
+            }
+
+            model.startDate = viewmodel.startDate;
+            model.endDate = viewmodel.endDate;
+            return model;
+        }
+
+
+        public TimeSheetViewModel ReimbursementSheet(string? startrange, string? endrange, int id, int CurrentPage)
+        {
+            DateOnly startdate = DateOnly.Parse(startrange!);
+            DateOnly enddate = DateOnly.Parse(endrange!);
+
+
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == startdate).FirstOrDefault()!;
+            TimeSheetViewModel model = new TimeSheetViewModel();
+
+            List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
+            Expression<Func<TimeSheetDetail, bool>> expression = PredicateBuilder.New<TimeSheetDetail>();
+            expression = x => x.TimeSheetId == check.TimeSheetId && x.Bill != null;
+
+            var result = _timedetailsRepository.GetAllWithPagination(x => new TimeSheetViewModel
+            {
+                startDate = x.Date,
+                item = x.Item,
+                amount = x.Amount,
+                billname = x.Bill,
+            }, expression, CurrentPage, 5, x => x.Date, false);
+            foreach (var item in result)
+            {
+                list.Add(item);
+            }
+
+            if (CurrentPage == 0) { CurrentPage = 1; }
+            int dataSize = 5;
+            int totalCount = list.Count();
+            int totalPage = (int)Math.Ceiling((double)totalCount / dataSize);
+            int FirstItemIndex = Math.Min((CurrentPage - 1) * dataSize + 1, totalCount);
+            int LastItemIndex = Math.Min(CurrentPage * dataSize, totalCount);
+
+            return new TimeSheetViewModel
+            {
+                TimeSheets = list,
+                TotalCount = totalCount,
+                TotalPages = totalPage,
+                CurrentPage = CurrentPage,
+                PageSize = 3,
+                FirstItemIndex = FirstItemIndex,
+                LastItemIndex = LastItemIndex,
+                startDate = startdate,
+                endDate = enddate,
+                physicianID = id,
+            };
+
+
+        }
+
+        public void SaveTimeSheet(TimeSheetViewModel model)
+        {
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == model.startDate).FirstOrDefault();
+
+            if (check == null)
+            {
+                QuarterSheet sheet = new QuarterSheet();
+                sheet.StartDate = model.startDate;
+                sheet.EndDate = model.endDate;
+                sheet.CreatedDate = DateTime.Now;
+                sheet.PhysicianId = model.physicianID;
+
+                _quaterSheetRepository.AddAsync(sheet);
+
+                foreach (var item in model.TimeSheets)
+                {
+                    TimeSheetDetail table = new TimeSheetDetail();
+                    table.Date = item.startDate;
+                    table.TimeSheetId = sheet.TimeSheetId;
+                    table.Item = item.item;
+                    table.Amount = item.amount;
+                    table.Bill = item.bill == null ? null : item.bill.FileName;
+                    if (item.bill != null || item.item != null || item.amount != null)
+                    {
+                        table.IsReceipt = new BitArray(new bool[] { true });
+                    }
+                    if (item.holiday == true)
+                    {
+                        table.NightShiftWeekend = item.totalHr;
+                        table.HouseCallNightWeekend = item.Housecalls;
+                        table.PhoneNightWeekend = item.phoneConsult;
+                        table.Holiday = new BitArray(new bool[] { true });
+                    }
+                    else
+                    {
+                        table.TotalHours = item.totalHr;
+                        table.HouseCall = item.Housecalls;
+                        table.PhoneConsult = item.phoneConsult;
+                    }
+                    if (item.bill != null)
+                    {
+
+                        var newName = $"{model.physicianID}_{item.startDate}_bill.pdf";
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/Bill/", newName);
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        using var stream = System.IO.File.Create(filePath);
+                        item.bill.CopyTo(stream);
+                    }
+                    _timedetailsRepository.AddAsync(table);
+                }
+
+            }
+            else
+            {
+                check.StartDate = model.startDate;
+                check.EndDate = model.endDate;
+                check.PhysicianId = model.physicianID;
+                _quaterSheetRepository.UpdateAsync(check);
+
+                foreach (var item in model.TimeSheets)
+                {
+                    TimeSheetDetail table = _timedetailsRepository.GetAll().Where(x => x.Date == item.startDate).FirstOrDefault();
+                    table.Date = item.startDate;
+                    table.TimeSheetId = check.TimeSheetId;
+                    table.Item = item.item;
+                    table.Amount = item.amount;
+                    table.Bill = item.bill == null ? null : item.bill.FileName;
+                    if (item.bill != null || item.item != null || item.amount != null)
+                    {
+                        table.IsReceipt = new BitArray(new bool[] { true });
+                    }
+                    if (item.holiday == true)
+                    {
+                        table.NightShiftWeekend = item.totalHr;
+                        table.HouseCallNightWeekend = item.Housecalls;
+                        table.PhoneNightWeekend = item.phoneConsult;
+                        table.Holiday = new BitArray(new bool[] { true });
+                    }
+                    else
+                    {
+                        table.TotalHours = item.totalHr;
+                        table.HouseCall = item.Housecalls;
+                        table.PhoneConsult = item.phoneConsult;
+                    }
+                    if (item.bill != null)
+                    {
+                        var newName = $"{model.physicianID}_{item.startDate}_bill.pdf";
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/Bill/", newName);
+
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+                        using var stream = System.IO.File.Create(filePath);
+                        item.bill.CopyTo(stream);
+                    }
+                    _timedetailsRepository.UpdateAsync(table);
+                }
+            }
+        }
+        public TimeSheetViewModel TimeSheet(string? startrange, string? endrange, int id)
+        {
+            DateOnly startdate = DateOnly.Parse(startrange!);
+            DateOnly enddate = DateOnly.Parse(endrange!);
+
+
+            QuarterSheet check = _quaterSheetRepository.GetAll().Where(x => x.StartDate == startdate).FirstOrDefault()!;
+            TimeSheetViewModel model = new TimeSheetViewModel();
+            if (check != null)
+            {
+
+                List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
+                Expression<Func<TimeSheetDetail, bool>> expression = PredicateBuilder.New<TimeSheetDetail>();
+                expression = x => x.TimeSheetId == check.TimeSheetId;
+
+                var result = _timedetailsRepository.GetAllData(x => new TimeSheetViewModel
+                {
+                    totalHr = x.TotalHours,
+                    Housecalls = x.HouseCall,
+                    phoneConsult = x.PhoneConsult,
+                    HousecallNightsWeekend = x.HouseCallNightWeekend,
+                    NightShiftWeekend = x.NightShiftWeekend,
+                    PhoneconsultNightWeekend = x.PhoneNightWeekend,
+                    holiday = x.Holiday == null ? false : true,
+
+                }, expression);
+                foreach (var item in result)
+                {
+                    item.shiftCount = _shiftDetailsRepository.GetCount(x => x.ShiftDetailId, x => x.ShiftDate == startdate && x.Shift.PhysicianId == id);
+                    list.Add(item);
+                }
+                foreach (var item in result)
+                {
+                    list.Add(item);
+                }
+                model.TimeSheets = list;
+
+            }
+            model.startDate = startdate;
+            model.endDate = enddate;
+
+            return model;
+        }
+
+        public void FinalizeSheet(DateOnly date)
+        {
+            QuarterSheet sheet = _quaterSheetRepository.GetAll().Where(x => x.StartDate == date).FirstOrDefault();
+            if (sheet != null)
+            {
+                sheet.Status = 1;
+            }
+            _quaterSheetRepository.UpdateAsync(sheet);
+        }
+
+        public void DeleteBill(DateOnly date)
+        {
+            TimeSheetDetail sheet = _timedetailsRepository.GetAll().Where(x => x.Date == date).FirstOrDefault();
+            if (sheet != null)
+            {
+                sheet.Item = null;
+                sheet.Bill = null;
+                sheet.Amount = null;
+
+            }
+            _timedetailsRepository.UpdateAsync(sheet);
         }
         #endregion
 
