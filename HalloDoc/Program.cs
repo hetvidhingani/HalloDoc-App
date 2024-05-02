@@ -48,12 +48,14 @@ builder.Services.AddScoped<IPhysicianLocationRepository, PhysicianLocationReposi
 builder.Services.AddScoped<IPhysicianRegionRepository, PhysicianRegionRepository>();
 builder.Services.AddScoped<IQuaterSheetRepository , QuaterSheetRepository>();
 builder.Services.AddScoped<ITimeDetailsRepository, TimeDetailsRepository>();
+builder.Services.AddScoped<IPayRateRepository, PayRateRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();    
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<ICustomService, CustomService>();
-builder.Services.AddScoped<IPayRateRepository, PayRateRepository>();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(option =>
 {

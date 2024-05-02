@@ -33,6 +33,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<CaseTag> CaseTags { get; set; }
 
+    public virtual DbSet<Category> Categories { get; set; }
+
     public virtual DbSet<Concierge> Concierges { get; set; }
 
     public virtual DbSet<EmailLog> EmailLogs { get; set; }
@@ -186,6 +188,11 @@ public partial class ApplicationDbContext : DbContext
             entity.HasKey(e => e.CaseTagId).HasName("CaseTag_pkey");
         });
 
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.CategoryId).HasName("Category_pkey");
+        });
+
         modelBuilder.Entity<Concierge>(entity =>
         {
             entity.HasKey(e => e.ConciergeId).HasName("Concierge_pkey");
@@ -240,6 +247,8 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<PayRate>(entity =>
         {
             entity.HasKey(e => e.PayRateId).HasName("PayRate_pkey");
+
+            entity.HasOne(d => d.Catagory).WithMany(p => p.PayRates).HasConstraintName("CategoryId");
 
             entity.HasOne(d => d.Physician).WithMany(p => p.PayRates).HasConstraintName("PhysicianId_Fk");
         });

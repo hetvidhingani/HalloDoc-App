@@ -37,6 +37,7 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using HalloDoc.Repository.Repository;
 using iTextSharp.text;
+using System.Security.Cryptography;
 
 namespace HalloDoc.Services.Services
 {
@@ -76,6 +77,7 @@ namespace HalloDoc.Services.Services
         private readonly IPhysicianRegionRepository _physicianRegionRepository;
         private readonly IPhysicianLocationRepository _physicianLocationRepository;
         private readonly IPayRateRepository _payRateRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
         private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
@@ -94,7 +96,7 @@ namespace HalloDoc.Services.Services
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
                                ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
                                IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository,
-                               IPayRateRepository payRateRepository)
+                               IPayRateRepository payRateRepository, ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -129,6 +131,7 @@ namespace HalloDoc.Services.Services
             _physicianLocationRepository = physicianLocationRepository;
             _physicianRegionRepository = physicianRegionRepository;
             _payRateRepository = payRateRepository;
+            _categoryRepository = categoryRepository;
         }
         #endregion
 
@@ -2740,46 +2743,89 @@ namespace HalloDoc.Services.Services
         #region Invoicing
         public TimeSheetViewModel payrate(int id)
         {
-          
-            List<PayRate> rate = _payRateRepository.GetAll().Where(x => x.PhysicianId == id).ToList();
-            TimeSheetViewModel model = new TimeSheetViewModel();
-            model.physicianID = id;
-
-            // Create a list to store pay rates
-            model.payRates = new List<int?>();
-
-            foreach (var data in rate)
+            List<TimeSheetViewModel> list = new List<TimeSheetViewModel>();
+            var tabledashboard = (from rc in _categoryRepository.GetAll()
+                                  join rp in _payRateRepository.GetAll() on rc.CategoryId equals rp.CatagoryId into rgrp
+                                  from r in rgrp.DefaultIfEmpty()
+                                  where (r.PhysicianId == id || r.PhysicianId == null)
+                                  select new TimeSheetViewModel
+                                  {
+                                      payrateId = r != null ? r.PayRateId : 0,
+                                      physicianID = (int)(r != null ? r.PhysicianId : 0),
+                                      categoryId = r != null ? r.CatagoryId : 0,
+                                      rate = r != null ? r.Rate : 0,
+                                      category = rc.Category1,
+                                      cid = rc.CategoryId
+                                  }).ToList();
+            if (tabledashboard.Count > 0)
             {
-                // Add each pay rate to the list
-                model.payRates.Add(data.CatagoryId == 1 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 2 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 3 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 4 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 5 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 6 ? (int)data.Rate : null);
-                model.payRates.Add(data.CatagoryId == 7 ? (int)data.Rate : null);
-            }
-            return model;
-        }
-
-        public void EditPayrate(int physician, int rates, int category)
-        {
-            PayRate rate = _payRateRepository.GetAll().Where(x => x.PhysicianId == physician && x.CatagoryId == category).FirstOrDefault()!;
-            if (rate == null)
-            {
-                rate = new()
+                foreach (var r in tabledashboard)
                 {
-                    CatagoryId = category,
-                    PhysicianId = physician,
-                    Rate = rates
-                };
-                _payRateRepository.AddAsync(rate);
+                    TimeSheetViewModel dash = new TimeSheetViewModel();
+                    if (r.physicianID != null)
+                    {
+                        dash.physicianID = (int)r.physicianID;
+                        dash.payrate = r.payrateId;
+                        dash.rate = r.rate;
+                    }
+                    dash.physicianID = id;
+                    dash.category = r.category;
+                    dash.categoryId = r.cid;
+                    list.Add(dash);
+                }
+
+
             }
             else
             {
-                rate.Rate = rates;
-                _payRateRepository.UpdateAsync(rate);
+                var tabledashboard2 = _categoryRepository.GetAll().ToList();
+                foreach (var r in tabledashboard2)
+                {
+                    TimeSheetViewModel dash = new TimeSheetViewModel();
+                    dash.physicianID = id;
+                    dash.category = r.Category1;
+                    dash.categoryId = r.CategoryId;
+                    list.Add(dash);
+                }
+
             }
+            return new TimeSheetViewModel
+            {
+                TimeSheets = list,
+            };
+        }
+
+
+        public int EditPayrate(TimeSheetViewModel model)
+        {
+            int id = 0;
+            foreach (var data in model.TimeSheets)
+            {
+
+                if (data.rate != null)
+                {
+                    PayRate rate = _payRateRepository.GetAll().Where(x => x.PhysicianId == data.physicianID && x.CatagoryId == data.categoryId).FirstOrDefault()!;
+
+                    if (rate == null)
+                    {
+                        rate = new()
+                        {
+                            CatagoryId = data.categoryId,
+                            PhysicianId = data.physicianID,
+                            Rate = data.rate
+                        };
+                        _payRateRepository.AddAsync(rate);
+                    }
+                    else
+                    {
+                        rate.Rate = data.rate;
+                        rate.PhysicianId = data.physicianID;
+                        _payRateRepository.UpdateAsync(rate);
+                    }
+                    id = data.physicianID;
+                }
+            }
+            return id;
         }
         #endregion
 

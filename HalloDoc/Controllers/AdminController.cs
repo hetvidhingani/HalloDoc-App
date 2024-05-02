@@ -1209,14 +1209,15 @@ namespace HalloDoc.Controllers
         public IActionResult PayRate(int id)
         {
             var result = _admin.payrate(id);
-         
-                return View(result);
+
+            return View(result);
             
         }
-        public IActionResult EditPayrate(int physician, int value, int id)
+        [HttpPost]
+        public IActionResult EditPayrate(TimeSheetViewModel model)
         {
-            _admin.EditPayrate(physician, value, id);
-            return RedirectToAction("PayRate", new { id = physician });
+             var result = _admin.EditPayrate(model);
+            return RedirectToAction("PayRate",new { id = result});
         }
         public IActionResult Invoicing()
         {

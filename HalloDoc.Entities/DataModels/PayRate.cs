@@ -20,6 +20,10 @@ public partial class PayRate
     [Column("physicianId")]
     public int? PhysicianId { get; set; }
 
+    [ForeignKey("CatagoryId")]
+    [InverseProperty("PayRates")]
+    public virtual Category? Catagory { get; set; }
+
     [ForeignKey("PhysicianId")]
     [InverseProperty("PayRates")]
     public virtual Physician? Physician { get; set; }
