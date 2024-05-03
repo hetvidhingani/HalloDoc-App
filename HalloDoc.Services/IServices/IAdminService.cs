@@ -108,6 +108,7 @@ namespace HalloDoc.Services.IServices
         public TimeSheetViewModel payrate(int id);
 
         public QuarterSheet checkIfTimeSheet(string? startrange, int physicianId);
+        public string getName(int id);
 
         public TimeSheetViewModel Sheet(TimeSheetViewModel viewmodel, int id);
         public void SaveTimeSheet(TimeSheetViewModel model);

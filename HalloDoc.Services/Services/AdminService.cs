@@ -2850,7 +2850,12 @@ namespace HalloDoc.Services.Services
                 return check;
             }
         }
+        public string getName(int id)
+        {
 
+            Physician physician = _physicianRepository.GetById(id);
+            return physician.FirstName + " " + physician.LastName;
+        }
         public TimeSheetViewModel Sheet(TimeSheetViewModel viewmodel, int id)
         {
 
@@ -2875,26 +2880,44 @@ namespace HalloDoc.Services.Services
                     amount = x.Amount,
                     billname = x.Bill == null ? null : x.Bill,
 
+
                 }, expression, 1, 20, x => x.Date, true);
 
-                PayRate y = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
-                model.totalHr = y.Rate == null? null : y.Rate;
+                var y = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                model.totalHr = y.Rate == null ? null : y.Rate;
 
-                var z = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                var z = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 1);
                 model.NightShiftWeekend = z.Rate == null ? null : z.Rate;
 
-                var a = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                var a = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 7);
                 model.Housecalls = a.Rate;
 
-                var b = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 2);
+                var b = _payRateRepository.getFirstOrDefault(x => x.PhysicianId == id && x.CatagoryId == 4);
                 model.phoneConsult = b.Rate;
 
+                int count = 0;
+                int totalShiftcount = 0;
+                int HousecallsCount = 0;
+                int phoneConsultCount = 0;
                 foreach (var item in result)
                 {
+                    totalShiftcount += (item.totalHr == null ? 0 : item.totalHr);
+
+                    HousecallsCount += (item.Housecalls == null ? 0 : item.Housecalls);
+                    phoneConsultCount += (item.phoneConsult == null ? 0 : item.phoneConsult);
+                    if (item.holiday)
+                    {
+                        count++;
+                    }
                     list.Add(item);
+
                 }
                 model.TimeSheets = list;
-
+                model.NightShiftWeekendCount = count * model.NightShiftWeekend;
+                model.phoneConsultCount = phoneConsultCount * model.phoneConsult;
+                model.totalShiftcount = totalShiftcount * model.totalHr;
+                model.HousecallsCount = HousecallsCount * model.Housecalls;
+                model.TotalCount = (int)(model.NightShiftWeekendCount + model.phoneConsultCount + model.totalShiftcount + model.HousecallsCount);
             }
 
             model.startDate = viewmodel.startDate;
@@ -2923,6 +2946,7 @@ namespace HalloDoc.Services.Services
                 amount = x.Amount,
                 billname = x.Bill,
             }, expression, CurrentPage, 5, x => x.Date, false);
+
             foreach (var item in result)
             {
                 list.Add(item);

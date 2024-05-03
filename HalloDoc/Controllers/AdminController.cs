@@ -1243,6 +1243,11 @@ namespace HalloDoc.Controllers
                 return Json(new { success = true, isFinalize = result.IsFinalized ,status = result.Status });
             }
         }
+        public IActionResult getName(int id)
+        {
+            var result = _admin.getName(id);
+            return Json(result);
+        }
         [HttpPost]
         public IActionResult UnApprovedSheet(string? startrange, string? endrange, int physicianId)
         {
@@ -1287,8 +1292,6 @@ namespace HalloDoc.Controllers
             return PartialView("_TimeSheet", result);
         }
       
-
-
         public IActionResult FinalizeSheet(DateOnly date)
         {
             _admin.FinalizeSheet(date);

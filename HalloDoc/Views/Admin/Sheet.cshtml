@@ -60,6 +60,7 @@
                                 <th scope="col">Weekend / Holidays</th>
                                 <th scope="col">Number of Housecalls </th>
                                 <th scope="col">Number of Phone consults</th>
+                                <th>Total</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
@@ -105,8 +106,64 @@
                                 </tr>
                                 u++;
                             }
+                            <tr >
+                                <td >PayRate</td>
+                                <td></td>
+                                <td >
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="totalHr" disabled />
+                                    </div>
+                                </td>
+                                <td >
 
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="NightShiftWeekend" disabled readonly />
+                                    </div>
 
+                                </td>
+                                <td>
+
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="Housecalls" disabled />
+                                    </div>
+                                </td>
+                                <td >
+
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="phoneConsult" disabled />
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Invoice Total</td>
+                                <td></td>
+                                <td>
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="totalShiftcount" disabled />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="NightShiftWeekendCount" disabled />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="HousecallsCount" disabled />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="phoneConsultCount" disabled />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-floating form-group input-group mb-3">
+                                        <input type="text" asp-for="TotalCount" disabled />
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-end">
@@ -209,7 +266,7 @@
                                                     <button class="btn btn-info show d-none" type="submit">Save</button>
                                                     <a class="btn btn-danger show d-none" onclick="hideBtns()">Cancel</a>
 
-                                                    <a class="btn btn-outline-info hide" href="@Url.Action("DeleteBill","Admin",new{date = @i})"  >Delete</a>
+                                                    <a class="btn btn-outline-info hide" href="@Url.Action("DeleteBill","Admin",new{date = @i})">Delete</a>
                                                     @{
                                                         var bill = Model.physicianID + "_" + @i + "_bill.pdf";
                                                     }
@@ -229,23 +286,7 @@
                         </tbody>
                     </table>
                     <table>
-                        <tr>
-                            <td>PayRate</td>
-                            <td>
-                                <input type="text" asp-for="totalHr" disabled />
-                            </td>
-                            <td>
-                                <input type="text" asp-for="NightShiftWeekend" disabled />
-
-                            </td>
-                            <td>
-                                <input type="text" asp-for="Housecalls" disabled />
-                            </td>
-                            <td>
-                                <input type="text" asp-for="phoneConsult" disabled />
-
-                            </td>
-                        </tr>
+                       
                     </table>
                 </div>
 

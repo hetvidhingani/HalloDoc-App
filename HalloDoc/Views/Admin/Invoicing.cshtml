@@ -57,7 +57,7 @@
                                 }
                             </select>
                             <label>Physician</label>
-
+                            <span class="d-none validate text-danger">Please Select Physician</span>
                         </div>
                         <div class="form-floating ">
 
@@ -81,7 +81,7 @@
             <div class="row mt-2">
                 <div id="admindata" class="mb-5"></div>
             </div>
-            @*  <div id="norecords" class="mt-2 mx-auto fw-bold d-none p-5">@Model.physicianID has not finalized yet.</div> *@
+            <div id="norecords" class="mt-2 mx-auto fw-bold d-none p-5"></div>
         </div>
 
         <div class="shadow mb-3 w-75 rounded h-100 timesheetRe d-none">
@@ -103,21 +103,24 @@
         page = CurrentPage;
         datechange();
     }
-
     $('input[name="dates"]').daterangepicker();
-
-
     function datechange() {
+        
         var date = $('#dateRange').val();
         var splitString = date.split(" - ");
         var physician = $('#phy').val();
+        if (physician == null || physician == "") { 
+
+            $(".validate").removeClass('d-none');
+            return;
+        }
         $.ajax({
             type: "POST",
             data: { startrange: splitString[0], physicianId: physician },
             url: "@(Url.Action("checkIfTimeSheet", "Admin"))",
 
             success: function (response) {
-
+                $(".validate").addClass('d-none');
                 if (response.success) {
                     if (response.isFinalize) {
                         if (response.status != 1) {
@@ -186,11 +189,26 @@
                 }
                 else {
                     $("#norecords").removeClass('d-none');
-                    $("#norecordsReciept").removeClass('d-none');
-                    $('.openTimeSheet').removeClass('d-none');
+                    $(".timesheetRe").addClass('d-none');
+                    $("#norecordsReciept").addClass('d-none');
+                    $('.openTimeSheet').addClass('d-none');
                     $("#admindata").addClass('d-none');
                     $("#receiptData").addClass('d-none');
+                    $.ajax({
+                        type: "POST",
+                        dataType: "html",
+                        data: { id: physician },
+                        url: "@(Url.Action("getName", "Admin"))",
+                        dataType: "html",
+                        success: function (data) {
+                            
+                            document.getElementById("norecords").innerHTML = data + "has not finalized the timesheet in specified time period.";
+                        },
+                        error: function () {
 
+                            $("#receiptData").innerText = "No records found";
+                        }
+                    });
 
                 }
             },
