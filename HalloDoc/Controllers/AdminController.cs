@@ -1304,5 +1304,14 @@ namespace HalloDoc.Controllers
             return RedirectToAction("Invoicing");
         }
         #endregion
+
+        #region
+
+        public IActionResult chat()
+        {
+            return PartialView("_chatBox");
+        }
+
+        #endregion
     }
 }

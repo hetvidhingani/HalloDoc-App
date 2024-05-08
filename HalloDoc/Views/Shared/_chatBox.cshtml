@@ -1,0 +1,58 @@
+﻿<div class=" row bg-white h-100 chatbox " style="position:fixed;right:12px;top:0px;width:400px;z-index:1000">
+    <div class=" bg-info text-white d-flex align-items-center justify-content-between" style="height:60px;right:0px">
+
+        <div class="fw-bold mx-3">
+            DR. ABCD
+        </div>
+        <div class="" >
+  
+            <i class="bi bi-arrows-fullscreen fw-bold mx-1 " style="cursor:pointer"></i>
+            <i class="bi bi-fullscreen-exit d-none mx-1" style="cursor:pointer"></i>
+            <i class="bi bi-x-lg mx-1 closeChat me-4" style="cursor:pointer"></i>
+        </div>
+    </div>
+
+    <div class="mx-3 msg" style="position:fixed;bottom:25px;width:400px;z-index:1000">
+        <div class="form-inline d-flex"  >
+            <input type="text" class="form-control w-75 mx-2" placeholder=" Type a Message">
+       
+            <button class="btn btn-info text-white">
+                <i class="bi bi-send"></i>
+            </button>
+        </div>
+       
+    </div>
+</div>
+<script>
+    $('.closeChat').on('click', function () {
+        $('.chatbox').addClass('d-none');
+    });
+    $('.bi-arrows-fullscreen').on('click', function () {
+        $('.chatbox').addClass('w-100');
+        $('.bi-arrows-fullscreen').addClass('d-none');
+        $('.bi-fullscreen-exit').removeClass('d-none');
+        $('.msg').addClass('w-100');
+        $('.form-control').removeClass('w-75');
+
+       
+        $('.form-control').addClass('wText');
+
+
+
+    });
+    $('.bi-fullscreen-exit').on('click', function () {
+        $('.chatbox').removeClass('w-100');
+        $('.bi-arrows-fullscreen').removeClass('d-none');
+        $('.bi-fullscreen-exit').addClass('d-none');
+        $('.msg').removeClass('w-100');
+        $('.form-control').addClass('w-75');
+
+
+        $('.form-control').removeClass('wText');
+    });
+</script>
+<style>
+    .wText{
+        width:93vw;
+    }
+</style>

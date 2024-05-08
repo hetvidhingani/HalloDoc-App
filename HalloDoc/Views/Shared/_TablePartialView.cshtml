@@ -1,5 +1,209 @@
 ﻿@model AdminDashboardViewModel;
 
+@* admin dashboard Mobile *@
+<div class="adminDashMobile mb-5">
+    @foreach (var request in Model.PagingData)
+    {
+
+        var added = "";
+        var type = "";
+        switch (request.RequestTypeID)
+        {
+            case 1:
+                added = "dot1";
+                type = "Patient";
+                break;
+            case 2:
+                added = "dot2"; //rgb(75, 223, 75)
+                type = "Family/Friend";
+
+                break;
+            case 3:
+                added = "dot4";
+                type = "Concierge";
+
+                break;
+            case 4:
+                added = "dot3";
+                type = "Business";
+
+                break;
+            default:
+                added = " ";
+                break;
+        }
+        <div class="mobileviewdashboard my-1  p-2 ">
+            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
+                <div class="d-block ">
+                    <div class="">
+                        @request.PatientName
+                    </div>
+                    @request.Address
+                </div>
+                <div class="d-flex align-items-center justify-content-end  ">
+                    <div> @type</div>
+                    <div class="@added mx-1">
+                    </div>
+                </div>
+            </button>
+
+            <div class="content" style="display:none">
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" class="viewCaseBtn">View Case</a>
+                </div>
+                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Date Of Birth:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">@request.DateOfBirth</div>
+                    </div>
+                }
+
+                <div class="d-flex mb-2">
+                    <div class="">
+                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                        Email:
+                    </div>
+                    <div style="margin-left:8px;font-weight:500">  @request.Email</div>
+                </div>
+
+                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-telephone mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Patient:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">  @request.PatientPhone</div>
+                    </div>
+                }
+                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+
+                            Date Of Service:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">   @request.DateOfService</div>
+                    </div>
+                }
+                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Physician:
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">  @request.PhysicianName</div>
+                    </div>
+                }
+                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+
+                            Requestor :
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">
+                            @request.Requestor
+                        </div>
+                    </div>
+                }
+                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Transfer Note :
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">@request.Notes</div>
+                    </div>
+                }
+                @if (Model.stateTab  == "Toclose")
+                {
+                    <div class="d-flex mb-2">
+                        <div class="">
+                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
+                            Region :
+                        </div>
+                        <div style="margin-left:8px;font-weight:500">@request.RegionId</div>
+                    </div>
+                }
+                <div class=" row  justify-content-between mx-auto  mt-3">
+                    @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
+                    {
+                        <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Notes</a>
+                    }
+
+                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
+                    {
+                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
+                    }
+                    @if (Model.stateTab  == "Unpaid" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
+                    {
+                        <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Uploads</a>
+                    }
+                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
+                    {
+                        <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">Encounter</a>
+                    }
+                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude")
+                    {
+                        <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn3" style="text-align:center;text-decoration:none;">Orders</a>
+                    }
+                    @if (Model.stateTab  == "New")
+                    {
+                        <button data-bs-toggle="modal" data-bs-target="#AssignCase" id=@request.RequstClientId class="Assign col-5 mobileDashBtn adminDashBtn">Assign</button>
+
+                      
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId class="Cancel1 col-5 mobileDashBtn bg-danger">
+                            Cancel Case</button>
+
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId class="Block col-5 mobileDashBtn bg-danger">Block Patient</button>
+                    }
+                    @*    @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
+                {
+                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
+                } *@
+                    @if (Model.stateTab  == "Pending")
+                    {
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId class="SendAgreement col-5 mobileDashBtn adminDashBtn3">Send Agreement</button>
+
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId class="Transfer col-5 mobileDashBtn bg-info">Transfer</button>
+                    }
+                    @if (Model.stateTab  == "Pending" || Model.stateTab  == "Toclose")
+                    {
+                        <button data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID class="Clear col-5 mobileDashBtn adminDashBtn3">Clear Case</button>
+                    }
+
+                    @if (Model.stateTab  == "Toclose")
+                    {
+                        <a href="@Url.Action("CloseCase", "Admin", new { Id = @request.requestID })" style="text-align:center;text-decoration:none;" class="col-5 mobileDashBtn bg-danger">Close Case</a>
+
+                    }
+
+
+
+                </div>
+                <div class="d-flex justify-content-end align-items-center mt-2">
+                    <div>
+                        Chat With:
+                    </div>
+                    <button class="mx-1 bg-transparent btn btn-sm btn-outline-info">Patient</button>
+                    <button class="bg-transparent btn btn-sm btn-outline-info">Provider</button>
+                </div>
+            </div>
+        </div>
+    }
+    <partial name="_Paging.cshtml" />
+
+</div>
 
 @* admin dashboard Desktop *@
 <div class=" table-responsive mt-3  adminDashTable">
@@ -176,12 +380,12 @@
                             @if (Model.stateTab  == "Toclose" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
                             {
 
-                                <button class=" btn btn-sm d-flex align-items-center justify-content-center mb-1 " aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
+                                <button class="chat btn btn-sm d-flex align-items-center justify-content-center mb-1 " aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                     Patient
                                 </button>
                             }
-                            <button class=" btn btn-sm d-flex align-items-center justify-content-center " aria-expanded="false" style="border-radius: 4px;color:white;border:1px solid white">
+                            <button class="chat btn btn-sm d-flex align-items-center justify-content-center " aria-expanded="false" style="border-radius: 4px;color:white;border:1px solid white">
                                 <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                 Provider
                             </button>
@@ -426,212 +630,6 @@
     <partial name="_Paging.cshtml" />
 </div>
 
-@* admin dashboard Mobile *@
-<div class="adminDashMobile mb-5">
-    @foreach (var request in Model.PagingData)
-    {
-
-        var added = "";
-        var type = "";
-        switch (request.RequestTypeID)
-        {
-            case 1:
-                added = "dot1";
-                type = "Patient";
-                break;
-            case 2:
-                added = "dot2"; //rgb(75, 223, 75)
-                type = "Family/Friend";
-
-                break;
-            case 3:
-                added = "dot4";
-                type = "Concierge";
-
-                break;
-            case 4:
-                added = "dot3";
-                type = "Business";
-
-                break;
-            default:
-                added = " ";
-                break;
-        }
-        <div class="mobileviewdashboard my-1  p-2 ">
-            <button type="button" class="table-btn collapsible w-100 bg-transparent  d-flex justify-content-between">
-                <div class="d-block ">
-                    <div class="">
-                        @request.PatientName
-                    </div>
-                    @request.Address
-                </div>
-                <div class="d-flex align-items-center justify-content-end  ">
-                    <div> @type</div>
-                    <div class="@added mx-1">
-                    </div>
-                </div>
-            </button>
-
-            <div class="content" style="display:none">
-                <hr />
-                <div class="d-flex justify-content-end">
-                    <a href="@Url.Action("ViewCase", "Admin", new { Id = @request.RequstClientId })" class="viewCaseBtn">View Case</a>
-                </div>
-                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                            Date Of Birth:
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">@request.DateOfBirth</div>
-                    </div>
-                }
-
-                <div class="d-flex mb-2">
-                    <div class="">
-                        <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                        Email:
-                    </div>
-                    <div style="margin-left:8px;font-weight:500">  @request.Email</div>
-                </div>
-
-                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-telephone mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                            Patient:
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">  @request.PatientPhone</div>
-                    </div>
-                }
-                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-
-                            Date Of Service:
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">   @request.DateOfService</div>
-                    </div>
-                }
-                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                            Physician:
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">  @request.PhysicianName</div>
-                    </div>
-                }
-                @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-person mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-
-                            Requestor :
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">
-                            @request.Requestor
-                        </div>
-                    </div>
-                }
-                @if (Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                            Transfer Note :
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">@request.Notes</div>
-                    </div>
-                }
-                @if (Model.stateTab  == "Toclose")
-                {
-                    <div class="d-flex mb-2">
-                        <div class="">
-                            <i class="bi bi-calendar mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
-                            Region :
-                        </div>
-                        <div style="margin-left:8px;font-weight:500">@request.RegionId</div>
-                    </div>
-                }
-                <div class=" row  justify-content-between mx-auto  mt-3">
-                    @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
-                    {
-                        <a href="@Url.Action("ViewNotes", "Admin", new { Id = @request.RequstClientId })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Notes</a>
-                    }
-
-                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
-                    {
-                        <button class="col-5 mobileDashBtn adminDashBtn2">Doctors Notes</button>
-                    }
-                    @if (Model.stateTab  == "Unpaid" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
-                    {
-                        <a href="@Url.Action("ViewUploads", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">View Uploads</a>
-                    }
-                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose")
-                    {
-                        <a href="@Url.Action("EncounterForm","Admin",new{RequestId = request.requestID})" id=@request.requestID class="col-5 mobileDashBtn adminDashBtn" style="text-align:center;text-decoration:none;">Encounter</a>
-                    }
-                    @if (Model.stateTab  == "Active" || Model.stateTab  == "Conclude")
-                    {
-                        <a href="@Url.Action("SendOrder", "Admin", new { Id = @request.requestID })" class="col-5 mobileDashBtn adminDashBtn3" style="text-align:center;text-decoration:none;">Orders</a>
-                    }
-                    @if (Model.stateTab  == "New")
-                    {
-                        <button data-bs-toggle="modal" data-bs-target="#AssignCase" id=@request.RequstClientId class="Assign col-5 mobileDashBtn adminDashBtn">Assign</button>
-
-                      
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#CancelCase" id=@request.RequstClientId class="Cancel1 col-5 mobileDashBtn bg-danger">
-                            Cancel Case</button>
-
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#BlockCase" id=@request.RequstClientId class="Block col-5 mobileDashBtn bg-danger">Block Patient</button>
-                    }
-                    @*    @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Toclose" || Model.stateTab  == "Unpaid")
-                {
-                <button class="col-5 mobileDashBtn adminDashBtn">Email</button>
-                } *@
-                    @if (Model.stateTab  == "Pending")
-                    {
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#SendAgreement" id=@request.RequstClientId class="SendAgreement col-5 mobileDashBtn adminDashBtn3">Send Agreement</button>
-
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#TransferCase" id=@request.RequstClientId class="Transfer col-5 mobileDashBtn bg-info">Transfer</button>
-                    }
-                    @if (Model.stateTab  == "Pending" || Model.stateTab  == "Toclose")
-                    {
-                        <button data-bs-toggle="modal" type="button" data-bs-target="#ClearCase" id=@request.requestID class="Clear col-5 mobileDashBtn adminDashBtn3">Clear Case</button>
-                    }
-
-                    @if (Model.stateTab  == "Toclose")
-                    {
-                        <a href="@Url.Action("CloseCase", "Admin", new { Id = @request.requestID })" style="text-align:center;text-decoration:none;" class="col-5 mobileDashBtn bg-danger">Close Case</a>
-
-                    }
-
-
-
-                </div>
-                <div class="d-flex justify-content-end align-items-center mt-2">
-                    <div>
-                        Chat With:
-                    </div>
-                    <button class="mx-1 bg-transparent btn btn-sm btn-outline-info">Patient</button>
-                    <button class="bg-transparent btn btn-sm btn-outline-info">Provider</button>
-                </div>
-            </div>
-        </div>
-    }
-    <partial name="_Paging.cshtml" />
-
-</div>
-
-
 <script>
 
     //mobile view cards
@@ -748,4 +746,23 @@
 
    
 
+</script>
+<div id="chatboxdata">
+
+</div>
+
+@* chat box *@
+
+<script>
+    $('.chat').on('click', function () {
+        $.ajax({
+            type: "POST",
+            dataType: "html",
+            url: "@(Url.Action("chat", "Admin"))",
+            success: function (data) {
+
+                $("#chatboxdata").html(data);
+            }
+        });
+    });
 </script>
