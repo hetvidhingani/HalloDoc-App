@@ -1,4 +1,7 @@
-
+#messagesList > li  {
+    padding: 10px;
+    border: 1px solid #20a2ce;
+}
 #loader-wrapper {
     position: fixed;
     top: 0;

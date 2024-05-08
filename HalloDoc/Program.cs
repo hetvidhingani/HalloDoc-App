@@ -1,12 +1,16 @@
 using HalloDoc.Entities.DataModels;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Repository.IRepository;
-
+using HalloDoc.Hubs;
 using Microsoft.EntityFrameworkCore;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -63,6 +67,7 @@ builder.Services.AddSession(option =>
     option.Cookie.HttpOnly = true;
     option.Cookie.IsEssential = true;
 });
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -86,6 +91,6 @@ app.MapControllerRoute(
      
 //   pattern: "{controller=Custom}/{action=PatientSite}/{id?}");
 pattern: "{controller=Custom}/{action=AdminLogin}/{id?}");
-
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
