@@ -1305,12 +1305,13 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region
+        #region chat
 
         public IActionResult chat()
         {
             return PartialView("_chatBox");
         }
+           
 
         #endregion
     }

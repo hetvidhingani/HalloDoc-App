@@ -68,7 +68,7 @@
                         <i class="bi bi-envelope mx-1" style="padding:3px; border:1px solid #00BCE7;border-radius:50%"></i>
                         Email:
                     </div>
-                    <div style="margin-left:8px;font-weight:500">  @request.Email</div>
+                    <div style="margin-left:8px;font-weight:500">  @request.Email </div>
                 </div>
 
                 @if (Model.stateTab  == "New" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
@@ -376,10 +376,8 @@
                         </td>
                     }
                     <td>
-                       
                             @if (Model.stateTab  == "Toclose" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
                             {
-
                                 <button class="chat btn btn-sm d-flex align-items-center justify-content-center mb-1 " aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                     Patient
@@ -689,7 +687,6 @@
     $('.Block').click(function () {
         var id = this.id;
 
-
         $.ajax({
             type: "POST",
             dataType: "html",
@@ -737,14 +734,10 @@
             url: "@(Url.Action("SendAgreement", "Admin"))",
             success: function (data) {
              
-                
-
                 $("#SendAgreement").find('.modal-content').html(data);
             }
         });
     });
-
-   
 
 </script>
 <div id="chatboxdata">
@@ -759,9 +752,9 @@
             dataType: "html",
             url: "@(Url.Action("chat", "Admin"))",
             success: function (data) {
-
                 $("#chatboxdata").html(data);
             }
         });
     });
+  
 </script>

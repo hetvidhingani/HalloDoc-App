@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using HalloDoc.Entities.DataModels;
+using Microsoft.AspNetCore.SignalR;
 
 namespace HalloDoc.Hubs
 {
@@ -9,6 +10,6 @@ namespace HalloDoc.Hubs
             var username = Context.ConnectionId;
             await Clients.All.SendAsync("ReceiveMessage", userId, message);
         }
-    
+        
     }
 }

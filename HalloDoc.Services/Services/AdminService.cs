@@ -2879,7 +2879,7 @@ namespace HalloDoc.Services.Services
                     item = x.Item,
                     amount = x.Amount,
                     billname = x.Bill == null ? null : x.Bill,
-
+                   
 
                 }, expression, 1, 20, x => x.Date, true);
 
@@ -2972,7 +2972,6 @@ namespace HalloDoc.Services.Services
                 endDate = enddate,
                 physicianID = id,
             };
-
 
         }
 
