@@ -54,7 +54,7 @@ builder.Services.AddScoped<IQuaterSheetRepository , QuaterSheetRepository>();
 builder.Services.AddScoped<ITimeDetailsRepository, TimeDetailsRepository>();
 builder.Services.AddScoped<IPayRateRepository, PayRateRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
+builder.Services.AddScoped<IChatRepository,_ChatRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();    
