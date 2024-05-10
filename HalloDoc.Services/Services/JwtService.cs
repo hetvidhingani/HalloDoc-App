@@ -71,7 +71,7 @@ namespace HalloDoc.Services.Services
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            return jwtToken.Claims.First(claim => claim.Type == "AdminID").Value;
+            return jwtToken.Claims.First(claim => claim.Type == "userId").Value;
          
         }
 

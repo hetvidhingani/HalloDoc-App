@@ -37,6 +37,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Chat> Chats { get; set; }
 
+    public virtual DbSet<ChatDetail> ChatDetails { get; set; }
+
     public virtual DbSet<Concierge> Concierges { get; set; }
 
     public virtual DbSet<EmailLog> EmailLogs { get; set; }
@@ -198,6 +200,11 @@ public partial class ApplicationDbContext : DbContext
         modelBuilder.Entity<Chat>(entity =>
         {
             entity.HasKey(e => e.ConnectionId).HasName("Chat_pkey");
+        });
+
+        modelBuilder.Entity<ChatDetail>(entity =>
+        {
+            entity.HasKey(e => e.ChatId).HasName("ChatDetail_pkey");
         });
 
         modelBuilder.Entity<Concierge>(entity =>

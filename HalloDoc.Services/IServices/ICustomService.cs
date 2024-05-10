@@ -14,7 +14,6 @@ namespace HalloDoc.Services.IServices
     {
         string SendEmail(string email, string link, string subject, string body,int id,int AdminId,int providerId,List<string> attachmentFilePath = null);
         Task<int> GetCount(int statusId);
-
         Task<DashboardViewModel> ViewDocument(int Id);
         Task<string> ViewDocument(IFormFile a, int Id, int adminID, int userid);
         Task<RequestWiseFile> DownloadFile(int fileId);
@@ -22,7 +21,6 @@ namespace HalloDoc.Services.IServices
         Task<byte[]> DownloadAll(IEnumerable<int> documentValues, int? requestid);
         Task<string> PatientForgotPassword(CreateAccountViewModel createAccountViewModel);
         Task<string> AdminResetPassword(CreateAccountViewModel createAccountViewModel);
-       // void EmailLog(int requestclientID, string Email,string link,string  subject,string body,int AdminId);
         AspNetUser checkEmailPassword(string data, string password);
         AspNetUser checkIfExist(string email);
         AspNetUserRole checkIfRoleExist(string id);
@@ -34,9 +32,9 @@ namespace HalloDoc.Services.IServices
         Task<RequestClient> GetRequestClientByID(int id);
         Task<object> SendOrder(int Id);
         Task<List<HealthProfessional>> GetBusinessByProfession(int professionId);
-
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
-
         Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id, string createdByID);
+        public ChatDetailsViewModel GetChats(string RecieverId, string SenderId);
+        public void AddChat(ChatModel model);
     }
 }

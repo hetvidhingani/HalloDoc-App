@@ -39,6 +39,8 @@ namespace HalloDoc.Entities.ViewModels
         public int TotalPages { get; set; }
         public int currData { get; set; }
 
+        public string? aspnetID { get; set; }
+
         public int TotalCount { get; set; }
         public List<AdminDashboardViewModel> PagingData { get; set; }
         public string stateTab { get; set; }

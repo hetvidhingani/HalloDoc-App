@@ -1,39 +1,170 @@
-﻿<div class=" row bg-white h-100 chatbox " style="position:fixed;right:12px;top:0px;width:400px;z-index:1000">
+﻿@model ChatDetailsViewModel;
+@{
+    string outDiv = "";
+}
+<div class="offcanvas offcanvas-end chatbox" tabindex="-1" id="offcanvasRight">
+    <div class="offcanvas-header bg-info">
+
+        <div class="fw-bold mx-3">
+            <h5 id="offcanvasRightLabel">@Model.RecieverName</h5>
+        </div>
+        <div class="">
+            <i class="bi bi-arrows-fullscreen fw-bold mx-1 text-white" style="cursor:pointer"></i>
+            <i class="bi bi-fullscreen-exit d-none mx-1 text-white" style="cursor:pointer"></i>
+            <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x text-white" style="font-size:20px"></i></button>
+        </div>
+
+      
+
+    </div>
+    <div class="offcanvas-body">
+        <div class="">
+            @foreach (var item in Model.Chats)
+            {
+                outDiv = (item.ChatBoxClass == "Sender" ? "end" : "start");
+                <div class="d-flex flex-column align-items-@outDiv mb-2">
+                    <div class="@item.ChatBoxClass">@item.Message</div>
+                    @* <div class="chatDate">@item.ChatDate</div> *@
+                </div>
+            }
+        </div>
+    </div>
+    <div class="mx-3 msg" style="position:fixed;bottom:25px;width:400px;z-index:1000">
+        <div class="form-inline d-flex">
+
+            <input type="text" placeholder="Message" class="chatInput form-control w-75 mx-2" id="Message" />
+            <button class="submit btn btn-info text-white" type="submit" onclick="ChatSubmit()"><i class="bi bi-send"></i></button>
+            <input type="hidden" asp-for="SenderId" id="SenderId" />
+            <input type="hidden" asp-for="RecieverId" id="RecieverId" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#offcanvasRight").offcanvas("show");
+    function ChatSubmit() {
+        console.log("Function chat submit success");
+
+        var SenderId = $('#SenderId').val();
+        var RecieverId = $('#RecieverId').val();
+        var Message = $('#Message').val();
+        var Items = {
+            SenderId: SenderId,
+            RecieverId: RecieverId,
+            Message: Message,
+        }
+        $.ajax({
+            method: "POST",
+            url: "/Admin/Chat",
+            data: {
+                model: Items,
+            },
+            success: function (response) {
+                // chatafter();
+                console.log("Function success");
+                location.reload();
+
+            },
+            error: function () {
+                console.log("Function Fail")
+            }
+
+        });
+
+    }
+
+ 
+</script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+
+
+
+
+<script>
+    "use strict";
+    var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    connection.on("ReceiveMessage", function () {
+        GetChat();
+    });
+
+    connection.start().then(function () {
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    $('.bi-arrows-fullscreen').on('click', function () {
+        $('.chatbox').addClass('w-100');
+        $('.bi-arrows-fullscreen').addClass('d-none');
+        $('.bi-fullscreen-exit').removeClass('d-none');
+        $('.msg').addClass('w-100');
+        $('.form-control').removeClass('w-75');
+        $('.form-control').addClass('wText');
+    });
+    $('.bi-fullscreen-exit').on('click', function () {
+        $('.chatbox').removeClass('w-100');
+        $('.bi-arrows-fullscreen').removeClass('d-none');
+        $('.bi-fullscreen-exit').addClass('d-none');
+        $('.msg').removeClass('w-100');
+        $('.form-control').addClass('w-75');
+        $('.form-control').removeClass('wText');
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+
+
+
+
+
+
+<div class=" row bg-white h-100 chatbox " style="position:fixed;right:12px;top:0px;width:400px;z-index:1000">
     <div class=" bg-info text-white d-flex align-items-center justify-content-between" style="height:60px;right:0px">
 
         <div class="fw-bold mx-3">
             DR. ABCD
         </div>
         <div class="" >
-  
+
             <i class="bi bi-arrows-fullscreen fw-bold mx-1 " style="cursor:pointer"></i>
             <i class="bi bi-fullscreen-exit d-none mx-1" style="cursor:pointer"></i>
             <i class="bi bi-x-lg mx-1 closeChat me-4" style="cursor:pointer"></i>
         </div>
     </div>
-   
+
         <div class="row p-1 d-flex align-content-end mb-5">
             <div class="col-12 mb-3">
             <ul id="messagesList" style="list-style-type: none;"></ul>
             </div>
         </div>
-   
+
     <div class="mx-3 msg" style="position:fixed;bottom:25px;width:400px;z-index:1000">
         <div class="form-inline d-flex"  >
             <input type="text" class="form-control w-75 mx-2" id="messageInput" placeholder=" Type a Message">
-       
+
             <button class="btn btn-info text-white" id="sendButton">
                 <i class="bi bi-send"></i>
             </button>
         </div>
-       
+
     </div>
 
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
 <script>
- 
+
 
     $('.closeChat').on('click', function () {
         $('.chatbox').addClass('d-none');
@@ -64,18 +195,18 @@
     connection.on("ReceiveMessage", function (user, message) {
         var li = document.createElement("li");
         document.getElementById("messagesList").appendChild(li);
-        
+
         li.textContent = `${user} says ${message}`;
     });
 
-  
+
     connection.start().then(function () {
         document.getElementById("sendButton").disabled = false;
     }).catch(function (err) {
         return console.error(err.toString());
     });
 
-  
+
 
     document.getElementById("sendButton").addEventListener("click", function (event) {
         var user = "91";
@@ -90,4 +221,4 @@
     .wText{
         width:93vw;
     }
-</style>
+</style> *@

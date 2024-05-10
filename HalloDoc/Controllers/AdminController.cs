@@ -15,24 +15,31 @@ using Twilio;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Twilio.Rest.Api.V2010.Account;
 using Microsoft.DotNet.Scaffolding.Shared;
-
+using Microsoft.AspNetCore.SignalR;
+using HalloDoc.Hubs;
 namespace HalloDoc.Controllers
 {
     [CustomAuthorize("1")]
     public class AdminController : Controller
     {
         private IAdminService _admin;
+        private readonly IHubContext<ChatHub> hubContext;
         private IJwtService _jwtService;
         private ICustomService _customService;
+
+      //  private IHubContext hubContext;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
 
-        public AdminController(IAdminService admin, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+
+        public AdminController(IAdminService admin,IHubContext<ChatHub> hubContext, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
 
             _admin = admin;
+            this.hubContext = hubContext;
             _jwtService = jwtService;
             _customService = customService;
             _hostingEnvironment = hostingEnvironment;
+         //   hubContext = chatHub;
         }
 
         #region Logout
@@ -1231,16 +1238,16 @@ namespace HalloDoc.Controllers
             return View(model);
         }
 
-        public IActionResult checkIfTimeSheet(string? startrange , int physicianId)
+        public IActionResult checkIfTimeSheet(string? startrange, int physicianId)
         {
-            var result = _admin.checkIfTimeSheet(startrange,physicianId);
+            var result = _admin.checkIfTimeSheet(startrange, physicianId);
             if (result == null)
             {
                 return Json(new { success = false });
             }
             else
             {
-                return Json(new { success = true, isFinalize = result.IsFinalized ,status = result.Status });
+                return Json(new { success = true, isFinalize = result.IsFinalized, status = result.Status });
             }
         }
         public IActionResult getName(int id)
@@ -1264,16 +1271,16 @@ namespace HalloDoc.Controllers
             return PartialView("_UnApprovedSheet", model);
         }
 
-        public IActionResult Sheet(TimeSheetViewModel model,int id)
+        public IActionResult Sheet(TimeSheetViewModel model, int id)
         {
-            
+
             var result = _admin.Sheet(model, id);
 
             return View(result);
         }
         public IActionResult ReimbursementSheet(string? startrange, string? endrange, int id, int CurrentPage = 1)
         {
-         
+
             var result = _admin.ReimbursementSheet(startrange, endrange, id, CurrentPage);
 
             return PartialView("_ReimbursmentSheet", result);
@@ -1284,14 +1291,14 @@ namespace HalloDoc.Controllers
             _admin.SaveTimeSheet(model);
             return RedirectToAction("Invoicing", model);
         }
-        public IActionResult ApprovedSheet(string? startrange, string? endrange,int id)
+        public IActionResult ApprovedSheet(string? startrange, string? endrange, int id)
         {
- 
+
             var result = _admin.TimeSheet(startrange, endrange, id);
 
             return PartialView("_TimeSheet", result);
         }
-      
+
         public IActionResult FinalizeSheet(DateOnly date)
         {
             _admin.FinalizeSheet(date);
@@ -1307,11 +1314,23 @@ namespace HalloDoc.Controllers
 
         #region chat
 
-        public IActionResult chat()
+        //public IActionResult chat()
+        //{
+        //    return PartialView("_chatBox");
+        //}
+        public IActionResult GetChat(string AspnetUserId)
         {
-            return PartialView("_chatBox");
+            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]));
+            return PartialView("_chatBox", model);
         }
-           
+
+        [HttpPost]
+        public async Task<IActionResult> Chat(ChatModel model)
+        {
+            _customService.AddChat(model);
+           await hubContext.Clients.Client(model.RecieverId).SendAsync("ReceiveMessage");
+            return Json("success");
+        }
 
         #endregion
     }

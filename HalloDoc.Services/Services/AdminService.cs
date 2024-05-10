@@ -80,6 +80,8 @@ namespace HalloDoc.Services.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly IQuaterSheetRepository _quaterSheetRepository;
         private readonly ITimeDetailsRepository _timedetailsRepository;
+        private readonly IChatRepository _chatRepository;
+        private readonly IChatDetailsRepository _chatDetailsRepository;
         private const string AccountSid = "AC224885bd4f29fd4d16ea6dfbdaf4c609";
         private const string AuthToken = "9e16acc4370092159b4970030c4e6a58";
         private const string TwilioPhoneNumber = "+12515722513";
@@ -97,7 +99,8 @@ namespace HalloDoc.Services.Services
                                IMenuRepository menuRepository, IRoleMenuRepository roleMenuRepository, IEmailLogsRepository emailLogsRepository,
                                ISMSLogRepository smmsLogRepository, IAspNetUserRolesRepository userRolesRepository, IShiftDetailsRepository shiftDetailsRepository,
                                IShiftRepository shiftRepository, IPhysicianLocationRepository physicianLocationRepository, IPhysicianRegionRepository physicianRegionRepository,
-                               IPayRateRepository payRateRepository, ICategoryRepository categoryRepository, IQuaterSheetRepository quaterSheetRepository, ITimeDetailsRepository timedetailsRepository)
+                               IPayRateRepository payRateRepository, ICategoryRepository categoryRepository, IQuaterSheetRepository quaterSheetRepository,
+                               ITimeDetailsRepository timedetailsRepository, IChatRepository chatRepository, IChatDetailsRepository chatDetailsRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -135,6 +138,8 @@ namespace HalloDoc.Services.Services
             _categoryRepository = categoryRepository;
             _quaterSheetRepository = quaterSheetRepository;
             _timedetailsRepository = timedetailsRepository;
+            _chatRepository = chatRepository;
+            _chatDetailsRepository = chatDetailsRepository;
         }
         #endregion
 
@@ -191,6 +196,7 @@ namespace HalloDoc.Services.Services
                     Email = rec.Email,
                     RegionId = (int)rec.RegionId,
                     StateofTable = rec.State,
+                    aspnetID=r.User.Id,
                     stateTab = state,
                 }).ToList();
 
@@ -2879,7 +2885,7 @@ namespace HalloDoc.Services.Services
                     item = x.Item,
                     amount = x.Amount,
                     billname = x.Bill == null ? null : x.Bill,
-                   
+
 
                 }, expression, 1, 20, x => x.Date, true);
 
@@ -3146,6 +3152,7 @@ namespace HalloDoc.Services.Services
             _timedetailsRepository.UpdateAsync(sheet);
         }
         #endregion
+
 
     }
 }

@@ -19,7 +19,12 @@ public partial class Chat
     [Column("recieverId", TypeName = "character varying")]
     public string? RecieverId { get; set; }
 
-    [Column("conversation ")]
     [StringLength(500)]
-    public string Conversation { get; set; } = null!;
+    public string Message { get; set; } = null!;
+
+    [Column(TypeName = "timestamp without time zone")]
+    public DateTime? ChatDate { get; set; }
+
+    [StringLength(100)]
+    public string? ChatBoxClass { get; set; }
 }

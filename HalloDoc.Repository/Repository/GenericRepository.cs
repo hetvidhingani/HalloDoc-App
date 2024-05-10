@@ -1,4 +1,5 @@
 ﻿using HalloDoc.Entities.DataModels;
+using HalloDoc.Entities.ViewModels;
 using HalloDoc.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -164,7 +165,7 @@ namespace HalloDoc.Repository.Repository
         {
             return _genericContext.Where(where).Select(select).ToList();
         }
-
+       
         public T? IncludeEntity(Expression<Func<T, bool>> expression, Expression<Func<T, object>> Include)
         {
             return _genericContext.Where(expression).Include(Include).FirstOrDefault();
@@ -180,7 +181,7 @@ namespace HalloDoc.Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
-
+     
     }
 
 

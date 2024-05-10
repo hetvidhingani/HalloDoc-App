@@ -1,0 +1,184 @@
+﻿@*   public ChatDetailsViewModel GetChats(string RecieverId, string SenderId)
+    {
+        ChatDetailsViewModel model = new ChatDetailsViewModel()
+        {
+            RecieverId = RecieverId,
+            SenderId = SenderId,
+            Chats = new List<ChatDetailsTableModel>
+    (),
+    RecieverName = "Reciever"
+    };
+    model.Chats = _unitOfWork.chatDetailsRepo.GetList(x => new ChatDetailsTableModel
+    {
+    Message = x.Message ?? "",
+    ChatDate = x.SentDate.ToString("hh:mm tt"),
+    ChatBoxClass = x.SenderId == SenderId ? "Sender" : "Reciever",
+    }, x => (x.SenderId == SenderId || x.SenderId == RecieverId) && (x.RecieverId == SenderId || x.RecieverId == RecieverId));
+    return model;
+    }
+
+    public void AddChat(ChatModel model)
+    {
+    ChatDetail chatDetail = new ChatDetail
+    {
+    RecieverId = model.RecieverId,
+    SenderId = model.SenderId,
+    Message = model.Message
+    };
+
+    _unitOfWork.chatDetailsRepo.Add(chatDetail);
+    }
+
+
+    services
+
+
+    public IActionResult GetChat(string AspnetUserId)
+    {
+    ChatDetailsViewModel model = commonServices.GetChats(AspnetUserId, jwtServices.GetTokenData(Request.Cookies["Jwt"]).AspNetUserId);
+    return PartialView("_chatPartialView", model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult>
+        Chat(ChatModel model)
+        {
+        commonServices.AddChat(model);
+        await hubContext.Clients.Client(model.RecieverId).SendAsync("ReceiveMessage");
+        return Json("success");
+        }
+
+        controller
+
+        @model ChatDetailsViewModel;
+        @{
+            string outDiv = "";
+        }
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight">
+            <div class="offcanvas-header">
+                <h5 id="offcanvasRightLabel">@Model.RecieverName</h5>
+                <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close"><i class="bi bi-x text-white" style="font-size:20px"></i></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="">
+                    @foreach (var item in Model.Chats)
+                    {
+                        outDiv = (item.ChatBoxClass == "Sender" ? "end" : "start");
+                        <div class="d-flex flex-column align-items-@outDiv mb-2">
+                            <div class="@item.ChatBoxClass">@item.Message</div>
+                            <div class="chatDate">@item.ChatDate</div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="d-flex" style="gap:10px ;margin-bottom:50px">
+                <input type="text" placeholder="Message" class="chatInput" id="Message" />
+                <button class="submit" type="submit" onclick="ChatSubmit()"><i class="bi bi-send"></i></button>
+                <input type="hidden" asp-for="SenderId" id="SenderId" />
+                <input type="hidden" asp-for="RecieverId" id="RecieverId" />
+            </div>
+        </div>
+
+        <script>
+            $("#offcanvasRight").offcanvas("show");
+            function ChatSubmit() {
+                var SenderId = $('#SenderId').val();
+                var RecieverId = $('#RecieverId').val();
+                var Message = $('#Message').val();
+                var Items = {
+                    SenderId: SenderId,
+                    RecieverId: RecieverId,
+                    Message: Message,
+                }
+                $.ajax({
+                    method: "POST",
+                    url: "/Base/Chat",
+                    data: {
+                        model: Items,
+                    },
+                    success: function (response) {
+                        chatafter();
+                    },
+                    error: function () {
+                        console.log("Function Fail")
+                    }
+
+                });
+
+            }
+        </script>
+
+        <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+        <script src="~/js/chat.js"></script>
+
+        Partial View
+
+        "use strict";
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+        connection.on("ReceiveMessage", function () {
+        GetChat();
+        });
+
+        connection.start().then(function () {
+        }).catch(function (err) {
+        return console.error(err.toString());
+        });
+
+        chat.js
+
+        using HalloDoc.Services.Interfaces;
+        using Microsoft.AspNetCore.SignalR;
+
+        namespace HalloDoc.SignalRChat
+        {
+        public class ChatHub : Hub
+        {
+        private readonly IJwtServices jwtServices;
+
+        public ChatHub(IJwtServices jwtServices)
+        {
+        this.jwtServices = jwtServices;
+        }
+
+        public async Task SendMessage(string user, string message)
+        {
+        await Clients.Client(user).SendAsync("ReceiveMessage", user, message);
+        }
+        }
+        }
+
+        chathub.cs
+
+        <button class="btn4" onclick="GetChat('@items.ClientAspNetId')">Patient</button>
+
+        Dashboard nu button
+
+
+        <script>
+            function GetChat(AspnetUserId) {
+                $.ajax({
+                    method: "GET",
+                    url: "/Base/GetChat",
+                    data: {
+                        AspnetUserId: AspnetUserId
+                    },
+                    success: function (data) {
+                        $('#partialViewForChat').html(data);
+                    },
+                    error: function () {
+                        console.log("Function Fail");
+                    }
+                });
+            }
+        </script>
+
+        Dashboard na parialview ma niche nu function
+
+
+        <button class="btn4" onclick="GetChat('@items.ClientAspNetId')">Patient</button>
+
+        Dashboard nu button
+        Vivek Sakariya, Yesterday at 22:46
+        aya aspnetuserId karvanu ho jeni chat kholvani hoi enu
+ *@

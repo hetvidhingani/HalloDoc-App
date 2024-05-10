@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using HalloDoc.Repository.IRepository;
 using System.Data.Entity;
 using System.Runtime.Intrinsics.X86;
+using HalloDoc.Repository.Repository;
 
 namespace HalloDoc.Services.Services
 {
@@ -51,7 +52,8 @@ namespace HalloDoc.Services.Services
         private readonly IAdminRegionRepository _adminRegionRepository;
         private readonly IAspNetUserRolesRepository _aspNetUserRolesRepository;
         private readonly IEmailLogsRepository _emailLogsRepository;
-
+        private readonly IChatDetailsRepository _chatDetailsRepository;
+        private readonly IChatRepository _chatRepository;
         public CustomService(IAspNetUserRepository aspnetuserRepository, IUserRepository userRepository,
                                IRequestRepository requestRepository, IRequestClientRepository requestclientRepository,
                                IRequestWiseFilesRepository requestwisefileRepository, IBusinessRepository businessRepository,
@@ -62,7 +64,7 @@ namespace HalloDoc.Services.Services
                                IHealthProfessionalTypeRepository healthProfessionalTypeRepository, IBlockRequestRepository blockRequestRepository,
                                IAdminRegionRepository adminRegionRepository,
                                IEncounterRepository encounterRepository, IRequestClosedRepository requestClosedRepository, IAspNetUserRolesRepository aspNetUserRolesRepository,
-                               IEmailLogsRepository emailLogsRepository)
+                               IEmailLogsRepository emailLogsRepository, IChatDetailsRepository chatDetailsRepository, IChatRepository chatRepository)
         {
             _userRepository = userRepository;
             _aspnetuserRepository = aspnetuserRepository;
@@ -86,6 +88,8 @@ namespace HalloDoc.Services.Services
             _adminRegionRepository = adminRegionRepository;
             _aspNetUserRolesRepository = aspNetUserRolesRepository;
             _emailLogsRepository = emailLogsRepository;
+            _chatDetailsRepository = chatDetailsRepository;
+            _chatRepository = chatRepository;
         }
         #endregion
 
@@ -191,13 +195,13 @@ namespace HalloDoc.Services.Services
                 {
                     Admin admin = _adminRepository.GetById(AdminId);
                     roleId = admin.RoleId;
-                    adminid= admin.AdminId;
+                    adminid = admin.AdminId;
                 }
                 else if (PhysicianId != 0)
                 {
                     Physician phy = _physicianRepository.GetById(PhysicianId);
-                    roleId=phy.RoleId;
-                    physicianId= phy.PhysicianId;
+                    roleId = phy.RoleId;
+                    physicianId = phy.PhysicianId;
                 }
 
                 EmailLog log = new EmailLog();
@@ -420,10 +424,10 @@ namespace HalloDoc.Services.Services
                 Lastname = req.LastName,
                 Phonenumber = req.PhoneNumber,
                 Location = req.Address,
-                Dateofbirth= new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth), (int)req.IntDate),
+                Dateofbirth = new DateTime((int)req.IntYear, Convert.ToInt32(req.StrMonth), (int)req.IntDate),
                 Email = req.Email,
-                Physicianid=request.PhysicianId,
-                
+                Physicianid = request.PhysicianId,
+
             };
             await _encounterRepository.AddAsync(encounter);
             return "";
@@ -487,6 +491,45 @@ namespace HalloDoc.Services.Services
             order.CreatedBy = createdById;
             await _orderDetailsRepository.AddAsync(order);
             return "";
+        }
+        #endregion
+
+        #region chat
+        public ChatDetailsViewModel GetChats(string RecieverId, string SenderId)
+        {
+            ChatDetailsViewModel model = new ChatDetailsViewModel()
+            {
+                RecieverId = RecieverId,
+                SenderId = SenderId,
+                Chats = new List<ChatDetailsTableModel>(),
+                RecieverName = "Reciever"
+            };
+            var data = _chatDetailsRepository.GetAllData(x => new ChatDetailsTableModel
+            {
+                Message = x.Message ?? "",
+              //  ChatDate = x.ChatDate.ToString()!,
+                ChatBoxClass = x.SenderId == SenderId ? "Sender" : "Reciever",
+            }, x => (x.SenderId == SenderId || x.SenderId == RecieverId) && (x.RecieverId == SenderId || x.RecieverId == RecieverId));
+            List<ChatDetailsTableModel> record = new List<ChatDetailsTableModel>();
+            foreach ( var rrecord in data)
+            {
+                record.Add(rrecord);
+            }
+
+            model.Chats = record;
+
+            return model;
+        }
+
+        public void AddChat(ChatModel model)
+        {
+            ChatDetail chatDetail = new ChatDetail
+            {
+                RecieverId = model.RecieverId,
+                SenderId = model.SenderId,
+                Message = model.Message
+            };
+            _chatDetailsRepository.AddAsync(chatDetail);
         }
         #endregion
     }

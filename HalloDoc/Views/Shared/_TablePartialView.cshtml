@@ -13,21 +13,22 @@
                 added = "dot1";
                 type = "Patient";
                 break;
+
             case 2:
                 added = "dot2"; //rgb(75, 223, 75)
                 type = "Family/Friend";
-
                 break;
+
             case 3:
                 added = "dot4";
                 type = "Concierge";
-
                 break;
+
             case 4:
                 added = "dot3";
                 type = "Business";
-
                 break;
+
             default:
                 added = " ";
                 break;
@@ -378,8 +379,10 @@
                     <td>
                             @if (Model.stateTab  == "Toclose" || Model.stateTab  == "Pending" || Model.stateTab  == "Active" || Model.stateTab  == "Conclude" || Model.stateTab  == "Unpaid")
                             {
-                                <button class="chat btn btn-sm d-flex align-items-center justify-content-center mb-1 " aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
+                            <button class="chat btn btn-sm d-flex align-items-center justify-content-center mb-1 " onclick="GetChat('@request.aspnetID')" aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
+                              
+
                                     Patient
                                 </button>
                             }
@@ -625,8 +628,28 @@
                         </tbody>
         }
     </table>
+    <div id="partialViewForChat"></div>
     <partial name="_Paging.cshtml" />
 </div>
+<script>
+    function GetChat(AspnetUserId) {
+        console.log("AspnetUserId:", AspnetUserId);
+        $.ajax({
+            method: "GET",
+            url: "/Admin/GetChat",
+            data: {
+                AspnetUserId: AspnetUserId
+            },
+            success: function (data) {
+
+                $('#partialViewForChat').html(data);
+            },
+            error: function () {
+                console.log("Function Fail");
+            }
+        });
+    }
+</script>
 
 <script>
 
@@ -745,16 +768,3 @@
 
 @* chat box *@
 
-<script>
-    $('.chat').on('click', function () {
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            url: "@(Url.Action("chat", "Admin"))",
-            success: function (data) {
-                $("#chatboxdata").html(data);
-            }
-        });
-    });
-  
-</script>
