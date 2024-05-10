@@ -382,11 +382,10 @@
                             <button class="chat btn btn-sm d-flex align-items-center justify-content-center mb-1 " onclick="GetChat('@request.aspnetID')" aria-expanded="false" style="width:90px;border-radius: 4px;color:white;border:1px solid white">
                                     <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                               
-
                                     Patient
                                 </button>
                             }
-                            <button class="chat btn btn-sm d-flex align-items-center justify-content-center " aria-expanded="false" style="border-radius: 4px;color:white;border:1px solid white">
+                            <button class="chat btn btn-sm d-flex align-items-center justify-content-center " onclick="GetChat('@request.aspnetID')" aria-expanded="false" style="border-radius: 4px;color:white;border:1px solid white">
                                 <i class="fa fa-user-md mx-1" aria-hidden="true"></i>
                                 Provider
                             </button>
@@ -624,7 +623,6 @@
                         </div>
                     </td>
                 </tr>
-
                         </tbody>
         }
     </table>
@@ -636,7 +634,7 @@
         console.log("AspnetUserId:", AspnetUserId);
         $.ajax({
             method: "GET",
-            url: "/Admin/GetChat",
+            url: "/Custom/GetChat",
             data: {
                 AspnetUserId: AspnetUserId
             },
@@ -648,6 +646,8 @@
                 console.log("Function Fail");
             }
         });
+    }
+    function getUser() { 
     }
 </script>
 
@@ -673,14 +673,12 @@
         });
         maintb[i].addEventListener("click", function () {
             this.classList.toggle("active");
-
         });
     }
 
     //popup box
     $('.Cancel1').click(function () {
         var id = this.id;
-
         $.ajax({
             type: "POST",
             dataType: "html",

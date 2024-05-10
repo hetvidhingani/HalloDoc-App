@@ -16,6 +16,8 @@ using HalloDoc.Services.Services;
 using HalloDoc.Repository.Repository;
 using System.Linq;
 using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.SignalR;
+using HalloDoc.Hubs;
 
 namespace HalloDoc.Controllers
 {
@@ -25,10 +27,15 @@ namespace HalloDoc.Controllers
     {
         public IPatientService _patient;
         public ICustomService _customService;
-        public PatientController( IPatientService patient, ICustomService customService)
+        public IJwtService _jwtService;
+        private readonly IHubContext<ChatHub> hubContext;
+
+        public PatientController(IPatientService patient, IHubContext<ChatHub> hubContext, ICustomService customService, IJwtService jwtService)
         {
             _patient = patient;
             _customService = customService;
+            _jwtService = jwtService;
+            this.hubContext = hubContext;
         }
 
         #region view
@@ -84,7 +91,7 @@ namespace HalloDoc.Controllers
             var request = HttpContext.Request;
             int? userId = Int32.Parse(request.Cookies["UserID"]);
             var result = await _patient.submitInfoMe(userId);
-           
+
             return View(result);
         }
         [HttpPost]
@@ -210,25 +217,19 @@ namespace HalloDoc.Controllers
         #region Logout
         public IActionResult Logout()
         {
-            if (HttpContext.Session.GetString("UserSession") != null)
-            {
-                HttpContext.Session.Remove("UserSession");
-                HttpContext.Session.Clear();
-                Response.Cookies.Delete("jwt");
-                Response.Cookies.Delete("UserID");
-                Response.Cookies.Delete("UserNameUser");
-                Response.Cookies.Delete("AspNetIdUser");
-                return RedirectToAction("RegisterdPatientLogin", "Custom");
-            }
+            HttpContext.Session.Remove("UserSession");
+            HttpContext.Session.Clear();
+            Response.Cookies.Delete("jwt");
+            Response.Cookies.Delete("UserID");
+            Response.Cookies.Delete("UserNameUser");
+            Response.Cookies.Delete("AspNetIdUser");
             return RedirectToAction("RegisterdPatientLogin", "Custom");
+
         }
 
 
         #endregion
-        public IActionResult chat()
-        {
-            return PartialView("_chatBox");
-        }
 
+       
     }
 }

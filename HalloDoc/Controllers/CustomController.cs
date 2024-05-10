@@ -1,7 +1,9 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Entities.ViewModels;
+using HalloDoc.Hubs;
 using HalloDoc.Services.IServices;
 using HalloDoc.Services.Services;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using System.Security.Cryptography;
@@ -15,15 +17,17 @@ namespace HalloDoc.Controllers
         private IAdminService _admin;
         private IJwtService _jwtService;
         private ICustomService _customService;
+        private readonly IHubContext<ChatHub> hubContext;
 
         #region constructor
-        public CustomController(ApplicationDbContext context, IPatientService patient, IAdminService admin, IJwtService jwtService, ICustomService customService)
+        public CustomController(ApplicationDbContext context, IHubContext<ChatHub> hubContext, IPatientService patient, IAdminService admin, IJwtService jwtService, ICustomService customService)
         {
             _context = context;
             _patient = patient;
             _admin = admin;
             _jwtService = jwtService;
             _customService = customService;
+            this.hubContext = hubContext;
 
         }
         public IActionResult PatientSite()
@@ -417,6 +421,26 @@ namespace HalloDoc.Controllers
         {
             await _customService.ConfirmCancelAgreement(id, note);
             return "";
+        }
+        #endregion
+
+        #region chat
+        public IActionResult chat()
+        {
+            return PartialView("_chatBox");
+        }
+        public IActionResult GetChat(string AspnetUserId)
+        {
+            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]!));
+            return PartialView("_chatBox", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Chat(ChatModel model)
+        {
+            _customService.AddChat(model);
+            await hubContext.Clients.Client(model.RecieverId!).SendAsync("ReceiveMessage");
+            return Json("success");
         }
         #endregion
     }

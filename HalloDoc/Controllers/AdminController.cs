@@ -27,11 +27,11 @@ namespace HalloDoc.Controllers
         private IJwtService _jwtService;
         private ICustomService _customService;
 
-      //  private IHubContext hubContext;
+        //  private IHubContext hubContext;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
 
 
-        public AdminController(IAdminService admin,IHubContext<ChatHub> hubContext, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        public AdminController(IAdminService admin, IHubContext<ChatHub> hubContext, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
 
             _admin = admin;
@@ -39,14 +39,12 @@ namespace HalloDoc.Controllers
             _jwtService = jwtService;
             _customService = customService;
             _hostingEnvironment = hostingEnvironment;
-         //   hubContext = chatHub;
+            //   hubContext = chatHub;
         }
 
         #region Logout
         public IActionResult Logout()
         {
-
-
             HttpContext.Session.Clear();
             Response.Cookies.Delete("jwt");
             Response.Cookies.Delete("RoleMenu");
@@ -1312,26 +1310,6 @@ namespace HalloDoc.Controllers
         }
         #endregion
 
-        #region chat
-
-        //public IActionResult chat()
-        //{
-        //    return PartialView("_chatBox");
-        //}
-        public IActionResult GetChat(string AspnetUserId)
-        {
-            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]));
-            return PartialView("_chatBox", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Chat(ChatModel model)
-        {
-            _customService.AddChat(model);
-           await hubContext.Clients.Client(model.RecieverId).SendAsync("ReceiveMessage");
-            return Json("success");
-        }
-
-        #endregion
+       
     }
 }

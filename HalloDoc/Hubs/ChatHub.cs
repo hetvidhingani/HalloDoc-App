@@ -26,6 +26,6 @@ namespace HalloDoc.Hubs
             await Clients.Client(user).SendAsync("ReceiveMessage", user, message);
         }
 
-
+       
     }
 }

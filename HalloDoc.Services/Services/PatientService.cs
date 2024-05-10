@@ -568,8 +568,11 @@ namespace HalloDoc.Services.Services
                 select new DashboardData
                 {
                     RequstId = r.RequestId,
+                    PhysicianId = r.Physician.Id,
                     CreatedDate = r.CreatedDate.ToShortDateString(),
                     Status = r.Status,
+                    aspnetID= "edad7f7d-d16f-496f-b27f-128a0acf3170",
+
                     FileName = (
                         from file in _requestwisefileRepository.GetAll()
                         where file.RequestId == r.RequestId

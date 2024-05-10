@@ -32,5 +32,7 @@ namespace HalloDoc.Entities.ViewModels
         public bool isdeleted { get; set; }
         public List<RequestWiseFile> RequestWiseFiles { get; set; }
         public string Email { get; set; }
+         public string aspnetID { get; set; }
+        public string? PhysicianId { get; set; }
     }
 }

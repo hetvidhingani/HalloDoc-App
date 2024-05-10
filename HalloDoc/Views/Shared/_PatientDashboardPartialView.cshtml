@@ -62,11 +62,12 @@
                             }
                             <td>@status </td>
                             <td>
-                            <button class="btn btn-sm btn-outline-info chat">
-                            Provider
+
+                                <button class="btn btn-sm btn-outline-info chat" onclick="GetChat('@r.PhysicianId')">
+                                 Provider
                             </button>
-                                <button class="btn btn-sm btn-outline-info chat">
-                                    Patient
+                                <button class="btn btn-sm btn-outline-info chat" onclick="GetChat('@r.aspnetID')">
+                                    Admin
                                 </button>
                             </td>
                             <td>
@@ -83,8 +84,7 @@
                 }
             </tbody>
         </table>
-
-
+        <div id="partialViewForChat"></div>
         <partial name="_Paging.cshtml" />
 
     </div>
@@ -165,6 +165,27 @@
 
 
 </div>
+
+<script>
+    function GetChat(AspnetUserId) {
+        console.log("AspnetUserId:", AspnetUserId);
+        $.ajax({
+            method: "GET",
+            url: "/Custom/GetChat",
+            data: {
+                AspnetUserId: AspnetUserId
+            },
+            success: function (data) {
+
+                $('#partialViewForChat').html(data);
+            },
+            error: function () {
+                console.log("Function Fail");
+            }
+        });
+    }
+
+</script>
 <script>
     var coll = document.getElementsByClassName("collapsible");
     var i;
@@ -180,15 +201,5 @@
             }
         });
     }
-    $('.chat').on('click', function () {
-        $.ajax({
-            type: "POST",
-            dataType: "html",
-            url: "@(Url.Action("chat", "Patient"))",
-            success: function (data) {
-
-                $("#chatboxdata").html(data);
-            }
-        });
-    });
+    
 </script>

@@ -1,8 +1,10 @@
 ﻿using HalloDoc.Entities.DataModels;
 using HalloDoc.Entities.ViewModels;
+using HalloDoc.Hubs;
 using HalloDoc.Repository.Repository;
 using HalloDoc.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json.Linq;
 
 namespace HalloDoc.Controllers
@@ -15,10 +17,12 @@ namespace HalloDoc.Controllers
         private IProviderService _provider;
         private IJwtService _jwtService;
         private ICustomService _customService;
+        private readonly IHubContext<ChatHub> hubContext;
         private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
 
-        public ProviderController(IProviderService provider, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
+        public ProviderController(IProviderService provider, IHubContext<ChatHub> hubContext, IJwtService jwtService, ICustomService customService, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
+            this.hubContext = hubContext;
             _provider = provider;
             _jwtService = jwtService;
             _customService = customService;
@@ -29,6 +33,7 @@ namespace HalloDoc.Controllers
         #region Logout
         public IActionResult Logout()
         {
+
             HttpContext.Session.Clear();
             Response.Cookies.Delete("jwt");
             Response.Cookies.Delete("RoleMenu");
@@ -637,6 +642,26 @@ namespace HalloDoc.Controllers
         {
             _provider.DeleteBill(date);
             return RedirectToAction("Invoicing");
+        }
+        #endregion
+
+        #region Chat
+        public IActionResult chat()
+        {
+            return PartialView("_chatBox");
+        }
+        public IActionResult GetChat(string AspnetUserId)
+        {
+            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]));
+            return PartialView("_chatBox", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Chat(ChatModel model)
+        {
+            _customService.AddChat(model);
+            await hubContext.Clients.Client(model.RecieverId).SendAsync("ReceiveMessage");
+            return Json("success");
         }
         #endregion
     }

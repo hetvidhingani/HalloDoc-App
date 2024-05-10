@@ -510,12 +510,12 @@ namespace HalloDoc.Services.Services
               //  ChatDate = x.ChatDate.ToString()!,
                 ChatBoxClass = x.SenderId == SenderId ? "Sender" : "Reciever",
             }, x => (x.SenderId == SenderId || x.SenderId == RecieverId) && (x.RecieverId == SenderId || x.RecieverId == RecieverId));
+
             List<ChatDetailsTableModel> record = new List<ChatDetailsTableModel>();
             foreach ( var rrecord in data)
             {
                 record.Add(rrecord);
             }
-
             model.Chats = record;
 
             return model;
