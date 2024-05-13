@@ -35,6 +35,7 @@ namespace HalloDoc.Services.IServices
         Task<HealthProfessional> GetBusinessDetails(object BusinessId);
         Task<string> SendOrderDetails(SendOrderViewModel viewModel, int id, string createdByID);
         public ChatDetailsViewModel GetChats(string RecieverId, string SenderId);
-        public void AddChat(ChatModel model);
+        public string AddChat(ChatModel model);
+
     }
 }

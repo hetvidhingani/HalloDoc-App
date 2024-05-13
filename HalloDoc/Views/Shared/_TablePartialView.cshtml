@@ -590,11 +590,7 @@
                                         </a>
                                     </li>
 
-                                   @*  <li>
-                                        <a href="@Url.Action("EncounterForm","Admin")" id=@request.requestID style="text-decoration:none;color:black;">
-                                            Encounter
-                                        </a>
-                                    </li> *@
+                                   
                                     }
                                     @if (Model.stateTab  == "Unpaid")
                                     {
@@ -631,12 +627,13 @@
 </div>
 <script>
     function GetChat(AspnetUserId) {
-        console.log("AspnetUserId:", AspnetUserId);
+ 
+   
         $.ajax({
             method: "GET",
             url: "/Custom/GetChat",
             data: {
-                AspnetUserId: AspnetUserId
+                AspnetUserId: AspnetUserId 
             },
             success: function (data) {
 

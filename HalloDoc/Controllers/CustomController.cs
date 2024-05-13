@@ -431,6 +431,7 @@ namespace HalloDoc.Controllers
         }
         public IActionResult GetChat(string AspnetUserId)
         {
+    
             ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]!));
             return PartialView("_chatBox", model);
         }
@@ -438,9 +439,9 @@ namespace HalloDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> Chat(ChatModel model)
         {
-            _customService.AddChat(model);
+            string mesesage = _customService.AddChat(model);
             await hubContext.Clients.Client(model.RecieverId!).SendAsync("ReceiveMessage");
-            return Json("success");
+            return Json(mesesage);
         }
         #endregion
     }

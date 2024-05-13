@@ -497,12 +497,13 @@ namespace HalloDoc.Services.Services
         #region chat
         public ChatDetailsViewModel GetChats(string RecieverId, string SenderId)
         {
+            AspNetUser name = _aspnetuserRepository.GetAll().Where(x => x.Id == RecieverId).FirstOrDefault();
             ChatDetailsViewModel model = new ChatDetailsViewModel()
             {
                 RecieverId = RecieverId,
                 SenderId = SenderId,
                 Chats = new List<ChatDetailsTableModel>(),
-                RecieverName = "Reciever"
+                RecieverName = name.UserName
             };
             var data = _chatDetailsRepository.GetAllData(x => new ChatDetailsTableModel
             {
@@ -521,7 +522,7 @@ namespace HalloDoc.Services.Services
             return model;
         }
 
-        public void AddChat(ChatModel model)
+        public string AddChat(ChatModel model)
         {
             ChatDetail chatDetail = new ChatDetail
             {
@@ -530,6 +531,8 @@ namespace HalloDoc.Services.Services
                 Message = model.Message
             };
             _chatDetailsRepository.AddAsync(chatDetail);
+
+            return chatDetail.Message;
         }
         #endregion
     }

@@ -2,6 +2,16 @@
     padding: 10px;
     border: 1px solid #20a2ce;
 }
+.offcanvas-body{
+    position:relative;
+    height:500px;
+
+    overflow-y:scroll;
+}
+    .offcanvas-body::-webkit-scrollbar {
+        display:none;
+    }
+
 #loader-wrapper {
     position: fixed;
     top: 0;
@@ -11,7 +21,7 @@
     background: rgba(255, 255, 255, 0.7);
     z-index: 9999;
     display: none;
-    / Initially hide loader /
+  
 }
 
 #loader {
