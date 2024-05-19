@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Voice;
 
 
 namespace HalloDoc.Repository.Repository
@@ -181,7 +182,17 @@ namespace HalloDoc.Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
-     
+        public List<Tentity> GetList<Tentity>(Expression<Func<T, Tentity>> select, Expression<Func<T, bool>> where) where Tentity : class
+        {
+            try
+            {
+                return _genericContext.Where(where).Select(select).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 
 

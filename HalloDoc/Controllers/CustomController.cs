@@ -431,17 +431,26 @@ namespace HalloDoc.Controllers
         }
         public IActionResult GetChat(string AspnetUserId)
         {
-    
-            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]!));
-            return PartialView("_chatBox", model);
+            ChatDetailsViewModel model = _customService.GetChats(AspnetUserId, _jwtService.GetTokenData(Request.Cookies["Jwt"]).AspNetUserId);
+            return PartialView("_chatPartialView", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Chat(ChatModel model)
         {
-            string mesesage = _customService.AddChat(model);
-            await hubContext.Clients.Client(model.RecieverId!).SendAsync("ReceiveMessage");
-            return Json(mesesage);
+            _customService.AddChat(model);
+            if (model.RecieverId != null)
+            {
+                List<string> connections = ChatHub.GetUserConnections(model.RecieverId);
+                if (connections.Count > 0)
+                {
+                    foreach (string connectionId in connections)
+                    {
+                        await hubContext.Clients.Client(connectionId).SendAsync("ReceiveMessage");
+                    }
+                }
+            }
+            return Json("success");
         }
         #endregion
     }

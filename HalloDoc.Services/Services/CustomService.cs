@@ -497,32 +497,23 @@ namespace HalloDoc.Services.Services
         #region chat
         public ChatDetailsViewModel GetChats(string RecieverId, string SenderId)
         {
-            AspNetUser name = _aspnetuserRepository.GetAll().Where(x => x.Id == RecieverId).FirstOrDefault();
             ChatDetailsViewModel model = new ChatDetailsViewModel()
             {
                 RecieverId = RecieverId,
                 SenderId = SenderId,
                 Chats = new List<ChatDetailsTableModel>(),
-                RecieverName = name.UserName
+                RecieverName = "Reciever"
             };
-            var data = _chatDetailsRepository.GetAllData(x => new ChatDetailsTableModel
+            model.Chats = _chatDetailsRepository.GetList(x => new ChatDetailsTableModel
             {
                 Message = x.Message ?? "",
-              //  ChatDate = x.ChatDate.ToString()!,
+                //ChatDate = x.SentDate.ToString("hh:mm tt"),
                 ChatBoxClass = x.SenderId == SenderId ? "Sender" : "Reciever",
             }, x => (x.SenderId == SenderId || x.SenderId == RecieverId) && (x.RecieverId == SenderId || x.RecieverId == RecieverId));
-
-            List<ChatDetailsTableModel> record = new List<ChatDetailsTableModel>();
-            foreach ( var rrecord in data)
-            {
-                record.Add(rrecord);
-            }
-            model.Chats = record;
-
             return model;
         }
 
-        public string AddChat(ChatModel model)
+        public void AddChat(ChatModel model)
         {
             ChatDetail chatDetail = new ChatDetail
             {
@@ -530,9 +521,8 @@ namespace HalloDoc.Services.Services
                 SenderId = model.SenderId,
                 Message = model.Message
             };
-            _chatDetailsRepository.AddAsync(chatDetail);
 
-            return chatDetail.Message;
+            _chatDetailsRepository.AddAsync(chatDetail);
         }
         #endregion
     }

@@ -29,5 +29,6 @@ namespace HalloDoc.Repository.IRepository
         dynamic GetAllData(Expression<Func<T, object>> select, Expression<Func<T, bool>> where);
         T? IncludeEntity(Expression<Func<T, bool>> expression, Expression<Func<T, object>> Include);
         int GetCount(Expression<Func<T, object>> select, Expression<Func<T, bool>> where);
+        public List<Tentity> GetList<Tentity>(Expression<Func<T, Tentity>> select, Expression<Func<T, bool>> where) where Tentity : class;
     }
 }
